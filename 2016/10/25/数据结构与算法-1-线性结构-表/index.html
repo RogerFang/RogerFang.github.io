@@ -1,0 +1,672 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数据结构,线性结构,表," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="数组数组能够顺序存储相同类型的多个数据，数据的元素在内存上的存储地址是连续的。在声明数组的时候，需要指定数组的名称，它含有的数据类型以及数组的长度。特点：数据是连续的，随机访问速度快。（在Java中Collection集合中提供了ArrayList和Vector实现动态数组）
+表（线性表）线性表：零个或多个数据元素的有限序列。线性表中数据元素之间的关系是一对一的关系，即除了第一个和最后一个数据元素">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法(1): 线性结构-表">
+<meta property="og:url" content="http://yoursite.com/2016/10/25/数据结构与算法-1-线性结构-表/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="数组数组能够顺序存储相同类型的多个数据，数据的元素在内存上的存储地址是连续的。在声明数组的时候，需要指定数组的名称，它含有的数据类型以及数组的长度。特点：数据是连续的，随机访问速度快。（在Java中Collection集合中提供了ArrayList和Vector实现动态数组）
+表（线性表）线性表：零个或多个数据元素的有限序列。线性表中数据元素之间的关系是一对一的关系，即除了第一个和最后一个数据元素">
+<meta property="og:updated_time" content="2016-12-27T11:38:38.203Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据结构与算法(1): 线性结构-表">
+<meta name="twitter:description" content="数组数组能够顺序存储相同类型的多个数据，数据的元素在内存上的存储地址是连续的。在声明数组的时候，需要指定数组的名称，它含有的数据类型以及数组的长度。特点：数据是连续的，随机访问速度快。（在Java中Collection集合中提供了ArrayList和Vector实现动态数组）
+表（线性表）线性表：零个或多个数据元素的有限序列。线性表中数据元素之间的关系是一对一的关系，即除了第一个和最后一个数据元素">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/10/25/数据结构与算法-1-线性结构-表/"/>
+
+
+  <title> 数据结构与算法(1): 线性结构-表 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a1eb6dc312a93939356214ab5491901a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                数据结构与算法(1): 线性结构-表
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-25T17:52:46+08:00" content="2016-10-25">
+              2016-10-25
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h1><p>数组能够顺序存储相同类型的多个数据，数据的元素在内存上的存储地址是连续的。在声明数组的时候，需要指定数组的名称，它含有的数据类型以及数组的长度。<br><strong>特点</strong>：数据是连续的，随机访问速度快。<br>（在Java中Collection集合中提供了ArrayList和Vector实现动态数组）</p>
+<h1 id="表（线性表）"><a href="#表（线性表）" class="headerlink" title="表（线性表）"></a>表（线性表）</h1><p>线性表：零个或多个数据元素的有限序列。线性表中数据元素之间的关系是<strong><em>一对一的关系</em></strong>，即除了第一个和最后一个数据元素之外，其它数据元素都是首尾相接的。</p>
+<blockquote>
+<ul>
+<li>线性表的顺序存储结构，指的是用一段<strong><em>地址连续</em></strong>的存储单元依次存储线性表的数据元素。</li>
+<li>线性表的链式存储结构，是由一系列结点组成，这些节点不必再内存中相连。结点包括存储元素的数据域和存储直接后继或前驱的指针域。</li>
+</ul>
+</blockquote>
+<p>具体实现可以参见java集合类中的<em>ArrayList</em>和<em>LinkedList</em>。</p>
+<h2 id="数组实现"><a href="#数组实现" class="headerlink" title="数组实现"></a>数组实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 顺序存储结构：表的简单数组实现</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SequenceList</span> </span>&#123;</div><div class="line">	<span class="comment">// 线性表的最大存储容量</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_VALUE = <span class="number">20</span>;</div><div class="line">    <span class="comment">// 线性表实际存储位置</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span>[] data = <span class="keyword">new</span> <span class="keyword">int</span>[MAX_VALUE];</div><div class="line">    <span class="comment">// 线性表的当前长度</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> length = <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 链式存储结构：单链表</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleLinkedList</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">    <span class="comment">// 首元素</span></div><div class="line">    <span class="keyword">private</span> Node&lt;T&gt; head;</div><div class="line">    <span class="comment">// 尾元素</span></div><div class="line">    <span class="keyword">private</span> Node&lt;T&gt; last;</div><div class="line"></div><div class="line">    <span class="comment">// 元素个数</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> theSize = <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">T</span>&gt;</span>&#123;</div><div class="line">        <span class="keyword">private</span> T value;</div><div class="line">        <span class="keyword">private</span> Node&lt;T&gt; next;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(T value, Node&lt;T&gt; next)</span> </span>&#123;</div><div class="line">            <span class="keyword">this</span>.value = value;</div><div class="line">            <span class="keyword">this</span>.next = next;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SingleLinkedList</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 增加一个数据到list</div><div class="line">     * <span class="doctag">@param</span> v</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(T v)</span></span>&#123;</div><div class="line">        Node&lt;T&gt; newNode = <span class="keyword">new</span> Node&lt;&gt;(v, <span class="keyword">null</span>);</div><div class="line">        <span class="keyword">if</span> (isEmpty())&#123;</div><div class="line">            head = newNode;</div><div class="line">            last = head;</div><div class="line">        &#125;<span class="keyword">else</span> &#123;</div><div class="line">            last.next = newNode;</div><div class="line">            last = newNode;</div><div class="line">        &#125;</div><div class="line">        theSize++;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 在index处添加元素v，其他元素后移</div><div class="line">     * <span class="doctag">@param</span> index</div><div class="line">     * <span class="doctag">@param</span> v</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> index, T v)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span> (index == <span class="number">0</span>)&#123;</div><div class="line">            Node&lt;T&gt; newNode = <span class="keyword">new</span> Node&lt;&gt;(v, head);</div><div class="line">            head = newNode;</div><div class="line">        &#125;<span class="keyword">else</span> &#123;</div><div class="line">            checkIndex(index);</div><div class="line">            Node&lt;T&gt; current = head;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index - <span class="number">1</span>; i++)&#123;</div><div class="line">                current = current.next;</div><div class="line">            &#125;</div><div class="line">            Node&lt;T&gt; newNode = <span class="keyword">new</span> Node&lt;&gt;(v, current.next);</div><div class="line">            current.next = newNode;</div><div class="line">        &#125;</div><div class="line">        theSize++;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 根据索引获取值</div><div class="line">     * <span class="doctag">@param</span> index</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> node(index).value;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 是否包含传入的对象</div><div class="line">     * <span class="doctag">@param</span> obj</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object obj)</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> indexOf(obj) != -<span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 删除list中首次出现的value</div><div class="line">     * <span class="doctag">@param</span> v</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object obj)</span></span>&#123;</div><div class="line">        Node&lt;T&gt; current = head;</div><div class="line">        Node&lt;T&gt; prev = current;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size(); i++)&#123;</div><div class="line">            <span class="keyword">if</span> (current.value.equals(obj))&#123;</div><div class="line">                <span class="keyword">if</span> (i == <span class="number">0</span>)&#123;</div><div class="line">                    head = current.next;</div><div class="line">                    theSize--;</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                prev.next = current.next;</div><div class="line">                theSize--;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125;</div><div class="line">            prev = current;</div><div class="line">            current = current.next;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 根据索引值删除元素</div><div class="line">     * <span class="doctag">@param</span> index</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span></span>&#123;</div><div class="line">        checkIndex(index);</div><div class="line">        theSize--;</div><div class="line">        <span class="keyword">if</span> (index == <span class="number">0</span>)&#123;</div><div class="line">            Node&lt;T&gt; current = head;</div><div class="line">            T val = current.value;</div><div class="line">            head = current.next;</div><div class="line">            current.value = <span class="keyword">null</span>;</div><div class="line">            current.next = <span class="keyword">null</span>;</div><div class="line">            <span class="keyword">return</span> val;</div><div class="line">        &#125;<span class="keyword">else</span> &#123;</div><div class="line">            Node&lt;T&gt; prev = node(index-<span class="number">1</span>);</div><div class="line">            Node&lt;T&gt; current = prev.next;</div><div class="line">            T val = current.value;</div><div class="line">            prev.next = current.next;</div><div class="line">            current.value = <span class="keyword">null</span>;</div><div class="line">            current.next = <span class="keyword">null</span>;</div><div class="line">            <span class="keyword">return</span> val;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 清空链表</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span></span>&#123;</div><div class="line">        head = <span class="keyword">null</span>;</div><div class="line">        theSize = <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 打印全部链表</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span> || size() == <span class="number">0</span>)&#123;</div><div class="line">            System.out.println(<span class="string">"链表为空"</span>);</div><div class="line">        &#125;<span class="keyword">else</span> &#123;</div><div class="line">            Node&lt;T&gt; current = head;</div><div class="line">            <span class="keyword">while</span> (current != <span class="keyword">null</span>)&#123;</div><div class="line">                System.out.print(current.value + <span class="string">" "</span>);</div><div class="line">                current = current.next;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Returns the index of the first occurrence of the specified element</div><div class="line">     * in this list</div><div class="line">     * <span class="doctag">@param</span> obj</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">indexOf</span><span class="params">(Object obj)</span></span>&#123;</div><div class="line">        <span class="keyword">int</span> index = <span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span> (obj == <span class="keyword">null</span>)&#123;</div><div class="line">            <span class="keyword">for</span> (Node&lt;T&gt; x = head; x != <span class="keyword">null</span>; x = x.next)&#123;</div><div class="line">                <span class="keyword">if</span> (x.value != <span class="keyword">null</span>)&#123;</div><div class="line">                    <span class="keyword">return</span> index;</div><div class="line">                &#125;</div><div class="line">                index++;</div><div class="line">            &#125;</div><div class="line">        &#125;<span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">for</span> (Node&lt;T&gt; x = head; x != <span class="keyword">null</span>; x = x.next)&#123;</div><div class="line">                <span class="keyword">if</span> (obj.equals(x.value))&#123;</div><div class="line">                    <span class="keyword">return</span> index;</div><div class="line">                &#125;</div><div class="line">                index++;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.theSize;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.size() == <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Returns the (non-null) Node at the specified element index.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">private</span> Node&lt;T&gt; <span class="title">node</span><span class="params">(<span class="keyword">int</span> index)</span></span>&#123;</div><div class="line">        checkIndex(index);</div><div class="line"></div><div class="line">        Node&lt;T&gt; current = head;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; i++)&#123;</div><div class="line">            current = current.next;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> current;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">checkIndex</span><span class="params">(<span class="keyword">int</span> index)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt; size() - <span class="number">1</span>)&#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException(<span class="string">"传入索引无效:"</span>+index);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="双链表"><a href="#双链表" class="headerlink" title="双链表"></a>双链表</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 链式存储结构：双链表</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DoubleLinkedList</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Node head;</div><div class="line">    <span class="keyword">private</span> Node tail;</div><div class="line">    <span class="comment">// 节点个数</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> theSize = <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">T</span>&gt;</span>&#123;</div><div class="line">        <span class="keyword">private</span> T value;</div><div class="line">        <span class="keyword">private</span> Node prev;</div><div class="line">        <span class="keyword">private</span> Node next;</div><div class="line"></div><div class="line">        Node(T value, Node prev, Node next) &#123;</div><div class="line">            <span class="keyword">this</span>.value = value;</div><div class="line">            <span class="keyword">this</span>.prev = prev;</div><div class="line">            <span class="keyword">this</span>.next = next;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DoubleLinkedList</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 添加一个元素到双链表</div><div class="line">     * <span class="doctag">@param</span> v</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(T v)</span></span>&#123;</div><div class="line">        Node&lt;T&gt; newNode = <span class="keyword">new</span> Node&lt;&gt;(v, tail, <span class="keyword">null</span>);</div><div class="line">        <span class="keyword">if</span> (tail == <span class="keyword">null</span>)&#123;</div><div class="line">            head = newNode;</div><div class="line">        &#125;<span class="keyword">else</span> &#123;</div><div class="line">            tail.next = newNode;</div><div class="line">        &#125;</div><div class="line">        tail = newNode;</div><div class="line">        theSize++;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 根据索引获取元素</div><div class="line">     * <span class="doctag">@param</span> i</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">get</span><span class="params">(<span class="keyword">int</span> i)</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> node(i).value;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 删除索引的元素</div><div class="line">     * Removes the element at the specified position in this list</div><div class="line">     * <span class="doctag">@param</span> i</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">remove</span><span class="params">(<span class="keyword">int</span> i)</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> unlink(node(i));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 删除传入的对象</div><div class="line">     * Removes the first occurrence of the specified element from this list</div><div class="line">     * <span class="doctag">@param</span> obj</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object obj)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span> (obj == <span class="keyword">null</span>)&#123;</div><div class="line">            <span class="keyword">for</span> (Node&lt;T&gt; x = head; x != <span class="keyword">null</span>; x = x.next)&#123;</div><div class="line">                <span class="keyword">if</span> (x.value == <span class="keyword">null</span>)&#123;</div><div class="line">                    unlink(x);</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;<span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">for</span> (Node&lt;T&gt; x = head; x != <span class="keyword">null</span>; x = x.next)&#123;</div><div class="line">                <span class="keyword">if</span> (obj.equals(x.value))&#123;</div><div class="line">                    unlink(x);</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 是否包含传入的对象</div><div class="line">     * <span class="doctag">@param</span> obj</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object obj)</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> indexOf(obj) != -<span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.theSize;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.size() == <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">for</span> (Node&lt;T&gt; x = head; x != <span class="keyword">null</span>;)&#123;</div><div class="line">            Node&lt;T&gt; next = x.next;</div><div class="line">            x.value = <span class="keyword">null</span>;</div><div class="line">            x.next = <span class="keyword">null</span>;</div><div class="line">            x.prev = <span class="keyword">null</span>;</div><div class="line">            x = next;</div><div class="line">        &#125;</div><div class="line">        head = tail = <span class="keyword">null</span>;</div><div class="line">        theSize = <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Returns the index of the first occurrence of the specified element</div><div class="line">     * in this list</div><div class="line">     * <span class="doctag">@param</span> obj</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">indexOf</span><span class="params">(Object obj)</span></span>&#123;</div><div class="line">        <span class="keyword">int</span> index = <span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span> (obj == <span class="keyword">null</span>)&#123;</div><div class="line">            <span class="keyword">for</span> (Node&lt;T&gt; x = head; x != <span class="keyword">null</span>; x = x.next)&#123;</div><div class="line">                <span class="keyword">if</span> (x.value != <span class="keyword">null</span>)&#123;</div><div class="line">                    <span class="keyword">return</span> index;</div><div class="line">                &#125;</div><div class="line">                index++;</div><div class="line">            &#125;</div><div class="line">        &#125;<span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">for</span> (Node&lt;T&gt; x = head; x != <span class="keyword">null</span>; x = x.next)&#123;</div><div class="line">                <span class="keyword">if</span> (obj.equals(x.value))&#123;</div><div class="line">                    <span class="keyword">return</span> index;</div><div class="line">                &#125;</div><div class="line">                index++;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Returns the index of the last occurrence of the specified element</div><div class="line">     * in this list</div><div class="line">     * <span class="doctag">@param</span> obj</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lastIndexOf</span><span class="params">(Object obj)</span></span>&#123;</div><div class="line">        <span class="keyword">int</span> index = size();</div><div class="line">        <span class="keyword">if</span> (obj == <span class="keyword">null</span>)&#123;</div><div class="line">            <span class="keyword">for</span> (Node&lt;T&gt; x = tail; x != <span class="keyword">null</span>; x = x.prev)&#123;</div><div class="line">                index--;</div><div class="line">                <span class="keyword">if</span> (x.value == <span class="keyword">null</span>)&#123;</div><div class="line">                    <span class="keyword">return</span> index;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;<span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">for</span> (Node&lt;T&gt; x = tail; x != <span class="keyword">null</span>; x = x.prev)&#123;</div><div class="line">                index--;</div><div class="line">                <span class="keyword">if</span> (obj.equals(x.value))&#123;</div><div class="line">                    <span class="keyword">return</span> index;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span> || size() == <span class="number">0</span>)&#123;</div><div class="line">            System.out.println(<span class="string">"链表为空"</span>);</div><div class="line">        &#125;<span class="keyword">else</span> &#123;</div><div class="line">            Node&lt;T&gt; current = head;</div><div class="line">            <span class="keyword">while</span> (current != <span class="keyword">null</span>)&#123;</div><div class="line">                System.out.print(current.value + <span class="string">" "</span>);</div><div class="line">                current = current.next;</div><div class="line">            &#125;</div><div class="line">            System.out.println();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Returns the (non-null) Node at the specified element index.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">private</span> Node&lt;T&gt; <span class="title">node</span><span class="params">(<span class="keyword">int</span> index)</span></span>&#123;</div><div class="line">        checkIndex(index);</div><div class="line"></div><div class="line">        Node&lt;T&gt; current;</div><div class="line">        <span class="keyword">if</span> (index &lt; (size() &gt;&gt; <span class="number">1</span>))&#123;</div><div class="line">            current = head;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; i++)&#123;</div><div class="line">                current = current.next;</div><div class="line">            &#125;</div><div class="line">        &#125;<span class="keyword">else</span> &#123;</div><div class="line">            current = tail;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = size() - <span class="number">1</span>; i &gt; index; i--)&#123;</div><div class="line">                current = current.prev;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> current;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> T <span class="title">unlink</span><span class="params">(Node&lt;T&gt; p)</span></span>&#123;</div><div class="line">        T val = p.value;</div><div class="line">        Node&lt;T&gt; prev = p.prev;</div><div class="line">        Node&lt;T&gt; next = p.next;</div><div class="line">        <span class="keyword">if</span> (prev == <span class="keyword">null</span>)&#123;</div><div class="line">            head = next;</div><div class="line">        &#125;<span class="keyword">else</span> &#123;</div><div class="line">            prev.next = next;</div><div class="line">            p.prev = <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (next == <span class="keyword">null</span>)&#123;</div><div class="line">            tail = prev;</div><div class="line">        &#125;<span class="keyword">else</span> &#123;</div><div class="line">            next.prev = prev;</div><div class="line">            p.next = <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        p.value = <span class="keyword">null</span>;</div><div class="line">        theSize--;</div><div class="line">        <span class="keyword">return</span> val;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">checkIndex</span><span class="params">(<span class="keyword">int</span> index)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt; size() - <span class="number">1</span>)&#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException(<span class="string">"传入索引无效:"</span>+index);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<p>顺序存储结构和单链表结构的优缺点比较:</p>
+<table>
+<thead>
+<tr>
+<th>column</th>
+<th>顺序存储结构</th>
+<th>单链表存储结构</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>存储分配方式</td>
+<td>连续的存储单元</td>
+<td>任意的存储单元</td>
+</tr>
+<tr>
+<td>时间性能</td>
+<td>find:O(1), insert&amp;delete:O(n)</td>
+<td>find:O(n), insert&amp;delete:O(1)</td>
+</tr>
+<tr>
+<td>空间性能</td>
+<td>需要预分配存储空间</td>
+<td>不需要预分配存储空间</td>
+</tr>
+</tbody>
+</table>
+<hr>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构/" rel="tag">#数据结构</a>
+          
+            <a href="/tags/线性结构/" rel="tag">#线性结构</a>
+          
+            <a href="/tags/表/" rel="tag">#表</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/25/数据结构与算法-2-线性结构-栈/" rel="prev" title="数据结构与算法(2): 线性结构-栈">
+                数据结构与算法(2): 线性结构-栈 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">46</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">56</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/a-mu-mu-art" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数组"><span class="nav-number">1.</span> <span class="nav-text">数组</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#表（线性表）"><span class="nav-number">2.</span> <span class="nav-text">表（线性表）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数组实现"><span class="nav-number">2.1.</span> <span class="nav-text">数组实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单链表"><span class="nav-number">2.2.</span> <span class="nav-text">单链表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#双链表"><span class="nav-number">2.3.</span> <span class="nav-text">双链表</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

@@ -1,0 +1,662 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数据结构,树形结构,二叉树,二叉查找树,2-3树,红黑树," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="介绍&amp;emsp;&amp;emsp;红黑二叉查找树（红黑树）：基本思想是用标准的二叉查找树（完全由2-节点构成）和一些额外的信息（替换3-节点）来表示2-3树。&amp;emsp;&amp;emsp;红链接：将两个2-节点连接起来构成一个3-节点。&amp;emsp;&amp;emsp;黑链接：是2-3树中的普通链接。
+红黑树另一种定义是含有红黑链接并满足下列条件的二叉查找树：&amp;emsp;&amp;emsp;1. 红链接均为左链接；&amp;emsp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法(9): 树形结构- 红黑树">
+<meta property="og:url" content="http://yoursite.com/2016/10/29/数据结构与算法-9-树形结构-红黑树/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="介绍&amp;emsp;&amp;emsp;红黑二叉查找树（红黑树）：基本思想是用标准的二叉查找树（完全由2-节点构成）和一些额外的信息（替换3-节点）来表示2-3树。&amp;emsp;&amp;emsp;红链接：将两个2-节点连接起来构成一个3-节点。&amp;emsp;&amp;emsp;黑链接：是2-3树中的普通链接。
+红黑树另一种定义是含有红黑链接并满足下列条件的二叉查找树：&amp;emsp;&amp;emsp;1. 红链接均为左链接；&amp;emsp;">
+<meta property="og:image" content="http://yoursite.com/images/tree/rb-tree-rotate.png">
+<meta property="og:image" content="http://yoursite.com/images/tree/rb-tree-insert-right-red.png">
+<meta property="og:image" content="http://yoursite.com/images/tree/rb-tree-insert-left-right-red.png">
+<meta property="og:image" content="http://yoursite.com/images/tree/rb-tree-insert-continue-red.png">
+<meta property="og:updated_time" content="2016-12-27T11:38:38.265Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据结构与算法(9): 树形结构- 红黑树">
+<meta name="twitter:description" content="介绍&amp;emsp;&amp;emsp;红黑二叉查找树（红黑树）：基本思想是用标准的二叉查找树（完全由2-节点构成）和一些额外的信息（替换3-节点）来表示2-3树。&amp;emsp;&amp;emsp;红链接：将两个2-节点连接起来构成一个3-节点。&amp;emsp;&amp;emsp;黑链接：是2-3树中的普通链接。
+红黑树另一种定义是含有红黑链接并满足下列条件的二叉查找树：&amp;emsp;&amp;emsp;1. 红链接均为左链接；&amp;emsp;">
+<meta name="twitter:image" content="http://yoursite.com/images/tree/rb-tree-rotate.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/10/29/数据结构与算法-9-树形结构-红黑树/"/>
+
+
+  <title> 数据结构与算法(9): 树形结构- 红黑树 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a1eb6dc312a93939356214ab5491901a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                数据结构与算法(9): 树形结构- 红黑树
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-29T17:46:38+08:00" content="2016-10-29">
+              2016-10-29
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>&emsp;&emsp;红黑二叉查找树（红黑树）：基本思想是用标准的二叉查找树（完全由2-节点构成）和一些额外的信息（替换3-节点）来表示2-3树。<br>&emsp;&emsp;红链接：将两个2-节点连接起来构成一个3-节点。<br>&emsp;&emsp;黑链接：是2-3树中的普通链接。</p>
+<p>红黑树另一种定义是含有红黑链接并满足下列条件的二叉查找树：<br>&emsp;&emsp;1. 红链接均为左链接；<br>&emsp;&emsp;2. 没有任何一个节点同时有两条红链接相连；<br>&emsp;&emsp;3. 该树是<strong>完美黑色平衡的</strong>，即任意空链接到根节点的路径上的黑链接数量相同。</p>
+<p>颜色表示，为了方便做出以下规定：<br>&emsp;&emsp;1. 根节点为黑色；<br>&emsp;&emsp;2. 空节点为黑色。</p>
+<h1 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h1><h2 id="旋转"><a href="#旋转" class="headerlink" title="旋转"></a>旋转</h2><p>&emsp;&emsp;在进行某些操作中可能会出现红色右链接或者两条连续的红链接，但在操作完成前都可以通过旋转来修复。红黑树的旋转只有两种：顺时针旋转（右旋转）和逆时针旋转（左旋转）。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">    * 左旋转：红色右链接 -&gt; 红色左链接</div><div class="line">    *</div><div class="line">    * <span class="doctag">@param</span> node</div><div class="line">    * <span class="doctag">@return</span></div><div class="line">    */</div><div class="line">   <span class="function"><span class="keyword">private</span> Node&lt;T&gt; <span class="title">rotateToLeft</span><span class="params">(Node&lt;T&gt; node)</span> </span>&#123;</div><div class="line">       Node&lt;T&gt; x = node.right;</div><div class="line">       node.right = x.left;</div><div class="line">       x.left = node;</div><div class="line">       x.color = node.color;</div><div class="line">       node.color = RED;</div><div class="line">       <span class="keyword">return</span> x;</div><div class="line">   &#125;</div><div class="line">   </div><div class="line">   <span class="comment">/**</span></div><div class="line">    * 右旋转： 红色左链接 -&gt; 红色右链接</div><div class="line">    *</div><div class="line">    * <span class="doctag">@param</span> node</div><div class="line">    * <span class="doctag">@return</span></div><div class="line">    */</div><div class="line">   <span class="function"><span class="keyword">private</span> Node&lt;T&gt; <span class="title">rotateToRight</span><span class="params">(Node&lt;T&gt; node)</span> </span>&#123;</div><div class="line">       Node&lt;T&gt; x = node.left;</div><div class="line">       node.left = x.right;</div><div class="line">       x.right = node;</div><div class="line">       x.color = node.color;</div><div class="line">       node.color = RED;</div><div class="line">       <span class="keyword">return</span> x;</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p><img src="/images/tree/rb-tree-rotate.png" alt=""></p>
+<h2 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h2><p>&emsp;&emsp;在2-3树中，我们将新插入的节点与树的底部节点合并，然后再做调整。为了表示合并，我们将新插入的节点均设为红色，表示与底部节点相连接。然而插入后，新的红节点可能会违反我们的规定，因此需要在回溯的时候进行调整。</p>
+<ol>
+<li><p><strong>情况一：红色右链接</strong><br>&emsp;&emsp;当我们发现某个节点的左儿子是黑色但右儿子是红色时，我们要将右边的红色链接转到左边来。<br><img src="/images/tree/rb-tree-insert-right-red.png" alt=""></p>
+</li>
+<li><p><strong>情况二：分解4-节点</strong><br>&emsp;&emsp;当左儿子和右儿子都是红色时，就代表着一个4-节点，为此我们可以直接将其反色来分解它。<br><img src="/images/tree/rb-tree-insert-left-right-red.png" alt=""></p>
+</li>
+<li><p><strong>情况三：连续红色左链接</strong><br>&emsp;&emsp;当出现连续的红色左链接时，需要经过一次右旋转变成一个4-节点，再进行一次反色分解它。<br><img src="/images/tree/rb-tree-insert-continue-red.png" alt=""></p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">    * 插入实现</div><div class="line">    */</div><div class="line"><span class="function"><span class="keyword">private</span> Node&lt;T&gt; <span class="title">insert</span><span class="params">(T ele, Node&lt;T&gt; tree)</span></span>&#123;</div><div class="line">       <span class="keyword">if</span> (tree == <span class="keyword">null</span>)&#123;</div><div class="line">           <span class="keyword">return</span> <span class="keyword">new</span> Node&lt;&gt;(ele, RED);</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       <span class="keyword">int</span> cmpResult = ele.compareTo(tree.element);</div><div class="line">       <span class="keyword">if</span> (cmpResult &lt; <span class="number">0</span>)&#123;</div><div class="line">           tree.left = insert(ele, tree.left);</div><div class="line">       &#125;<span class="keyword">else</span> <span class="keyword">if</span> (cmpResult &gt; <span class="number">0</span>)&#123;</div><div class="line">           tree.right = insert(ele, tree.right);</div><div class="line">       &#125;<span class="keyword">else</span> &#123;</div><div class="line">           <span class="comment">// duplicate; do nothing</span></div><div class="line">       &#125;</div><div class="line"></div><div class="line">       <span class="comment">// check balance</span></div><div class="line">       <span class="keyword">if</span> (isRed(tree.right) &amp;&amp; !isRed(tree.left))&#123;</div><div class="line">           <span class="comment">// 情况一：红色右链接</span></div><div class="line">           tree = rotateToLeft(tree);</div><div class="line">       &#125;</div><div class="line">       <span class="keyword">if</span> (isRed(tree.left) &amp;&amp; isRed(tree.left.left))&#123; <span class="comment">// 该步在下一步flipColors之前进行校验</span></div><div class="line">           <span class="comment">// 情况三：连续红色左节点, 进行一次右旋转变成情况二4-节点</span></div><div class="line">           tree = rotateToRight(tree);</div><div class="line">       &#125;</div><div class="line">       <span class="keyword">if</span> (isRed(tree.left) &amp;&amp; isRed(tree.right))&#123;</div><div class="line">           <span class="comment">// 情况二：分解4-节点</span></div><div class="line">           tree = filpColors(tree);</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       <span class="keyword">return</span> tree;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>感谢:<a href="https://riteme.github.io/blog/2016-3-12/2-3-tree-and-red-black-tree.html#_5" target="_blank" rel="external">https://riteme.github.io/blog/2016-3-12/2-3-tree-and-red-black-tree.html#_5</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构/" rel="tag">#数据结构</a>
+          
+            <a href="/tags/树形结构/" rel="tag">#树形结构</a>
+          
+            <a href="/tags/二叉树/" rel="tag">#二叉树</a>
+          
+            <a href="/tags/二叉查找树/" rel="tag">#二叉查找树</a>
+          
+            <a href="/tags/2-3树/" rel="tag">#2-3树</a>
+          
+            <a href="/tags/红黑树/" rel="tag">#红黑树</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/29/数据结构与算法-8-树形结构-2-3树/" rel="next" title="数据结构与算法(8): 树形结构- 2-3树">
+                <i class="fa fa-chevron-left"></i> 数据结构与算法(8): 树形结构- 2-3树
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/31/数据结构与算法-10-树形结构-哈夫曼树/" rel="prev" title="数据结构与算法(10): 树形结构- 哈夫曼树">
+                数据结构与算法(10): 树形结构- 哈夫曼树 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">46</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">56</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/a-mu-mu-art" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#操作"><span class="nav-number">2.</span> <span class="nav-text">操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#旋转"><span class="nav-number">2.1.</span> <span class="nav-text">旋转</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插入"><span class="nav-number">2.2.</span> <span class="nav-text">插入</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

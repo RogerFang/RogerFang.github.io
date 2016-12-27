@@ -1,0 +1,689 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数据访问,JPA 2.0," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="JPA 2.0版本(JSR 317)引入的关键特性之一就是Criteria API，所带来的好处就是：查询可以通过Java编译器来验证其正确性，而且还提供了能够在运行时动态地构建查询的机制。
+使用Criteria API开发Java编译器能够检查其正确定的查询，从而减少运行时的错误，这种查询优于传统的基于字符串的Java Persistence Query Language(JPQL)查询。
+基本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JPA 2.0 动态类型安全查询">
+<meta property="og:url" content="http://yoursite.com/2016/12/07/JPA-2-0-动态类型安全查询/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="JPA 2.0版本(JSR 317)引入的关键特性之一就是Criteria API，所带来的好处就是：查询可以通过Java编译器来验证其正确性，而且还提供了能够在运行时动态地构建查询的机制。
+使用Criteria API开发Java编译器能够检查其正确定的查询，从而减少运行时的错误，这种查询优于传统的基于字符串的Java Persistence Query Language(JPQL)查询。
+基本">
+<meta property="og:updated_time" content="2016-12-27T11:38:38.484Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JPA 2.0 动态类型安全查询">
+<meta name="twitter:description" content="JPA 2.0版本(JSR 317)引入的关键特性之一就是Criteria API，所带来的好处就是：查询可以通过Java编译器来验证其正确性，而且还提供了能够在运行时动态地构建查询的机制。
+使用Criteria API开发Java编译器能够检查其正确定的查询，从而减少运行时的错误，这种查询优于传统的基于字符串的Java Persistence Query Language(JPQL)查询。
+基本">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/07/JPA-2-0-动态类型安全查询/"/>
+
+
+  <title> JPA 2.0 动态类型安全查询 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a1eb6dc312a93939356214ab5491901a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                JPA 2.0 动态类型安全查询
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-07T14:26:33+08:00" content="2016-12-07">
+              2016-12-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/JPA/" itemprop="url" rel="index">
+                    <span itemprop="name">JPA</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>JPA 2.0版本(JSR 317)引入的关键特性之一就是Criteria API，所带来的好处就是：查询可以通过Java编译器来验证其正确性，而且还提供了能够在运行时动态地构建查询的机制。</p>
+<p>使用Criteria API开发Java编译器能够检查其正确定的查询，从而减少运行时的错误，这种查询优于传统的基于字符串的Java Persistence Query Language(JPQL)查询。</p>
+<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p><strong>持久化单元</strong>（Persist Unit）就是关于一组Entity的命名配置。持久化单元是一个静态概念。<br><strong>持久化上下文</strong>（Persist Context）就是一个受管的Entity实例的集合。每一个持久化上下文都关联一个持久化单元，持久化上下文不可能脱离持久化单元独立存在。持久化上下文是一个动态概念。尽管持久化上下文非常重要，但是开发者不直接与之打交道，持久化上下文在程序中是透明的，我们通过<strong>EntityManager</strong>间接管理它。<br><strong>实体的生命周期</strong>：新实体（new），持久化态（managed），游离态（detached），删除状态（removed）。</p>
+<h1 id="JPQL查询缺陷"><a href="#JPQL查询缺陷" class="headerlink" title="JPQL查询缺陷"></a>JPQL查询缺陷</h1><p>JPA 1.0引进了JPQL，这是一种强大的查询语言，在很大程度上导致了JPA的流行。不过，基于字符串并使用有限语法的JPQL存在一些限制。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 例子: JPQL查询</span></div><div class="line">EntityManager entityManager = ...;</div><div class="line">String jpql = <span class="string">"select p from Person where p.age &gt; 20"</span>;</div><div class="line">Query query entityManager.createQuery(jpql);</div><div class="line">List result = query.getResultList();</div></pre></td></tr></table></figure></p>
+<p>JPA 1.0的查询执行模型:</p>
+<ol>
+<li>JPQL查询被指定为一个字符串;</li>
+<li>EntityManager是构造一个包含给定JPQL查询字符串的可执行查询实例的工厂，在一组实体类与底层数据源之间进行 O/R 映射的管理;</li>
+<li>查询执行的结果包含无类型的List的元素。</li>
+</ol>
+<p><strong>注意</strong>：该例子存在一个验证错误，代码能够通过编译，但是运行会失败，因为JPQL查询字符串的语法有误。<br>正确的JPQL语句为：<code>String jpql = &quot;select p from Person p where p.age &gt; 20&quot;;</code></p>
+<h1 id="类型安全检查"><a href="#类型安全检查" class="headerlink" title="类型安全检查"></a>类型安全检查</h1><p>Criteria API的最大优势之一就是禁止构造语法错误的查询。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 例子: 类型安全查询</span></div><div class="line">EntityManager entityManager = ...;</div><div class="line">CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();</div><div class="line">CriteriaQuery&lt;Person&gt; criteriaQuery = criteriaBuilder.createQuery(Person.class);</div><div class="line">Root&lt;Person&gt; root = criteriaQuery.from(Person.class);</div><div class="line">Predicate predicate = criteriaBuilder.gt(root.get(Person_.age), <span class="number">20</span>);</div><div class="line">criteriaQuery.where(predicate);</div><div class="line">TypedQuery&lt;Person&gt; typedQuery = entityManager.createQuery(criteriaQuery);</div><div class="line">List&lt;Person&gt; result = typerQuery.getResultList();</div></pre></td></tr></table></figure></p>
+<p>JPA 2.0的Criteria API查询执行模型:</p>
+<ol>
+<li>EntityManager创建CriteriaBuilder的一个实例，CriteriaBuilder是CriteriaQuery的工厂。</li>
+<li>CriteriaBuilder工厂构造一个CriteriaQuery实例，CriteriaQuery被赋予泛型类型。泛型类型声明CriteriaQuery在执行时返回的结果的类型。</li>
+<li>在CriteriaQuery实例上设置查询表达式，CriteriaQuery 封装了传统查询的子句：<ul>
+<li>将CriteriaQuery设置为从Person.class查询。</li>
+<li>Root<t>是一个查询表达式，表示持久化实体的范围，实际上表示“对所有类型为T的实例计算这个查询”。类似于SQL查询的FROM子句。</t></li>
+</ul>
+</li>
+<li>构造Predicate，Predicate是计算结果为true或false的常见查询表达式形式。<br>谓词由CriteriaBuilder构造，CriteriaBuilder不仅是CriteriaQuery的工厂，同时也是查询表达式的工厂。CriteriaBuilder提供了传统JPQL支持的所有查询表达式的API方法，这些方法签名能够检查查询表达式的正确性。例如: <code>Predicate predicate = criteriaBuilder.gt(root.get(Person_.age), 20);</code></li>
+<li><code>criteriaBuilder.gt(root.get(Person_.age), 20);</code>，方法<code>gt()</code>的第一个参数:<code>root.get(Person_.age)</code>是一个路径表达式Expression<t>。路径表达式时通过一个或多个持久化属性从根表达式进行导航得到的结果。Person_.age将在Metamodel API中解释。</t></li>
+<li>第6行，在 CriteriaQuery 上将谓词设置为其 WHERE 子句。</li>
+<li>第7行，EntityManager 创建一个可执行查询，其输入为 CriteriaQuery。这类似于构造一个输入为 JPQL 字符串的可执行查询。</li>
+</ol>
+<h1 id="Metamodel元模型"><a href="#Metamodel元模型" class="headerlink" title="Metamodel元模型"></a>Metamodel元模型</h1><p><code>Person_.age</code>，它表示 Person 的持久化属性 age。Person<em>.age 是 Person</em> 类中的公共静态字段，Person_ 是静态、已实例化的规范元模型类，对应于原来的 Person 实体类。</p>
+<blockquote>
+<p>元模型类描述持久化类的元数据。规范的元模型类是静态的，因此它的所有成员变量都被声明为静态的（也是 public 的）。<code>Person_.age</code>是静态成员变量之一。</p>
+</blockquote>
+<h2 id="元模型Metamodel和Java-Reflection-API比较"><a href="#元模型Metamodel和Java-Reflection-API比较" class="headerlink" title="元模型Metamodel和Java Reflection API比较"></a>元模型Metamodel和Java Reflection API比较</h2><p><code>Person_</code>元模型类是引用 Person 的元信息的一种代替方法。这种方法类似于经常使用的 Java Reflection API，但概念上有很大的不同。<br><strong>问题</strong>：可以使用反射获得关于 java.lang.Class 的实例的元信息，但是不能以++编译器能够检查的方式++引用关于 Person.class 的元信息。<br>例如，使用反射时，使用<code>Field field = Person.class.getField(&quot;age&quot;);</code>来引用Person.class中的age字段。这种方式造成编译器能够顺利编译该代码，但是不能确定是否可以正常工作。</p>
+<blockquote>
+<ul>
+<li>反射不能实现JPA 2.0的类型安全查询API要实现的功能。</li>
+<li>类型安全查询 API 必须让您的代码能够引用 Person 类中的持久化属性 age，同时让编译器能够在编译期间检查错误。</li>
+</ul>
+</blockquote>
+<p><strong>解决办法</strong>：JPA 2.0 提供的解决办法通过静态地公开相同的持久化属性实例化名为 Person_ 的元模型类（对应于 Person）。编译器可以根据元模型实施属性的类型检查。<br>JPA Metamodel API 提供接口（比如 MappedSuperclassType、EntityType 和 EmbeddableType，SingularAttribute 和 PluralAttribute）来描述元模型类的类型及其属性。</p>
+<h3 id="简单的持久化实体类"><a href="#简单的持久化实体类" class="headerlink" title="简单的持久化实体类"></a>简单的持久化实体类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 简单的持久化实体类</div><div class="line"> */</div><div class="line"><span class="meta">@Entity</span></div><div class="line"><span class="keyword">public</span>　<span class="class"><span class="keyword">class</span>　<span class="title">Person</span>　</span>&#123;</div><div class="line">　 <span class="meta">@Id</span></div><div class="line">　 <span class="keyword">private</span>　<span class="keyword">long</span>　ssn;</div><div class="line">　 <span class="keyword">private</span>　string　name;</div><div class="line">　 <span class="keyword">private</span>　<span class="keyword">int</span>　age;</div><div class="line"></div><div class="line">　 <span class="comment">//　public　gettter/setter　methods</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="简单实体的规范元模型"><a href="#简单实体的规范元模型" class="headerlink" title="简单实体的规范元模型"></a>简单实体的规范元模型</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 简单实体的规范元模型</div><div class="line"> */</div><div class="line"><span class="keyword">public</span>　<span class="class"><span class="keyword">class</span>　<span class="title">Person_</span>　</span>&#123;</div><div class="line">　 <span class="keyword">public</span>　<span class="keyword">static</span>　<span class="keyword">volatile</span>　SingularAttribute&lt;Person,Long&gt;　ssn;</div><div class="line">　 <span class="keyword">public</span>　<span class="keyword">static</span>　<span class="keyword">volatile</span>　SingularAttribute&lt;Person,String&gt;　name;</div><div class="line">　 <span class="keyword">public</span>　<span class="keyword">static</span>　<span class="keyword">volatile</span>　SingularAttribute&lt;Person,Integer&gt;　age;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="运行时作用域"><a href="#运行时作用域" class="headerlink" title="运行时作用域"></a>运行时作用域</h1><blockquote>
+<p>将一组严格的可相互引用的类称为运行时作用域</p>
+</blockquote>
+<h2 id="Class实例的作用域"><a href="#Class实例的作用域" class="headerlink" title="Class实例的作用域"></a>Class实例的作用域</h2><p>一般而言，可以将 Java Reflection API 的传统接口与专门用于描述持久化元数据的 javax.persistence.metamodel 的接口进行比较。要进一步进行类比，则需要对元模型接口使用等效的运行时作用域概念。java.lang.Class 实例的作用域由 java.lang.ClassLoader 在运行时划分。一组相互引用的 Java 类实例必须在 ClassLoader 作用域下定义。作用域的边界是严格 或封闭 的，如果在 ClassLoader L 作用域下定义的类 A 试图引用不在 ClassLoader L 作用域之内的类 B，结果将收到可怕的 ClassNotFoundException 或 NoClassDef FoundError。</p>
+<h2 id="JPA-运行时作用域"><a href="#JPA-运行时作用域" class="headerlink" title="JPA 运行时作用域"></a>JPA 运行时作用域</h2><blockquote>
+<p>运行时作用域在 JPA 1.0 中称为持久化单元。持久化单元作用域的持久化实体在 META-INF/persistence.xml 文件的 <class> 子句中枚举。</class></p>
+</blockquote>
+<p>在 JPA 2.0 中，通过 javax.persistence.metamodel.Metamodel 接口让开发人员可以在运行时使用作用域。Metamodel 接口是特定持久化单元知道的所有持久化实体的容器。</p>
+<blockquote>
+<p>这个接口允许通过元模型元素的对应持久化实体类访问元模型元素。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 例子</span></div><div class="line">EntityManager entityManager = ...;</div><div class="line">Metamodel metamodel = entityManager.getMetamodel();</div><div class="line">EntityType&lt;Person&gt; entityType = metamodel.entity(Person.class);</div></pre></td></tr></table></figure>
+<p>感谢：<a href="http://www.th7.cn/Program/java/201501/356865.shtml" target="_blank" rel="external">http://www.th7.cn/Program/java/201501/356865.shtml</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据访问/" rel="tag">#数据访问</a>
+          
+            <a href="/tags/JPA-2-0/" rel="tag">#JPA 2.0</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/06/Spring-Boot-项目启动执行CommandLineRunner/" rel="next" title="Spring Boot:项目启动执行CommandLineRunner">
+                <i class="fa fa-chevron-left"></i> Spring Boot:项目启动执行CommandLineRunner
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/09/Docker-1-初步使用/" rel="prev" title="Docker(1): 初步使用">
+                Docker(1): 初步使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">46</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">56</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/a-mu-mu-art" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本概念"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JPQL查询缺陷"><span class="nav-number">2.</span> <span class="nav-text">JPQL查询缺陷</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类型安全检查"><span class="nav-number">3.</span> <span class="nav-text">类型安全检查</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Metamodel元模型"><span class="nav-number">4.</span> <span class="nav-text">Metamodel元模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#元模型Metamodel和Java-Reflection-API比较"><span class="nav-number">4.1.</span> <span class="nav-text">元模型Metamodel和Java Reflection API比较</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简单的持久化实体类"><span class="nav-number">4.1.1.</span> <span class="nav-text">简单的持久化实体类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简单实体的规范元模型"><span class="nav-number">4.1.2.</span> <span class="nav-text">简单实体的规范元模型</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#运行时作用域"><span class="nav-number">5.</span> <span class="nav-text">运行时作用域</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Class实例的作用域"><span class="nav-number">5.1.</span> <span class="nav-text">Class实例的作用域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JPA-运行时作用域"><span class="nav-number">5.2.</span> <span class="nav-text">JPA 运行时作用域</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

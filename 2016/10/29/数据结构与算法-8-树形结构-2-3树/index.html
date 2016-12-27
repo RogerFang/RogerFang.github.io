@@ -1,0 +1,687 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数据结构,树形结构,二叉树,平衡查找树,2-3树," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="介绍
+红黑树是一种平衡二叉树，其目标是为了优化二叉搜索树，防止极端情况下时间复杂度的退化。
+
+&amp;emsp;&amp;emsp;2-节点：含有一个键(及其对应的值)和两条链接，左链接指向的2-3树中的键都小于该结点，右链接指向的2-3树中的键都大于该结点。&amp;emsp;&amp;emsp;3-节点：含有两个键(及其对应的值)和三条链接，左链接指向的2-3树中的键都小于该结点，左链接指向的2-3树中的键都小于该结点，中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法(8): 树形结构- 2-3树">
+<meta property="og:url" content="http://yoursite.com/2016/10/29/数据结构与算法-8-树形结构-2-3树/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="介绍
+红黑树是一种平衡二叉树，其目标是为了优化二叉搜索树，防止极端情况下时间复杂度的退化。
+
+&amp;emsp;&amp;emsp;2-节点：含有一个键(及其对应的值)和两条链接，左链接指向的2-3树中的键都小于该结点，右链接指向的2-3树中的键都大于该结点。&amp;emsp;&amp;emsp;3-节点：含有两个键(及其对应的值)和三条链接，左链接指向的2-3树中的键都小于该结点，左链接指向的2-3树中的键都小于该结点，中">
+<meta property="og:image" content="http://yoursite.com/images/tree/2-3-tree-definition.png">
+<meta property="og:image" content="http://yoursite.com/images/tree/2-3-tree-construct-trace.png">
+<meta property="og:image" content="http://yoursite.com/images/tree/2-3-tree-node-merge.png">
+<meta property="og:image" content="http://yoursite.com/images/tree/2-3-tree-node-split.png">
+<meta property="og:updated_time" content="2016-12-27T11:38:38.250Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据结构与算法(8): 树形结构- 2-3树">
+<meta name="twitter:description" content="介绍
+红黑树是一种平衡二叉树，其目标是为了优化二叉搜索树，防止极端情况下时间复杂度的退化。
+
+&amp;emsp;&amp;emsp;2-节点：含有一个键(及其对应的值)和两条链接，左链接指向的2-3树中的键都小于该结点，右链接指向的2-3树中的键都大于该结点。&amp;emsp;&amp;emsp;3-节点：含有两个键(及其对应的值)和三条链接，左链接指向的2-3树中的键都小于该结点，左链接指向的2-3树中的键都小于该结点，中">
+<meta name="twitter:image" content="http://yoursite.com/images/tree/2-3-tree-definition.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/10/29/数据结构与算法-8-树形结构-2-3树/"/>
+
+
+  <title> 数据结构与算法(8): 树形结构- 2-3树 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a1eb6dc312a93939356214ab5491901a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                数据结构与算法(8): 树形结构- 2-3树
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-29T13:43:33+08:00" content="2016-10-29">
+              2016-10-29
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><blockquote>
+<p>红黑树是一种平衡二叉树，其目标是为了优化二叉搜索树，防止极端情况下时间复杂度的退化。</p>
+</blockquote>
+<p>&emsp;&emsp;2-节点：含有一个键(及其对应的值)和两条链接，左链接指向的2-3树中的键都小于该结点，右链接指向的2-3树中的键都大于该结点。<br>&emsp;&emsp;3-节点：含有两个键(及其对应的值)和三条链接，左链接指向的2-3树中的键都小于该结点，左链接指向的2-3树中的键都小于该结点，中链接指向的2-3树中的键都位于该结点的两个键之间，右链接指向的2-3树中的键都待遇该结点。<br>&emsp;&emsp;为了保持树的平衡性，我们将会利用4-节点来在插入和删除过程中保持树的完美平衡。<br>&emsp;&emsp;将指向一棵空树的链接成为<strong>空链接</strong>。</p>
+<blockquote>
+<p>一棵<strong>完美平衡</strong>的2-3查找树中的所有空链接到根节点的距离应该是相同的。</p>
+</blockquote>
+<p><img src="/images/tree/2-3-tree-definition.png" alt=""></p>
+<p><strong>性质</strong>:<br>&emsp;&emsp;1. 一个节点包含一个或两个键值；<br>&emsp;&emsp;2. 每个内部节点有两个或三个子节点；<br>&emsp;&emsp;3. 所有子节点都在树结构的同一层，因此树的高度总是平衡的。</p>
+<p><strong>优势</strong>：<br>&emsp;&emsp;和标准二叉树有上向下生长不同，2-3树是由下向上生长的。在一棵大小为N的2-3树中，查找和插入操作访问的节点必然不超过$\log{N}$。<br><img src="/images/tree/2-3-tree-construct-trace.png" alt=""></p>
+<h1 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h1><p>&emsp;&emsp;2-3树之所以完美平衡，关键在于插入时的维护。涉及到2-节点、3-节点以及4-节点之间如何转换。</p>
+<h2 id="节点合并"><a href="#节点合并" class="headerlink" title="节点合并"></a>节点合并</h2><p>&emsp;&emsp;与二叉查找树一样，我们将会在2-3树中找到一个合适位置来插入它，这个位置一定在<strong>树的底部</strong>。在插入前，我们可以保证这棵2-3树是完美平衡的（空树也是如此）。在底部插入一个节点后，就会导致底部“多出”一个节点，导致2-3树不完美平衡。<br>&emsp;&emsp;解决方案就是节点结合：包括将2节点转换为3节点，3节点转换为4节点<br><img src="/images/tree/2-3-tree-node-merge.png" alt=""></p>
+<h2 id="节点分裂"><a href="#节点分裂" class="headerlink" title="节点分裂"></a>节点分裂</h2><p>&emsp;&emsp;在上面的节点合并的操作中，出现了4-节点。然而4-节点是不能出现在最后的2-3树中的。因此我们需要将4-节点“肢解”，以确保这是一棵2-3树。<br>&emsp;&emsp;通常情况下，一个4-节点可以分裂成3个2-节点：<br><img src="/images/tree/2-3-tree-node-split.png" alt=""><br>&emsp;&emsp;分裂的过程十分简单，只需要将4-叉节点从中间分开，并将中间的两个儿子分别重新接在a的右儿子和c的左儿子即可。</p>
+<h3 id="分解根节点"><a href="#分解根节点" class="headerlink" title="分解根节点"></a>分解根节点</h3><p>&emsp;&emsp;如果从插入节点到根节点的路径上全都是3-节点，所以根节点最终变成一个临时的4-节点。此时按照上述的分解后，整棵树的高度增加1，保证了2-3树的完美平衡。</p>
+<h1 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h1><p>2-3树的插入操作是有点复杂的，然而删除操作更加麻烦。</p>
+<blockquote>
+<p>2-3树在实际中很少使用，由于其需要大量的节点变换（从2-节点到3-节点到4-节点甚至到5-节点），这些变换在实际代码中是很复杂的，所以现在几乎没有2-3树的具体实现。</p>
+</blockquote>
+<hr>
+<p>感谢: <a href="https://riteme.github.io/blog/2016-3-12/2-3-tree-and-red-black-tree.html#_5" target="_blank" rel="external">https://riteme.github.io/blog/2016-3-12/2-3-tree-and-red-black-tree.html#_5</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构/" rel="tag">#数据结构</a>
+          
+            <a href="/tags/树形结构/" rel="tag">#树形结构</a>
+          
+            <a href="/tags/二叉树/" rel="tag">#二叉树</a>
+          
+            <a href="/tags/平衡查找树/" rel="tag">#平衡查找树</a>
+          
+            <a href="/tags/2-3树/" rel="tag">#2-3树</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/28/数据结构与算法-7-树形结构-伸展树/" rel="next" title="数据结构与算法(7): 树形结构-伸展树">
+                <i class="fa fa-chevron-left"></i> 数据结构与算法(7): 树形结构-伸展树
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/29/数据结构与算法-9-树形结构-红黑树/" rel="prev" title="数据结构与算法(9): 树形结构- 红黑树">
+                数据结构与算法(9): 树形结构- 红黑树 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">46</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">56</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/a-mu-mu-art" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#插入"><span class="nav-number">2.</span> <span class="nav-text">插入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#节点合并"><span class="nav-number">2.1.</span> <span class="nav-text">节点合并</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#节点分裂"><span class="nav-number">2.2.</span> <span class="nav-text">节点分裂</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分解根节点"><span class="nav-number">2.2.1.</span> <span class="nav-text">分解根节点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#删除"><span class="nav-number">3.</span> <span class="nav-text">删除</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
