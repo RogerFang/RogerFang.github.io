@@ -1,0 +1,656 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Map,HashMap,HashTable," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="相同点
+HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法解决Hash冲突。
+
+添加key-value键值对：首先，根据key值计算出哈希值，再计算出数组索引(即，该key-value在table中的索引)。然后，根据数组索引找到Entry(即，单向链表)，再遍历单向链表，将key和链表中的每一个节点的key进行对比。若key已经存在Entry链表中，则用该value值取代">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java集合框架(15): HashMap和HashTable异同">
+<meta property="og:url" content="http://yoursite.com/2016/12/30/Java集合框架-15-HashMap和HashTable异同/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="相同点
+HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法解决Hash冲突。
+
+添加key-value键值对：首先，根据key值计算出哈希值，再计算出数组索引(即，该key-value在table中的索引)。然后，根据数组索引找到Entry(即，单向链表)，再遍历单向链表，将key和链表中的每一个节点的key进行对比。若key已经存在Entry链表中，则用该value值取代">
+<meta property="og:updated_time" content="2016-12-30T10:14:34.288Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java集合框架(15): HashMap和HashTable异同">
+<meta name="twitter:description" content="相同点
+HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法解决Hash冲突。
+
+添加key-value键值对：首先，根据key值计算出哈希值，再计算出数组索引(即，该key-value在table中的索引)。然后，根据数组索引找到Entry(即，单向链表)，再遍历单向链表，将key和链表中的每一个节点的key进行对比。若key已经存在Entry链表中，则用该value值取代">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/30/Java集合框架-15-HashMap和HashTable异同/"/>
+
+
+  <title> Java集合框架(15): HashMap和HashTable异同 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a1eb6dc312a93939356214ab5491901a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java集合框架(15): HashMap和HashTable异同
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-30T17:08:25+08:00" content="2016-12-30">
+              2016-12-30
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java集合框架/" itemprop="url" rel="index">
+                    <span itemprop="name">Java集合框架</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h1><blockquote>
+<p><code>HashMap</code>和<code>HashTable</code>都是存储“键值对”的散列表，都采用拉链法解决Hash冲突。</p>
+</blockquote>
+<p><strong>添加</strong>key-value键值对：首先，根据key值计算出哈希值，再计算出数组索引(即，该key-value在table中的索引)。然后，根据数组索引找到Entry(即，单向链表)，再遍历单向链表，将key和链表中的每一个节点的key进行对比。若key已经存在Entry链表中，则用该value值取代旧的value值；若key不存在Entry链表中，则新建一个key-value节点，并将该节点插入Entry链表的表头位置。</p>
+<p><strong>删除</strong>key-value键值对：删除键值对，相比于“添加键值对”来说，简单很多。首先，还是根据key计算出哈希值，再计算出数组索引(即，该key-value在table中的索引)。然后，根据索引找出Entry(即，单向链表)。若节点key-value存在与链表Entry中，则删除链表中的节点即可。</p>
+<h1 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h1><h2 id="继承和实现方式不同"><a href="#继承和实现方式不同" class="headerlink" title="继承和实现方式不同"></a>继承和实现方式不同</h2><p><code>HashMap</code> 继承于AbstractMap，实现了Map、Cloneable、java.io.Serializable接口。<br><code>Hashtable</code> 继承于Dictionary，实现了Map、Cloneable、java.io.Serializable接口。</p>
+<h2 id="线程安全不同"><a href="#线程安全不同" class="headerlink" title="线程安全不同"></a>线程安全不同</h2><p><code>HashTable</code>是线程安全的，几乎所有函数都是同步的。<br><code>HashMap</code>不是线程安全的。可以使用<code>Collections.synchronizedMap</code>或者java.util.concurrent包里的<code>ConcurrentHashMap</code>类。</p>
+<h2 id="null处理"><a href="#null处理" class="headerlink" title="null处理"></a>null处理</h2><p><code>HashMap</code>的key、value都可以为null。<br><code>HashTable</code>的key、value都不可以为null。当HashMap的key为null时，HashMap会将其固定的插入table[0]位置(即HashMap散列表的第一个位置)；而且table[0]处只会容纳一个key为null的值。</p>
+<h2 id="遍历支持不同"><a href="#遍历支持不同" class="headerlink" title="遍历支持不同"></a>遍历支持不同</h2><p><code>HashMap</code>只支持Iterator(迭代器)遍历。<br><code>Hashtable</code>支持Iterator(迭代器)和Enumeration(枚举器)两种方式遍历。</p>
+<p><code>Enumeration</code> 是JDK 1.0添加的接口，只有hasMoreElements(), nextElement() 两个API接口，不能通过Enumeration()对元素进行修改 。<br><code>Iterator</code> 是JDK 1.2才添加的接口，支持hasNext(), next(), remove() 三个API接口。HashMap也是JDK 1.2版本才添加的，所以用Iterator取代Enumeration，HashMap只支持Iterator遍历。</p>
+<h2 id="Iterator迭代器遍历顺序不同"><a href="#Iterator迭代器遍历顺序不同" class="headerlink" title="Iterator迭代器遍历顺序不同"></a>Iterator迭代器遍历顺序不同</h2><p><code>HashMap</code>是“从前向后”的遍历数组；再对数组具体某一项对应的链表，从表头开始进行遍历。<br><code>Hashtable</code>是“从后往前”的遍历数组；再对数组具体某一项对应的链表，从表头开始进行遍历。</p>
+<h2 id="初始容量不同"><a href="#初始容量不同" class="headerlink" title="初始容量不同"></a>初始容量不同</h2><p><code>HashMap</code>默认的容量大小是16<br><code>Hashtable</code>默认的容量大小是11</p>
+<h2 id="扩容方式不同"><a href="#扩容方式不同" class="headerlink" title="扩容方式不同"></a>扩容方式不同</h2><p><code>HashMap</code>增加容量时，每次将容量变为“原始容量x2”。<br>扩容时，会将单链表拆分为高低两个链表（低链表还是保存在原索引，高链表保存在原索引+oldCap的位置）。</p>
+<p><code>HashTable</code>增加容量时，每次将容量变为“原始容量x2 + 1”。<br>扩容时，会将每个元素遍历一遍重新计算hash值得到索引位置。</p>
+<h2 id="hash算法不同"><a href="#hash算法不同" class="headerlink" title="hash算法不同"></a>hash算法不同</h2><p><code>HashMap</code> 使用自定义的哈希算法，<code>(key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16)</code>。</p>
+<p><code>HashTable</code> 则是<code>(key.hashCode() &amp; 0x7FFFFFFF)</code>。</p>
+<h2 id="部分API不同"><a href="#部分API不同" class="headerlink" title="部分API不同"></a>部分API不同</h2><p><code>HashMap</code>没有重写<code>toString()</code>方法。<br><code>HashTable</code>重写了<code>toString()</code>方法。</p>
+<hr>
+<p>感谢：<br><a href="http://wangkuiwu.github.io/2012/02/14/collection-14-mapsummary/" target="_blank" rel="external">http://wangkuiwu.github.io/2012/02/14/collection-14-mapsummary/</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Map/" rel="tag">#Map</a>
+          
+            <a href="/tags/HashMap/" rel="tag">#HashMap</a>
+          
+            <a href="/tags/HashTable/" rel="tag">#HashTable</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/30/Java集合框架-14-HashTable源码分析/" rel="next" title="Java集合框架(14): HashTable源码分析">
+                <i class="fa fa-chevron-left"></i> Java集合框架(14): HashTable源码分析
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">58</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">69</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/a-mu-mu-art" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#相同点"><span class="nav-number">1.</span> <span class="nav-text">相同点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#不同点"><span class="nav-number">2.</span> <span class="nav-text">不同点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#继承和实现方式不同"><span class="nav-number">2.1.</span> <span class="nav-text">继承和实现方式不同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程安全不同"><span class="nav-number">2.2.</span> <span class="nav-text">线程安全不同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null处理"><span class="nav-number">2.3.</span> <span class="nav-text">null处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#遍历支持不同"><span class="nav-number">2.4.</span> <span class="nav-text">遍历支持不同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Iterator迭代器遍历顺序不同"><span class="nav-number">2.5.</span> <span class="nav-text">Iterator迭代器遍历顺序不同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初始容量不同"><span class="nav-number">2.6.</span> <span class="nav-text">初始容量不同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩容方式不同"><span class="nav-number">2.7.</span> <span class="nav-text">扩容方式不同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hash算法不同"><span class="nav-number">2.8.</span> <span class="nav-text">hash算法不同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部分API不同"><span class="nav-number">2.9.</span> <span class="nav-text">部分API不同</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

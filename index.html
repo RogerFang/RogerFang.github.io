@@ -259,8 +259,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/12/29/Java集合框架-9-IdentityHashMap源码分析/" itemprop="url">
-                  Java集合框架(9): IdentityHashMap源码分析
+                <a class="post-title-link" href="/2016/12/30/Java集合框架-15-HashMap和HashTable异同/" itemprop="url">
+                  Java集合框架(15): HashMap和HashTable异同
                 </a>
               
             
@@ -273,8 +273,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-29T20:55:17+08:00" content="2016-12-29">
-              2016-12-29
+            <time itemprop="dateCreated" datetime="2016-12-30T17:08:25+08:00" content="2016-12-30">
+              2016-12-30
             </time>
           </span>
 
@@ -322,12 +322,14 @@
       
         
           
-          123public class IdentityHashMap&lt;K,V&gt;    extends AbstractMap&lt;K,V&gt;    implements Map&lt;K,V&gt;, java.io.Serializable, Cloneable
-简介IdentityH
+          相同点
+HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法解决Hash冲突。
+
+添加key-value键值对：首先，根据key值计算出哈希值，再计算出数组索引(即，该key-value在table中的索引)。然后，根据数组索引找到Entry(即，单向链表)，再遍历单向链表，将
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/29/Java集合框架-9-IdentityHashMap源码分析/#more" rel="contents">
+            <a class="btn" href="/2016/12/30/Java集合框架-15-HashMap和HashTable异同/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -378,8 +380,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/12/29/Java集合框架-8-TreeMap源码分析/" itemprop="url">
-                  Java集合框架(8): TreeMap源码分析
+                <a class="post-title-link" href="/2016/12/30/Java集合框架-14-HashTable源码分析/" itemprop="url">
+                  Java集合框架(14): HashTable源码分析
                 </a>
               
             
@@ -392,8 +394,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-29T18:03:26+08:00" content="2016-12-29">
-              2016-12-29
+            <time itemprop="dateCreated" datetime="2016-12-30T14:04:42+08:00" content="2016-12-30">
+              2016-12-30
             </time>
           </span>
 
@@ -441,12 +443,12 @@
       
         
           
-          123public class TreeMap&lt;K,V&gt;    extends AbstractMap&lt;K,V&gt;    implements NavigableMap&lt;K,V&gt;, Cloneable, java.io.Serializable
-简介TreeMap是
+          123public class Hashtable&lt;K,V&gt;    extends Dictionary&lt;K,V&gt;    implements Map&lt;K,V&gt;, Cloneable, java.io.Serializable
+简介HashTable和HashMa
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/29/Java集合框架-8-TreeMap源码分析/#more" rel="contents">
+            <a class="btn" href="/2016/12/30/Java集合框架-14-HashTable源码分析/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -497,8 +499,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/12/29/Java集合框架-7-LinkedHashMap源码分析/" itemprop="url">
-                  Java集合框架(7): LinkedHashMap源码分析
+                <a class="post-title-link" href="/2016/12/30/Java集合框架-13-fail-fast/" itemprop="url">
+                  Java集合框架(13): fail-fast
                 </a>
               
             
@@ -511,8 +513,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-29T15:31:50+08:00" content="2016-12-29">
-              2016-12-29
+            <time itemprop="dateCreated" datetime="2016-12-30T13:23:55+08:00" content="2016-12-30">
+              2016-12-30
             </time>
           </span>
 
@@ -560,12 +562,12 @@
       
         
           
-          123public class LinkedHashMap&lt;K,V&gt;    extends HashMap&lt;K,V&gt;    implements Map&lt;K,V&gt;
-简介LinkedHashMap是HashMap的子类，也是对Map接口的一种基于链表和哈希表的实现，
+          简介fail-fast机制是java集合框架中的一种错误机制。当多个线程对同一个集合的结构进行操作时，可能会产生fail-fast，出现java.util.ConcurrentModificationException。
+解决办法fail-fast机制，是一种错误检测机制，只能被用来检测错误，因为J
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/29/Java集合框架-7-LinkedHashMap源码分析/#more" rel="contents">
+            <a class="btn" href="/2016/12/30/Java集合框架-13-fail-fast/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -616,8 +618,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/12/28/Java集合框架-6-HashMap源码分析/" itemprop="url">
-                  Java集合框架(6): HashMap源码分析
+                <a class="post-title-link" href="/2016/12/30/Java集合框架-12-TreeSet源码分析/" itemprop="url">
+                  Java集合框架(12): TreeSet源码分析
                 </a>
               
             
@@ -630,8 +632,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-28T12:28:00+08:00" content="2016-12-28">
-              2016-12-28
+            <time itemprop="dateCreated" datetime="2016-12-30T12:15:37+08:00" content="2016-12-30">
+              2016-12-30
             </time>
           </span>
 
@@ -679,12 +681,12 @@
       
         
           
-          12public class HashMap&lt;K,V&gt; extends AbstractMap&lt;K,V&gt;    implements Map&lt;K,V&gt;, Cloneable, Serializable
-简介HashMap是一种基于哈希表(hash table)实现
+          12public class TreeSet&lt;E&gt; extends AbstractSet&lt;E&gt;    implements NavigableSet&lt;E&gt;, Cloneable, java.io.Serializable
+简介TreeSet是基于TreeMap实
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/28/Java集合框架-6-HashMap源码分析/#more" rel="contents">
+            <a class="btn" href="/2016/12/30/Java集合框架-12-TreeSet源码分析/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -735,8 +737,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/12/28/Java集合框架-5-Stack源码分析/" itemprop="url">
-                  Java集合框架(5): Stack源码分析
+                <a class="post-title-link" href="/2016/12/30/Java集合框架-11-LinkedHashSet源码分析/" itemprop="url">
+                  Java集合框架(11): LinkedHashSet源码分析
                 </a>
               
             
@@ -749,8 +751,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-28T10:47:10+08:00" content="2016-12-28">
-              2016-12-28
+            <time itemprop="dateCreated" datetime="2016-12-30T12:15:20+08:00" content="2016-12-30">
+              2016-12-30
             </time>
           </span>
 
@@ -798,17 +800,12 @@
       
         
           
-          1public class Stack&lt;E&gt; extends Vector&lt;E&gt;
-简介
-Stack是继承Vector，实现了栈相关的操作。
-Stack也是线程安全的。
-
-源码分析构造方法12public Stack() &#123;&#125;
-方法push入栈1234567
+          123public class LinkedHashSet&lt;E&gt;    extends HashSet&lt;E&gt;    implements Set&lt;E&gt;, Cloneable, java.io.Serializable
+简介LinkedHashSet继承自HashS
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/28/Java集合框架-5-Stack源码分析/#more" rel="contents">
+            <a class="btn" href="/2016/12/30/Java集合框架-11-LinkedHashSet源码分析/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -842,7 +839,7 @@ Stack也是线程安全的。
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -883,7 +880,7 @@ Stack也是线程安全的。
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">52</span>
+              <span class="site-state-item-count">58</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -900,7 +897,7 @@ Stack也是线程安全的。
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">63</span>
+                <span class="site-state-item-count">69</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
