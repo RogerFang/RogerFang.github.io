@@ -98,7 +98,7 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
 JVM的类加载机制允许从多种源动态地加载Java类，但是动态类加载有一个重要的缺点，即我们在使用动态加载的类对象时，往往对这个类知之甚少，甚至于一无所知。这种情况下就需要使用一种动态编程技术——反射。
 
 优点：可以在运行时加载类，并获取类的内部结构，还可以创建新的对象和调用对象中的方法等">
-<meta property="og:updated_time" content="2016-12-31T06:24:47.786Z">
+<meta property="og:updated_time" content="2016-12-31T14:06:30.685Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 反射">
 <meta name="twitter:description" content="简介反射能够让运行在JVM中的程序检测和修改运行时的行为，使用反射API可以在运行时获取对象的内部结构信息。
@@ -339,6 +339,9 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
 <h1 id="获取Class对象"><a href="#获取Class对象" class="headerlink" title="获取Class对象"></a>获取Class对象</h1><h2 id="getClass-方式"><a href="#getClass-方式" class="headerlink" title="getClass()方式"></a><code>getClass()</code>方式</h2><p>通过一个类的实例来得到Class对象<br><code>Class&lt;?&gt; cls = obj.getClass();</code></p>
 <h2 id="class方式"><a href="#class方式" class="headerlink" title=".class方式"></a><code>.class</code>方式</h2><p>如果在编译期知道类名，可以使用以下方式得到Class对象：<br><code>Class&lt;?&gt; cls = String.class;</code>或者<code>Class&lt;?&gt; cls = Integer.TYPE;</code></p>
 <h2 id="Class-forName-方式"><a href="#Class-forName-方式" class="headerlink" title="Class.forName()方式"></a><code>Class.forName()</code>方式</h2><p>如果在编译期不知道类名，但是在运行期可以获得，可以使用以下方式得到Class对象：<br><code>Class&lt;?&gt; cls = Class.forName(&quot;类的全限定名&quot;);</code></p>
+<blockquote>
+<p>Class.forName()是调用当前所在类的类加载器来加载的。</p>
+</blockquote>
 <p>这种方式其实是利用反射API把指定字符串的类加载到内存中，所以也叫类加载器加载方法。<br>这样的话，它会把该类的静态方法、静态属性和静态代码全部加载到内存中。但这时候，对象还没有产生。所以为什么静态方法不能访问非静态属性和方法。因为静态方法和属性产生的时机在非静态属性和方法之前。</p>
 <p>当接着运行<code>cls.newInstance();</code>时，会进行类的实例化操作（执行非静态的属性初始化和非静态代码块，然后调用构造方法完成实例化）。</p>
 <h1 id="反射API"><a href="#反射API" class="headerlink" title="反射API"></a>反射API</h1><p>Java 反射API的主要作用体现在两个方面：在运行时刻获取类的内部结构和操作一个Java对象。</p>
@@ -431,6 +434,10 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2016/12/31/Java-动态代理与反射/" rel="prev" title="Java 动态代理与反射">
+                Java 动态代理与反射 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -497,7 +504,7 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">61</span>
+              <span class="site-state-item-count">63</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -514,7 +521,7 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">72</span>
+                <span class="site-state-item-count">74</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
