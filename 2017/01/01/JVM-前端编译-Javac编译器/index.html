@@ -1,0 +1,782 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="编译,前端编译,javac," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="Java语言中的“编译期”是一段“不确定”的操作过程。可能指的是以下三种：
+
+前端编译器
+
+把.java文件转变成.class文件的过程。
+
+  例如：Sun的javac、Eclipse JDT中的增量式编译器（ECJ）
+
+后端编译器
+
+把字节码转变成机器码的过程。
+
+  例如：JIT编译器（分为client和server端）
+
+AOT编译器
+
+直接把*.java文件编译成本地机器码的过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM: 前端编译(Javac编译器)">
+<meta property="og:url" content="http://yoursite.com/2017/01/01/JVM-前端编译-Javac编译器/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="Java语言中的“编译期”是一段“不确定”的操作过程。可能指的是以下三种：
+
+前端编译器
+
+把.java文件转变成.class文件的过程。
+
+  例如：Sun的javac、Eclipse JDT中的增量式编译器（ECJ）
+
+后端编译器
+
+把字节码转变成机器码的过程。
+
+  例如：JIT编译器（分为client和server端）
+
+AOT编译器
+
+直接把*.java文件编译成本地机器码的过程。">
+<meta property="og:image" content="http://yoursite.com/images/jvm/java-compile-process.png">
+<meta property="og:image" content="http://yoursite.com/images/jvm/javac-compiler-process.png">
+<meta property="og:updated_time" content="2017-01-01T15:44:45.983Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM: 前端编译(Javac编译器)">
+<meta name="twitter:description" content="Java语言中的“编译期”是一段“不确定”的操作过程。可能指的是以下三种：
+
+前端编译器
+
+把.java文件转变成.class文件的过程。
+
+  例如：Sun的javac、Eclipse JDT中的增量式编译器（ECJ）
+
+后端编译器
+
+把字节码转变成机器码的过程。
+
+  例如：JIT编译器（分为client和server端）
+
+AOT编译器
+
+直接把*.java文件编译成本地机器码的过程。">
+<meta name="twitter:image" content="http://yoursite.com/images/jvm/java-compile-process.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/01/JVM-前端编译-Javac编译器/"/>
+
+
+  <title> JVM: 前端编译(Javac编译器) | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a1eb6dc312a93939356214ab5491901a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                JVM: 前端编译(Javac编译器)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-01T15:02:16+08:00" content="2017-01-01">
+              2017-01-01
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Java语言中的“编译期”是一段“不确定”的操作过程。可能指的是以下三种：</p>
+<ul>
+<li><p><strong>前端编译器</strong></p>
+<blockquote>
+<p>把<em>.java文件转变成</em>.class文件的过程。</p>
+</blockquote>
+<p>  例如：Sun的javac、Eclipse JDT中的增量式编译器（ECJ）</p>
+</li>
+<li><p><strong>后端编译器</strong></p>
+<blockquote>
+<p>把字节码转变成机器码的过程。</p>
+</blockquote>
+<p>  例如：JIT编译器（分为client和server端）</p>
+</li>
+<li><p><strong>AOT编译器</strong></p>
+<blockquote>
+<p>直接把*.java文件编译成本地机器码的过程。</p>
+</blockquote>
+<p>  例如：GNU Compiler for the Java(GCJ)、Excelsior JET</p>
+</li>
+</ul>
+<h1 id="编译器优化简介"><a href="#编译器优化简介" class="headerlink" title="编译器优化简介"></a>编译器优化简介</h1><blockquote>
+<p>前端编译器（Javac）在编译期的优化过程对于<strong>程序编码</strong>来说关系更密切。<br>后端编译器（JIT）在运行期的优化过程对于<strong>程序运行</strong>来说更重要。</p>
+</blockquote>
+<p>虚拟机设计团队把对性能的优化集中到了后端编译器（JIT编译器）中，这样可以让那些不是由javac产生的Class文件（如JRuby、Groovy等语言的Class文件）也同样能享受到编译器优化所带来的好处。</p>
+<p>但是Javac编译器做了许多针对Java语言编码过程的优化措施来改善程序员的编码风格和提高编码效率，Java的许多语法特性都是靠编译器的“语法糖”来实现的。</p>
+<h1 id="Javac编译器"><a href="#Javac编译器" class="headerlink" title="Javac编译器"></a>Javac编译器</h1><p>Sun提供的Javac编译器的编译过程大致分为3个过程：</p>
+<ol>
+<li>解析与填充符号表过程。</li>
+<li>插入式注解处理器的注解处理过程。</li>
+<li>分析与字节码生成过程。</li>
+</ol>
+<p><img src="/images/jvm/java-compile-process.png" alt=""></p>
+<h2 id="解析与填充符号表"><a href="#解析与填充符号表" class="headerlink" title="解析与填充符号表"></a>解析与填充符号表</h2><h3 id="词法分析"><a href="#词法分析" class="headerlink" title="词法分析"></a>词法分析</h3><blockquote>
+<p>词法分析是将源代码的字符流转变为<strong>标记（Token）</strong>的集合。</p>
+</blockquote>
+<p>单个字符是程序编写过程的最小元素；而标记（Token）则是编译过程的最小元素，关键字、变量名、运算符、字面量都可以称为标记。</p>
+<h3 id="语法分析"><a href="#语法分析" class="headerlink" title="语法分析"></a>语法分析</h3><blockquote>
+<p>语法分析是根据Token序列构造抽象语法树的过程。</p>
+</blockquote>
+<p><strong>抽象语法树</strong>（Abstract Syntax Tree）：是一种用来描述程序代码语法结构的树形表示方式。语法树中的每一个节点都代表着程序源代码中的一个语法结构（Construct），例如包、类型、修饰符、运算符、接口、返回值甚至代码注释都可以是一个语法结构。</p>
+<blockquote>
+<p>经过语法分析后，编译器就不会再对源码文件进行操作了，之后的操作都是建立在抽象语法树之上。</p>
+</blockquote>
+<h3 id="填充符号表"><a href="#填充符号表" class="headerlink" title="填充符号表"></a>填充符号表</h3><p><strong>符号表</strong>（Symbol Table）：是由一组符号地址和符号信息构成的表格。<br>符号表中保存的信息在编译的不同阶段都要用到。在语义分析（后面的步骤）中，符号表所登记的内容将用于语义检查和产生中间代码，在目标代码生成阶段，当对符号名进行地址分配时，符号表是地址分配的依据。</p>
+<blockquote>
+<p>在这个阶段，如果类的代码中没有提供任何构造函数，编译器会添加一个没有参数的、访问性与当前类一致的默认构造函数。</p>
+</blockquote>
+<h2 id="注解处理器"><a href="#注解处理器" class="headerlink" title="注解处理器"></a>注解处理器</h2><p>在JDK 1.5之后，Java提供了对注解（Annotation）的支持，这些注解与普通的Java代码一样，是在运行期间发挥作用的。</p>
+<blockquote>
+<p>在JDK 1.6中提供了一组插入式注解处理器的标准API在编译期间对注解进行处理，可以把它看作是一组编译器的插件，可以读取、修改、添加抽象语法树中的任意元素。</p>
+</blockquote>
+<p>注解处理器可以在处理注解期间对语法树进行修改，编译器将回到解析及填充符号表的过程进行重新处理，直到所有插入式注解处理器都没有再对语法树进行修改位置，每次循环称为一个<strong>Round</strong>。</p>
+<p><img src="/images/jvm/javac-compiler-process.png" alt=""></p>
+<h2 id="语义分析与字节码生成"><a href="#语义分析与字节码生成" class="headerlink" title="语义分析与字节码生成"></a>语义分析与字节码生成</h2><h3 id="语义分析"><a href="#语义分析" class="headerlink" title="语义分析"></a>语义分析</h3><p>语法分析得到了程序代码的抽象语法树表示，但无法保证源程序是符合逻辑的。</p>
+<blockquote>
+<p>语义分析：主要任务是对结构上正确的源程序进行上下文有关性质的审查。</p>
+</blockquote>
+<p>是否合乎语义逻辑必须限定在<strong>具体的语言</strong>与<strong>具体的上下文</strong>环境中才有意义。</p>
+<p>例如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> a = <span class="number">1</span>;</div><div class="line"><span class="keyword">boolean</span> b = <span class="keyword">false</span>;</div><div class="line"><span class="keyword">char</span> c = <span class="number">2</span>;</div></pre></td></tr></table></figure></p>
+<p>后续赋值运算：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> d = a + c; <span class="comment">// ok</span></div><div class="line"><span class="keyword">int</span> d = b + c; <span class="comment">// compile error</span></div><div class="line"><span class="keyword">char</span> d = a + c; <span class="comment">// compile error</span></div></pre></td></tr></table></figure></p>
+<p>上述后续赋值如果在C语言中，都是可以正确编译的。</p>
+<blockquote>
+<p>Javac的编译过程中，语义分析又分为<strong>标注检查</strong>与<strong>数据及控制流分析</strong>。</p>
+</blockquote>
+<h4 id="标注检查"><a href="#标注检查" class="headerlink" title="标注检查"></a>标注检查</h4><p>标注检查，检查的内容包括诸如变量使用前是否已声明、变量与赋值之间的数据类型是否能够匹配等。</p>
+<blockquote>
+<p>在标注检查步骤中，还有一个重要的动作称为<strong>常量折叠</strong>。</p>
+</blockquote>
+<p>例如：在代码中定义了<code>int a = 1 + 2;</code>，在语法树上仍然能看到字面量<code>1</code>和<code>2</code>以及操作符<code>+</code>，但是经过<strong>常量折叠</strong>之后，她们将会被折叠为字面量<code>3</code>。</p>
+<blockquote>
+<p>由于在编译期间进行了常量折叠，所以代码里面的<code>int a = 1 + 2</code>比起直接定义<code>int a = 3;</code>，并不会增加程序运行期间的CPU指令运算量。</p>
+</blockquote>
+<h4 id="数据及控制流分析"><a href="#数据及控制流分析" class="headerlink" title="数据及控制流分析"></a>数据及控制流分析</h4><p>数据及控制流分析：是对程序上下文逻辑更进一步的验证。它可以检查出诸如程序局部变量在使用前是否有赋值、方法的每条路径是否都有返回值、是否所有的受查异常都被正确处理了等问题。</p>
+<blockquote>
+<p><strong>编译期</strong>的数据及控制流分析与<strong>运行期</strong>类加载时的数据及控制流分析的目的基本上是一致的，但是校验范围有所区别。</p>
+</blockquote>
+<p>例如：final语义校验<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method1</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">final</span> <span class="keyword">int</span> var = <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> var = <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>方法一与方法二在经过编译后得到的Class文件没有任何区别，局部变量与字段（实例变量、类变量）是有区别的，它在常量池中没有符号引用，自然就没有访问标志（Access_Flags）的信息，在Class文件中不可能知道一个局部变量是不是声明为final了。</p>
+<blockquote>
+<p>因此，将局部变量声明为final，对运行期是没有影响的，变量的不变形仅仅由编译器在编译期间保障。</p>
+</blockquote>
+<h3 id="解语法糖"><a href="#解语法糖" class="headerlink" title="解语法糖"></a>解语法糖</h3><blockquote>
+<p>语法糖（Syntactic Sugar）：是计算机语言中的某种语法，这种语法对语言功能没有任何影响，但是可以增加程序的可读性，方便程序员的使用。例如：泛型、变长参数、自动拆箱/装箱等。</p>
+</blockquote>
+<p><strong>解语法糖</strong>：虚拟机运行时不支持这些语法糖，在编译期间会将它们还原为简单的基础语法结构。</p>
+<h3 id="字节码生成"><a href="#字节码生成" class="headerlink" title="字节码生成"></a>字节码生成</h3><p>字节码生成阶会把前面各个步骤生成的信息（语法树、符号表）转换成字节码写到磁盘中，同时编译器还会进行少量的代码添加和转换工作（比如会添加实例构造器和类构造器，以及将字符串的加操作替换为<code>StringBuffer</code>或<code>StringBuilder</code>(JDK版本&gt;=1.5)的<code>append()</code>操作等）。</p>
+<h4 id="实例构造器-lt-init-gt-和类构造器-lt-clinit-gt"><a href="#实例构造器-lt-init-gt-和类构造器-lt-clinit-gt" class="headerlink" title="实例构造器&lt;init&gt;()和类构造器&lt;clinit&gt;()"></a>实例构造器<code>&lt;init&gt;</code>()和类构造器<code>&lt;clinit&gt;()</code></h4><p>实例构造器<code>&lt;init&gt;()</code>和类构造器<code>&lt;clinit&gt;()</code>就是在字节码生成这个阶段被添加到语法树中的。（实例构造器和类构造器调用分别属于<strong>对象初始化</strong>和<strong>类初始化</strong>的两个过程，后面博客会继续介绍）</p>
+<blockquote>
+<p>注意：这里的实例构造器并不是指构造函数，更不是默认的构造的构造函数，<strong><em>默认的构造函数添加是在填充符号表阶段</em></strong>。</p>
+</blockquote>
+<p>这两个构造器的产生过程实际上是一个<strong>代码收敛</strong>的过程，编译器会把<strong>语句块</strong>、<strong>变量初始化</strong>、<strong>调用父类的实例构造器</strong>等操作收敛到<code>&lt;init&gt;()</code>和<code>&lt;clinit&gt;()</code>方法之中。</p>
+<blockquote>
+<p>并且会保证执行顺序：先执行父类的实例构造器<code>init&lt;&gt;</code>，然后初始化变量和执行语句块。</p>
+</blockquote>
+<p>对于<code>&lt;init&gt;()</code>而言是非静态语句块<code>{}</code>块和实例变量，对于<code>&lt;clinit&gt;()</code>而言是静态语句块<code>static{}</code>块和类变量。<br><code>&lt;clinit&gt;()</code>无需调用父类的<code>clinit()</code>方法，虚拟机会保证父类构造器的执行（类加载）。</p>
+<blockquote>
+<p>相关博客：<br><a href="https://rogerfang.github.io/2016/12/30/Java-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/" target="_blank" rel="external">https://rogerfang.github.io/2016/12/30/Java-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编译/" rel="tag">#编译</a>
+          
+            <a href="/tags/前端编译/" rel="tag">#前端编译</a>
+          
+            <a href="/tags/javac/" rel="tag">#javac</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/01/JVM-C和Java编译执行的过程比较/" rel="next" title="JVM: C和Java编译执行的过程比较">
+                <i class="fa fa-chevron-left"></i> JVM: C和Java编译执行的过程比较
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/01/JVM-后端编译-JIT编译器/" rel="prev" title="JVM: 后端编译(JIT编译器)">
+                JVM: 后端编译(JIT编译器) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">67</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">81</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/a-mu-mu-art" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#编译器优化简介"><span class="nav-number">1.</span> <span class="nav-text">编译器优化简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Javac编译器"><span class="nav-number">2.</span> <span class="nav-text">Javac编译器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#解析与填充符号表"><span class="nav-number">2.1.</span> <span class="nav-text">解析与填充符号表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#词法分析"><span class="nav-number">2.1.1.</span> <span class="nav-text">词法分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#语法分析"><span class="nav-number">2.1.2.</span> <span class="nav-text">语法分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#填充符号表"><span class="nav-number">2.1.3.</span> <span class="nav-text">填充符号表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注解处理器"><span class="nav-number">2.2.</span> <span class="nav-text">注解处理器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#语义分析与字节码生成"><span class="nav-number">2.3.</span> <span class="nav-text">语义分析与字节码生成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#语义分析"><span class="nav-number">2.3.1.</span> <span class="nav-text">语义分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#标注检查"><span class="nav-number">2.3.1.1.</span> <span class="nav-text">标注检查</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据及控制流分析"><span class="nav-number">2.3.1.2.</span> <span class="nav-text">数据及控制流分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解语法糖"><span class="nav-number">2.3.2.</span> <span class="nav-text">解语法糖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字节码生成"><span class="nav-number">2.3.3.</span> <span class="nav-text">字节码生成</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例构造器-lt-init-gt-和类构造器-lt-clinit-gt"><span class="nav-number">2.3.3.1.</span> <span class="nav-text">实例构造器<init>()和类构造器<clinit>()</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

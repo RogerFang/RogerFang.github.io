@@ -1,0 +1,691 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="编译,执行," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="编译不论是物理机还是虚拟机，大部分的程序代码从开始编译到最终转化成物理机的目标代码或虚拟机能执行的指令集之前，都会按照如下图所示的各个步骤进行：
+
+其中绿色的模块可以选择性实现。分为解释执行和编译执行。
+
+上图中间的那条分支是解释执行的过程（即一条字节码一条字节码地解释执行，如 JavaScript）。
+而下面的那条分支就是传统编译原理中从源代码到目标机器代码的生成过程。
+
+如今，基于物理机、虚拟">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM: C和Java编译执行的过程比较">
+<meta property="og:url" content="http://yoursite.com/2017/01/01/JVM-C和Java编译执行的过程比较/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="编译不论是物理机还是虚拟机，大部分的程序代码从开始编译到最终转化成物理机的目标代码或虚拟机能执行的指令集之前，都会按照如下图所示的各个步骤进行：
+
+其中绿色的模块可以选择性实现。分为解释执行和编译执行。
+
+上图中间的那条分支是解释执行的过程（即一条字节码一条字节码地解释执行，如 JavaScript）。
+而下面的那条分支就是传统编译原理中从源代码到目标机器代码的生成过程。
+
+如今，基于物理机、虚拟">
+<meta property="og:image" content="http://yoursite.com/images/jvm/compile-process.png">
+<meta property="og:image" content="http://yoursite.com/images/jvm/java-compile-execution-process.png">
+<meta property="og:updated_time" content="2017-01-01T07:14:26.179Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM: C和Java编译执行的过程比较">
+<meta name="twitter:description" content="编译不论是物理机还是虚拟机，大部分的程序代码从开始编译到最终转化成物理机的目标代码或虚拟机能执行的指令集之前，都会按照如下图所示的各个步骤进行：
+
+其中绿色的模块可以选择性实现。分为解释执行和编译执行。
+
+上图中间的那条分支是解释执行的过程（即一条字节码一条字节码地解释执行，如 JavaScript）。
+而下面的那条分支就是传统编译原理中从源代码到目标机器代码的生成过程。
+
+如今，基于物理机、虚拟">
+<meta name="twitter:image" content="http://yoursite.com/images/jvm/compile-process.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/01/JVM-C和Java编译执行的过程比较/"/>
+
+
+  <title> JVM: C和Java编译执行的过程比较 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a1eb6dc312a93939356214ab5491901a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                JVM: C和Java编译执行的过程比较
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-01T11:05:40+08:00" content="2017-01-01">
+              2017-01-01
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h1><p>不论是物理机还是虚拟机，大部分的程序代码从开始编译到最终转化成物理机的目标代码或虚拟机能执行的指令集之前，都会按照如下图所示的各个步骤进行：</p>
+<p><img src="/images/jvm/compile-process.png" alt=""></p>
+<p>其中绿色的模块可以选择性实现。分为<strong>解释执行</strong>和<strong>编译执行</strong>。</p>
+<ol>
+<li>上图中间的那条分支是解释执行的过程（即一条字节码一条字节码地解释执行，如 JavaScript）。</li>
+<li>而下面的那条分支就是传统编译原理中从源代码到目标机器代码的生成过程。</li>
+</ol>
+<p>如今，基于物理机、虚拟机等的语言，大多都遵循这种基于现代经典编译原理的思路，在执行前先对程序源码进行词法解析和语法解析处理，把源码转化为抽象语法树。对于一门具体语言的实现来说，词法和语法分析乃至后面的优化器和目标代码生成器都可以选择独立于执行引擎，形成一个<strong>完整意义的编译器</strong>去实现，这类代表是 <code>C/C++</code>语言。<br>也可以把抽象语法树或指令流之前的步骤实现一个<strong>半独立的编译器</strong>，这类代表是<code>Java</code>语言。<br>又或者可以把这些步骤和执行引擎全部集中在一起实现，如大多数的 <code>JavaScript</code>执行器。</p>
+<blockquote>
+<p>javac 字节码编译器与虚拟机内的 JIT 编译器的执行过程合起来其实就等同于一个传统的编译器所执行的编译过程。</p>
+</blockquote>
+<h1 id="C"><a href="#C" class="headerlink" title="C"></a>C</h1><h2 id="编译和连接过程"><a href="#编译和连接过程" class="headerlink" title="编译和连接过程"></a>编译和连接过程</h2><p>整个过程会有这样4个步骤：</p>
+<ol>
+<li><strong>预处理</strong>(Preprocessing)：静态替换，处理预编译指令。</li>
+<li><strong>编译</strong>(Compilation)：预处理完的文件进行一系列的词法分析，语法分析，语义分析及优化后生成相应的汇编代码。</li>
+<li><strong>汇编</strong>(Assembly)：汇编代码转变成机器可以执行的命令，每一个汇编语句几乎都对应一条机器指令。</li>
+<li><strong>连接</strong>(Linking)：通过调用链接器ld来链接程序运行需要的一大堆目标文件，以及所依赖的其它库文件，最后生成可执行文件。</li>
+</ol>
+<blockquote>
+<p>最终得到的是一个.exe(windows)或.out(linux)文件。</p>
+</blockquote>
+<h2 id="执行过程"><a href="#执行过程" class="headerlink" title="执行过程"></a>执行过程</h2><p>在运行的时候，是将整个输出文件（a.exe）读到内存里运行的。</p>
+<p>可见，经过编译和汇编步骤，会生成直接给CPU执行的机器指令。机器码就是0101的二进制代码。所以，执行C语言的时候，实际上是运行最底层的语言，这样的代码高效，却和芯片，操作系统紧密耦合在一起了。</p>
+<h1 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h1><p>Java的平台无关性的基础：</p>
+<ol>
+<li><strong>字节码存储格式</strong>。Java编译器会将.java文件编译为.class文件，.class文件就是能被JVM执行的代码，它包含Java虚拟机的指令集，符号表和其他辅助信息。</li>
+<li><strong>Java虚拟机（JVM）</strong>。顾名思义它是加在应用层的一层抽象。从上层看，它就是CPU：加载并运行字节码代码，屏蔽了操作系统和硬件细节，对下，它将字节码翻译为CPU能执行的机器指令。</li>
+</ol>
+<p>Java编译和执行整个过程：<br><img src="/images/jvm/java-compile-execution-process.png" alt=""></p>
+<h2 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h2><p>Java的编译过程就是将.java文件编译成.class文件。</p>
+<h2 id="执行过程-1"><a href="#执行过程-1" class="headerlink" title="执行过程"></a>执行过程</h2><p>当JVM运行时，再按需加载这些.class到内存中。</p>
+<blockquote>
+<p>Java和C在编译过程中的一个差异是：在Java语言里面，类型的加载，连接，和初始化是在运行期间完成的。</p>
+</blockquote>
+<p>JVM 是基于栈的体系结构来执行 class 字节码的。线程创建后，都会产生程序计数器（PC）和栈（Stack），程序计数器存放下一条要执行的指令在方法内的偏移量，栈中存放一个个栈帧，每个栈帧对应着每个方法的每次调用，而栈帧又是有局部变量区和操作数栈两部分组成，局部变量区用于存放方法中的局部变量和参数，操作数栈中用于存放方法执行过程中产生的中间结果。</p>
+<hr>
+<p>感谢：<br><a href="http://afghl.github.io/2016/10/23/java-jvm-classloader-1.html" target="_blank" rel="external">http://afghl.github.io/2016/10/23/java-jvm-classloader-1.html</a><br><a href="http://wiki.jikexueyuan.com/project/java-vm/javac-jit.html" target="_blank" rel="external">http://wiki.jikexueyuan.com/project/java-vm/javac-jit.html</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编译/" rel="tag">#编译</a>
+          
+            <a href="/tags/执行/" rel="tag">#执行</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/31/Java-几种引用/" rel="next" title="Java 几种引用">
+                <i class="fa fa-chevron-left"></i> Java 几种引用
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/01/JVM-前端编译-Javac编译器/" rel="prev" title="JVM: 前端编译(Javac编译器)">
+                JVM: 前端编译(Javac编译器) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">67</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">81</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/a-mu-mu-art" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#编译"><span class="nav-number">1.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C"><span class="nav-number">2.</span> <span class="nav-text">C</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编译和连接过程"><span class="nav-number">2.1.</span> <span class="nav-text">编译和连接过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行过程"><span class="nav-number">2.2.</span> <span class="nav-text">执行过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java"><span class="nav-number">3.</span> <span class="nav-text">Java</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编译过程"><span class="nav-number">3.1.</span> <span class="nav-text">编译过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行过程-1"><span class="nav-number">3.2.</span> <span class="nav-text">执行过程</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
