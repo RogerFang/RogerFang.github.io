@@ -98,8 +98,10 @@ HotSpot虚拟机中内置了两个JIT编译器，分别为Client Compiler(C1编�
 可以使用解释器执行节约内存，反之使用JIT编译器来提升效率。
 
 HotSpot虚拟机中内置了两个JIT编译器，分别为Client Compiler(C1编译器)和Server">
-<meta property="og:image" content="http://yoursite.com/../images/jvm/java-execution-process.png">
-<meta property="og:updated_time" content="2017-01-01T16:28:21.108Z">
+<meta property="og:image" content="http://yoursite.com/images/jvm/java-execution-process.png">
+<meta property="og:image" content="http://yoursite.com/images/jvm/jit-invocation-counter-compile.png">
+<meta property="og:image" content="http://yoursite.com/images/jvm/jit-backedge-counter-compile.png">
+<meta property="og:updated_time" content="2017-01-02T14:10:47.252Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM: 后端编译(JIT编译器)">
 <meta name="twitter:description" content="解释器与JIT编译器当程序需要迅速启动和执行的时候，JIT解释器可以首先发挥作用，省去编译的时间，立即执行。在程序执行后，随着时间的推移，JIT编译器逐渐发挥作用，把越来越多的代码编译成本地机器码，可以获得更高的执行效率。
@@ -107,7 +109,7 @@ HotSpot虚拟机中内置了两个JIT编译器，分别为Client Compiler(C1编�
 可以使用解释器执行节约内存，反之使用JIT编译器来提升效率。
 
 HotSpot虚拟机中内置了两个JIT编译器，分别为Client Compiler(C1编译器)和Server">
-<meta name="twitter:image" content="http://yoursite.com/../images/jvm/java-execution-process.png">
+<meta name="twitter:image" content="http://yoursite.com/images/jvm/java-execution-process.png">
 
 
 
@@ -335,7 +337,7 @@ HotSpot虚拟机中内置了两个JIT编译器，分别为Client Compiler(C1编�
 <p>可以使用解释器执行节约内存，反之使用JIT编译器来提升效率。</p>
 </blockquote>
 <p>HotSpot虚拟机中内置了两个JIT编译器，分别为Client Compiler(C1编译器)和Server Compiler(C2编译器)。HotSpot采用混合模式，解释器与其中一个JIT编译器搭配使用。</p>
-<p><img src="../images/jvm/java-execution-process.png" alt=""></p>
+<p><img src="/images/jvm/java-execution-process.png" alt=""></p>
 <h1 id="热点代码（Hot-Spot-Code）"><a href="#热点代码（Hot-Spot-Code）" class="headerlink" title="热点代码（Hot Spot Code）"></a>热点代码（Hot Spot Code）</h1><p>Java 程序最初是仅仅通过解释器解释执行的，即对字节码逐条解释执行，这种方式的执行速度相对会比较慢，尤其当某个方法或代码块运行的特别频繁时，这种方式的执行效率就显得很低。于是后来在虚拟机中引入了 JIT 编译器（即时编译器），当虚拟机发现某个方法或代码块运行特别频繁时，就会把这些代码认定为“Hot Spot Code”（<strong>热点代码</strong>），为了提高热点代码的执行效率，在运行时，虚拟机将会把这些代码编译成与本地平台相关的机器码，并进行各层次的优化，完成这项任务的正是 <strong>JIT 编译器</strong>。</p>
 <h1 id="编译对象"><a href="#编译对象" class="headerlink" title="编译对象"></a>编译对象</h1><p>运行过程中会被即时编译器编译的“热点代码”有两类：</p>
 <ol>
@@ -345,6 +347,7 @@ HotSpot虚拟机中内置了两个JIT编译器，分别为Client Compiler(C1编�
 <blockquote>
 <p>两种情况，编译器都是以<strong>整个方法</strong>作为编译对象，这种编译也是虚拟机中标准的编译方式。要知道一段代码或方法是不是热点代码，是不是需要触发即时编译，需要进行Hot Spot Detection（<strong>热点探测</strong>）。</p>
 </blockquote>
+<p>对于后一种情况，由于编译对象仍然是整个方法（而不是单独的循环体），代码可能正在解释执行的过程中直接切换到本地代码执行，所以也称为“<strong>栈上替换</strong>”(OnStackReplacement)，简称<strong>OSR编译</strong>，即方法栈帧还在栈上，方法就被替换了。</p>
 <h1 id="热点探测"><a href="#热点探测" class="headerlink" title="热点探测"></a>热点探测</h1><p>目前主要的热点探测方式有两种：基于采样和基于计数器的热点探测方法。</p>
 <h2 id="基于采样的热点探测"><a href="#基于采样的热点探测" class="headerlink" title="基于采样的热点探测"></a>基于采样的热点探测</h2><p>采用这种方法的虚拟机会周期性地检查各个线程的栈顶，如果发现某些方法经常出现在栈顶，那这段方法代码就是“热点代码”。</p>
 <p><strong>优点</strong>：实现简单高效，还可以很容易地获取方法调用关系。<br><strong>缺点</strong>：很难精确地确认一个方法的热度，容易因为受到线程阻塞或别的外界因素的影响而扰乱热点探测。</p>
@@ -353,12 +356,45 @@ HotSpot虚拟机中内置了两个JIT编译器，分别为Client Compiler(C1编�
 <blockquote>
 <p>在 HotSpot 虚拟机中使用的是<strong>基于计数器的热点探测方法</strong>，因此它为每个方法准备了两个计数器：方法调用计数器和回边计数器。</p>
 </blockquote>
-<p><strong>方法调用计数器</strong>：用来统计方法调用的次数，在默认设置下，方法调用计数器统计的并不是方法被调用的绝对次数，而是一个相对的执行频率，即一<em>段时间内方法被调用的次数</em>。</p>
-<p><strong>回边计数器</strong>：用于统计一个方法中循环体代码执行的次数（准确地说，应该是回边的次数，因为并非所有的循环都是回边），在字节码中遇到控制流向后跳转的指令就称为“<strong>回边</strong>”。</p>
-<p>在确定虚拟机运行参数的前提下，这两个计数器都有一个确定的<strong>阀值</strong>，当计数器的值超过了阀值，就会触发JIT编译。</p>
+<h3 id="方法调用计数器（Invocation-Counter）"><a href="#方法调用计数器（Invocation-Counter）" class="headerlink" title="方法调用计数器（Invocation Counter）"></a>方法调用计数器（Invocation Counter）</h3><p>方法调用计数器用来统计方法调用的次数，在默认设置下，方法调用计数器统计的并不是方法被调用的绝对次数，而是一个相对的执行频率，即<em>一段时间内方法被调用的次数</em>。</p>
+<blockquote>
+<p>当超过一定的时间限度，如果方法调用次数仍不足以触发即时编译，则方法调用器值会被减少一半，这个过程称为方法调用计数器热度的衰减，这段时间称为方法调用计数器的半衰期。</p>
+</blockquote>
+<p><strong>方法调用计数器触发即时编译</strong><br><img src="/images/jvm/jit-invocation-counter-compile.png" alt=""></p>
+<h3 id="回边计数器（Back-Edge-Counter）"><a href="#回边计数器（Back-Edge-Counter）" class="headerlink" title="回边计数器（Back Edge Counter）"></a>回边计数器（Back Edge Counter）</h3><p>回边计数器用于统计一个方法中循环体代码执行的次数（准确地说，应该是回边的次数，因为并非所有的循环都是回边），在字节码中遇到控制流向后跳转的指令就称为“<strong>回边</strong>”。</p>
+<blockquote>
+<p>建立回边计数器的目的就是为了触发OSR编译。<br>与方法计数器不同，回边计数器没有计数衰减热度的过程，因此统计的是该方法循环执行的绝对次数。</p>
+</blockquote>
+<p><strong>回边计数器触发即时编译</strong><br><img src="/images/jvm/jit-backedge-counter-compile.png" alt=""></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>在确定虚拟机运行参数的前提下，这两个计数器都有一个确定的<strong>阀值</strong>，当计数器的值超过了阀值，就会触发JIT编译。</p>
 <blockquote>
 <p><em>触发了 JIT 编译后，在默认设置下，执行引擎并不会同步等待编译请求完成，而是继续进入解释器按照解释方式执行字节码</em>，直到提交的请求被编译器编译完成为止（<strong>编译工作在后台线程中进行</strong>）。当编译工作完成后，下一次调用该方法或代码时，就会使用已编译的版本。</p>
 </blockquote>
+<h1 id="JIT编译优化技术"><a href="#JIT编译优化技术" class="headerlink" title="JIT编译优化技术"></a>JIT编译优化技术</h1><p>以<strong>编译方式</strong>执行本地代码比<strong>解释方式</strong>更快，除了虚拟机解释执行字节码时额外消耗时间的原因外，还有一个很重要的原因就是虚拟机几乎把所有对代码的优化措施集中在了JIT编译器。</p>
+<p>下面介绍的几种优化技术，都以下面的代码作为实例。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> class <span class="title">B</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> value;</div><div class="line">    <span class="function"><span class="keyword">final</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">()</span></span>&#123;</div><div class="line">    	<span class="keyword">return</span> value;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span></span>&#123;</div><div class="line">	y = b.value;</div><div class="line">    <span class="comment">// ... do stuff ...</span></div><div class="line">    z = b.get();</div><div class="line">    sum = y + z;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="方法内联"><a href="#方法内联" class="headerlink" title="方法内联"></a>方法内联</h2><p>方法内联（Method Inlining）的重要性高于其他优化措施，它的主要目的有两个：</p>
+<ul>
+<li>一是出去方法调用的成本（如建立栈帧等）。</li>
+<li>二是为其他优化建立良好的基础，方法内联膨胀之后，便于在更大范围上采取后续的优化手段。</li>
+</ul>
+<p>方法内联后的实例代码为：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span></span>&#123;</div><div class="line">	y = b.value;</div><div class="line">    <span class="comment">// ... do stuff ...</span></div><div class="line">    z = b.value;</div><div class="line">    sum = y + z;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="冗余访问消除"><a href="#冗余访问消除" class="headerlink" title="冗余访问消除"></a>冗余访问消除</h2><p>冗余访问消除（Redundant Loads Elimination），假设<code>... do stuff ...</code>所代表的操作不会改变<code>b.value</code>的值，那就可以把<code>z = b.value</code>替换成<code>z = y</code>，这样就可以不再去访问对象<code>b</code>的属性了。</p>
+<p>在方法内联后，接着进行冗余访问消除后的实例代码为：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span></span>&#123;</div><div class="line">	y = b.value;</div><div class="line">    <span class="comment">// ... do stuff ...</span></div><div class="line">    z = y;</div><div class="line">    sum = y + z;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="公共子表达式消除"><a href="#公共子表达式消除" class="headerlink" title="公共子表达式消除"></a>公共子表达式消除</h2><p><strong>公共子表达式消除</strong>（Common Subexpression Elimination）:如果一个表达式E已经计算过了，并且从先前的计算到现在E中所有变量的值都没有发生变化，那么E的这次出现就成为了公共子表达式。对于这种表达式，没有必要花时间再对它进行计算，直接用钱买计算过的表达式结果代替E就可以了。</p>
+<blockquote>
+<p>如果把<code>b.value</code>看成是一个表达式，可以把这项优化看成是公共子表达式消除。</p>
+</blockquote>
+<p>例如，<code>int d = (c * b) * 12 + a + (a + b* c)；</code>javac编译器不会进行任何优化，但是虚拟机的JIT编译器会进行优化，将<code>c*b</code>与<code>b*c</code>是一样的表达式，而且在计算期间的值不会变化。因此，这条表达式可能被视为：<code>int d = E * 12 + a + (a +Ｅ)；</code>。<br>这时JIT编译器还能进行<strong>代数简化</strong>（Algebraic Simplification），把表达式变为：<code>int d = E * 13 + a * 2;</code>。</p>
+<h2 id="复写传播"><a href="#复写传播" class="headerlink" title="复写传播"></a>复写传播</h2><p>对冗余访问消除后的代码进行复写传播（Copy Propagation）：因为在这段代码的逻辑中没有必要使用一个额外的变量<code>z</code>，它与变量<code>y</code>完全相等的，因此可以使用<code>y</code>来代替<code>z</code>。</p>
+<p>复写传播后的实例代码为：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span></span>&#123;</div><div class="line">	y = b.value;</div><div class="line">    <span class="comment">// ... do stuff ...</span></div><div class="line">    y = y;</div><div class="line">    sum = y + y;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="无用代码消除"><a href="#无用代码消除" class="headerlink" title="无用代码消除"></a>无用代码消除</h2><p>无用代码消除（Dead Code Elimination）：无用代码是永远不会被执行的代码，也可能是完全没有意义的代码，形象称之为“Dead Code”。如在进行复写传播后实例中的<code>y = y</code>。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span></span>&#123;</div><div class="line">	y = b.value;</div><div class="line">    <span class="comment">// ... do stuff ...</span></div><div class="line">    sum = y + y;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="数组边界检查消除"><a href="#数组边界检查消除" class="headerlink" title="数组边界检查消除"></a>数组边界检查消除</h2><p>数组边界检查消除（Array Bounds Checking Elimination）：是JIT编译器中的一项经典优化技术。为了安全，数组边界检查是不是必须在运行期一次不漏地检查则是可以“商量”的事情。</p>
+<p>Java是一门<strong>动态安全</strong>的语言，为了安全会进行各种检查。这些安全检查也导致了相同的程序，Java要比C/C++做更多的事情（各种检查判断），这些事情就成为一种<strong>隐式开销</strong>，如果不处理好，就很可能成为一个Java语言比C/C++更慢的因素。</p>
+<p>消除隐式开销的方式：</p>
+<ul>
+<li>将各种安全检查尽可能把运行期检查提到编译期完成。</li>
+<li>隐式异常处理：虚拟机通过注册一个异常处理器，当安全时不进行安全检查，因而也就不会额外消耗一次进行安全检查的开销。代价就是当不安全时必须转入到异常处理器进行处理（例如抛出异常），这个过程必须从<code>用户态</code>转到<code>内核态</code>中处理，结束后再回到用户态，速度远比一次安全检查慢。</li>
+</ul>
 
       
     </div>
@@ -534,7 +570,7 @@ HotSpot虚拟机中内置了两个JIT编译器，分别为Client Compiler(C1编�
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#解释器与JIT编译器"><span class="nav-number">1.</span> <span class="nav-text">解释器与JIT编译器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#热点代码（Hot-Spot-Code）"><span class="nav-number">2.</span> <span class="nav-text">热点代码（Hot Spot Code）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编译对象"><span class="nav-number">3.</span> <span class="nav-text">编译对象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#热点探测"><span class="nav-number">4.</span> <span class="nav-text">热点探测</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于采样的热点探测"><span class="nav-number">4.1.</span> <span class="nav-text">基于采样的热点探测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于计数器的热点探测"><span class="nav-number">4.2.</span> <span class="nav-text">基于计数器的热点探测</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#解释器与JIT编译器"><span class="nav-number">1.</span> <span class="nav-text">解释器与JIT编译器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#热点代码（Hot-Spot-Code）"><span class="nav-number">2.</span> <span class="nav-text">热点代码（Hot Spot Code）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编译对象"><span class="nav-number">3.</span> <span class="nav-text">编译对象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#热点探测"><span class="nav-number">4.</span> <span class="nav-text">热点探测</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于采样的热点探测"><span class="nav-number">4.1.</span> <span class="nav-text">基于采样的热点探测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于计数器的热点探测"><span class="nav-number">4.2.</span> <span class="nav-text">基于计数器的热点探测</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法调用计数器（Invocation-Counter）"><span class="nav-number">4.2.1.</span> <span class="nav-text">方法调用计数器（Invocation Counter）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#回边计数器（Back-Edge-Counter）"><span class="nav-number">4.2.2.</span> <span class="nav-text">回边计数器（Back Edge Counter）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">4.2.3.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JIT编译优化技术"><span class="nav-number">5.</span> <span class="nav-text">JIT编译优化技术</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方法内联"><span class="nav-number">5.1.</span> <span class="nav-text">方法内联</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#冗余访问消除"><span class="nav-number">5.2.</span> <span class="nav-text">冗余访问消除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#公共子表达式消除"><span class="nav-number">5.3.</span> <span class="nav-text">公共子表达式消除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复写传播"><span class="nav-number">5.4.</span> <span class="nav-text">复写传播</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#无用代码消除"><span class="nav-number">5.5.</span> <span class="nav-text">无用代码消除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数组边界检查消除"><span class="nav-number">5.6.</span> <span class="nav-text">数组边界检查消除</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

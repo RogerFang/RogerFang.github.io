@@ -106,7 +106,7 @@
 如今，基于物理机、虚拟">
 <meta property="og:image" content="http://yoursite.com/images/jvm/compile-process.png">
 <meta property="og:image" content="http://yoursite.com/images/jvm/java-compile-execution-process.png">
-<meta property="og:updated_time" content="2017-01-01T07:14:26.179Z">
+<meta property="og:updated_time" content="2017-01-02T14:51:49.732Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM: C和Java编译执行的过程比较">
 <meta name="twitter:description" content="编译不论是物理机还是虚拟机，大部分的程序代码从开始编译到最终转化成物理机的目标代码或虚拟机能执行的指令集之前，都会按照如下图所示的各个步骤进行：
@@ -349,7 +349,18 @@
 </ol>
 <p>如今，基于物理机、虚拟机等的语言，大多都遵循这种基于现代经典编译原理的思路，在执行前先对程序源码进行词法解析和语法解析处理，把源码转化为抽象语法树。对于一门具体语言的实现来说，词法和语法分析乃至后面的优化器和目标代码生成器都可以选择独立于执行引擎，形成一个<strong>完整意义的编译器</strong>去实现，这类代表是 <code>C/C++</code>语言。<br>也可以把抽象语法树或指令流之前的步骤实现一个<strong>半独立的编译器</strong>，这类代表是<code>Java</code>语言。<br>又或者可以把这些步骤和执行引擎全部集中在一起实现，如大多数的 <code>JavaScript</code>执行器。</p>
 <blockquote>
-<p>javac 字节码编译器与虚拟机内的 JIT 编译器的执行过程合起来其实就等同于一个传统的编译器所执行的编译过程。</p>
+<p>javac 字节码编译器与虚拟机内的 JIT 编译器的执行过程合起来其实就等同于一个传统的编译器所执行的编译过程。<br>Java与C/C++的编译器对比实际上代表了最经典的<strong>即时编译器与静态编译器</strong>的对比，很大程度上也决定了Java与C/C++的性能。</p>
+</blockquote>
+<h1 id="Java和C-C-比较"><a href="#Java和C-C-比较" class="headerlink" title="Java和C/C++比较"></a>Java和C/C++比较</h1><p>JVM的即时编译器与C/C++的静态编译器相比，可能会由于以下原因存在导致输出的本地代码有一些劣势：</p>
+<ol>
+<li>即时编译器运行占用的是用户程序的运行时间。</li>
+<li>Java语言是动态的类型安全语言，实现上回进行各种安全检查。</li>
+<li>Java语言没有<code>virtual</code>关键字，但是使用<strong>虚方法</strong>的频率却远远大于C/C++，这意味着运行时对方法接收者进行多态选择的频率要远远大于C/C++。</li>
+<li>Java语言是可以动态扩展的语言，运行时加载新的类可能改变程序类型的继承关系，使得很多全局优化难以进行，JIT编译器不得不时刻关注类型的变化并在运行时撤销或重新进行一些优化。</li>
+<li>Java语言中对象的内存分配都是在堆上进行的，只有方法中的局部变量才能在栈上分配。而C/C++的对象有多种内存分配方式（栈上分配线程私有的对象，将减轻内存回收的压力）。</li>
+</ol>
+<blockquote>
+<p>Java语言上性能的劣势换取开发效率上的优势，动态安全、动态扩展、垃圾回收都为开发效率做出了很大贡献。</p>
 </blockquote>
 <h1 id="C"><a href="#C" class="headerlink" title="C"></a>C</h1><h2 id="编译和连接过程"><a href="#编译和连接过程" class="headerlink" title="编译和连接过程"></a>编译和连接过程</h2><p>整个过程会有这样4个步骤：</p>
 <ol>
@@ -554,7 +565,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#编译"><span class="nav-number">1.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C"><span class="nav-number">2.</span> <span class="nav-text">C</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编译和连接过程"><span class="nav-number">2.1.</span> <span class="nav-text">编译和连接过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行过程"><span class="nav-number">2.2.</span> <span class="nav-text">执行过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java"><span class="nav-number">3.</span> <span class="nav-text">Java</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编译过程"><span class="nav-number">3.1.</span> <span class="nav-text">编译过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行过程-1"><span class="nav-number">3.2.</span> <span class="nav-text">执行过程</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#编译"><span class="nav-number">1.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java和C-C-比较"><span class="nav-number">2.</span> <span class="nav-text">Java和C/C++比较</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C"><span class="nav-number">3.</span> <span class="nav-text">C</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编译和连接过程"><span class="nav-number">3.1.</span> <span class="nav-text">编译和连接过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行过程"><span class="nav-number">3.2.</span> <span class="nav-text">执行过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java"><span class="nav-number">4.</span> <span class="nav-text">Java</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编译过程"><span class="nav-number">4.1.</span> <span class="nav-text">编译过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行过程-1"><span class="nav-number">4.2.</span> <span class="nav-text">执行过程</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
