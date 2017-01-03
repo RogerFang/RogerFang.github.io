@@ -1,0 +1,730 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="类加载," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="类加载机制：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型。
+
+Java可以动态扩展的特性就是依赖运行期动态加载和动态连接这个特点实现的。
+
+类加载的时机类的生命周期类从被加载到虚拟机内存中开始，到卸载出内存为止，整个生命周期包括：加载（Loading）、验证（Verification）、准备（Preparation）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM: 类加载(1)-类加载机制">
+<meta property="og:url" content="http://yoursite.com/2017/01/02/JVM-类加载-1-类加载机制/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="类加载机制：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型。
+
+Java可以动态扩展的特性就是依赖运行期动态加载和动态连接这个特点实现的。
+
+类加载的时机类的生命周期类从被加载到虚拟机内存中开始，到卸载出内存为止，整个生命周期包括：加载（Loading）、验证（Verification）、准备（Preparation）">
+<meta property="og:image" content="http://yoursite.com/images/jvm/classloader-lifecycle.png">
+<meta property="og:updated_time" content="2017-01-03T02:08:47.997Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM: 类加载(1)-类加载机制">
+<meta name="twitter:description" content="类加载机制：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型。
+
+Java可以动态扩展的特性就是依赖运行期动态加载和动态连接这个特点实现的。
+
+类加载的时机类的生命周期类从被加载到虚拟机内存中开始，到卸载出内存为止，整个生命周期包括：加载（Loading）、验证（Verification）、准备（Preparation）">
+<meta name="twitter:image" content="http://yoursite.com/images/jvm/classloader-lifecycle.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/02/JVM-类加载-1-类加载机制/"/>
+
+
+  <title> JVM: 类加载(1)-类加载机制 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a1eb6dc312a93939356214ab5491901a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                JVM: 类加载(1)-类加载机制
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-02T23:10:10+08:00" content="2017-01-02">
+              2017-01-02
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>类加载机制</strong>：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型。</p>
+<blockquote>
+<p>Java可以动态扩展的特性就是依赖运行期动态加载和动态连接这个特点实现的。</p>
+</blockquote>
+<h1 id="类加载的时机"><a href="#类加载的时机" class="headerlink" title="类加载的时机"></a>类加载的时机</h1><h2 id="类的生命周期"><a href="#类的生命周期" class="headerlink" title="类的生命周期"></a>类的生命周期</h2><p>类从被加载到虚拟机内存中开始，到卸载出内存为止，整个生命周期包括：<strong>加载</strong>（Loading）、<strong>验证</strong>（Verification）、<strong>准备</strong>（Preparation）、<strong>解析</strong>（Resolution）、<strong>初始化</strong>（Initialization）、<strong>使用</strong>（Using）和<strong>卸载</strong>（Unloading）7个阶段。</p>
+<p><img src="/images/jvm/classloader-lifecycle.png" alt=""></p>
+<blockquote>
+<p>加载、验证、准备、初始化和卸载这5个阶段的顺序是确定的（这些阶段通常互相<strong>交叉地混合式进行</strong>，在一个阶段执行的过程中激活另一个阶段），而解析阶段在某些情况下可以在初始化阶段之后再开始，这是为了支持Java语言的运行时绑定（动态绑定）。</p>
+</blockquote>
+<h2 id="类初始化时机"><a href="#类初始化时机" class="headerlink" title="类初始化时机"></a>类初始化时机</h2><p>虚拟机规范规定<strong>有且只有</strong>5种情况（也被称为<strong>主动引用</strong>），如果类没有进行初始化，则需要先触发其初始化。</p>
+<ol>
+<li>遇到<code>new</code>、<code>getstatic</code>、<code>putstatic</code>或<code>invokestatic</code>这4条字节码指令时。<br>常见的场景：使用<code>new</code>关键字实例化对象、读取或调用一个类的静态字段的时候（被final修饰、已在编译期把结果放入常量池的静态字段除外）、以及调用一个类的静态方法的时候。</li>
+<li>反射调用。</li>
+<li>初始化一个类时，其父类还没有进行初始化，先触发父类的初始化。（接口并不要求其父接口都完成初始化）</li>
+<li>虚拟机启动时，要执行的主类（包括<code>main()</code>方法），虚拟机会先初始化这个主类。</li>
+<li>使用JDK 1.7的动态语言支持时，如果一个<code>java.lang.invoke.MethodHandle</code>实例最后的解析结果是<code>REF_getStatic</code>、<code>REF_putStatic</code>、<code>REF_invokeStatic</code>的方法句柄，方法句柄对应的类没有初始化，则需要先触发其初始化。</li>
+</ol>
+<blockquote>
+<p>Reflection和MethodHandle机制本质上都是在<strong>模拟方法调用</strong>，但是Reflection是在模拟Java代码层次的方法调用，而MethodHandle是在模拟字节码层次的方法调用。<br>相关知识点可以参见：<a href="http://www.infoq.com/cn/articles/jdk-dynamically-typed-language" target="_blank" rel="external">http://www.infoq.com/cn/articles/jdk-dynamically-typed-language</a></p>
+</blockquote>
+<p>几个不会触发类初始化（也被称为<strong>被动引用</strong>）的例子：</p>
+<ol>
+<li>通过子类引用父类的静态字段，不会导致子类初始化。<code>System.out.println(SubClass.value);</code>（<code>value</code>是父类静态字段）</li>
+<li>通过数组定义来引用类，不会触发类的初始化。<code>MyClass[] arr = new MyClass[10];</code></li>
+<li>使用常量（编译阶段会存入调用类的常量池中）。</li>
+</ol>
+<h1 id="类加载的过程"><a href="#类加载的过程" class="headerlink" title="类加载的过程"></a>类加载的过程</h1><p>类加载的过程就是：加载、验证、准备、解析和初始化这5个阶段。</p>
+<h2 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h2><p>加载阶段，虚拟机完成以下3件事：</p>
+<ol>
+<li>通过一个<strong>类的全限定名</strong>来获取定义此类的二进制字节流（一般是字节码文件）。</li>
+<li>将这个字节流所代表的<strong>静态存储结构</strong>转换为方法区的<strong>运行时数据结构</strong>。</li>
+<li>在内存中生成一个代表这个类的<code>java.lang.Class</code>对象，作为方法区这个类的各种数据的访问入口。</li>
+</ol>
+<blockquote>
+<p>加载阶段中获取获取类的二进制字节流，非数组类由类加载器去完成；数组类情况不同，数组类本身不通过类加载器创建，它是由Java虚拟机直接创建的。</p>
+</blockquote>
+<p>加载阶段完成后，二进制字节流就按照虚拟机所需的格式存储在方法区之中，方法区中的数据存储格式由虚拟机实现自定义。然后在内存中实例化一个<code>java.lang.Class</code>对象（并没有明确规定是在Java堆中，HotSpot虚拟机把Class对象存在方法区中），作为程序访问方法区中这些类型数据的外部接口。</p>
+<blockquote>
+<p>加载阶段可以由用户自定义的类加载器去完成，其他阶段都是由虚拟机主导和控制的。</p>
+</blockquote>
+<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><blockquote>
+<p>验证是连接的第一步，目的是为了确保二进制字节流中所包含的信息符合当前虚拟机的要求，并且不会危害虚拟机自身的安全。</p>
+</blockquote>
+<p>验证阶段大致会完成4个阶段的检验动作：文件格式验证、元数据验证、字节码验证、符号引用验证。</p>
+<h3 id="文件格式验证"><a href="#文件格式验证" class="headerlink" title="文件格式验证"></a>文件格式验证</h3><blockquote>
+<p>阶段一：验证字节流是否符合Class文件格式的规范，并且能被当前版本的虚拟机处理。</p>
+</blockquote>
+<p>通过了这个验证字节流才会进入内存的方法区中进行存储，后面3个验证部分都市基于方法区的存储结构进行的，不会再直接操作字节流。</p>
+<h3 id="元数据验证"><a href="#元数据验证" class="headerlink" title="元数据验证"></a>元数据验证</h3><blockquote>
+<p>阶段二：元数据验证就是对字节码所描述的信息进行语义分析，以保证其秒速的信息符合Java语言规范的要求。</p>
+</blockquote>
+<h3 id="字节码验证"><a href="#字节码验证" class="headerlink" title="字节码验证"></a>字节码验证</h3><blockquote>
+<p>阶段三：字节码验证主要目的是通过数据流和控制流分析，确定程序语义是合法的、符合逻辑的。</p>
+</blockquote>
+<p>阶段二对元数据信息中的数据类型做完校验后，这个阶段将对类的方法体进行校验分析，保证被校验类的方法在运行时不会做出危害虚拟机安全的事件。</p>
+<h3 id="符号引用验证"><a href="#符号引用验证" class="headerlink" title="符号引用验证"></a>符号引用验证</h3><p>最后一个阶段的校验发生在虚拟机将<strong>符号引用</strong>转换为<strong>直接引用</strong>的时候，这个转换动作发生在解析阶段（连接的第三阶段）。目的是确保解析能正常执行。</p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>准备阶段正式为<strong>类变量</strong>（static修饰的变量）分配内存并设置类变量初始值（一般是数据类型的零值），这些变量所用内存都在方法区中进行分配。<br>如果类变量是常量，那么在准备阶段变量值就会被初始化为其制定的值。</p>
+<blockquote>
+<p>实例变量会随着对象一起分配在Java堆中。</p>
+</blockquote>
+<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><p>解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程，</p>
+<ul>
+<li><strong>符号引用</strong>（Symbolic References）：定义在Java虚拟机规范的Class文件中，符号引用以一组符号来描述所引用的目标，符号可以是任何形式的字面量。</li>
+<li><strong>直接引用</strong>（Direct References）：直接引用可以是直接指向目标的指针、相对偏移量或是能间接定位到目标的句柄。直接引用是和虚拟机实现的内存布局相关的，有了直接引用，那引用的目标必定已经在内存中存在。</li>
+</ul>
+<p>比如类或接口解析、字段解析、类方法解析、接口方法解析以及动态调用相关的解析。</p>
+<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><p>类初始化阶段是类加载过程的最后一步，到了初始化阶段，才真正开始<strong>执行</strong>类中定义的Java代码（字节码）。</p>
+<p>在准备阶段，变量已经赋过一次系统要求的初始值，而在初始化阶段，则根据程序员通过程序制定的主观计划去初始化类变量和其他资源。</p>
+<blockquote>
+<p>初始化阶段是执行类构造器<code>&lt;clinit&gt;()</code>方法的过程。同一个类加载器下，一个类型只会初始化一次。</p>
+</blockquote>
+<h3 id="lt-clinit-gt-方法"><a href="#lt-clinit-gt-方法" class="headerlink" title="&lt;clinit&gt;()方法"></a><code>&lt;clinit&gt;()</code>方法</h3><ul>
+<li><code>&lt;clinit&gt;()</code>方法是由编译器合并所有类变量的赋值动作和静态语句块中的语句产生的，编译器收集的顺序是由语句在源文件中出现的顺序所决定的。<blockquote>
+<p>静态语句块只能<strong>访问</strong>定义在其之前的变量，定义在其之后的变量只能被赋值但不能被访问。</p>
+</blockquote>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span>&#123;</div><div class="line">	i = <span class="number">10</span>; <span class="comment">// ok</span></div><div class="line">    System.out.println(i); <span class="comment">// compile error 不能访问，非法向前引用</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="keyword">int</span> i = <span class="number">20</span>; <span class="comment">// 最后i的值还是20</span></div></pre></td></tr></table></figure>
+<ul>
+<li><p><code>&lt;clinit&gt;()</code>方法不需要显示地调用父类构造器，虚拟机会保证在子类的<code>&lt;clinit&gt;()</code>方法执行之前，父类的<code>&lt;clinit&gt;()</code>方法已经执行完毕。（虚拟机第一个被执行的<code>&lt;clinit&gt;()</code>方法的类肯定是<code>java.lang.Object</code>）</p>
+</li>
+<li><p><code>&lt;clinit&gt;()</code>方法对于类或接口并不是必需的，如果没有静态变量的赋值操作或静态语句块，那么编译器不会为这个类或接口生成<code>&lt;clinit&gt;()</code>方法。</p>
+</li>
+<li><p>接口可以由静态编赋值操作，但是不能使用静态语句块。执行接口的<code>&lt;clinit&gt;()</code>方法不需要先执行父接口的<code>&lt;clinit&gt;()</code>方法。接口的实现类在初始化时也一样不会执行接口的<code>&lt;clinit&gt;()</code>方法。</p>
+</li>
+<li><p>虚拟机会保证<code>&lt;clinit&gt;()</code>方法在多线程环境下被正确地加锁、同步。</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/类加载/" rel="tag">#类加载</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/01/JVM-后端编译-JIT编译器/" rel="next" title="JVM: 后端编译(JIT编译器)">
+                <i class="fa fa-chevron-left"></i> JVM: 后端编译(JIT编译器)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/02/JVM-类加载-2-类加载器ClassLoader/" rel="prev" title="JVM: 类加载(2)-类加载器ClassLoader">
+                JVM: 类加载(2)-类加载器ClassLoader <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">69</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">84</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/a-mu-mu-art" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#类加载的时机"><span class="nav-number">1.</span> <span class="nav-text">类加载的时机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#类的生命周期"><span class="nav-number">1.1.</span> <span class="nav-text">类的生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类初始化时机"><span class="nav-number">1.2.</span> <span class="nav-text">类初始化时机</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类加载的过程"><span class="nav-number">2.</span> <span class="nav-text">类加载的过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#加载"><span class="nav-number">2.1.</span> <span class="nav-text">加载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#验证"><span class="nav-number">2.2.</span> <span class="nav-text">验证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件格式验证"><span class="nav-number">2.2.1.</span> <span class="nav-text">文件格式验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#元数据验证"><span class="nav-number">2.2.2.</span> <span class="nav-text">元数据验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字节码验证"><span class="nav-number">2.2.3.</span> <span class="nav-text">字节码验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#符号引用验证"><span class="nav-number">2.2.4.</span> <span class="nav-text">符号引用验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准备"><span class="nav-number">2.3.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解析"><span class="nav-number">2.4.</span> <span class="nav-text">解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化"><span class="nav-number">2.5.</span> <span class="nav-text">初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-clinit-gt-方法"><span class="nav-number">2.5.1.</span> <span class="nav-text"><clinit>()方法</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
