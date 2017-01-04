@@ -1,0 +1,714 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JVM,编译,Class文件," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="Java虚拟机字节码指令：由1个字节长度的操作码（代表着某种特定操作含义的数字），以及跟随其后的0至多个操作数（Operands，此操作所需的参数）而构成。
+
+再次强调Java虚拟机采用面向操作数栈而不是寄存器的架构，所以大多数的指令都包含操作数，而只有一个操作码。
+
+
+指令的操作码长度为1个字节，意味着指令集的操作码总数不能超过256条。
+Class文件格式放弃了编译后代码的操作数长度对齐。当虚">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Class文件(2): 字节码指令">
+<meta property="og:url" content="http://yoursite.com/2017/01/03/Class文件-2-字节码指令/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="Java虚拟机字节码指令：由1个字节长度的操作码（代表着某种特定操作含义的数字），以及跟随其后的0至多个操作数（Operands，此操作所需的参数）而构成。
+
+再次强调Java虚拟机采用面向操作数栈而不是寄存器的架构，所以大多数的指令都包含操作数，而只有一个操作码。
+
+
+指令的操作码长度为1个字节，意味着指令集的操作码总数不能超过256条。
+Class文件格式放弃了编译后代码的操作数长度对齐。当虚">
+<meta property="og:updated_time" content="2017-01-04T05:55:42.115Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Class文件(2): 字节码指令">
+<meta name="twitter:description" content="Java虚拟机字节码指令：由1个字节长度的操作码（代表着某种特定操作含义的数字），以及跟随其后的0至多个操作数（Operands，此操作所需的参数）而构成。
+
+再次强调Java虚拟机采用面向操作数栈而不是寄存器的架构，所以大多数的指令都包含操作数，而只有一个操作码。
+
+
+指令的操作码长度为1个字节，意味着指令集的操作码总数不能超过256条。
+Class文件格式放弃了编译后代码的操作数长度对齐。当虚">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/03/Class文件-2-字节码指令/"/>
+
+
+  <title> Class文件(2): 字节码指令 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a1eb6dc312a93939356214ab5491901a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Class文件(2): 字节码指令
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-03T18:39:09+08:00" content="2017-01-03">
+              2017-01-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Java虚拟机字节码指令：由1个字节长度的<strong>操作码</strong>（代表着某种特定操作含义的数字），以及跟随其后的0至多个<strong>操作数</strong>（Operands，此操作所需的参数）而构成。</p>
+<blockquote>
+<p>再次强调Java虚拟机采用面向操作数栈而不是寄存器的架构，所以大多数的指令都包含操作数，而只有一个操作码。</p>
+</blockquote>
+<ol>
+<li>指令的操作码长度为1个字节，意味着指令集的操作码总数不能超过256条。</li>
+<li>Class文件格式放弃了编译后代码的<strong>操作数长度对齐</strong>。<br>当虚拟机处理超过一个字节数据的时候，不得不在运行时从字节中重建出具体数据的结构。如一个16位长度的无符号整数需要使用两个字节存储起来。<blockquote>
+<p>这种操作会在某种程度上导致解释器执行字节码时损失一些性能，优势是省略了很多填充和间隔符。</p>
+</blockquote>
+</li>
+</ol>
+<h1 id="字节码指令与数据类型"><a href="#字节码指令与数据类型" class="headerlink" title="字节码指令与数据类型"></a>字节码指令与数据类型</h1><p>在Java虚拟机的指令集中，大多数的指令都包含了其操作所对应的的数据类型信息。<br>操作码助记符都有特殊的字符来表明专门为哪种数据类型服务：<code>i</code>代表int类型的数据操作，<code>l</code>代表long，<code>s</code>代表short，<code>b</code>代表byte，<code>c</code>代表char，<code>f</code>代表float，<code>d</code>代表double，<code>a</code>代表reference。</p>
+<p>一些操作指令（int类型指令）如：<code>iload</code>,<code>istore</code>,<code>iinc</code>,<code>iadd</code>,<code>isub</code>,<code>imul</code>,<code>idiv</code>,<code>ireturn</code>。</p>
+<p>注意：编译器会在编译期或运行期将byte和short类型的数据<strong>带符号扩展</strong>（Sign-Extend）为相应的int类型数据，将boolean和char类型数据<strong>零位扩展</strong>（Zero-Extend）为相应的类型数据。</p>
+<h1 id="加载和存储指令"><a href="#加载和存储指令" class="headerlink" title="加载和存储指令"></a>加载和存储指令</h1><p>加载和存储指令用于将数据在栈帧中的<strong>局部变量表</strong>和<strong>操作数栈</strong>之间来回传输。</p>
+<p>局部变量加载到操作数栈：<code>iload</code>、<code>iload_&lt;n&gt;</code>等，<code>n</code>代表指令隐含的操作数。<br>操作数栈存储到局部变量表：<code>istore</code>、<code>istore_n</code>等。</p>
+<h1 id="运算指令"><a href="#运算指令" class="headerlink" title="运算指令"></a>运算指令</h1><p>运算指令用于对两个操作数栈上的值进行某种特定运算，并把结果重新存入到操作栈顶。<br>例如：<br>加法指令：<code>iadd</code>、<code>fadd</code>。<br>减法指令：<code>isub</code>、<code>fsub</code>。<br>求余指令：<code>irem</code>、<code>frem</code>。<br>局部变量自增指令：<code>iinc</code>。<br>按位或指令：<code>ior</code>、<code>lor</code>。<br>比较指令：<code>dcmpg</code>、<code>fcmpg</code>。</p>
+<h1 id="类型转换指令"><a href="#类型转换指令" class="headerlink" title="类型转换指令"></a>类型转换指令</h1><p>类型转换指令可以将两种不同的数值类型进行相互转换。</p>
+<p>Java虚拟机直接支持宽化类型转化（无需显示的转换指令）：</p>
+<ul>
+<li>int类型到long、float或double类型；</li>
+<li>long类型到float、double类型；</li>
+<li>float类型到double类型。</li>
+</ul>
+<p>在处理窄化类型转化时，需要显示地使用转换指令：<code>i2b</code>、<code>i2c</code>、<code>i2s</code>、<code>l2i</code>、<code>f2i</code>、<code>f2l</code>、<code>d2i</code>、<code>d2l</code>和<code>d2f</code>。<br>窄化处理可能发生上限溢出、下限溢出和精度丢失等情况。</p>
+<blockquote>
+<p>Java虚拟机规范中规定数值类型的窄化转换指令永远不可能导致虚拟机抛出运行时异常。</p>
+</blockquote>
+<h1 id="对象创建于访问指令"><a href="#对象创建于访问指令" class="headerlink" title="对象创建于访问指令"></a>对象创建于访问指令</h1><p>虽然累实例和数组都是对象，但是JVM对类实例和数组的创建和操作使用了不同的字节码指令。</p>
+<ul>
+<li>创建类实例的指令：<code>new</code>。</li>
+<li>创建数组的指令：<code>newarray</code>、<code>anewarray</code>、<code>multianewarray</code>。</li>
+<li>访问类变量和实例变量的指令：<code>getfield</code>、<code>putfield</code>、<code>getstatic</code>、<code>putstatic</code>。</li>
+<li>把一个数组元素加载到操作数栈的指令：<code>baload</code>、<code>caload</code>、<code>saload</code>、<code>iaload</code>、<code>laload</code>、<code>faload</code>、<code>daload</code>、<code>aaload</code>。</li>
+<li>把一个操作数栈的值存储到数组元素中的指令：<code>bastore</code>、<code>castore</code> …</li>
+<li>取数组长度的指令：<code>arraylength</code>。</li>
+<li>检查类实例类型的指令：<code>instanceof</code>、<code>checkcast</code>。</li>
+</ul>
+<h1 id="操作数栈管理指令"><a href="#操作数栈管理指令" class="headerlink" title="操作数栈管理指令"></a>操作数栈管理指令</h1><p>将操作数栈的栈顶一个或两个元素出栈：<code>pop</code>、<code>pop2</code>。<br>复制栈顶一个或两个数值并将复制值或双份的复制值重新压入栈顶：<code>dup</code>、<code>dup2</code>、<code>dup_x1</code>、<code>dup2_x1</code>、<code>dup_x2</code>、<code>dup2_x2</code>。<br>将栈最顶端的两个数值互换：<code>swap</code>。</p>
+<h1 id="控制转移指令"><a href="#控制转移指令" class="headerlink" title="控制转移指令"></a>控制转移指令</h1><p>控制转移指令可以让JVM有条件或无条件地从指定的位置指令而不是控制转移指令的下一条指令继续执行程序。</p>
+<ul>
+<li>条件分支<br><code>ifeq</code>、<code>iflt</code>、<code>ifle</code>、<code>ifne</code>、<code>ifgt</code>、<code>ifge</code>、<code>ifnull</code>、<code>ifnonnull</code>、<code>if_icmpeq</code>、<code>if_icmpne</code>、<code>if_icmplt</code>、<code>if_icmple</code>、<code>if_acmpeq</code>和<code>if_acmpne</code>。</li>
+<li>复合条件分支<br><code>tableswitch</code>、<code>lookupswitch</code>。</li>
+<li>无条件分支<br><code>goto</code>、<code>goto_w</code>、<code>jsr</code>、<code>jsr_w</code>、<code>ret</code>。</li>
+</ul>
+<h1 id="方法调用和返回指令"><a href="#方法调用和返回指令" class="headerlink" title="方法调用和返回指令"></a>方法调用和返回指令</h1><p>方法调用（分派、执行过程）与数据类型无关：</p>
+<ul>
+<li><code>invokevirtual</code>：用于调用对象的实例方法，根据对象的实际类型进行分派（虚分派）。</li>
+<li><code>invokeinterface</code>：用于调用接口方法，会在运行时搜索一个实现了接口方法的对象，找出适合的方法进行调用。</li>
+<li><code>invokespecial</code>：用于调用一些需要特殊处理的实例方法，包括实例初始化方法、私有方法和父类方法。</li>
+<li><code>invokestatic</code>：用于调用类方法。</li>
+<li><code>invokedynamic</code>：用于在运行时动态解析出<strong>调用点限定符</strong>所引用的方法，并执行该方法。<blockquote>
+<p>前面4种调用指令的分派逻辑都固化在JVM内部，<code>invokedynamic</code>指令的分派逻辑是由用户所设定的引导方法决定的。</p>
+</blockquote>
+</li>
+</ul>
+<p>方法返回指令与数据类型相关，根据返回值的类型区分：<code>ireturn</code>（返回值是boolean、byte、char、short和int类型）、<code>lreturn</code>、<code>freturn</code>、<code>dreturn</code>和<code>areturn</code>；还有一条return指令供声明为void的方法、实例初始化方法以及类和接口的类初始化方法使用。</p>
+<h1 id="异常处理指令"><a href="#异常处理指令" class="headerlink" title="异常处理指令"></a>异常处理指令</h1><p>Java程序中显示抛出异常的操作（throw语句）都是由<code>athrow</code>指令来实现的。</p>
+<p>Java虚拟机规范还规定了许多<strong>运行时异常</strong>会在其他Java虚拟机指令检测到异常状况时<strong>自动抛出</strong>。</p>
+<p>而在JVM中处理异常语句（catch语句，受查异常）不是由字节码指令来实现的，而是采用<strong>异常表</strong>来完成的（上一篇博客中的Code属性有介绍过）。</p>
+<h1 id="同步指令"><a href="#同步指令" class="headerlink" title="同步指令"></a>同步指令</h1><p>Java虚拟机可以支持<strong>方法级</strong>的同步和<strong>方法内部</strong>的一段指令序列的同步，这两种同步结构都使用<code>管程</code>（Monitor）来支持的。</p>
+<h2 id="方法级的同步"><a href="#方法级的同步" class="headerlink" title="方法级的同步"></a>方法级的同步</h2><p>方法级的同步是<strong>隐式的</strong>，不需要通过字节码指令来控制，它实现在方法调用和返回操作之中。</p>
+<p>虚拟机可以从方法表结构中的<code>ACC_SYNCHRONIZED</code>访问标志得知是否声明为同步。<br>如果设置了，执行线程需要成功持有<strong>管程</strong>，然后才能执行方法。</p>
+<h2 id="方法内部的指令序列同步"><a href="#方法内部的指令序列同步" class="headerlink" title="方法内部的指令序列同步"></a>方法内部的指令序列同步</h2><p>同步一段指令集序列通常是由Java语言中的<code>synchronized</code>语句块来表示的，JVM指令集中有<code>monitorenter</code>和<code>monitorexit</code>两条指令来支持synchronized关键字的语义。</p>
+<blockquote>
+<p>正确实现synchronized关键字需要Javac编译器与Java虚拟机两者共同协作。</p>
+</blockquote>
+<p>编译器必须确保无论方法通过何种方式完成，方法中调用过的<code>monitorenter</code>指令都必须执行器对应的<code>monitorexit</code>指令，无论是正常结束还是异常结束。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag">#JVM</a>
+          
+            <a href="/tags/编译/" rel="tag">#编译</a>
+          
+            <a href="/tags/Class文件/" rel="tag">#Class文件</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/03/Class文件-1-类文件结构/" rel="next" title="Class文件(1): 类文件结构">
+                <i class="fa fa-chevron-left"></i> Class文件(1): 类文件结构
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">71</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">86</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/a-mu-mu-art" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#字节码指令与数据类型"><span class="nav-number">1.</span> <span class="nav-text">字节码指令与数据类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#加载和存储指令"><span class="nav-number">2.</span> <span class="nav-text">加载和存储指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#运算指令"><span class="nav-number">3.</span> <span class="nav-text">运算指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类型转换指令"><span class="nav-number">4.</span> <span class="nav-text">类型转换指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#对象创建于访问指令"><span class="nav-number">5.</span> <span class="nav-text">对象创建于访问指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#操作数栈管理指令"><span class="nav-number">6.</span> <span class="nav-text">操作数栈管理指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#控制转移指令"><span class="nav-number">7.</span> <span class="nav-text">控制转移指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法调用和返回指令"><span class="nav-number">8.</span> <span class="nav-text">方法调用和返回指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#异常处理指令"><span class="nav-number">9.</span> <span class="nav-text">异常处理指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#同步指令"><span class="nav-number">10.</span> <span class="nav-text">同步指令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方法级的同步"><span class="nav-number">10.1.</span> <span class="nav-text">方法级的同步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法内部的指令序列同步"><span class="nav-number">10.2.</span> <span class="nav-text">方法内部的指令序列同步</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
