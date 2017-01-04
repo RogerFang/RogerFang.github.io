@@ -1,0 +1,696 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JVM,字节码执行引擎," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="方法调用不同于方法执行，方法调用阶段唯一的任务就是确定被调用方法的版本（即调用哪一个方法），暂时还不涉及方法内部的具体运行过程。
+解析
+解析调用一定是个静态的过程，在编译期间就完全确定，在类加载的解析阶段就会把涉及的符号引用转换为可确定的直接引用，不会延迟到运行期再去完成。
+
+所有方法调用中的目标方法在Class文件中都是一个常量池中的符号引用，在类加载的解析阶段，会将其中的一部分符号引用转化为直">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM: 字节码执行引擎(2)-方法调用">
+<meta property="og:url" content="http://yoursite.com/2017/01/04/JVM-字节码执行引擎-2-方法调用/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="方法调用不同于方法执行，方法调用阶段唯一的任务就是确定被调用方法的版本（即调用哪一个方法），暂时还不涉及方法内部的具体运行过程。
+解析
+解析调用一定是个静态的过程，在编译期间就完全确定，在类加载的解析阶段就会把涉及的符号引用转换为可确定的直接引用，不会延迟到运行期再去完成。
+
+所有方法调用中的目标方法在Class文件中都是一个常量池中的符号引用，在类加载的解析阶段，会将其中的一部分符号引用转化为直">
+<meta property="og:updated_time" content="2017-01-04T14:52:29.694Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM: 字节码执行引擎(2)-方法调用">
+<meta name="twitter:description" content="方法调用不同于方法执行，方法调用阶段唯一的任务就是确定被调用方法的版本（即调用哪一个方法），暂时还不涉及方法内部的具体运行过程。
+解析
+解析调用一定是个静态的过程，在编译期间就完全确定，在类加载的解析阶段就会把涉及的符号引用转换为可确定的直接引用，不会延迟到运行期再去完成。
+
+所有方法调用中的目标方法在Class文件中都是一个常量池中的符号引用，在类加载的解析阶段，会将其中的一部分符号引用转化为直">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/04/JVM-字节码执行引擎-2-方法调用/"/>
+
+
+  <title> JVM: 字节码执行引擎(2)-方法调用 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a1eb6dc312a93939356214ab5491901a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                JVM: 字节码执行引擎(2)-方法调用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-04T15:24:50+08:00" content="2017-01-04">
+              2017-01-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>方法调用不同于方法执行，方法调用阶段唯一的任务就是确定被调用方法的版本（即调用哪一个方法），暂时还不涉及方法内部的具体运行过程。</p>
+<h1 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h1><blockquote>
+<p>解析调用一定是个静态的过程，在编译期间就完全确定，在类加载的解析阶段就会把涉及的符号引用转换为可确定的直接引用，不会延迟到运行期再去完成。</p>
+</blockquote>
+<p>所有方法调用中的目标方法在Class文件中都是一个常量池中的符号引用，在类加载的解析阶段，会将其中的一部分符号引用转化为直接引用。这种解析能成立的前提是：方法在程序真正运行之前就有一个可确定的调用版本，并且这个方法的调用版本在运行期是不可改变的。也就是说，调用目标在程序代码写好、编译器进行编译时就必须确定下来。这类方法的调用称为解析（Resolution）。</p>
+<blockquote>
+<p>符合“<strong>编译期可知，运行期不可变</strong>”这个要求的方法，主要包括<strong>静态方法</strong>和<strong>私有方法</strong>两大类。</p>
+</blockquote>
+<p>与之相对应的是，JVM提供了5条方法调用字节码指令：<br><code>invokestatic</code>：调用静态方法。<br><code>invokespecial</code>：调用实例构造器<code>&lt;init&gt;()</code>方法、私有方法和父类方法。<br><code>invokevirtual</code>：调用所有的虚方法。<br><code>invokeinterface</code>：调用接口方法，会在运行时再确定一个实现此接口的对象。<br><code>invokedynamic</code>：先在运行时动态解析出调用点限定符所引用的方法，然后再执行该方法。</p>
+<blockquote>
+<p>前4条调用指令，分派逻辑是固化在JVM内部的，而<code>invokedynamic</code>指令的分派逻辑是由用户所设定的引导方法决定的。</p>
+</blockquote>
+<h2 id="非虚方法"><a href="#非虚方法" class="headerlink" title="非虚方法"></a>非虚方法</h2><p>在类加载的时候就会把方法调用的符号引用转换为该方法的直接引用，这些方法称为<strong>非虚方法</strong>。<br>非虚方法除了使用<code>invokestatic</code>、<code>invokespecial</code>指令调用的方法之外还有一种，就是被<code>final</code>修饰的方法。虽然<code>final</code>方法是使用<code>invokevirtual</code>指令来调用的，但是由于它无法被覆盖，没有其他版本，所以也无须对方法接收者进行多态选择。</p>
+<p>那么<strong>虚方法</strong>就是与之相反的方法。</p>
+<h1 id="分派"><a href="#分派" class="headerlink" title="分派"></a>分派</h1><p>分派（Dispatch）调用则可能是静态的也可能是动态地，分派调用的过程会揭示<strong>多态性</strong>的一些最基本的体现，如“重载”和“重写”在Java虚拟机中是如何实现的。</p>
+<h2 id="静态分派（重载）"><a href="#静态分派（重载）" class="headerlink" title="静态分派（重载）"></a>静态分派（重载）</h2><blockquote>
+<p>静态分派在英文技术文档中称为“Method Overload Resolution”。静态分派的典型应用是<strong>重载</strong></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 重载overload</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MethodDispatchTest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Human</span></span>&#123;&#125;</div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Man</span> <span class="keyword">extends</span> <span class="title">Human</span></span>&#123;&#125;</div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Woman</span> <span class="keyword">extends</span> <span class="title">Human</span></span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">say</span><span class="params">(Human human)</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"Say, Human!"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">say</span><span class="params">(Man man)</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"Say, Man!"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">say</span><span class="params">(Woman woman)</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"Say, Woman!"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Human man = <span class="keyword">new</span> Man();</div><div class="line">        Human woman = <span class="keyword">new</span> Woman();</div><div class="line">        MethodDispatchTest.say(man);</div><div class="line">        MethodDispatchTest.say(woman);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>程序输出结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Say, Human!</div><div class="line">Say, Human!</div></pre></td></tr></table></figure></p>
+<p><code>Human man = new Man();</code>代码中的<code>Human</code>称为变量的<strong>静态类型</strong>（Static Type），或者称为外观类型（Apparent Type），后面的<code>Man</code>称为变量的<strong>实际类型</strong>（Actual Type）。</p>
+<blockquote>
+<p>静态类型和实际类型的区别是：静态类型的变化在编译期是可知的，但是实际类型的变化却要在运行期才能确定。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 动态类型变化</span></div><div class="line">Human man = <span class="keyword">new</span> Man();</div><div class="line">man = <span class="keyword">new</span> Woman();</div><div class="line"></div><div class="line"><span class="comment">// 静态类型变化</span></div><div class="line">test.say((Man) man);</div><div class="line">test.say((Woman) man)</div></pre></td></tr></table></figure>
+<p>编译器在<strong>重载</strong>时是通过参数的<strong>静态类型</strong>而不是实际类型作为判断依据的。</p>
+<p>所有依赖静态类型来定位方法执行版本的分派动作称为<strong>静态分派</strong>。</p>
+<h2 id="动态分派（重写）"><a href="#动态分派（重写）" class="headerlink" title="动态分派（重写）"></a>动态分派（重写）</h2><p>动态分派和多态性的另一个体现重写（Override）由很密切的关联。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 重写Override</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MethodDispatchTest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Human</span></span>&#123;</div><div class="line">        <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>&#123;</div><div class="line">            System.out.println(<span class="string">"Print, Human!"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Man</span> <span class="keyword">extends</span> <span class="title">Human</span></span>&#123;</div><div class="line">        <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>&#123;</div><div class="line">            System.out.println(<span class="string">"Print, Man!"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Woman</span> <span class="keyword">extends</span> <span class="title">Human</span></span>&#123;</div><div class="line">        <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>&#123;</div><div class="line">            System.out.println(<span class="string">"Print, Woman!"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Human man = <span class="keyword">new</span> Man();</div><div class="line">        Human woman = <span class="keyword">new</span> Woman();</div><div class="line">        man.print();</div><div class="line">        woman.print();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>程序输出结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Print, Man!</div><div class="line">Print, Woman!</div></pre></td></tr></table></figure></p>
+<p><strong>虚方法</strong>的调用是通过<code>invokevirtual</code>指令来实现的，在运行期需要确定方法接收者的<strong>实际类型</strong>。<br>如果将上述重写的方法改为<code>static</code>修饰，从而变成<strong>非虚方法</strong>，那就会变成<strong>解析</strong>，输出的都是<code>Print, Human!</code>。</p>
+<h1 id="动态类型语言支持"><a href="#动态类型语言支持" class="headerlink" title="动态类型语言支持"></a>动态类型语言支持</h1><p>JDK 1.7中新增了一条字节码指令<code>invokedynamic</code>指令，这条指令时为了实现动态类型语言支持而进行的改进之一，也是为JDK 1.8可以顺序实现Lambda表达式做准备。</p>
+<h2 id="动态类型语言"><a href="#动态类型语言" class="headerlink" title="动态类型语言"></a>动态类型语言</h2><p><strong>动态类型语言</strong>的关键特征是它的<strong>类型检查</strong>的主体过程是在<strong>运行期</strong>而不是编译期。例如：Clojure、Erlang、Groovy、JavaScript、Jython、Lisp、PHP、Python、Ruby等。<br>相对的，在编译期就进行类型检查过程的语言（如C/C++和Java等）就是最常用的<strong>静态类型语言</strong>。</p>
+<blockquote>
+<p>静态类型语言在编译期确定类型，最显著的好处是编译器可以提供严谨的类型检查，利于稳定性；动态类型语言在运行期确定类型，可以为开发人员提供更多的灵活性。</p>
+</blockquote>
+<h2 id="JDK-1-7与动态类型"><a href="#JDK-1-7与动态类型" class="headerlink" title="JDK 1.7与动态类型"></a>JDK 1.7与动态类型</h2><h3 id="java-lang-invoke包"><a href="#java-lang-invoke包" class="headerlink" title="java.lang.invoke包"></a>java.lang.invoke包</h3><p>这个包的主要目的是在之前单纯依靠符号引用来确定调用的目标方法这种方式以外，提供一种新的动态确定目标方法的机制，称为<strong>MethodHandle机制</strong>。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MethodHandleTest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassA</span></span>&#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">println</span><span class="params">(String s)</span></span>&#123;</div><div class="line">            System.out.println(<span class="string">"ClassA: "</span>+s);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">        Object obj = System.currentTimeMillis()%<span class="number">2</span> == <span class="number">0</span>?System.out:<span class="keyword">new</span> ClassA();</div><div class="line">        <span class="comment">// 无论obj最终是哪个实现类，都能正确调用println方法</span></div><div class="line">        getPrintlnMH(obj).invokeExact(<span class="string">"Roger"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> MethodHandle <span class="title">getPrintlnMH</span><span class="params">(Object receiver)</span> <span class="keyword">throws</span> NoSuchMethodException, IllegalAccessException </span>&#123;</div><div class="line">        <span class="comment">// MethodType：代表方法类型，包含了方法的返回值和具体参数</span></div><div class="line">        MethodType methodType = MethodType.methodType(<span class="keyword">void</span>.class, String.class);</div><div class="line">        <span class="comment">// lookup()方法的作用是在指定的类中查找符合给定的方法名称、方法类型，并且符合调用权限的方法句柄。</span></div><div class="line">        <span class="comment">// 调用虚方法，Java语言的规则是方法第一个参数是隐式的，也就是this指向的对象，代表该方法的接收者，通过bindTo()方法完成</span></div><div class="line">        <span class="keyword">return</span> MethodHandles.lookup().findVirtual(receiver.getClass(), <span class="string">"println"</span>, methodType).bindTo(receiver);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>实际上，方法<code>getPrintlnMH()</code>中模拟了<code>invokevirtual</code>指令的执行过程，只不过它的分派逻辑并非固化在Class文件的字节码上，而是通过一个具体方法来实现。</p>
+<blockquote>
+<p>而这个方法本身的返回值（MethodHandle对象），可以视为对最终调用的一个“引用”。</p>
+</blockquote>
+<h3 id="MethodHandle与Reflection机制"><a href="#MethodHandle与Reflection机制" class="headerlink" title="MethodHandle与Reflection机制"></a>MethodHandle与Reflection机制</h3><ul>
+<li><p>Reflection和MethodHandle机制都是在模拟方法调用，但是Reflection是在模拟<strong>Java代码</strong>层次的方法调用，而MethodHandle是在模拟<strong>字节码</strong>层次的方法调用。<br>MethodHandles.lookup()中的3个方法<code>findStatic()</code>、<code>findVirtual()</code>、<code>findSpecial</code>正式为了对应于<code>invokestatic</code>、<code>invokevirtual</code>&amp;<code>invokeinterface</code>和<code>invokespecial</code>这几条字节码指令的执行权限校验行为。</p>
+</li>
+<li><p>Reflection中的<code>java.lang.reflect.Method</code>对象远比MethodHandle机制中的<code>java.lang.invoke.MethodType</code>对象所包含的信息。<br>前者包含了方法的签名、描述符以及方法属性表红各种属性的Java表示方式，还包含执行权限等的运行期信息。后者仅仅包含与执行该方法相关的信息。（<strong>Reflection是重量级的，MethodHandle是轻量级的</strong>）</p>
+</li>
+<li><p>MethodHandle是对字节码的方法指令调用的模拟，理论上，虚拟机在这方面做的各种优化（如方法内联），在MethodHandle上也应当可以支持（目前还不完善）。通过反射区调用方法则没有这方面的优化。</p>
+</li>
+</ul>
+<blockquote>
+<p>Reflection API的设计目标是只针对Java语言服务的，而MethodHandle则设计成可服务于所有Java虚拟机之上的语言。</p>
+</blockquote>
+<h3 id="invokedynamic指令"><a href="#invokedynamic指令" class="headerlink" title="invokedynamic指令"></a>invokedynamic指令</h3><p>JDK 1.7为了更好地支持动态类型语言，引入了第5条方法调用的字节码指令<code>invokedynamic</code>。</p>
+<blockquote>
+<p>invokedynamic指令所面向的并非Java语言，而是其他Java虚拟机之上的动态类型语言。</p>
+</blockquote>
+<p>在某种程度上，<code>invokedynamic</code>指令和MethodHandle机制的作用是一样的，都是为了解决前4条“invoke*”指令方法分派规则固化在虚拟机之中的问题，把如何查找目标方法的决定权从虚拟机转移到用户代码中。（MethodHandle用上层Java代码和API来实现，另一个用字节码和Class中其他属性、常量来完成）</p>
+<p><strong>动态调用点</strong>（Dynamic Call Site）：每一处含有<code>invokedynamic</code>指令的位置。</p>
+<p>这条指令的第一个参数不再是代表方法的符号引用的<code>CONSTANT_Methodref_info</code>常量，而是变成JDK 1.7新加入的<code>CONSTATN_InvokeDynamic_info</code>常量。根据<code>CONSTANT_InvokeDynamic_info</code>常量中提供的信息，虚拟机可以找到并且执行引导方法，从而得到一个CallSite对象，最终调用要执行的目标方法。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag">#JVM</a>
+          
+            <a href="/tags/字节码执行引擎/" rel="tag">#字节码执行引擎</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/04/JVM-字节码执行引擎-1-概述/" rel="next" title="JVM: 字节码执行引擎(1)-概述">
+                <i class="fa fa-chevron-left"></i> JVM: 字节码执行引擎(1)-概述
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">73</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">87</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/a-mu-mu-art" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#解析"><span class="nav-number">1.</span> <span class="nav-text">解析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#非虚方法"><span class="nav-number">1.1.</span> <span class="nav-text">非虚方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分派"><span class="nav-number">2.</span> <span class="nav-text">分派</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#静态分派（重载）"><span class="nav-number">2.1.</span> <span class="nav-text">静态分派（重载）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态分派（重写）"><span class="nav-number">2.2.</span> <span class="nav-text">动态分派（重写）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#动态类型语言支持"><span class="nav-number">3.</span> <span class="nav-text">动态类型语言支持</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#动态类型语言"><span class="nav-number">3.1.</span> <span class="nav-text">动态类型语言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JDK-1-7与动态类型"><span class="nav-number">3.2.</span> <span class="nav-text">JDK 1.7与动态类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#java-lang-invoke包"><span class="nav-number">3.2.1.</span> <span class="nav-text">java.lang.invoke包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MethodHandle与Reflection机制"><span class="nav-number">3.2.2.</span> <span class="nav-text">MethodHandle与Reflection机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#invokedynamic指令"><span class="nav-number">3.2.3.</span> <span class="nav-text">invokedynamic指令</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
