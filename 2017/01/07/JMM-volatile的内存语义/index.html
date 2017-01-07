@@ -1,0 +1,657 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JVM,JMM,volatile," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="volatile关键字可以保证变量的可见性，也就是新值能立即同步到主内存，以及使用前立即从主内存刷新。
+可见性：对一个volatile变量的读，总是能看到（任意线程）对这个volatile变量最后的写入。原子性：对任意单个volatile变量的读/写具有原子性，但是对于复合操作如volatile++这种复合操作不具有原子性。
+volatile写-读内存语义volatile写内存语义：当写一个vol">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JMM: volatile的内存语义">
+<meta property="og:url" content="http://yoursite.com/2017/01/07/JMM-volatile的内存语义/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="volatile关键字可以保证变量的可见性，也就是新值能立即同步到主内存，以及使用前立即从主内存刷新。
+可见性：对一个volatile变量的读，总是能看到（任意线程）对这个volatile变量最后的写入。原子性：对任意单个volatile变量的读/写具有原子性，但是对于复合操作如volatile++这种复合操作不具有原子性。
+volatile写-读内存语义volatile写内存语义：当写一个vol">
+<meta property="og:image" content="http://yoursite.com/images/jmm/volatile-reorder-rules.png">
+<meta property="og:image" content="http://yoursite.com/../images/jmm/advanced-volatile-memory-semantic.png">
+<meta property="og:updated_time" content="2017-01-07T08:23:14.341Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JMM: volatile的内存语义">
+<meta name="twitter:description" content="volatile关键字可以保证变量的可见性，也就是新值能立即同步到主内存，以及使用前立即从主内存刷新。
+可见性：对一个volatile变量的读，总是能看到（任意线程）对这个volatile变量最后的写入。原子性：对任意单个volatile变量的读/写具有原子性，但是对于复合操作如volatile++这种复合操作不具有原子性。
+volatile写-读内存语义volatile写内存语义：当写一个vol">
+<meta name="twitter:image" content="http://yoursite.com/images/jmm/volatile-reorder-rules.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/07/JMM-volatile的内存语义/"/>
+
+
+  <title> JMM: volatile的内存语义 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a1eb6dc312a93939356214ab5491901a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                JMM: volatile的内存语义
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-07T14:05:43+08:00" content="2017-01-07">
+              2017-01-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>volatile关键字可以保证变量的可见性，也就是新值能立即同步到主内存，以及使用前立即从主内存刷新。</p>
+<p><strong>可见性</strong>：对一个volatile变量的读，总是能看到（任意线程）对这个volatile变量最后的写入。<br><strong>原子性</strong>：对任意单个volatile变量的读/写具有原子性，但是对于复合操作如volatile++这种复合操作不具有原子性。</p>
+<h1 id="volatile写-读内存语义"><a href="#volatile写-读内存语义" class="headerlink" title="volatile写-读内存语义"></a>volatile写-读内存语义</h1><p>volatile<strong>写</strong>内存语义：当写一个volatile变量时，JMM会把该线程对应的本地内存中的共享变量值刷新到主内存。</p>
+<p>volatile<strong>读</strong>内存语义：当读一个volatile变量时，JMM会把该线程对应的本地内存置为无效，然后从主内存中读取共享变量。</p>
+<h1 id="volatile内存语义的实现"><a href="#volatile内存语义的实现" class="headerlink" title="volatile内存语义的实现"></a>volatile内存语义的实现</h1><h2 id="编译器重排序序规则"><a href="#编译器重排序序规则" class="headerlink" title="编译器重排序序规则"></a>编译器重排序序规则</h2><p>JMM针对<strong>编译器</strong>指定的volatile重排序规则表。<br><img src="/images/jmm/volatile-reorder-rules.png" alt=""><br>从表中可以看出：</p>
+<ol>
+<li>当第二个操作是volatile写时，不管第一个操作是什么，都不能重排序。<br> 这个规则确保volatile写之前的操作不会被编译器重排序到volatile写之后。</li>
+<li>当第一个操作时volatile读时，不管第二个操作是什么，都不能重排序。<br> 这个规则确保volatile读之后的操作不会被编译器重排序到volatile读之前。</li>
+<li>当第一个操作时volatile写时，第二个操作是volatile读时，不能重排序。</li>
+</ol>
+<h2 id="处理器内存屏障"><a href="#处理器内存屏障" class="headerlink" title="处理器内存屏障"></a>处理器内存屏障</h2><p>为了实现volatile内存语义，编译器在生成字节码时，会在指令序列中插入<strong>内存屏障</strong>来禁止特定类型的<strong>处理器</strong>重排序。</p>
+<h1 id="增强的volatile内存语义"><a href="#增强的volatile内存语义" class="headerlink" title="增强的volatile内存语义"></a>增强的volatile内存语义</h1><p>JSR-133之前的JMM虽然不允许volatile变量之间的重排序，但是<strong>允许volatile变量和普通变量重排序</strong>。<br><img src="../images/jmm/advanced-volatile-memory-semantic.png" alt=""><br>在旧的JMM中，当1和2之间没有数据依赖关系时，1和2之间就可能被重排序（3和4类似），这样就会导致：读线程B执行4时，不一定能看到写线程A在执行1时对共享变量的修改。</p>
+<p>也就是说，在旧的Java内存模型中，volatile的写-读没有<strong>锁</strong>的释放-获取所具有的的内存语义，为了提供一种比锁更轻量级的线程通信机制，JSR-133决定增强volatile的内存语义：</p>
+<blockquote>
+<p>严格限制编译器和处理器对<strong>volatile变量</strong>与<strong>普通变量</strong>的重排序，<em>确保volatile的写-读和锁的释放-获取具有相同的内存语义</em>。</p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag">#JVM</a>
+          
+            <a href="/tags/JMM/" rel="tag">#JMM</a>
+          
+            <a href="/tags/volatile/" rel="tag">#volatile</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/07/JMM-顺序一致性/" rel="next" title="JMM: 顺序一致性">
+                <i class="fa fa-chevron-left"></i> JMM: 顺序一致性
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/07/JMM-锁的内存语义/" rel="prev" title="JMM: 锁的内存语义">
+                JMM: 锁的内存语义 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">83</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">99</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/a-mu-mu-art" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile写-读内存语义"><span class="nav-number">1.</span> <span class="nav-text">volatile写-读内存语义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile内存语义的实现"><span class="nav-number">2.</span> <span class="nav-text">volatile内存语义的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编译器重排序序规则"><span class="nav-number">2.1.</span> <span class="nav-text">编译器重排序序规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#处理器内存屏障"><span class="nav-number">2.2.</span> <span class="nav-text">处理器内存屏障</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#增强的volatile内存语义"><span class="nav-number">3.</span> <span class="nav-text">增强的volatile内存语义</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

@@ -1,0 +1,684 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JVM,JMM,顺序一致性," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="顺序一致性内存模型是一个理论参考模型。
+
+数据竞争与顺序一致性当程序未正确同步时，就会存在数据竞争。
+Java内存模型规范对数据竞争的定义：在一个线程中写一个变量，在另一个线程读同一个变量，而且写和读没有通过同步来排序。
+如果程序是正确同步的，程序的执行将具有顺序一致性。即程序的执行结果与该程序在顺序一致性内存模型中的执行结果相同。
+
+这里的同步是指广义上的同步，包括常用同步原语（synchro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JMM: 顺序一致性">
+<meta property="og:url" content="http://yoursite.com/2017/01/07/JMM-顺序一致性/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="顺序一致性内存模型是一个理论参考模型。
+
+数据竞争与顺序一致性当程序未正确同步时，就会存在数据竞争。
+Java内存模型规范对数据竞争的定义：在一个线程中写一个变量，在另一个线程读同一个变量，而且写和读没有通过同步来排序。
+如果程序是正确同步的，程序的执行将具有顺序一致性。即程序的执行结果与该程序在顺序一致性内存模型中的执行结果相同。
+
+这里的同步是指广义上的同步，包括常用同步原语（synchro">
+<meta property="og:image" content="http://yoursite.com/images/jmm/bus-transaction.png">
+<meta property="og:updated_time" content="2017-01-07T05:40:13.042Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JMM: 顺序一致性">
+<meta name="twitter:description" content="顺序一致性内存模型是一个理论参考模型。
+
+数据竞争与顺序一致性当程序未正确同步时，就会存在数据竞争。
+Java内存模型规范对数据竞争的定义：在一个线程中写一个变量，在另一个线程读同一个变量，而且写和读没有通过同步来排序。
+如果程序是正确同步的，程序的执行将具有顺序一致性。即程序的执行结果与该程序在顺序一致性内存模型中的执行结果相同。
+
+这里的同步是指广义上的同步，包括常用同步原语（synchro">
+<meta name="twitter:image" content="http://yoursite.com/images/jmm/bus-transaction.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/07/JMM-顺序一致性/"/>
+
+
+  <title> JMM: 顺序一致性 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a1eb6dc312a93939356214ab5491901a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                JMM: 顺序一致性
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-07T13:06:06+08:00" content="2017-01-07">
+              2017-01-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>顺序一致性内存模型是一个<strong>理论参考模型</strong>。</p>
+</blockquote>
+<h1 id="数据竞争与顺序一致性"><a href="#数据竞争与顺序一致性" class="headerlink" title="数据竞争与顺序一致性"></a>数据竞争与顺序一致性</h1><p>当程序未正确同步时，就会存在数据竞争。</p>
+<p>Java内存模型规范对数据竞争的定义：在一个线程中写一个变量，在另一个线程读同一个变量，而且写和读没有通过同步来排序。</p>
+<p>如果程序是正确同步的，程序的执行将具有顺序一致性。即程序的执行结果与该程序在顺序一致性内存模型中的执行结果相同。</p>
+<blockquote>
+<p>这里的同步是指广义上的同步，包括常用同步原语（synchronized、volatile和final）的正确使用，还有Lock锁的正确使用。</p>
+</blockquote>
+<h1 id="顺序一致性内存模型"><a href="#顺序一致性内存模型" class="headerlink" title="顺序一致性内存模型"></a>顺序一致性内存模型</h1><p>顺序一致性内存模型的两大特性：</p>
+<ul>
+<li>一个线程中的所有操作必须按照程序的顺序来执行。</li>
+<li>（不管程序是否同步）所有线程都只能看到一个单一的操作执行顺序（一个一致的整体执行顺序）。每个操作都必须原子执行且立刻对所有线程可见。</li>
+</ul>
+<blockquote>
+<p>在任意时间点最多只有<strong>一个线程</strong>可以连接到内存。</p>
+</blockquote>
+<p>未同步的程序在顺序一致性模型中整体执行顺序是未知的（<strong>执行结果未知</strong>），但是所有线程能看到一个一致的整体执行顺序。</p>
+<p>JMM不保证每个操作都对任意线程可见，未同步的程序在JMM中不但整体的执行顺序是无序的，而且所有线程看到的操作执行顺序也可能不一致。</p>
+<h1 id="同步程序的顺序一致性效果"><a href="#同步程序的顺序一致性效果" class="headerlink" title="同步程序的顺序一致性效果"></a>同步程序的顺序一致性效果</h1><p>一个正确同步的程序，JMM保证程序的执行结果和顺序一致性模型中的执行结果相同。</p>
+<p>JMM在具体实现上的基本方针为：在不改变（正确同步）程序执行结果的前提下，尽可能地为编译器和处理器打开优化之门（例如临界区的代码可以重排序）。</p>
+<h1 id="最小安全性"><a href="#最小安全性" class="headerlink" title="最小安全性"></a>最小安全性</h1><p>对于<strong>未同步</strong>或<strong>未正确同步</strong>的多线程程序，JMM只提供最小安全性：线程执行时读取到的值，要么是之前某个线程写入的值，要么是默认值，JMM保证线程读操作读取到的值不是无中生有的。</p>
+<h1 id="JMM与顺序一致性内存模型比较"><a href="#JMM与顺序一致性内存模型比较" class="headerlink" title="JMM与顺序一致性内存模型比较"></a>JMM与顺序一致性内存模型比较</h1><p>未同步的程序在JMM和顺序一致性模型中都表现出整体上执行顺序是无序的，其执行结果也无法预知。</p>
+<p>未同步的程序在这两个模型中执行的差异：</p>
+<ol>
+<li>顺序一致性模型保证单线程内的操作会按程序的顺序执行，而JMM不保证单线程内的操作会按程序的顺序执行（比如正确同步的多线程程序在临界区内的重排序）。</li>
+<li>顺序一致性模型保证所有线程只能看到<strong>一致</strong>的操作执行顺序，而JMM不保证所有线程能看到一致的操作执行顺序。这一点前面也已经讲过，这里就不再赘述。</li>
+<li>JMM不保证对64位的long型和double型变量的读/写操作具有原子性，而顺序一致性模型保证对所有的内存读/写操作都具有原子性。</li>
+</ol>
+<p>第3个差异与处理器总线的工作机制密切相关。在计算机中，数据通过总线在处理器和内存之间传递。<strong>每次处理器和内存之间的数据传递都是通过一系列步骤来完成的</strong>，这一系列步骤称之为<strong>总线事务</strong>（bus transaction）。总线事务包括读事务（read transaction）和写事务（write transaction）。读事务从内存传送数据到处理器，写事务从处理器传送数据到内存，每个事务会读/写内存中一个或多个物理上连续的字。这里的关键是，总线会同步试图并发使用总线的事务。在一个处理器执行总线事务期间，总线会禁止其它所有的处理器和I/O设备执行内存的读/写。<br><img src="/images/jmm/bus-transaction.png" alt=""></p>
+<p>总线的工作机制可以把所有处理器对内存的访问以<strong>串行化</strong>的方式来执行。在任意时刻，最多只能有一个处理器可以访问内存。这个特性保证了单个总线事务中的内存读/写操作具有<strong>原子性</strong>。</p>
+<p>在不同平台上的处理器可能把一个64位的long/double类型的变量的写操作拆分为两个32位的写操作来执行，而这两个32位的写操作可能会被分配到不同的总线事务中执行，此时写操作就不具备原子性。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag">#JVM</a>
+          
+            <a href="/tags/JMM/" rel="tag">#JMM</a>
+          
+            <a href="/tags/顺序一致性/" rel="tag">#顺序一致性</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/06/Java与线程/" rel="next" title="Java与线程">
+                <i class="fa fa-chevron-left"></i> Java与线程
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/07/JMM-volatile的内存语义/" rel="prev" title="JMM: volatile的内存语义">
+                JMM: volatile的内存语义 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">83</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">99</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/a-mu-mu-art" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据竞争与顺序一致性"><span class="nav-number">1.</span> <span class="nav-text">数据竞争与顺序一致性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#顺序一致性内存模型"><span class="nav-number">2.</span> <span class="nav-text">顺序一致性内存模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#同步程序的顺序一致性效果"><span class="nav-number">3.</span> <span class="nav-text">同步程序的顺序一致性效果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最小安全性"><span class="nav-number">4.</span> <span class="nav-text">最小安全性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JMM与顺序一致性内存模型比较"><span class="nav-number">5.</span> <span class="nav-text">JMM与顺序一致性内存模型比较</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
