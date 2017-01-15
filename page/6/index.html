@@ -259,8 +259,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/12/30/Java集合框架-15-HashMap和HashTable异同/" itemprop="url">
-                  Java集合框架(15): HashMap和HashTable异同
+                <a class="post-title-link" href="/2017/01/02/JVM-类加载-2-类加载器ClassLoader/" itemprop="url">
+                  JVM: 类加载(2)-类加载器ClassLoader
                 </a>
               
             
@@ -273,8 +273,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-30T17:08:25+08:00" content="2016-12-30">
-              2016-12-30
+            <time itemprop="dateCreated" datetime="2017-01-02T23:10:37+08:00" content="2017-01-02">
+              2017-01-02
             </time>
           </span>
 
@@ -287,8 +287,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java集合框架/" itemprop="url" rel="index">
-                    <span itemprop="name">Java集合框架</span>
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
                   </a>
                 </span>
 
@@ -322,14 +322,15 @@
       
         
           
-          相同点
-HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法解决Hash冲突。
+          类加载器只用于完成整个类加载过程的加载（Loading）动作：类的加载阶段中“通过一个类的全限定名去获取描述此类的二进制字节流”这个动作放到Java虚拟机外部去实现，以便让程序代码自己决定如何去获取所需要的类。
 
-添加key-value键值对：首先，根据key值计算出哈希值，再计算出数组索引(即，该key-value在table中的索引)。然后，根据数组索引找到Entry(即，单向链表)，再遍历单向链表，将
+类加载器在类层次划分、OSGI、热部署、代码加密等领域被广泛应用。
+
+类在虚拟机中的唯
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/30/Java集合框架-15-HashMap和HashTable异同/#more" rel="contents">
+            <a class="btn" href="/2017/01/02/JVM-类加载-2-类加载器ClassLoader/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -380,8 +381,8 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
             
               
                 
-                <a class="post-title-link" href="/2016/12/30/Java集合框架-14-HashTable源码分析/" itemprop="url">
-                  Java集合框架(14): HashTable源码分析
+                <a class="post-title-link" href="/2017/01/02/JVM-类加载-1-类加载机制/" itemprop="url">
+                  JVM: 类加载(1)-类加载机制
                 </a>
               
             
@@ -394,8 +395,8 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-30T14:04:42+08:00" content="2016-12-30">
-              2016-12-30
+            <time itemprop="dateCreated" datetime="2017-01-02T23:10:10+08:00" content="2017-01-02">
+              2017-01-02
             </time>
           </span>
 
@@ -408,8 +409,8 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java集合框架/" itemprop="url" rel="index">
-                    <span itemprop="name">Java集合框架</span>
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
                   </a>
                 </span>
 
@@ -443,12 +444,15 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
       
         
           
-          123public class Hashtable&lt;K,V&gt;    extends Dictionary&lt;K,V&gt;    implements Map&lt;K,V&gt;, Cloneable, java.io.Serializable
-简介HashTable和HashMa
+          类加载机制：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型。
+
+Java可以动态扩展的特性就是依赖运行期动态加载和动态连接这个特点实现的。
+
+类加载的时机类的生命周期类从被加载到虚拟机内存中开始，到卸载出内存为止，整个生
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/30/Java集合框架-14-HashTable源码分析/#more" rel="contents">
+            <a class="btn" href="/2017/01/02/JVM-类加载-1-类加载机制/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -499,8 +503,8 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
             
               
                 
-                <a class="post-title-link" href="/2016/12/30/Java集合框架-13-fail-fast/" itemprop="url">
-                  Java集合框架(13): fail-fast
+                <a class="post-title-link" href="/2017/01/01/JVM-后端编译-JIT编译器/" itemprop="url">
+                  JVM: 后端编译(JIT编译器)
                 </a>
               
             
@@ -513,8 +517,8 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-30T13:23:55+08:00" content="2016-12-30">
-              2016-12-30
+            <time itemprop="dateCreated" datetime="2017-01-01T23:42:14+08:00" content="2017-01-01">
+              2017-01-01
             </time>
           </span>
 
@@ -527,8 +531,8 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java集合框架/" itemprop="url" rel="index">
-                    <span itemprop="name">Java集合框架</span>
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
                   </a>
                 </span>
 
@@ -562,12 +566,15 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
       
         
           
-          简介fail-fast机制是java集合框架中的一种错误机制。当多个线程对同一个集合的结构进行操作时，可能会产生fail-fast，出现java.util.ConcurrentModificationException。
-解决办法fail-fast机制，是一种错误检测机制，只能被用来检测错误，因为J
+          解释器与JIT编译器当程序需要迅速启动和执行的时候，JIT解释器可以首先发挥作用，省去编译的时间，立即执行。在程序执行后，随着时间的推移，JIT编译器逐渐发挥作用，把越来越多的代码编译成本地机器码，可以获得更高的执行效率。
+
+可以使用解释器执行节约内存，反之使用JIT编译器来提升效率。
+
+HotSp
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/30/Java集合框架-13-fail-fast/#more" rel="contents">
+            <a class="btn" href="/2017/01/01/JVM-后端编译-JIT编译器/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -618,8 +625,8 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
             
               
                 
-                <a class="post-title-link" href="/2016/12/30/Java集合框架-12-TreeSet源码分析/" itemprop="url">
-                  Java集合框架(12): TreeSet源码分析
+                <a class="post-title-link" href="/2017/01/01/前端编译-Javac编译器/" itemprop="url">
+                  前端编译(Javac编译器)
                 </a>
               
             
@@ -632,8 +639,8 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-30T12:15:37+08:00" content="2016-12-30">
-              2016-12-30
+            <time itemprop="dateCreated" datetime="2017-01-01T15:02:16+08:00" content="2017-01-01">
+              2017-01-01
             </time>
           </span>
 
@@ -646,8 +653,8 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java集合框架/" itemprop="url" rel="index">
-                    <span itemprop="name">Java集合框架</span>
+                  <a href="/categories/ava-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">ava SE</span>
                   </a>
                 </span>
 
@@ -681,12 +688,23 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
       
         
           
-          12public class TreeSet&lt;E&gt; extends AbstractSet&lt;E&gt;    implements NavigableSet&lt;E&gt;, Cloneable, java.io.Serializable
-简介TreeSet是基于TreeMap实
+          Java语言中的“编译期”是一段“不确定”的操作过程。可能指的是以下三种：
+
+前端编译器
+
+把.java文件转变成.class文件的过程。
+
+  例如：Sun的javac、Eclipse JDT中的增量式编译器（ECJ）
+
+后端编译器
+
+把字节码转变成机器码的过程。
+
+  例如：JIT编译器（分为c
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/30/Java集合框架-12-TreeSet源码分析/#more" rel="contents">
+            <a class="btn" href="/2017/01/01/前端编译-Javac编译器/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -737,8 +755,8 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
             
               
                 
-                <a class="post-title-link" href="/2016/12/30/Java集合框架-11-LinkedHashSet源码分析/" itemprop="url">
-                  Java集合框架(11): LinkedHashSet源码分析
+                <a class="post-title-link" href="/2017/01/01/C和Java编译执行的过程比较/" itemprop="url">
+                  C和Java编译执行的过程比较
                 </a>
               
             
@@ -751,8 +769,8 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-30T12:15:20+08:00" content="2016-12-30">
-              2016-12-30
+            <time itemprop="dateCreated" datetime="2017-01-01T11:05:40+08:00" content="2017-01-01">
+              2017-01-01
             </time>
           </span>
 
@@ -765,8 +783,8 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java集合框架/" itemprop="url" rel="index">
-                    <span itemprop="name">Java集合框架</span>
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
                   </a>
                 </span>
 
@@ -800,12 +818,15 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
       
         
           
-          123public class LinkedHashSet&lt;E&gt;    extends HashSet&lt;E&gt;    implements Set&lt;E&gt;, Cloneable, java.io.Serializable
-简介LinkedHashSet继承自HashS
+          编译不论是物理机还是虚拟机，大部分的程序代码从开始编译到最终转化成物理机的目标代码或虚拟机能执行的指令集之前，都会按照如下图所示的各个步骤进行：
+
+其中绿色的模块可以选择性实现。分为解释执行和编译执行。
+
+上图中间的那条分支是解释执行的过程（即一条字节码一条字节码地解释执行，如 JavaScript
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/30/Java集合框架-11-LinkedHashSet源码分析/#more" rel="contents">
+            <a class="btn" href="/2017/01/01/C和Java编译执行的过程比较/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -839,7 +860,7 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -880,7 +901,7 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">83</span>
+              <span class="site-state-item-count">94</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -897,7 +918,7 @@ HashMap和HashTable都是存储“键值对”的散列表，都采用拉链法�
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">99</span>
+                <span class="site-state-item-count">109</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

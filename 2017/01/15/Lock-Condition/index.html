@@ -1,0 +1,666 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="线程,锁,Lock,Condition," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="任意一个Java对象，都拥有一组监视器方法（定义在java.lang.Object上），主要包括wait()、wait(long timeout)、notify()、notifyAll()，这些方法与synchronized关键字配合，可以实现等待/通知机制。
+Condition的作用是对锁进行更精确的控制，也提供了类似Object的监视器方法。Condition中的await()方法相当于Obj">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lock: Condition">
+<meta property="og:url" content="http://yoursite.com/2017/01/15/Lock-Condition/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="任意一个Java对象，都拥有一组监视器方法（定义在java.lang.Object上），主要包括wait()、wait(long timeout)、notify()、notifyAll()，这些方法与synchronized关键字配合，可以实现等待/通知机制。
+Condition的作用是对锁进行更精确的控制，也提供了类似Object的监视器方法。Condition中的await()方法相当于Obj">
+<meta property="og:updated_time" content="2017-01-15T06:11:40.658Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Lock: Condition">
+<meta name="twitter:description" content="任意一个Java对象，都拥有一组监视器方法（定义在java.lang.Object上），主要包括wait()、wait(long timeout)、notify()、notifyAll()，这些方法与synchronized关键字配合，可以实现等待/通知机制。
+Condition的作用是对锁进行更精确的控制，也提供了类似Object的监视器方法。Condition中的await()方法相当于Obj">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/15/Lock-Condition/"/>
+
+
+  <title> Lock: Condition | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a1eb6dc312a93939356214ab5491901a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Lock: Condition
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-15T13:22:49+08:00" content="2017-01-15">
+              2017-01-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>任意一个Java对象，都拥有一组监视器方法（定义在java.lang.Object上），主要包括<code>wait()</code>、<code>wait(long timeout)</code>、<code>notify()</code>、<code>notifyAll()</code>，这些方法与<code>synchronized</code>关键字配合，可以实现<strong>等待/通知机制</strong>。</p>
+<p>Condition的作用是对锁进行更精确的控制，也提供了类似Object的监视器方法。<br>Condition中的<code>await()</code>方法相当于Object的<code>wait()</code>方法，Condition中的<code>signal()</code>方法相当于Object的<code>notify()</code>方法，Condition中的<code>signalAll()</code>相当于Object的<code>notifyAll()</code>方法。</p>
+<blockquote>
+<p>不同的是，Object中的监视器方法是和”同步锁”(synchronized关键字)配合使用的；而Condition是需要与”排他锁”/“共享锁”配合使用的。</p>
+</blockquote>
+<h1 id="Condition实现分析"><a href="#Condition实现分析" class="headerlink" title="Condition实现分析"></a>Condition实现分析</h1><p>ConditionObject是队列同步器AbstractQueuedSynchronizer的内部类，实现了Condition接口。因为Condition的操作需要获取相关联的锁，所以作为同步器的内部类也较为合理。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConditionObject</span> <span class="keyword">implements</span> <span class="title">Condition</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></span></div></pre></td></tr></table></figure></p>
+<p>Condition的实现主要包括：等待队列、等待、通知。</p>
+<h2 id="等待队列"><a href="#等待队列" class="headerlink" title="等待队列"></a>等待队列</h2><p>等待队列是一个FIFO的队列，在队列中的每个节点都包含了一个线程引用，</p>
+<blockquote>
+<p>等待队列的节点复用了同步器中同步队列的节点定义<code>AbstractQueuedSynchronizer.Node</code>。</p>
+</blockquote>
+<p>一个Condition包含一个等待队列，Condition拥有首节点（firstWaiter）和尾节点（lastWaiter）。<br>尾节点的更新并没有像同步队列中使用CAS保证，原因在于调用<code>await()</code>方法的线程必定是获取了锁的线程，也就是说该过程是由锁来保证线程安全的。</p>
+<blockquote>
+<p>在Object监视器模型上，一个对象拥有一个同步队列和一个等待队列；而并发包中的Lock拥有一个同步队列和多个等待队列。</p>
+</blockquote>
+<h2 id="等待"><a href="#等待" class="headerlink" title="等待"></a>等待</h2><p>调用Condition的<code>await()</code>方法会使当前线程进入等待队列并释放锁，同时线程状态会变为等待状态。从队列的角度看，相当于同步队列的首节点（获取了锁的节点）移动到Condition的等待队列中（通过<code>addConditionWaiter()</code>方法把当前线程构造成一个新的节点）。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">await</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        <span class="keyword">if</span> (Thread.interrupted())</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InterruptedException();</div><div class="line">        <span class="comment">// 当前线程加入到等待队列</span></div><div class="line">        Node node = addConditionWaiter();</div><div class="line">        <span class="comment">// 释放同步状态(锁)</span></div><div class="line">        <span class="keyword">int</span> savedState = fullyRelease(node);</div><div class="line">        <span class="keyword">int</span> interruptMode = <span class="number">0</span>;</div><div class="line">        <span class="comment">// 循环处理被唤醒的过程</span></div><div class="line">        <span class="keyword">while</span> (!isOnSyncQueue(node)) &#123;</div><div class="line">            LockSupport.park(<span class="keyword">this</span>);</div><div class="line">            <span class="keyword">if</span> ((interruptMode = checkInterruptWhileWaiting(node)) != <span class="number">0</span>)</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (acquireQueued(node, savedState) &amp;&amp; interruptMode != THROW_IE)</div><div class="line">            interruptMode = REINTERRUPT;</div><div class="line">        <span class="keyword">if</span> (node.nextWaiter != <span class="keyword">null</span>) <span class="comment">// clean up if cancelled</span></div><div class="line">            unlinkCancelledWaiters();</div><div class="line">        <span class="keyword">if</span> (interruptMode != <span class="number">0</span>)</div><div class="line">            reportInterruptAfterWait(interruptMode);</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>当等待队列中的节点被<strong>唤醒</strong>，则唤醒的节点尝试获取同步状态。如果不是通过其他线程调用<code>signal()</code>方法唤醒，而是对等待线程进行中断，则会抛出异常<code>InterruptedException</code>。</p>
+<h2 id="通知"><a href="#通知" class="headerlink" title="通知"></a>通知</h2><p>调用Condition的<code>signal()</code>方法会唤醒等待队列中等待时间最长的节点（首节点），在唤醒节点之前，会将节点移到同步队列中。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">signal</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// 前置条件必须是获取了锁，在此进行检查</span></div><div class="line">    <span class="keyword">if</span> (!isHeldExclusively())</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalMonitorStateException();</div><div class="line">    Node first = firstWaiter;</div><div class="line">    <span class="keyword">if</span> (first != <span class="keyword">null</span>)</div><div class="line">        doSignal(first);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>唤醒的过程</strong>：</p>
+<ol>
+<li>调用该方法的前置条件是当前线程必须获取了锁</li>
+<li>接着获取等待队列的首节点，调用同步器的<code>enq(Node node)</code>方法将其移动到同步队列中</li>
+<li>最后使用 LockSupport 唤醒节点中的线程。</li>
+<li>被唤醒的额线程将从<code>await()</code>方法中的while循环中退出，进而调用同步器的<code>acquireQueued()</code>方法加入到获取同步状态的竞争中。</li>
+<li>成功获取同步状态之后，被唤醒的线程将从先前调用的<code>await()</code>方法返回，此时已经成功获取锁。</li>
+</ol>
+<blockquote>
+<p>Condition的<code>signalAll()</code>方法，相当于对等待队列中的每个节点均执行一次<code>signal()</code>方法，效果就是将等待队列中的所有节点全部移动到同步队列中，并唤醒每个节点的线程。</p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/线程/" rel="tag">#线程</a>
+          
+            <a href="/tags/锁/" rel="tag">#锁</a>
+          
+            <a href="/tags/Lock/" rel="tag">#Lock</a>
+          
+            <a href="/tags/Condition/" rel="tag">#Condition</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/15/Lock-LockSupport/" rel="next" title="Lock: LockSupport">
+                <i class="fa fa-chevron-left"></i> Lock: LockSupport
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/15/Lock-并发工具类-CountDownLatch/" rel="prev" title="Lock: 并发工具类-CountDownLatch">
+                Lock: 并发工具类-CountDownLatch <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">94</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">109</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/a-mu-mu-art" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Condition实现分析"><span class="nav-number">1.</span> <span class="nav-text">Condition实现分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#等待队列"><span class="nav-number">1.1.</span> <span class="nav-text">等待队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#等待"><span class="nav-number">1.2.</span> <span class="nav-text">等待</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通知"><span class="nav-number">1.3.</span> <span class="nav-text">通知</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

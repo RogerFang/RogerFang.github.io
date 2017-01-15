@@ -259,8 +259,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/04/数据结构与算法-23-排序-快速排序/" itemprop="url">
-                  数据结构与算法(23): 排序- 快速排序
+                <a class="post-title-link" href="/2016/11/13/数据结构与算法-34-不相交集（并查集）/" itemprop="url">
+                  数据结构与算法(34): 不相交集（并查集）
                 </a>
               
             
@@ -273,8 +273,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-04T12:10:14+08:00" content="2016-11-04">
-              2016-11-04
+            <time itemprop="dateCreated" datetime="2016-11-13T10:19:33+08:00" content="2016-11-13">
+              2016-11-13
             </time>
           </span>
 
@@ -322,15 +322,18 @@
       
         
           
-          &emsp;&emsp;快速排序的基本思想：选择一个基准数，通过一趟排序将要排序的数据分割成独立的两部分；其中一部分的所有数据都比另外一部分的所有数据都要小。然后，再按此方法对这两部分数据分别进行快速排序，整个排序过程递归进行，以达到有序序列。
+          介绍&emsp;&emsp;不相交集（Disjoint-set）也称并查集（Union-find set），对于n个不同且不相交元素， 不相交集为支持以下两种操作的数据结构。
 
-快速排序的每一轮处理其实就是将一轮的基准数归位。
+找出给定元素所属的集合
+合并两个集合
 
+操作不相交集的操作：
 
+MAKE-SET(x)：建立一个有唯一元素x的集合，并且x
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/04/数据结构与算法-23-排序-快速排序/#more" rel="contents">
+            <a class="btn" href="/2016/11/13/数据结构与算法-34-不相交集（并查集）/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -381,8 +384,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/03/数据结构与算法-22-排序-归并排序/" itemprop="url">
-                  数据结构与算法(22): 排序- 归并排序
+                <a class="post-title-link" href="/2016/11/08/数据结构与算法-33-图-最短路径-解决负权边-Bellman-Ford/" itemprop="url">
+                  数据结构与算法(33): 图- 最短路径(解决负权边)Bellman-Ford
                 </a>
               
             
@@ -395,8 +398,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-03T19:10:14+08:00" content="2016-11-03">
-              2016-11-03
+            <time itemprop="dateCreated" datetime="2016-11-08T15:34:00+08:00" content="2016-11-08">
+              2016-11-08
             </time>
           </span>
 
@@ -444,13 +447,14 @@
       
         
           
-          &emsp;&emsp;归并排序的基本思想：将两个有序数列合并成一个有序数列，具体实现包括“从上往下”和“从下往上”2种方式。&emsp;&emsp;时间复杂度：O($N\log{N}$)。&emsp;&emsp;归并排序是稳定的。
+          
+Dijkstra算法虽然好，但是不能解决带负权边的图。
 
-从下往上的归并排序：将待排序的数列分成若干个长度为1的子数列，然
+&emsp;&emsp;想想Floyd-Warshall和Dijkstra算法，它们都是基于这样的事实：求两点之间的最短路径，看能否可以在路径中添加k个顶点来缩短路径。Dijkstra则是通过对dis数组进行V(顶点个数)轮松弛，得到单源最
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/03/数据结构与算法-22-排序-归并排序/#more" rel="contents">
+            <a class="btn" href="/2016/11/08/数据结构与算法-33-图-最短路径-解决负权边-Bellman-Ford/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -501,8 +505,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/03/数据结构与算法-21-排序-堆排序/" itemprop="url">
-                  数据结构与算法(21): 排序- 堆排序
+                <a class="post-title-link" href="/2016/11/06/数据结构与算法-32-图-单源最短路径Dijkstra/" itemprop="url">
+                  数据结构与算法(32): 图- 单源最短路径Dijkstra
                 </a>
               
             
@@ -515,8 +519,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-03T13:10:14+08:00" content="2016-11-03">
-              2016-11-03
+            <time itemprop="dateCreated" datetime="2016-11-06T19:28:00+08:00" content="2016-11-06">
+              2016-11-06
             </time>
           </span>
 
@@ -564,11 +568,11 @@
       
         
           
-          &emsp;&emsp;堆排序是指利用堆这种数据结构所涉及的一种排序算法。最大堆通常被用来进行”升序”排序，而最小堆通常被用来进行”降序”排序。&emsp;&emsp;最小堆进行降序的基本思想：&emsp;&emsp;1. 初始化堆：将数据构造成最小堆。&emsp;&emsp;2. 交换数据：将a[
+          &emsp;&emsp;迪杰斯特拉(Dijkstra)算法是典型最短路径算法，用于计算一个节点到其他节点的最短路径。它的主要特点是以起始点为中心向外层层扩展(广度优先搜索思想)，直到扩展到终点为止。&emsp;&emsp;Dijkstra算法每次找到离源点最近的一个顶点，然后以该顶点为中心进行扩展，
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/03/数据结构与算法-21-排序-堆排序/#more" rel="contents">
+            <a class="btn" href="/2016/11/06/数据结构与算法-32-图-单源最短路径Dijkstra/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -619,8 +623,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/03/数据结构与算法-20-排序-希尔排序/" itemprop="url">
-                  数据结构与算法(20): 排序- 希尔排序
+                <a class="post-title-link" href="/2016/11/06/数据结构与算法-31-图-多源最短路径Floyd-Warshall/" itemprop="url">
+                  数据结构与算法(31): 图- 多源最短路径Floyd-Warshall
                 </a>
               
             
@@ -633,8 +637,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-03T12:30:14+08:00" content="2016-11-03">
-              2016-11-03
+            <time itemprop="dateCreated" datetime="2016-11-06T18:36:57+08:00" content="2016-11-06">
+              2016-11-06
             </time>
           </span>
 
@@ -682,14 +686,11 @@
       
         
           
-          
-希尔排序是插入排序的一种，它是针对直接插入排序算法的改进。该方法又称缩减增量排序，因DL．Shell于1959年提出而得名。
-
-&emsp;&emsp;希尔排序实质上是一种分组插入方法。它的基本思想是：对于n个待排序的数列，取一个小于n的整数gap(gap被称为步长)将待排序元素分成若干个组子序列
+          &emsp;&emsp;Floyd-Warshall 算法采用动态规划方案来解决在一个有向图 G = (V, E) 上每对顶点间的最短路径问题，即全源最短路径问题（All-Pairs Shortest Paths Problem），其中图G允许存在权值为负的边，但不存在权值为负的回路。Floyd-W
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/03/数据结构与算法-20-排序-希尔排序/#more" rel="contents">
+            <a class="btn" href="/2016/11/06/数据结构与算法-31-图-多源最短路径Floyd-Warshall/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -740,8 +741,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/03/数据结构与算法-19-排序-插入排序/" itemprop="url">
-                  数据结构与算法(19): 排序- 插入排序
+                <a class="post-title-link" href="/2016/11/06/数据结构与算法-30-图-广度优先搜索-BFS/" itemprop="url">
+                  数据结构与算法(30): 图- 广度优先搜索(BFS)
                 </a>
               
             
@@ -754,8 +755,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-03T10:30:14+08:00" content="2016-11-03">
-              2016-11-03
+            <time itemprop="dateCreated" datetime="2016-11-06T15:31:29+08:00" content="2016-11-06">
+              2016-11-06
             </time>
           </span>
 
@@ -803,11 +804,11 @@
       
         
           
-          &emsp;&emsp;插入排序的基本思想：把n个待排序的元素看成为一个有序表和一个无序表。开始时有序表中只包含1个元素，无序表中包含有n-1个元素，排序过程中每次从无序表中取出第一个元素，将它插入到有序表中的适当位置，使之成为新的有序表，重复n-1次可完成排序过程。&emsp;&emsp;时间复杂
+          &emsp;&emsp;从图中某顶点v出发，在访问了v之后依次访问v的各个未曾访问过的邻接点，然后分别从这些邻接点出发依次访问它们的邻接点，并使得“先被访问的顶点的邻接点先于后被访问的顶点的邻接点被访问，直至图中所有已被访问的顶点的邻接点都被访问到。如果此时图中尚有顶点未被访问，则需要另选一个未曾被
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/03/数据结构与算法-19-排序-插入排序/#more" rel="contents">
+            <a class="btn" href="/2016/11/06/数据结构与算法-30-图-广度优先搜索-BFS/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -841,7 +842,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -882,7 +883,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">83</span>
+              <span class="site-state-item-count">94</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -899,7 +900,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">99</span>
+                <span class="site-state-item-count">109</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1041,24 +1042,7 @@
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
 

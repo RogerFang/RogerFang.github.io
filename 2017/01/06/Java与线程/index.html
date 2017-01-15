@@ -102,7 +102,7 @@
 线程的引入，可以把一个进程的资源分配和执行调度分开，各个线程共享资源，又可以独立调度。
 线程的实现实现线程主要有3种方式：使用内核线程实现、使用用户线程实现和使用用户线程加轻量级进程混合实现。
 使用内核线程实现内核线程就是直接使用操作系统">
-<meta property="og:updated_time" content="2017-01-06T15:26:32.411Z">
+<meta property="og:updated_time" content="2017-01-07T14:55:08.178Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java与线程">
 <meta name="twitter:description" content="并发不一定依赖多线程（例如PHP的多进程并发），但是在Java里面讨论并发大多数和线程离不开。
@@ -366,6 +366,7 @@
 <li>阻塞（Blocked）：阻塞状态下的线程在等待获取到一个排他锁，这个事件将在另外一个线程放弃这个锁的时候产生。</li>
 <li>结束（Terminated）：已终止的线程状态。</li>
 </ul>
+<p>阻塞状态是线程阻塞在进入synchronized关键字修饰的方法或代码块时的状态，但是阻塞在<strong>java.concurrent包</strong>中Lock接口的线程状态却是<strong>等待状态</strong>，因为java.concurrent包中Lock接口对于阻塞的实现均使用了LockSupport类中的相关方法。</p>
 
       
     </div>
@@ -475,7 +476,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">83</span>
+              <span class="site-state-item-count">94</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -492,7 +493,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">99</span>
+                <span class="site-state-item-count">109</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

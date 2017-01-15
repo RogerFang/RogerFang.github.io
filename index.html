@@ -259,8 +259,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/07/JMM-final域的内存语义/" itemprop="url">
-                  JMM: final域的内存语义
+                <a class="post-title-link" href="/2017/01/15/Lock-并发工具类-Exchanger/" itemprop="url">
+                  Lock: 并发工具类-Exchanger
                 </a>
               
             
@@ -273,8 +273,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-07T16:56:42+08:00" content="2017-01-07">
-              2017-01-07
+            <time itemprop="dateCreated" datetime="2017-01-15T17:11:35+08:00" content="2017-01-15">
+              2017-01-15
             </time>
           </span>
 
@@ -322,15 +322,11 @@
       
         
           
-          与volatile和锁相比，对final域的读写更像是普通变量的访问。
-final域的重排序规则对于final域编译器和处理器需要遵守两个重排序规则：
-
-在构造函数内对一个final域的写入，与随后把这个被构造对象的引用赋值给一个引用变量，这两个操作之间不能重排序。
-初次读一个包含final域的对象
+          Exchanger是一个用于线程间协作的工具类，可以进行线程间的数据交换。它提供一个同步点，在这个同步点，两个线程可以交换彼此的数据。这两个线程通过exchange(V x)方法交换数据，如果第一个线程先执行exchange(V x)方法，它会一直等待第二个线程也执行exchange(V x)方法，
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/07/JMM-final域的内存语义/#more" rel="contents">
+            <a class="btn" href="/2017/01/15/Lock-并发工具类-Exchanger/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -381,8 +377,8 @@ final域的重排序规则对于final域编译器和处理器需要遵守两个�
             
               
                 
-                <a class="post-title-link" href="/2017/01/07/JMM-锁的内存语义/" itemprop="url">
-                  JMM: 锁的内存语义
+                <a class="post-title-link" href="/2017/01/15/Lock-并发工具类-Semaphore/" itemprop="url">
+                  Lock: 并发工具类-Semaphore
                 </a>
               
             
@@ -395,8 +391,8 @@ final域的重排序规则对于final域编译器和处理器需要遵守两个�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-07T15:17:25+08:00" content="2017-01-07">
-              2017-01-07
+            <time itemprop="dateCreated" datetime="2017-01-15T14:21:40+08:00" content="2017-01-15">
+              2017-01-15
             </time>
           </span>
 
@@ -444,13 +440,12 @@ final域的重排序规则对于final域编译器和处理器需要遵守两个�
       
         
           
-          锁是Java并发编程中最重要的同步机制，锁除了可以让临界区互斥执行外，还可以让释放锁的线程向获取同一个锁的线程发送消息。
-锁释放-获取内存语义锁的释放内存语义：线程释放锁时，JMM会把该线程对应的本地内存中的共享变量刷新到主内存中。
-锁的获取内存语义：线程获取锁时，JMM会把线程对应的本地内存置为无
+          Semaphore（信号量）是用来控制同时访问特定资源的线程数量，它通过协调各个线程，以保证合理的使用公共资源。
+信号量维护了一个信号量许可集。线程可以通过调用acquire()来获取信号量的许可；当信号量中有可用的许可时，线程能获取该许可；否则线程必须等待，直到有可用的许可为止。 线程可以通过re
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/07/JMM-锁的内存语义/#more" rel="contents">
+            <a class="btn" href="/2017/01/15/Lock-并发工具类-Semaphore/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -501,8 +496,8 @@ final域的重排序规则对于final域编译器和处理器需要遵守两个�
             
               
                 
-                <a class="post-title-link" href="/2017/01/07/JMM-volatile的内存语义/" itemprop="url">
-                  JMM: volatile的内存语义
+                <a class="post-title-link" href="/2017/01/15/Lock-并发工具类-CyclicBarrier/" itemprop="url">
+                  Lock: 并发工具类-CyclicBarrier
                 </a>
               
             
@@ -515,8 +510,8 @@ final域的重排序规则对于final域编译器和处理器需要遵守两个�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-07T14:05:43+08:00" content="2017-01-07">
-              2017-01-07
+            <time itemprop="dateCreated" datetime="2017-01-15T14:21:14+08:00" content="2017-01-15">
+              2017-01-15
             </time>
           </span>
 
@@ -564,12 +559,13 @@ final域的重排序规则对于final域编译器和处理器需要遵守两个�
       
         
           
-          volatile关键字可以保证变量的可见性，也就是新值能立即同步到主内存，以及使用前立即从主内存刷新。
-可见性：对一个volatile变量的读，总是能看到（任意线程）对这个volatile变量最后的写入。原子性：对任意单个volatile变量的读/写具有原子性，但是对于复合操作如volatile++
+          CyclicBarrier可以让一组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，所有被屏障拦截的线程才会继续运行。
+CountDownLatch和CyclicBarrier的区别
+CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；而CyclicBa
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/07/JMM-volatile的内存语义/#more" rel="contents">
+            <a class="btn" href="/2017/01/15/Lock-并发工具类-CyclicBarrier/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -620,8 +616,8 @@ final域的重排序规则对于final域编译器和处理器需要遵守两个�
             
               
                 
-                <a class="post-title-link" href="/2017/01/07/JMM-顺序一致性/" itemprop="url">
-                  JMM: 顺序一致性
+                <a class="post-title-link" href="/2017/01/15/Lock-并发工具类-CountDownLatch/" itemprop="url">
+                  Lock: 并发工具类-CountDownLatch
                 </a>
               
             
@@ -634,8 +630,8 @@ final域的重排序规则对于final域编译器和处理器需要遵守两个�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-07T13:06:06+08:00" content="2017-01-07">
-              2017-01-07
+            <time itemprop="dateCreated" datetime="2017-01-15T14:20:41+08:00" content="2017-01-15">
+              2017-01-15
             </time>
           </span>
 
@@ -683,16 +679,13 @@ final域的重排序规则对于final域编译器和处理器需要遵守两个�
       
         
           
-          
-顺序一致性内存模型是一个理论参考模型。
-
-数据竞争与顺序一致性当程序未正确同步时，就会存在数据竞争。
-Java内存模型规范对数据竞争的定义：在一个线程中写一个变量，在另一个线程读同一个变量，而且写和读没有通过同步来排序。
-如果程序是正确同步的，程序的执行将具有顺序一致性。即程序的执行结果与该程序在
+          在JDK并发包提供了几个常用的并发工具类：CountDownLatch、CyclicBarrier、Semaphore提供了一种并发流程控制的手段，而Exchanger工具类提供了在线程间交换数据的一种手段。
+CountDownLatch允许一个或多个线程等待其他线程完成操作。
+CountDownL
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/07/JMM-顺序一致性/#more" rel="contents">
+            <a class="btn" href="/2017/01/15/Lock-并发工具类-CountDownLatch/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -743,8 +736,8 @@ Java内存模型规范对数据竞争的定义：在一个线程中写一个变�
             
               
                 
-                <a class="post-title-link" href="/2017/01/06/Java与线程/" itemprop="url">
-                  Java与线程
+                <a class="post-title-link" href="/2017/01/15/Lock-Condition/" itemprop="url">
+                  Lock: Condition
                 </a>
               
             
@@ -757,8 +750,8 @@ Java内存模型规范对数据竞争的定义：在一个线程中写一个变�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-06T22:29:24+08:00" content="2017-01-06">
-              2017-01-06
+            <time itemprop="dateCreated" datetime="2017-01-15T13:22:49+08:00" content="2017-01-15">
+              2017-01-15
             </time>
           </span>
 
@@ -806,16 +799,12 @@ Java内存模型规范对数据竞争的定义：在一个线程中写一个变�
       
         
           
-          并发不一定依赖多线程（例如PHP的多进程并发），但是在Java里面讨论并发大多数和线程离不开。
-
-线程是比进程更轻量级的调用执行单位，是CPU调度的基本单位。
-
-线程的引入，可以把一个进程的资源分配和执行调度分开，各个线程共享资源，又可以独立调度。
-线程的实现实现线程主要有3种方式：使用内核线程实现
+          任意一个Java对象，都拥有一组监视器方法（定义在java.lang.Object上），主要包括wait()、wait(long timeout)、notify()、notifyAll()，这些方法与synchronized关键字配合，可以实现等待/通知机制。
+Condition的作用是对锁进行更精
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/06/Java与线程/#more" rel="contents">
+            <a class="btn" href="/2017/01/15/Lock-Condition/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -849,7 +838,7 @@ Java内存模型规范对数据竞争的定义：在一个线程中写一个变�
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -890,7 +879,7 @@ Java内存模型规范对数据竞争的定义：在一个线程中写一个变�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">83</span>
+              <span class="site-state-item-count">94</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -907,7 +896,7 @@ Java内存模型规范对数据竞争的定义：在一个线程中写一个变�
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">99</span>
+                <span class="site-state-item-count">109</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

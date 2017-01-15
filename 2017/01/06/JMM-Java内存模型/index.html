@@ -96,7 +96,7 @@
 <meta property="og:image" content="http://yoursite.com/images/jmm/jmm-thread-memory-process.png">
 <meta property="og:image" content="http://yoursite.com/images/jmm/instruction-reordering.png">
 <meta property="og:image" content="http://yoursite.com/images/jmm/jmm-happens-before.png">
-<meta property="og:updated_time" content="2017-01-07T06:59:28.994Z">
+<meta property="og:updated_time" content="2017-01-07T12:08:49.692Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JMM: Java内存模型">
 <meta name="twitter:description" content="硬件效率与一致性一般来说，“让计算机并发执行若干个运算任务”（多任务处理）可以“更充分地利用计算机处理器的效能”。但是其中一个重要的复杂性（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，处理器还需要和内存交互，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。
@@ -337,6 +337,7 @@
 <blockquote>
 <p>此处的变量指的是线程共享的变量，包括了实例字段、静态字段和构成数组对象的元素。</p>
 </blockquote>
+<p>JMM是一个语言及的内存模型，处理器内存模型是硬件级的内存模型。</p>
 <h2 id="主内存与工作内存"><a href="#主内存与工作内存" class="headerlink" title="主内存与工作内存"></a>主内存与工作内存</h2><p>Java内存模型规定所有的变量都存储在主内存（虚拟机内存的一部分，可以和硬件中的主内存类比）中。<br>每条线程都有自己的工作内存（Working Memory，或者叫<strong>本地内存</strong>，可以和硬件中的高速缓存类比，本地内存只是JMM的一个抽象概念，并不真实存在）。</p>
 <p>线程A与线程B之间如要通信的话，必须要经历下面2个步骤：</p>
 <ol>
@@ -539,7 +540,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">83</span>
+              <span class="site-state-item-count">94</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -556,7 +557,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">99</span>
+                <span class="site-state-item-count">109</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

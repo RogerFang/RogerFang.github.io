@@ -259,8 +259,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/06/JMM-Java内存模型/" itemprop="url">
-                  JMM: Java内存模型
+                <a class="post-title-link" href="/2017/01/15/Lock-LockSupport/" itemprop="url">
+                  Lock: LockSupport
                 </a>
               
             
@@ -273,8 +273,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-06T18:27:02+08:00" content="2017-01-06">
-              2017-01-06
+            <time itemprop="dateCreated" datetime="2017-01-15T12:50:29+08:00" content="2017-01-15">
+              2017-01-15
             </time>
           </span>
 
@@ -322,12 +322,12 @@
       
         
           
-          硬件效率与一致性一般来说，“让计算机并发执行若干个运算任务”（多任务处理）可以“更充分地利用计算机处理器的效能”。但是其中一个重要的复杂性（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，处理器还需要和内存交互，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。
-由于计算机的存
+          LockSupport工具类是用来创建锁Lock和其他同步类的基本线程阻塞原语。通过park()和unpark()方法来阻塞和唤醒线程。
+LockSupport中的私有成员变量UNSAFE和parkBlockerOffset12private static final sun.misc.Unsafe
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/06/JMM-Java内存模型/#more" rel="contents">
+            <a class="btn" href="/2017/01/15/Lock-LockSupport/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -378,8 +378,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/05/JVM-垃圾收集器/" itemprop="url">
-                  JVM: 垃圾收集器
+                <a class="post-title-link" href="/2017/01/15/Lock-读写锁ReentrantReadWriteLock/" itemprop="url">
+                  Lock: 读写锁ReentrantReadWriteLock
                 </a>
               
             
@@ -392,8 +392,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-05T22:15:26+08:00" content="2017-01-05">
-              2017-01-05
+            <time itemprop="dateCreated" datetime="2017-01-15T11:03:44+08:00" content="2017-01-15">
+              2017-01-15
             </time>
           </span>
 
@@ -441,14 +441,15 @@
       
         
           
-          垃圾收集算法是内存回收的方法论，垃圾收集器是内存回收的具体实现。
-HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用于新生代和老年代的收集器，如果两个收集器之间存在连线，就说明可以搭配使用。
-并发和并行
-并行（Parallel）：并行就是同时执行。  多条垃圾收集线程并行工作，但用户线
+          之前提到的ReentrantLock是排他锁，也就是同一时刻只允许一个线程进行访问。而读写锁在同一时刻可以允许多个读线程进行访问，但是在写线程访问时，所有的读线程和写线程均会被阻塞。
+
+读写锁维护了一对锁，一个读锁和一个写锁，通过分离读锁和写锁，使得并发性相比一般的排他锁有了很大的提升。
+
+读写锁保
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/05/JVM-垃圾收集器/#more" rel="contents">
+            <a class="btn" href="/2017/01/15/Lock-读写锁ReentrantReadWriteLock/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -499,8 +500,8 @@ HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用
             
               
                 
-                <a class="post-title-link" href="/2017/01/05/JVM-垃圾回收机制/" itemprop="url">
-                  JVM: 垃圾回收机制
+                <a class="post-title-link" href="/2017/01/15/Lock-重入锁ReentrantLock/" itemprop="url">
+                  Lock: 重入锁ReentrantLock
                 </a>
               
             
@@ -513,8 +514,8 @@ HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-05T18:29:43+08:00" content="2017-01-05">
-              2017-01-05
+            <time itemprop="dateCreated" datetime="2017-01-15T10:08:54+08:00" content="2017-01-15">
+              2017-01-15
             </time>
           </span>
 
@@ -562,13 +563,17 @@ HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用
       
         
           
-          垃圾回收可以有效的防止内存泄露，有效的使用空闲的内存。Java堆和方法区的内存分配和回收是动态的，因而垃圾收集器所关注的也是这部分内存。
-垃圾收集机制要考虑的两件事情：（1）发现无用对象（如何判断对象是否还“存活”）；（2）回收被无用对象占用的内存空间，使该空间可被程序再次使用（垃圾收集算法）。
-对
+          重入锁ReentrantLock，表示该锁能够支持一个线程对资源的重复加锁。此外，还支持获取锁时的公平和非公平性选择，默认为非公平性的。
+
+synchronized关键字隐式的支持重进入。
+
+实现重进入重进入是指任意线程在获取到锁之后能够再次获取该锁而不会被锁所阻塞。该特性要解决两个问题：
+
+线程再
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/05/JVM-垃圾回收机制/#more" rel="contents">
+            <a class="btn" href="/2017/01/15/Lock-重入锁ReentrantLock/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -619,8 +624,8 @@ HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用
             
               
                 
-                <a class="post-title-link" href="/2017/01/05/JVM-HotSpot虚拟机中的对象/" itemprop="url">
-                  JVM: HotSpot虚拟机中的对象
+                <a class="post-title-link" href="/2017/01/07/Lock-队列同步器/" itemprop="url">
+                  Lock: 队列同步器AbstractQueuedSynchronizer
                 </a>
               
             
@@ -633,8 +638,8 @@ HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-05T16:26:02+08:00" content="2017-01-05">
-              2017-01-05
+            <time itemprop="dateCreated" datetime="2017-01-07T23:11:15+08:00" content="2017-01-07">
+              2017-01-07
             </time>
           </span>
 
@@ -682,17 +687,12 @@ HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用
       
         
           
-          探讨HotSpot虚拟机在Java堆中的对象分配、布局和访问过程。
-对象的创建
-这里仅讨论普通的Java对象，不涉及数组和Class对象等
-
-对象的创建过程：
-
-虚拟机遇到一条new指令时，首先去检查这个指令的参数是否能够在常量池中定位到一个类的符号引用，比检查这个符号引用代表的类是否已被加载、解析
+          概述队列同步器（AbstractQueuedSynchronizer，AQS），是用来构建锁或其他同步组件的基础框架，它使用了一个int成员变量表示同步状态，通过内置的FIFO队列来完成资源获取线程的排队工作。
+队列同步器是实现锁（也可以是任意同步组件）的关键，在锁的实现中聚合同步器，利用同步器实现
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/05/JVM-HotSpot虚拟机中的对象/#more" rel="contents">
+            <a class="btn" href="/2017/01/07/Lock-队列同步器/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -743,8 +743,8 @@ HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用
             
               
                 
-                <a class="post-title-link" href="/2017/01/05/JVM-Java虚拟机运行时数据区域/" itemprop="url">
-                  JVM: Java虚拟机运行时数据区域
+                <a class="post-title-link" href="/2017/01/07/Lock-概述/" itemprop="url">
+                  Lock: 概述
                 </a>
               
             
@@ -757,8 +757,8 @@ HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-05T14:32:43+08:00" content="2017-01-05">
-              2017-01-05
+            <time itemprop="dateCreated" datetime="2017-01-07T22:54:54+08:00" content="2017-01-07">
+              2017-01-07
             </time>
           </span>
 
@@ -806,15 +806,12 @@ HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用
       
         
           
-          
-Java与C/C++之间有一堵由动态内存分配和垃圾收集技术所围成的“高墙”。
-
-Java虚拟机在执行Java程序的过程中会把它管理的内存划分为若干个不同的数据区域。
-程序计数器程序计数器（Program Counter Register）是一块线程私有的内存空间，可以看作是当前线程所执行的字节码的
+          锁是用来控制多个线程访问共享资源的方式，一般来说，一个锁能够防止多个线程同时访问 共享资源（但是有些锁可以允许多个线程并发的访问共享资源，如读写锁）。
+Lock与synchronizedLock接口出现之前，Java程序是靠synchronized关键字实现锁功能的，而Java SE 5之后，并发包
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/05/JVM-Java虚拟机运行时数据区域/#more" rel="contents">
+            <a class="btn" href="/2017/01/07/Lock-概述/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -848,7 +845,7 @@ Java虚拟机在执行Java程序的过程中会把它管理的内存划分为若
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -889,7 +886,7 @@ Java虚拟机在执行Java程序的过程中会把它管理的内存划分为若
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">83</span>
+              <span class="site-state-item-count">94</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -906,7 +903,7 @@ Java虚拟机在执行Java程序的过程中会把它管理的内存划分为若
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">99</span>
+                <span class="site-state-item-count">109</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

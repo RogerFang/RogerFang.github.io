@@ -259,8 +259,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/02/JVM-类加载-1-类加载机制/" itemprop="url">
-                  JVM: 类加载(1)-类加载机制
+                <a class="post-title-link" href="/2017/01/06/Java与线程/" itemprop="url">
+                  Java与线程
                 </a>
               
             
@@ -273,8 +273,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-02T23:10:10+08:00" content="2017-01-02">
-              2017-01-02
+            <time itemprop="dateCreated" datetime="2017-01-06T22:29:24+08:00" content="2017-01-06">
+              2017-01-06
             </time>
           </span>
 
@@ -322,15 +322,16 @@
       
         
           
-          类加载机制：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型。
+          并发不一定依赖多线程（例如PHP的多进程并发），但是在Java里面讨论并发大多数和线程离不开。
 
-Java可以动态扩展的特性就是依赖运行期动态加载和动态连接这个特点实现的。
+线程是比进程更轻量级的调用执行单位，是CPU调度的基本单位。
 
-类加载的时机类的生命周期类从被加载到虚拟机内存中开始，到卸载出内存为止，整个生
+线程的引入，可以把一个进程的资源分配和执行调度分开，各个线程共享资源，又可以独立调度。
+线程的实现实现线程主要有3种方式：使用内核线程实现
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/02/JVM-类加载-1-类加载机制/#more" rel="contents">
+            <a class="btn" href="/2017/01/06/Java与线程/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -381,8 +382,8 @@ Java可以动态扩展的特性就是依赖运行期动态加载和动态连接�
             
               
                 
-                <a class="post-title-link" href="/2017/01/01/JVM-后端编译-JIT编译器/" itemprop="url">
-                  JVM: 后端编译(JIT编译器)
+                <a class="post-title-link" href="/2017/01/06/JMM-Java内存模型/" itemprop="url">
+                  JMM: Java内存模型
                 </a>
               
             
@@ -395,8 +396,8 @@ Java可以动态扩展的特性就是依赖运行期动态加载和动态连接�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-01T23:42:14+08:00" content="2017-01-01">
-              2017-01-01
+            <time itemprop="dateCreated" datetime="2017-01-06T18:27:02+08:00" content="2017-01-06">
+              2017-01-06
             </time>
           </span>
 
@@ -444,15 +445,12 @@ Java可以动态扩展的特性就是依赖运行期动态加载和动态连接�
       
         
           
-          解释器与JIT编译器当程序需要迅速启动和执行的时候，JIT解释器可以首先发挥作用，省去编译的时间，立即执行。在程序执行后，随着时间的推移，JIT编译器逐渐发挥作用，把越来越多的代码编译成本地机器码，可以获得更高的执行效率。
-
-可以使用解释器执行节约内存，反之使用JIT编译器来提升效率。
-
-HotSp
+          硬件效率与一致性一般来说，“让计算机并发执行若干个运算任务”（多任务处理）可以“更充分地利用计算机处理器的效能”。但是其中一个重要的复杂性（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，处理器还需要和内存交互，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。
+由于计算机的存
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/01/JVM-后端编译-JIT编译器/#more" rel="contents">
+            <a class="btn" href="/2017/01/06/JMM-Java内存模型/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -503,8 +501,8 @@ HotSp
             
               
                 
-                <a class="post-title-link" href="/2017/01/01/前端编译-Javac编译器/" itemprop="url">
-                  前端编译(Javac编译器)
+                <a class="post-title-link" href="/2017/01/05/JVM-垃圾收集器/" itemprop="url">
+                  JVM: 垃圾收集器
                 </a>
               
             
@@ -517,8 +515,8 @@ HotSp
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-01T15:02:16+08:00" content="2017-01-01">
-              2017-01-01
+            <time itemprop="dateCreated" datetime="2017-01-05T22:15:26+08:00" content="2017-01-05">
+              2017-01-05
             </time>
           </span>
 
@@ -531,8 +529,8 @@ HotSp
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/ava-SE/" itemprop="url" rel="index">
-                    <span itemprop="name">ava SE</span>
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
                   </a>
                 </span>
 
@@ -566,23 +564,14 @@ HotSp
       
         
           
-          Java语言中的“编译期”是一段“不确定”的操作过程。可能指的是以下三种：
-
-前端编译器
-
-把.java文件转变成.class文件的过程。
-
-  例如：Sun的javac、Eclipse JDT中的增量式编译器（ECJ）
-
-后端编译器
-
-把字节码转变成机器码的过程。
-
-  例如：JIT编译器（分为c
+          垃圾收集算法是内存回收的方法论，垃圾收集器是内存回收的具体实现。
+HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用于新生代和老年代的收集器，如果两个收集器之间存在连线，就说明可以搭配使用。
+并发和并行
+并行（Parallel）：并行就是同时执行。  多条垃圾收集线程并行工作，但用户线
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/01/前端编译-Javac编译器/#more" rel="contents">
+            <a class="btn" href="/2017/01/05/JVM-垃圾收集器/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -633,8 +622,8 @@ HotSp
             
               
                 
-                <a class="post-title-link" href="/2017/01/01/C和Java编译执行的过程比较/" itemprop="url">
-                  C和Java编译执行的过程比较
+                <a class="post-title-link" href="/2017/01/05/JVM-垃圾回收机制/" itemprop="url">
+                  JVM: 垃圾回收机制
                 </a>
               
             
@@ -647,8 +636,8 @@ HotSp
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-01T11:05:40+08:00" content="2017-01-01">
-              2017-01-01
+            <time itemprop="dateCreated" datetime="2017-01-05T18:29:43+08:00" content="2017-01-05">
+              2017-01-05
             </time>
           </span>
 
@@ -696,15 +685,13 @@ HotSp
       
         
           
-          编译不论是物理机还是虚拟机，大部分的程序代码从开始编译到最终转化成物理机的目标代码或虚拟机能执行的指令集之前，都会按照如下图所示的各个步骤进行：
-
-其中绿色的模块可以选择性实现。分为解释执行和编译执行。
-
-上图中间的那条分支是解释执行的过程（即一条字节码一条字节码地解释执行，如 JavaScript
+          垃圾回收可以有效的防止内存泄露，有效的使用空闲的内存。Java堆和方法区的内存分配和回收是动态的，因而垃圾收集器所关注的也是这部分内存。
+垃圾收集机制要考虑的两件事情：（1）发现无用对象（如何判断对象是否还“存活”）；（2）回收被无用对象占用的内存空间，使该空间可被程序再次使用（垃圾收集算法）。
+对
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/01/C和Java编译执行的过程比较/#more" rel="contents">
+            <a class="btn" href="/2017/01/05/JVM-垃圾回收机制/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -755,8 +742,8 @@ HotSp
             
               
                 
-                <a class="post-title-link" href="/2016/12/31/Java-几种引用/" itemprop="url">
-                  Java 几种引用
+                <a class="post-title-link" href="/2017/01/05/JVM-HotSpot虚拟机中的对象/" itemprop="url">
+                  JVM: HotSpot虚拟机中的对象
                 </a>
               
             
@@ -769,8 +756,8 @@ HotSp
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-31T23:47:56+08:00" content="2016-12-31">
-              2016-12-31
+            <time itemprop="dateCreated" datetime="2017-01-05T16:26:02+08:00" content="2017-01-05">
+              2017-01-05
             </time>
           </span>
 
@@ -818,14 +805,17 @@ HotSp
       
         
           
-          
-Java中存在四种引用：强引用、软引用、弱引用、虚引用。
+          探讨HotSpot虚拟机在Java堆中的对象分配、布局和访问过程。
+对象的创建
+这里仅讨论普通的Java对象，不涉及数组和Class对象等
 
-强引用强引用（Strong Reference）：是最普通的引用类型，只要强引用存在，GC就不会进行垃圾回收。当内存空间不足，Java虚拟机宁愿抛出OutOfMemoryError错误，使程序异常终止，也不会靠随意回收具有强引用的对象来解
+对象的创建过程：
+
+虚拟机遇到一条new指令时，首先去检查这个指令的参数是否能够在常量池中定位到一个类的符号引用，比检查这个符号引用代表的类是否已被加载、解析
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/31/Java-几种引用/#more" rel="contents">
+            <a class="btn" href="/2017/01/05/JVM-HotSpot虚拟机中的对象/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -859,7 +849,7 @@ Java中存在四种引用：强引用、软引用、弱引用、虚引用。
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -900,7 +890,7 @@ Java中存在四种引用：强引用、软引用、弱引用、虚引用。
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">83</span>
+              <span class="site-state-item-count">94</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -917,7 +907,7 @@ Java中存在四种引用：强引用、软引用、弱引用、虚引用。
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">99</span>
+                <span class="site-state-item-count">109</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -1,0 +1,663 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="线程,锁,Lock,CountDownLatch," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="在JDK并发包提供了几个常用的并发工具类：CountDownLatch、CyclicBarrier、Semaphore提供了一种并发流程控制的手段，而Exchanger工具类提供了在线程间交换数据的一种手段。
+CountDownLatch允许一个或多个线程等待其他线程完成操作。
+CountDownLatch和CyclicBarrier的区别
+CountDownLatch的作用是允许1或N个线程等待">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lock: 并发工具类-CountDownLatch">
+<meta property="og:url" content="http://yoursite.com/2017/01/15/Lock-并发工具类-CountDownLatch/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="在JDK并发包提供了几个常用的并发工具类：CountDownLatch、CyclicBarrier、Semaphore提供了一种并发流程控制的手段，而Exchanger工具类提供了在线程间交换数据的一种手段。
+CountDownLatch允许一个或多个线程等待其他线程完成操作。
+CountDownLatch和CyclicBarrier的区别
+CountDownLatch的作用是允许1或N个线程等待">
+<meta property="og:updated_time" content="2017-01-15T12:42:17.685Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Lock: 并发工具类-CountDownLatch">
+<meta name="twitter:description" content="在JDK并发包提供了几个常用的并发工具类：CountDownLatch、CyclicBarrier、Semaphore提供了一种并发流程控制的手段，而Exchanger工具类提供了在线程间交换数据的一种手段。
+CountDownLatch允许一个或多个线程等待其他线程完成操作。
+CountDownLatch和CyclicBarrier的区别
+CountDownLatch的作用是允许1或N个线程等待">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/15/Lock-并发工具类-CountDownLatch/"/>
+
+
+  <title> Lock: 并发工具类-CountDownLatch | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a1eb6dc312a93939356214ab5491901a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Lock: 并发工具类-CountDownLatch
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-15T14:20:41+08:00" content="2017-01-15">
+              2017-01-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在JDK并发包提供了几个常用的并发工具类：CountDownLatch、CyclicBarrier、Semaphore提供了一种<strong>并发流程控制</strong>的手段，而Exchanger工具类提供了在<strong>线程间交换数据</strong>的一种手段。</p>
+<p><strong>CountDownLatch允许一个或多个线程等待其他线程完成操作。</strong></p>
+<h1 id="CountDownLatch和CyclicBarrier的区别"><a href="#CountDownLatch和CyclicBarrier的区别" class="headerlink" title="CountDownLatch和CyclicBarrier的区别"></a>CountDownLatch和CyclicBarrier的区别</h1><ol>
+<li>CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；而CyclicBarrier则是允许一组线程相互等待。</li>
+<li>CountDownLatch的计数器无法被重置，只能使用一次；CyclicBarrier的计数器可以被重置后使用，因此它被称为是循环的barrier，能处理更为复杂的业务场景。</li>
+<li>CountDownLatch通过自定义同步器（共享锁）实现的；而CyclicBarrier是通过重入锁ReentrantLock（排他锁）和Condition来实现的。</li>
+</ol>
+<p><strong>关于CountDownLatch和CyclicBarrier的实现原理不同的思考</strong>：</p>
+<ul>
+<li>因为CountDownLatch设计的目的是用来<strong>等待“其他线程”</strong>完成执行，因而不能使用<strong>排他锁</strong>来实现，这样会产生阻塞从而影响“其他线程”的执行，所以采用<strong>共享锁</strong>实现比较合适。</li>
+<li>而CyclicBarrier设计的目的是使得一组线程<strong>相互等待</strong>，其本身机制会导致这一组线程到达屏障时进行阻塞等待，所以使用<strong>排他锁和Condition组合</strong>较为合适。</li>
+</ul>
+<h1 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h1><h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><p>CountDownLatch是通过自定义同步器以实现<strong>共享锁</strong>来完成<code>await()</code>和<code>countDown()</code>操作的。</p>
+<p>CountDownLatch的await方法可以在多个线程中调用，当CountDownLatch的计数器为0后，调用await的方法都会依次返回。 也就是说可以多个线程同时在等待await方法返回，所以获取的是一个共享锁。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Sync</span> <span class="keyword">extends</span> <span class="title">AbstractQueuedSynchronizer</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">4982264981922014374L</span>;</div><div class="line"></div><div class="line">    Sync(<span class="keyword">int</span> count) &#123;</div><div class="line">        setState(count);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> getState();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">	<span class="comment">/**</span></div><div class="line">     * 尝试获取共享锁。</div><div class="line">     * 如果"锁计数器=0"，即锁是可获取状态，则返回1；否则，锁是不可获取状态，则返回-1。</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">tryAcquireShared</span><span class="params">(<span class="keyword">int</span> acquires)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> (getState() == <span class="number">0</span>) ? <span class="number">1</span> : -<span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">	<span class="comment">/**</span></div><div class="line">     * 释放共享锁，将“锁计数器”的值减1</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">tryReleaseShared</span><span class="params">(<span class="keyword">int</span> releases)</span> </span>&#123;</div><div class="line">        <span class="comment">// Decrement count; signal when transition to zero</span></div><div class="line">        <span class="keyword">for</span> (;;) &#123;</div><div class="line">            <span class="keyword">int</span> c = getState();</div><div class="line">            <span class="keyword">if</span> (c == <span class="number">0</span>)</div><div class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">            <span class="keyword">int</span> nextc = c-<span class="number">1</span>;</div><div class="line">            <span class="keyword">if</span> (compareAndSetState(c, nextc))</div><div class="line">                <span class="keyword">return</span> nextc == <span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h2><p>构造方法接收一个int类型的参数作为计数器，并初始化自定义的同步器。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">CountDownLatch</span><span class="params">(<span class="keyword">int</span> count)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (count &lt; <span class="number">0</span>) <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"count &lt; 0"</span>);</div><div class="line">    <span class="keyword">this</span>.sync = <span class="keyword">new</span> Sync(count);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="await"><a href="#await" class="headerlink" title="await()"></a>await()</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">await</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">    sync.acquireSharedInterruptibly(<span class="number">1</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>acquireSharedInterruptibly()</code>的作用是获取共享锁。<br>如果当前线程是中断状态，则抛出异常<code>InterruptedException</code>。否则，调用<code>tryAcquireShared(arg)</code>尝试获取共享锁；尝试成功则返回，否则就调用<code>doAcquireSharedInterruptibly()</code>。<code>doAcquireSharedInterruptibly()</code>会使当前线程一直等待，直到当前线程获取到共享锁(或被中断)才返回。</p>
+<h2 id="countDown"><a href="#countDown" class="headerlink" title="countDown()"></a>countDown()</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">countDown</span><span class="params">()</span> </span>&#123;</div><div class="line">    sync.releaseShared(<span class="number">1</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>releaseShared()</code>目的是让当前线程释放锁，首先会通过<code>tryReleaseShared()</code>去尝试释放共享锁。尝试成功，则直接返回；尝试失败，则通过<code>doReleaseShared()</code>去释放共享锁。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/线程/" rel="tag">#线程</a>
+          
+            <a href="/tags/锁/" rel="tag">#锁</a>
+          
+            <a href="/tags/Lock/" rel="tag">#Lock</a>
+          
+            <a href="/tags/CountDownLatch/" rel="tag">#CountDownLatch</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/15/Lock-Condition/" rel="next" title="Lock: Condition">
+                <i class="fa fa-chevron-left"></i> Lock: Condition
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/15/Lock-并发工具类-CyclicBarrier/" rel="prev" title="Lock: 并发工具类-CyclicBarrier">
+                Lock: 并发工具类-CyclicBarrier <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">94</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">109</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/a-mu-mu-art" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CountDownLatch和CyclicBarrier的区别"><span class="nav-number">1.</span> <span class="nav-text">CountDownLatch和CyclicBarrier的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#源码分析"><span class="nav-number">2.</span> <span class="nav-text">源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖"><span class="nav-number">2.1.</span> <span class="nav-text">依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造方法"><span class="nav-number">2.2.</span> <span class="nav-text">构造方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#await"><span class="nav-number">2.3.</span> <span class="nav-text">await()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#countDown"><span class="nav-number">2.4.</span> <span class="nav-text">countDown()</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

@@ -1,0 +1,660 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="线程,锁,Lock,CyclicBarrier," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="CyclicBarrier可以让一组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，所有被屏障拦截的线程才会继续运行。
+CountDownLatch和CyclicBarrier的区别
+CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；而CyclicBarrier则是允许一组线程相互等待。
+CountDownLatch的计数器无法被重置，只能使用一次；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lock: 并发工具类-CyclicBarrier">
+<meta property="og:url" content="http://yoursite.com/2017/01/15/Lock-并发工具类-CyclicBarrier/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="CyclicBarrier可以让一组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，所有被屏障拦截的线程才会继续运行。
+CountDownLatch和CyclicBarrier的区别
+CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；而CyclicBarrier则是允许一组线程相互等待。
+CountDownLatch的计数器无法被重置，只能使用一次；">
+<meta property="og:updated_time" content="2017-01-15T08:40:57.401Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Lock: 并发工具类-CyclicBarrier">
+<meta name="twitter:description" content="CyclicBarrier可以让一组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，所有被屏障拦截的线程才会继续运行。
+CountDownLatch和CyclicBarrier的区别
+CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；而CyclicBarrier则是允许一组线程相互等待。
+CountDownLatch的计数器无法被重置，只能使用一次；">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/15/Lock-并发工具类-CyclicBarrier/"/>
+
+
+  <title> Lock: 并发工具类-CyclicBarrier | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a1eb6dc312a93939356214ab5491901a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Lock: 并发工具类-CyclicBarrier
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-15T14:21:14+08:00" content="2017-01-15">
+              2017-01-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>CyclicBarrier可以让一组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，所有被屏障拦截的线程才会继续运行。</p>
+<h1 id="CountDownLatch和CyclicBarrier的区别"><a href="#CountDownLatch和CyclicBarrier的区别" class="headerlink" title="CountDownLatch和CyclicBarrier的区别"></a>CountDownLatch和CyclicBarrier的区别</h1><ol>
+<li>CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；而CyclicBarrier则是允许一组线程相互等待。</li>
+<li>CountDownLatch的计数器无法被重置，只能使用一次；CyclicBarrier的计数器可以被重置后使用，因此它被称为是循环的barrier，能处理更为复杂的业务场景。</li>
+<li>CountDownLatch通过自定义同步器（共享锁）实现的；而CyclicBarrier是通过重入锁ReentrantLock（排他锁）和Condition来实现的。</li>
+</ol>
+<p><strong>关于CountDownLatch和CyclicBarrier的实现原理不同的思考</strong>：</p>
+<ul>
+<li>因为CountDownLatch设计的目的是用来<strong>等待“其他线程”</strong>完成执行，因而不能使用<strong>排他锁</strong>来实现，这样会产生阻塞从而影响“其他线程”的执行，所以采用<strong>共享锁</strong>实现比较合适。</li>
+<li>而CyclicBarrier设计的目的是使得一组线程<strong>相互等待</strong>，其本身机制会导致这一组线程到达屏障时进行阻塞等待，所以使用<strong>排他锁和Condition组合</strong>较为合适。</li>
+</ul>
+<h1 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h1><h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><p>CyclicBarrier是通过重入锁ReentrantLock和Condition实现的。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** The lock for guarding barrier entry */</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();</div><div class="line"><span class="comment">/** Condition to wait on until tripped */</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> Condition trip = lock.newCondition();</div></pre></td></tr></table></figure></p>
+<h2 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">CyclicBarrier</span><span class="params">(<span class="keyword">int</span> parties)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>(parties, <span class="keyword">null</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">CyclicBarrier</span><span class="params">(<span class="keyword">int</span> parties, Runnable barrierAction)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (parties &lt;= <span class="number">0</span>) <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</div><div class="line">    <span class="comment">// parties表示“必须同时到达barrier的线程个数”</span></div><div class="line">    <span class="keyword">this</span>.parties = parties;</div><div class="line">    <span class="comment">// count表示“处在等待状态的线程个数”</span></div><div class="line">    <span class="keyword">this</span>.count = parties;</div><div class="line">    <span class="comment">// barrierCommand表示“parties个线程到达barrier时，会优先执行的动作”</span></div><div class="line">    <span class="keyword">this</span>.barrierCommand = barrierAction;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="await"><a href="#await" class="headerlink" title="await()"></a>await()</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">await</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException, BrokenBarrierException </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">return</span> dowait(<span class="keyword">false</span>, <span class="number">0L</span>);</div><div class="line">    &#125; <span class="keyword">catch</span> (TimeoutException toe) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Error(toe); <span class="comment">// cannot happen</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Main barrier code, covering the various policies.</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">dowait</span><span class="params">(<span class="keyword">boolean</span> timed, <span class="keyword">long</span> nanos)</span></span></div><div class="line">    <span class="keyword">throws</span> InterruptedException, BrokenBarrierException,</div><div class="line">           TimeoutException &#123;</div><div class="line">    <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</div><div class="line">    <span class="comment">// 获取“排他锁(lock)”</span></div><div class="line">    lock.lock();</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">    	<span class="comment">// 保存当前的generation</span></div><div class="line">        <span class="keyword">final</span> Generation g = generation;</div><div class="line"></div><div class="line">		<span class="comment">// 如果当前generation损坏，则抛出异常</span></div><div class="line">        <span class="keyword">if</span> (g.broken)</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> BrokenBarrierException();</div><div class="line"></div><div class="line">		<span class="comment">// 如果当前线程被中断，则通过breakBarrier()终止CyclicBarrier，唤醒CyclicBarrier中所有等待线程。</span></div><div class="line">        <span class="keyword">if</span> (Thread.interrupted()) &#123;</div><div class="line">            breakBarrier();</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InterruptedException();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">int</span> index = --count;</div><div class="line">        <span class="comment">// // 如果index=0，则意味着“有parties个线程到达barrier”。</span></div><div class="line">        <span class="keyword">if</span> (index == <span class="number">0</span>) &#123;  <span class="comment">// tripped</span></div><div class="line">            <span class="keyword">boolean</span> ranAction = <span class="keyword">false</span>;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">final</span> Runnable command = barrierCommand;</div><div class="line">                <span class="keyword">if</span> (command != <span class="keyword">null</span>)</div><div class="line">                    command.run();</div><div class="line">                ranAction = <span class="keyword">true</span>;</div><div class="line">                <span class="comment">// 唤醒所有等待线程，并更新generation。</span></div><div class="line">                nextGeneration();</div><div class="line">                <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">            &#125; <span class="keyword">finally</span> &#123;</div><div class="line">                <span class="keyword">if</span> (!ranAction)</div><div class="line">                    breakBarrier();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// loop until tripped, broken, interrupted, or timed out</span></div><div class="line">        <span class="comment">// 当前线程一直阻塞，直到“有parties个线程到达barrier” 或 “当前线程被中断” 或 “超时”这3者之一发生，</span></div><div class="line">        <span class="comment">// 当前线程才继续执行。</span></div><div class="line">        <span class="keyword">for</span> (;;) &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">if</span> (!timed)</div><div class="line">                    trip.await();</div><div class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (nanos &gt; <span class="number">0L</span>)</div><div class="line">                    nanos = trip.awaitNanos(nanos);</div><div class="line">            &#125; <span class="keyword">catch</span> (InterruptedException ie) &#123;</div><div class="line">                <span class="keyword">if</span> (g == generation &amp;&amp; ! g.broken) &#123;</div><div class="line">                    breakBarrier();</div><div class="line">                    <span class="keyword">throw</span> ie;</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    <span class="comment">// We're about to finish waiting even if we had not</span></div><div class="line">                    <span class="comment">// been interrupted, so this interrupt is deemed to</span></div><div class="line">                    <span class="comment">// "belong" to subsequent execution.</span></div><div class="line">                    Thread.currentThread().interrupt();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">// 如果“当前generation已经损坏”，则抛出异常。</span></div><div class="line">            <span class="keyword">if</span> (g.broken)</div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> BrokenBarrierException();</div><div class="line"></div><div class="line">			<span class="comment">// 如果“generation已经换代”，则返回index。</span></div><div class="line">            <span class="keyword">if</span> (g != generation)</div><div class="line">                <span class="keyword">return</span> index;</div><div class="line"></div><div class="line">			<span class="comment">// 如果是“超时等待”，并且时间已到，则通过breakBarrier()终止CyclicBarrier，唤醒CyclicBarrier中所有等待线程。</span></div><div class="line">            <span class="keyword">if</span> (timed &amp;&amp; nanos &lt;= <span class="number">0L</span>) &#123;</div><div class="line">                breakBarrier();</div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> TimeoutException();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        lock.unlock();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在CyclicBarrier中，同一批的线程属于同一代，即同一个Generation；CyclicBarrier中通过generation对象，记录属于哪一代。<br>当有parties个线程到达barrier，generation就会被更新换代。</p>
+<hr>
+<p>感谢：<br><a href="http://www.cnblogs.com/skywang12345/p/3533995.html" target="_blank" rel="external">http://www.cnblogs.com/skywang12345/p/3533995.html</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/线程/" rel="tag">#线程</a>
+          
+            <a href="/tags/锁/" rel="tag">#锁</a>
+          
+            <a href="/tags/Lock/" rel="tag">#Lock</a>
+          
+            <a href="/tags/CyclicBarrier/" rel="tag">#CyclicBarrier</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/15/Lock-并发工具类-CountDownLatch/" rel="next" title="Lock: 并发工具类-CountDownLatch">
+                <i class="fa fa-chevron-left"></i> Lock: 并发工具类-CountDownLatch
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/15/Lock-并发工具类-Semaphore/" rel="prev" title="Lock: 并发工具类-Semaphore">
+                Lock: 并发工具类-Semaphore <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">94</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">109</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/a-mu-mu-art" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CountDownLatch和CyclicBarrier的区别"><span class="nav-number">1.</span> <span class="nav-text">CountDownLatch和CyclicBarrier的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#源码分析"><span class="nav-number">2.</span> <span class="nav-text">源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖"><span class="nav-number">2.1.</span> <span class="nav-text">依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造方法"><span class="nav-number">2.2.</span> <span class="nav-text">构造方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#await"><span class="nav-number">2.3.</span> <span class="nav-text">await()</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

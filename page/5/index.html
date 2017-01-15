@@ -259,8 +259,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/12/31/Java-反射原理解析/" itemprop="url">
-                  Java 反射原理解析
+                <a class="post-title-link" href="/2017/01/05/JVM-Java虚拟机运行时数据区域/" itemprop="url">
+                  JVM: Java虚拟机运行时数据区域
                 </a>
               
             
@@ -273,8 +273,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-31T22:09:50+08:00" content="2016-12-31">
-              2016-12-31
+            <time itemprop="dateCreated" datetime="2017-01-05T14:32:43+08:00" content="2017-01-05">
+              2017-01-05
             </time>
           </span>
 
@@ -323,16 +323,14 @@
         
           
           
-Java的反射机制允许我们动态的调用某个对象的方法/构造函数、获取某个对象的属性等，而无需在编码时确定调用的对象。
+Java与C/C++之间有一堵由动态内存分配和垃圾收集技术所围成的“高墙”。
 
-Method
-JDK中Method.invoke()实际上并不是自己实现的反射调用逻辑，而是委托给sun.reflect.MethodAccessor来处理的。
-
-首先要了解Met
+Java虚拟机在执行Java程序的过程中会把它管理的内存划分为若干个不同的数据区域。
+程序计数器程序计数器（Program Counter Register）是一块线程私有的内存空间，可以看作是当前线程所执行的字节码的
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/31/Java-反射原理解析/#more" rel="contents">
+            <a class="btn" href="/2017/01/05/JVM-Java虚拟机运行时数据区域/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -383,8 +381,8 @@ JDK中Method.invoke()实际上并不是自己实现的反射调用逻辑，而�
             
               
                 
-                <a class="post-title-link" href="/2016/12/31/Java-动态代理与反射/" itemprop="url">
-                  Java 动态代理与反射
+                <a class="post-title-link" href="/2017/01/04/JVM-字节码执行引擎-2-方法调用/" itemprop="url">
+                  JVM: 字节码执行引擎(2)-方法调用
                 </a>
               
             
@@ -397,8 +395,8 @@ JDK中Method.invoke()实际上并不是自己实现的反射调用逻辑，而�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-31T18:56:26+08:00" content="2016-12-31">
-              2016-12-31
+            <time itemprop="dateCreated" datetime="2017-01-04T15:24:50+08:00" content="2017-01-04">
+              2017-01-04
             </time>
           </span>
 
@@ -446,16 +444,15 @@ JDK中Method.invoke()实际上并不是自己实现的反射调用逻辑，而�
       
         
           
-          代理代理模式的特征是代理类与委托类有相同的接口。
+          方法调用不同于方法执行，方法调用阶段唯一的任务就是确定被调用方法的版本（即调用哪一个方法），暂时还不涉及方法内部的具体运行过程。
+解析
+解析调用一定是个静态的过程，在编译期间就完全确定，在类加载的解析阶段就会把涉及的符号引用转换为可确定的直接引用，不会延迟到运行期再去完成。
 
-为某个对象提供一个代理，通过代理类这一中间层，可以有效地隐藏和保护被代理的真实对象，以控制对这个对象的访问。
-
-代理类主要负责为委托类预处理消息、过滤消息、把消息转发给委托类以及事后处理等。
-根据代理类的创建时间不同可以分为静态代理和动态代理。静态
+所有方法调用中的目标方
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/31/Java-动态代理与反射/#more" rel="contents">
+            <a class="btn" href="/2017/01/04/JVM-字节码执行引擎-2-方法调用/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -506,8 +503,8 @@ JDK中Method.invoke()实际上并不是自己实现的反射调用逻辑，而�
             
               
                 
-                <a class="post-title-link" href="/2016/12/31/Java-反射/" itemprop="url">
-                  Java 反射
+                <a class="post-title-link" href="/2017/01/04/JVM-字节码执行引擎-1-概述/" itemprop="url">
+                  JVM: 字节码执行引擎(1)-概述
                 </a>
               
             
@@ -520,8 +517,8 @@ JDK中Method.invoke()实际上并不是自己实现的反射调用逻辑，而�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-31T11:22:58+08:00" content="2016-12-31">
-              2016-12-31
+            <time itemprop="dateCreated" datetime="2017-01-04T14:18:38+08:00" content="2017-01-04">
+              2017-01-04
             </time>
           </span>
 
@@ -569,13 +566,14 @@ JDK中Method.invoke()实际上并不是自己实现的反射调用逻辑，而�
       
         
           
-          简介反射能够让运行在JVM中的程序检测和修改运行时的行为，使用反射API可以在运行时获取对象的内部结构信息。
+          执行引擎是JVM最核心的组成部分之一。
+虚拟机执行引擎在执行代码的时候，可能会有解释执行（通过解释器执行）和编译执行（通过JIT编译器产生本地代码执行）两种选择。
 
-JVM的类加载机制允许从多种源动态地加载Java类，但是动态类加载有一个重要的缺点，即我们在使用动态加载的类对象时，往往对这个类知之甚少，甚至于一无所知。这种情况下就需要使用一种动态编程技
+虚拟机是一个相对于物理机的概念，它们都有代码执行能力，其区别是物理机的执行引擎是直接建立在处理器、硬件、指令集和操作系统层面上的，而虚
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/31/Java-反射/#more" rel="contents">
+            <a class="btn" href="/2017/01/04/JVM-字节码执行引擎-1-概述/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -626,8 +624,8 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
             
               
                 
-                <a class="post-title-link" href="/2016/12/30/Java-泛型Generics/" itemprop="url">
-                  Java 泛型Generics
+                <a class="post-title-link" href="/2017/01/03/Class文件-2-字节码指令/" itemprop="url">
+                  Class文件(2): 字节码指令
                 </a>
               
             
@@ -640,8 +638,8 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-30T20:12:16+08:00" content="2016-12-30">
-              2016-12-30
+            <time itemprop="dateCreated" datetime="2017-01-03T18:39:09+08:00" content="2017-01-03">
+              2017-01-03
             </time>
           </span>
 
@@ -689,12 +687,16 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
       
         
           
-          简介Java泛型(Generics)是JDK 1.5中引入的一个新特性，允许在定义类和接口的时候使用类型参数（type parameter）。声明的类型参数在使用时用具体的类型来替换，泛型最主要的应用是在JDK 1.5中的新集合类框架中。
-泛型使得编译器在编译时就可以发现很多错误，可以解决之前的集合
+          Java虚拟机字节码指令：由1个字节长度的操作码（代表着某种特定操作含义的数字），以及跟随其后的0至多个操作数（Operands，此操作所需的参数）而构成。
+
+再次强调Java虚拟机采用面向操作数栈而不是寄存器的架构，所以大多数的指令都包含操作数，而只有一个操作码。
+
+
+指令的操作码长度为1个字节，
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/30/Java-泛型Generics/#more" rel="contents">
+            <a class="btn" href="/2017/01/03/Class文件-2-字节码指令/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -745,8 +747,8 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
             
               
                 
-                <a class="post-title-link" href="/2016/12/30/Java-初始化顺序/" itemprop="url">
-                  Java 初始化顺序
+                <a class="post-title-link" href="/2017/01/03/Class文件-1-类文件结构/" itemprop="url">
+                  Class文件(1): 类文件结构
                 </a>
               
             
@@ -759,8 +761,8 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-30T19:11:31+08:00" content="2016-12-30">
-              2016-12-30
+            <time itemprop="dateCreated" datetime="2017-01-03T18:38:49+08:00" content="2017-01-03">
+              2017-01-03
             </time>
           </span>
 
@@ -808,17 +810,15 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
       
         
           
-          初始化操作的执行顺序：
+          
+Write Once, Run Anywhere.
 
-所有静态成员/初始块先执行
-父类初始化完成（非静态成员/初始块执行 -&gt; 构造函数调用）
-子类初始化完成（非静态成员/初始块执行 -&gt; 构造函数调用）
-
-例子：123456789101112131415161718192021222324252627282930
+各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——字节码（ByteCode），是构成平台无关性的基石。
+Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格按照顺序紧凑地排列在Class文件中，中间没有任何分隔符。当遇到
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/30/Java-初始化顺序/#more" rel="contents">
+            <a class="btn" href="/2017/01/03/Class文件-1-类文件结构/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -852,7 +852,7 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -893,7 +893,7 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">83</span>
+              <span class="site-state-item-count">94</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -910,7 +910,7 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">99</span>
+                <span class="site-state-item-count">109</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
