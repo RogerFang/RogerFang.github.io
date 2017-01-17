@@ -92,14 +92,14 @@ ConcurrentSkipHashMap相当于线程安全的HashMap，它继承于AbstractMap�
 <meta property="og:site_name" content="方龙的博客">
 <meta property="og:description" content="12public class ConcurrentHashMap&amp;lt;K,V&amp;gt; extends AbstractMap&amp;lt;K,V&amp;gt;    implements ConcurrentMap&amp;lt;K,V&amp;gt;, Serializable
 ConcurrentSkipHashMap相当于线程安全的HashMap，它继承于AbstractMap类，并实现了ConcurrentMap接">
-<meta property="og:image" content="http://yoursite.com/../images/juc/juc-concurrenthashmap-java7.png">
-<meta property="og:image" content="http://yoursite.com/../images/juc/juc-concurrenthashmap-java8.png">
-<meta property="og:updated_time" content="2017-01-16T08:23:07.476Z">
+<meta property="og:image" content="http://yoursite.com/images/juc/juc-concurrenthashmap-java7.png">
+<meta property="og:image" content="http://yoursite.com/images/juc/juc-concurrenthashmap-java8.png">
+<meta property="og:updated_time" content="2017-01-17T05:32:44.454Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JUC集合框架(2): ConcurrentHashMap">
 <meta name="twitter:description" content="12public class ConcurrentHashMap&amp;lt;K,V&amp;gt; extends AbstractMap&amp;lt;K,V&amp;gt;    implements ConcurrentMap&amp;lt;K,V&amp;gt;, Serializable
 ConcurrentSkipHashMap相当于线程安全的HashMap，它继承于AbstractMap类，并实现了ConcurrentMap接">
-<meta name="twitter:image" content="http://yoursite.com/../images/juc/juc-concurrenthashmap-java7.png">
+<meta name="twitter:image" content="http://yoursite.com/images/juc/juc-concurrenthashmap-java7.png">
 
 
 
@@ -332,12 +332,12 @@ ConcurrentSkipHashMap相当于线程安全的HashMap，它继承于AbstractMap�
 <li><p>效率低下的HashTable<br> HashTable使用synchronized来保证线程安全，但是在线程竞争激烈的情况下效率低下。因为HashTable会对整个表进行加锁来实现同步，而JDK 1.8中的ConcurrentHashMap则使用更细粒度的锁来实现同步（对表中的某一列进行加锁）。</p>
 </li>
 </ol>
-<h1 id="原理和结构"><a href="#原理和结构" class="headerlink" title="原理和结构"></a>原理和结构</h1><h2 id="JDK-1-8之前"><a href="#JDK-1-8之前" class="headerlink" title="JDK 1.8之前"></a>JDK 1.8之前</h2><p>JDK 1.8 之前的<code>ConcurrentHashMap</code>是通过<strong>锁分段</strong>来实现的，只有在同一个分段内才存在竞态关系。由<strong>Segment</strong>数组结构和<strong>HashEntry</strong>数组结构组成的。<br>一个ConcurrentHashMap里包含一个Segment数组，一个Segment里包含一个HashEntry数组。<br><img src="../images/juc/juc-concurrenthashmap-java7.png" alt=""></p>
+<h1 id="原理和结构"><a href="#原理和结构" class="headerlink" title="原理和结构"></a>原理和结构</h1><h2 id="JDK-1-8之前"><a href="#JDK-1-8之前" class="headerlink" title="JDK 1.8之前"></a>JDK 1.8之前</h2><p>JDK 1.8 之前的<code>ConcurrentHashMap</code>是通过<strong>锁分段</strong>来实现的，只有在同一个分段内才存在竞态关系。由<strong>Segment</strong>数组结构和<strong>HashEntry</strong>数组结构组成的。<br>一个ConcurrentHashMap里包含一个Segment数组，一个Segment里包含一个HashEntry数组。<br><img src="/images/juc/juc-concurrenthashmap-java7.png" alt=""></p>
 <p><code>Segment</code>是一个可重入锁（ReentrantLock），在ConcurrentHashMap里扮演锁的角色。<code>HashEntry</code>用于存储键值，每个HashEntry是一个链表结构的元素。</p>
 <p>每个Segment守护者一个HashEntry数组里面的元素，当对HashEntry数组里的数据进行修改时，必须首先获得与它对应的Segment锁。<br>Segment的结构和<code>HashMap</code>的结构类似，是一种数组和链表的结构。</p>
 <h2 id="JDK-1-8"><a href="#JDK-1-8" class="headerlink" title="JDK 1.8"></a>JDK 1.8</h2><p>JDK 1.8中，<code>ConcurrentHashMap</code>的实现已经抛弃了Segment分段锁机制，大量的利用了volatile，final，CAS等lock-free技术来减少锁竞争对于性能的影响。<br><strong>CAS</strong>+<strong>Synchronized</strong>来保证并发更新的安全，底层依然采用<strong>数组+链表+红黑树</strong>的存储结构。但是为了做到并发，又增加了很多辅助的类，例如TreeBin，Traverser等对象内部类。</p>
 <p>synchronized关键字锁住 table 中本次所操作对象的<strong>链表头</strong>。</p>
-<p><img src="../images/juc/juc-concurrenthashmap-java8.png" alt=""></p>
+<p><img src="/images/juc/juc-concurrenthashmap-java8.png" alt=""></p>
 <p>现在的实现中并没有用segment，而是延用 hashMap中单桶，定位到链表后，直接上锁，而后对链表就行操作，同样是将锁细化。</p>
 <blockquote>
 <p>Segment虽保留，但已经简化属性，仅仅是为了兼容旧版本。</p>
@@ -425,6 +425,10 @@ ConcurrentSkipHashMap相当于线程安全的HashMap，它继承于AbstractMap�
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/01/17/线程池/" rel="prev" title="线程池">
+                线程池 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -491,7 +495,7 @@ ConcurrentSkipHashMap相当于线程安全的HashMap，它继承于AbstractMap�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">96</span>
+              <span class="site-state-item-count">98</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -499,7 +503,7 @@ ConcurrentSkipHashMap相当于线程安全的HashMap，它继承于AbstractMap�
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -508,7 +512,7 @@ ConcurrentSkipHashMap相当于线程安全的HashMap，它继承于AbstractMap�
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">110</span>
+                <span class="site-state-item-count">113</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
