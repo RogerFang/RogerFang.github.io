@@ -99,8 +99,8 @@
 
 传输层最重要的两种协议：面向连接的TCP（传输控制协议，Transmission Control Protocol）和无连接的UDP（用户数据报协议，User Datagram Protocol）。所传输的数据单元分">
 <meta property="og:image" content="http://yoursite.com/images/network/tcp-3-handshake.png">
-<meta property="og:image" content="http://yoursite.com/../images/network/tcp-4-handshake.png">
-<meta property="og:updated_time" content="2017-01-19T09:29:07.959Z">
+<meta property="og:image" content="http://yoursite.com/images/network/tcp-4-handshake.png">
+<meta property="og:updated_time" content="2017-01-19T09:35:01.864Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络与通信：传输层">
 <meta name="twitter:description" content="传输层主要功能为两台主机上的应用程序提供端到端的通信，通过端口号识别两台主机上相对应程序之间进行通信。
@@ -419,7 +419,7 @@
 <li><strong>第二次握手</strong><br> 服务器收到<code>SYN</code>包后，必须确认客户端，所以发送<code>ACK</code>包，同时服务器还必须发送<code>SYN</code>包等待客户端的确认，此时服务器进入到<code>SYN_RCVD</code>状态。</li>
 <li><strong>第三次握手</strong><br> 客户端收到<code>SYN</code>+<code>ACK</code>包之后，向服务器发送确认包<code>ACK</code>，该包发送完毕，此时客户端与服务器进入<code>ESTABLISHED</code>状态，两者可以进行数据交换，完成三次握手。</li>
 </ol>
-<h3 id="TCP四次挥手（连接释放）"><a href="#TCP四次挥手（连接释放）" class="headerlink" title="TCP四次挥手（连接释放）"></a>TCP四次挥手（连接释放）</h3><p>由于TCP连接是全双工的，因此每个方向上都必须<strong>单独进行关闭</strong>，当一方完成数据发送任务后就能发送一个<code>FIN</code>来表示终止这个方向的连接，<strong>收到一个<code>FIN</code>意味着这个方向不再有数据传送但另一方向仍能继续发送数据，直到另一方向也发送<code>FIN</code>报文</strong>。<br><img src="../images/network/tcp-4-handshake.png" alt=""></p>
+<h3 id="TCP四次挥手（连接释放）"><a href="#TCP四次挥手（连接释放）" class="headerlink" title="TCP四次挥手（连接释放）"></a>TCP四次挥手（连接释放）</h3><p>由于TCP连接是全双工的，因此每个方向上都必须<strong>单独进行关闭</strong>，当一方完成数据发送任务后就能发送一个<code>FIN</code>来表示终止这个方向的连接，<strong>收到一个<code>FIN</code>意味着这个方向不再有数据传送但另一方向仍能继续发送数据，直到另一方向也发送<code>FIN</code>报文</strong>。<br><img src="/images/network/tcp-4-handshake.png" alt=""></p>
 <ol>
 <li><strong>第一次挥手</strong><br> 客户端主动向服务端发出连接释放请求<code>FIN</code>，并停止发送数据，进入<code>FIN_WAIT_1</code>状态，等待服务端确认。</li>
 <li><strong>第二次挥手</strong><br> 服务端收到连接释放请求报文后，发出确认释放连接的报文<code>ACK</code>，然后服务端进入<code>CLOSE_WAIT</code>关闭等待状态。<br> 此时TCP连接处于半关闭状态，客户端已经不向服务端发送数据，但是服务端仍可以向客户端发送数据。</li>
