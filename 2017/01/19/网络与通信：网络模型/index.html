@@ -92,14 +92,14 @@
 <meta property="og:site_name" content="方龙的博客">
 <meta property="og:description" content="OSI 七层模型OSI（Open System Interconnection，开放系统互连）七层网络模型称为开放式网络互连参考模型。它是国际标准组织制定的一个指导信息互连、互通和协作的网络规范。
 从逻辑上可以将其划分为七层模型：应用层、表示层、会话层、传输层、网络层、数据链路层和物理层。其中上3层称为高层，用于定义应用程序之间的通信和人机界面；下4层称为底层，用于定于数据如何进行端到端的传输，物">
-<meta property="og:image" content="http://yoursite.com/../images/network/osi-7-layer.png">
-<meta property="og:image" content="http://yoursite.com/../images/network/tcp-ip-4-layer.png">
-<meta property="og:updated_time" content="2017-01-19T02:04:59.905Z">
+<meta property="og:image" content="http://yoursite.com/images/network/osi-7-layer.png">
+<meta property="og:image" content="http://yoursite.com/images/network/tcp-ip-4-layer.png">
+<meta property="og:updated_time" content="2017-01-19T04:59:28.960Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络与通信：网络模型">
 <meta name="twitter:description" content="OSI 七层模型OSI（Open System Interconnection，开放系统互连）七层网络模型称为开放式网络互连参考模型。它是国际标准组织制定的一个指导信息互连、互通和协作的网络规范。
 从逻辑上可以将其划分为七层模型：应用层、表示层、会话层、传输层、网络层、数据链路层和物理层。其中上3层称为高层，用于定义应用程序之间的通信和人机界面；下4层称为底层，用于定于数据如何进行端到端的传输，物">
-<meta name="twitter:image" content="http://yoursite.com/../images/network/osi-7-layer.png">
+<meta name="twitter:image" content="http://yoursite.com/images/network/osi-7-layer.png">
 
 
 
@@ -323,15 +323,15 @@
 
       
         <h1 id="OSI-七层模型"><a href="#OSI-七层模型" class="headerlink" title="OSI 七层模型"></a>OSI 七层模型</h1><p>OSI（Open System Interconnection，开放系统互连）七层网络模型称为开放式网络互连参考模型。它是国际标准组织制定的一个指导信息互连、互通和协作的网络规范。</p>
-<p>从逻辑上可以将其划分为七层模型：应用层、表示层、会话层、传输层、网络层、数据链路层和物理层。其中上3层称为高层，用于定义应用程序之间的通信和人机界面；下4层称为底层，用于定于数据如何进行端到端的传输，物理规范以及数据与光电信号间的转换。<br><img src="../images/network/osi-7-layer.png" alt=""></p>
+<p>从逻辑上可以将其划分为七层模型：应用层、表示层、会话层、传输层、网络层、数据链路层和物理层。其中上3层称为高层，用于定义应用程序之间的通信和人机界面；下4层称为底层，用于定于数据如何进行端到端的传输，物理规范以及数据与光电信号间的转换。<br><img src="/images/network/osi-7-layer.png" alt=""></p>
 <p>每一层的功能：</p>
 <ol>
 <li><strong>应用层</strong><br> 应用层一般指应用程序，该层主要负责确定通信对象，并保证有足够的资源用于通信。<br> 常见的应用层协议有：HTTP/FTP/SNMP等。</li>
 <li><strong>表示层</strong><br> 表示层一般负责数据的编码及转化，确保应用层能够正常工作。<br> 该层是界面与二进制代码间互相转化的地方，同时该层负责进行数据的压缩、解压、加密、解密等。</li>
 <li><strong>会话层</strong><br> 会话层主要负责在网络中的两个节点间建立、维护、控制会话，区分不同的会话，以及提供单工（Simplex）、半双工（Half duplex）、全双工（Full duplex）3种通信模式的服务。</li>
 <li><strong>传输层</strong><br> 传输层是OSI模型中最重要的一层，主要负责分割、组合数据，实现端到端的逻辑。<br> 数据在上3层是整体的，到了这一层开始分割，分割后的数据成为<strong>段</strong>（Segment）。<br> 三次握手、面向连接或非面向连接的服务、流量控制等都发生在这一层。<br> 常见的传输层协议有：TCP/UDP/SPX等。</li>
-<li><strong>网络层</strong><br> 网络层是将网络地址翻译为物理地址，并决定数据从发送方路由到接收方。主要负责管理网络地址、定位设备、决定路由，路由器工作在该层。<br> 上层的数据<strong>段</strong>在这一层被分割，封装后叫做<strong>包</strong>（Packet），分为2种：用户数据包（Data packets）和路由更新包（Route update packets）。<br> 常见的网络层协议有：IP/RIP/OSPF等。</li>
-<li><strong>数据链路层</strong><br> 数据链路层控制物理层与网络层之间的通信。主要负责物理传输的准备，包括物理地址寻址、CRC校验、错误通知、网络拓扑、流量控制、重发等。<br> MAC地址和交换机工作在这一层。<br> 上层传下来的的<strong>包</strong>在这一层被分割封装后叫做<strong>帧</strong>（Frame）。<br> 常见的数据链路层协议有：SDLC/STP/HDLC/帧中继等。</li>
+<li><strong>网络层</strong><br> 网络层是将网络地址翻译为物理地址，并决定数据从发送方路由到接收方。主要负责管理网络地址、定位设备、决定路由，<strong>路由器</strong>工作在该层。<br> 上层的数据<strong>段</strong>在这一层被分割，封装后叫做<strong>包</strong>（Packet），分为2种：用户数据包（Data packets）和路由更新包（Route update packets）。<br> 常见的网络层协议有：IP/RIP/OSPF等。</li>
+<li><strong>数据链路层</strong><br> 数据链路层控制物理层与网络层之间的通信。主要负责物理传输的准备，包括物理地址寻址、CRC校验、错误通知、网络拓扑、流量控制、重发等。<br> MAC地址和<strong>交换机</strong>工作在这一层。<br> 上层传下来的的<strong>包</strong>在这一层被分割封装后叫做<strong>帧</strong>（Frame）。<br> 常见的数据链路层协议有：SDLC/STP/HDLC/帧中继等。</li>
 <li><strong>物理层</strong><br> 物理层是实实在在的物理链路。它为上层协议提供了一个传输数据的物理媒体，如双绞线、同轴电缆。</li>
 </ol>
 <h1 id="TCP-IP模型"><a href="#TCP-IP模型" class="headerlink" title="TCP/IP模型"></a>TCP/IP模型</h1><p>TCP/IP是最基本的Internet协议，由网络层的IP与传输层的TCP构成。现在常说的TCP/IP并不一定指这两个具体的协议，而是指的TCP/IP协议族。</p>
@@ -342,7 +342,7 @@
 <li>网际层<br> 网络层是将网络地址翻译为物理地址，并决定数据从发送方路由到接收方。</li>
 <li>网络接口层<br> 网络接口层负责处理网络连接的硬件部分。</li>
 </ol>
-<p><img src="../images/network/tcp-ip-4-layer.png" alt=""></p>
+<p><img src="/images/network/tcp-ip-4-layer.png" alt=""></p>
 
       
     </div>
@@ -385,6 +385,10 @@
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/19/网络与通信：网络层/" rel="prev" title="网络与通信：网络层">
+                网络与通信：网络层 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -452,7 +456,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">99</span>
+              <span class="site-state-item-count">101</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -469,7 +473,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">116</span>
+                <span class="site-state-item-count">125</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
