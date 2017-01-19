@@ -1,0 +1,682 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="线程,进程,用户线程,内核线程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="进程和线程的区别进程是一个执行中的程序的实例，它是系统进行资源分配和调度的一个独立单位。
+线程是进程的一个实体，是CPU调度和分配的基本单位，线程基本上不拥有系统资源，只拥有一点在运行中必不可少的资源（如：程序计数器、寄存器和栈），但是它可以与同属一个进程的其他线程共享进程所拥有的所有资源。
+在实现了线程的操作系统中，进程是资源分配的基本单位，线程是调度的基本单位，是系统中并发执行的单元。
+引入线">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统：进程管理">
+<meta property="og:url" content="http://yoursite.com/2017/01/19/操作系统：进程管理/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="进程和线程的区别进程是一个执行中的程序的实例，它是系统进行资源分配和调度的一个独立单位。
+线程是进程的一个实体，是CPU调度和分配的基本单位，线程基本上不拥有系统资源，只拥有一点在运行中必不可少的资源（如：程序计数器、寄存器和栈），但是它可以与同属一个进程的其他线程共享进程所拥有的所有资源。
+在实现了线程的操作系统中，进程是资源分配的基本单位，线程是调度的基本单位，是系统中并发执行的单元。
+引入线">
+<meta property="og:updated_time" content="2017-01-19T14:52:13.565Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作系统：进程管理">
+<meta name="twitter:description" content="进程和线程的区别进程是一个执行中的程序的实例，它是系统进行资源分配和调度的一个独立单位。
+线程是进程的一个实体，是CPU调度和分配的基本单位，线程基本上不拥有系统资源，只拥有一点在运行中必不可少的资源（如：程序计数器、寄存器和栈），但是它可以与同属一个进程的其他线程共享进程所拥有的所有资源。
+在实现了线程的操作系统中，进程是资源分配的基本单位，线程是调度的基本单位，是系统中并发执行的单元。
+引入线">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/19/操作系统：进程管理/"/>
+
+
+  <title> 操作系统：进程管理 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a1eb6dc312a93939356214ab5491901a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                操作系统：进程管理
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-19T22:08:30+08:00" content="2017-01-19">
+              2017-01-19
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/操作系统/" itemprop="url" rel="index">
+                    <span itemprop="name">操作系统</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="进程和线程的区别"><a href="#进程和线程的区别" class="headerlink" title="进程和线程的区别"></a>进程和线程的区别</h1><p><strong>进程</strong>是一个执行中的程序的实例，它是系统进行资源分配和调度的一个独立单位。</p>
+<p><strong>线程</strong>是进程的一个实体，是CPU调度和分配的基本单位，线程基本上不拥有系统资源，只拥有一点在运行中必不可少的资源（如：程序计数器、寄存器和栈），但是它可以与同属一个进程的其他线程共享进程所拥有的所有资源。</p>
+<p>在实现了线程的操作系统中，进程是资源分配的基本单位，线程是调度的基本单位，是系统中并发执行的单元。</p>
+<p>引入线程的主要优点：</p>
+<ul>
+<li>易于调度。</li>
+<li>提高并发性。</li>
+<li>开销小。</li>
+<li>有利于发挥多处理器的功能。</li>
+</ul>
+<p><strong>进程和线程的区别：</strong></p>
+<ol>
+<li>一个线程必定属于也只能属于一个进程；而一个进程可以拥有多个线程并且至少拥有一个线程。</li>
+<li>属于一个进程的所有线程共享该线程的所有资源，不同的进程相互独立。</li>
+<li>线程又被称为轻量级进程（LWP）。线程间切换代价小，进程间切换代价大。</li>
+<li>进程是程序的一次执行，线程可以理解为程序中一段程序片段的执行。</li>
+<li>每个进程都有独立的内存空间，而线程共享其所属进程的内存空间。</li>
+</ol>
+<h1 id="线程同步机制"><a href="#线程同步机制" class="headerlink" title="线程同步机制"></a>线程同步机制</h1><p>线程同步互斥的控制机制，其实是由最基本的4种方法实现的：</p>
+<ol>
+<li><strong>临界区</strong><br> 通过对多线程的串行化来访问公共资源或一段代码，适合控制数据访问。</li>
+<li><strong>互斥量</strong><br> 为协调共同对一个共享资源的单独访问而设计。只有拥有互斥对象的线程才有权限去访问系统的公共资源，因为互斥对象只有一个。</li>
+<li><strong>信号量</strong><br> 为控制一个具有有限数量的用户资源而设计。它允许多个线程在同一时刻去访问同一资源，但是一般需要限制同时访问的最大线程数目。</li>
+<li><strong>事件</strong><br> 用来通知线程有一些事件已发生，从而启动后继任务的开始。</li>
+</ol>
+<h1 id="内核线程和用户线程"><a href="#内核线程和用户线程" class="headerlink" title="内核线程和用户线程"></a>内核线程和用户线程</h1><p><strong>内核线程</strong>的建立和销毁都是由操作系统负责、通过系统调用完成。</p>
+<p><strong>用户线程</strong>是指不需要内核支持而在用户程序中实现的线程，其不依赖于操作系统的核心。用户线程利用线程库提供创建、同步、调度和管理线程的函数来控制用户线程。速度快，不需要用户态/内核态切换，操作系统不知道多线程的存在。</p>
+<p>用户线程的优点：</p>
+<ul>
+<li>可以在不支持线程的操作系统中实现。</li>
+<li>创建和销毁线程、线程切换等线程管理的代价比内核线程少得多。</li>
+<li>允许每个进程定制自己的调度算法，组织管理比较灵活。</li>
+<li>线程能够利用的表空间和堆栈空间比内核线程多。</li>
+</ul>
+<p>用户线程的缺点：</p>
+<ul>
+<li>同一进程中只能同时有一个线程在运行，因为操作系统内核不知道用户线程的存在，此时处理器时间片分配是以进程为基本单位的，如果一个线程阻塞会导致整个进程挂起。</li>
+<li>页面失效也会产生类似的问题。</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/线程/" rel="tag">#线程</a>
+          
+            <a href="/tags/进程/" rel="tag">#进程</a>
+          
+            <a href="/tags/用户线程/" rel="tag">#用户线程</a>
+          
+            <a href="/tags/内核线程/" rel="tag">#内核线程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/19/网络与通信：传输层/" rel="next" title="网络与通信：传输层">
+                <i class="fa fa-chevron-left"></i> 网络与通信：传输层
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/19/操作系统：内存管理/" rel="prev" title="操作系统：内存管理">
+                操作系统：内存管理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">103</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">130</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/a-mu-mu-art" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#进程和线程的区别"><span class="nav-number">1.</span> <span class="nav-text">进程和线程的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程同步机制"><span class="nav-number">2.</span> <span class="nav-text">线程同步机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内核线程和用户线程"><span class="nav-number">3.</span> <span class="nav-text">内核线程和用户线程</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

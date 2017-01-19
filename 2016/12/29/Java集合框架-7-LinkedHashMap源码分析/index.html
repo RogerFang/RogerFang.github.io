@@ -96,7 +96,7 @@
 简介LinkedHashMap是HashMap的子类，也是对Map接口的一种基于链表和哈希表的实现，不过扩展了HashMap增加了双向链表的实现。
 
 相较于HashMap的迭代器中混乱的访问顺序，Li">
-<meta property="og:updated_time" content="2016-12-29T09:22:31.438Z">
+<meta property="og:updated_time" content="2017-01-19T15:25:21.515Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java集合框架(7): LinkedHashMap源码分析">
 <meta name="twitter:description" content="123public class LinkedHashMap&amp;lt;K,V&amp;gt;    extends HashMap&amp;lt;K,V&amp;gt;    implements Map&amp;lt;K,V&amp;gt;
@@ -328,7 +328,7 @@
         <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkedHashMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</span></div><div class="line">    <span class="keyword">extends</span> <span class="title">HashMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</div><div class="line">    <span class="keyword">implements</span> <span class="title">Map</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</div></pre></td></tr></table></figure>
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>LinkedHashMap是HashMap的子类，也是对Map接口的一种基于链表和哈希表的实现，不过扩展了HashMap增加了双向链表的实现。</p>
 <blockquote>
-<p>相较于HashMap的迭代器中混乱的访问顺序，LinkedHashMap可以提供可以预测的迭代访问，即按照插入顺序(insertion-order)或访问序(access-order)来对哈希表中的元素进行迭代。</p>
+<p>相较于HashMap的迭代器中混乱的访问顺序，LinkedHashMap可以提供可以预测的迭代访问，即按照<strong>插入顺序</strong>(insertion-order)或<strong>访问序</strong>(access-order)来对哈希表中的元素进行迭代。</p>
 </blockquote>
 <ul>
 <li>插入序(insertion-order)：就是Entry被添加到Map中的顺序。</li>
@@ -459,7 +459,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">101</span>
+              <span class="site-state-item-count">103</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -467,7 +467,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -476,7 +476,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">125</span>
+                <span class="site-state-item-count">130</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
