@@ -84,15 +84,15 @@
 
 
 
-<meta name="description" content="码路漫漫，且行且珍惜">
+<meta name="description" content="梦想还是要有的，万一实现了呢">
 <meta property="og:type" content="website">
 <meta property="og:title" content="方龙的博客">
 <meta property="og:url" content="http://yoursite.com/page/4/index.html">
 <meta property="og:site_name" content="方龙的博客">
-<meta property="og:description" content="码路漫漫，且行且珍惜">
+<meta property="og:description" content="梦想还是要有的，万一实现了呢">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="方龙的博客">
-<meta name="twitter:description" content="码路漫漫，且行且珍惜">
+<meta name="twitter:description" content="梦想还是要有的，万一实现了呢">
 
 
 
@@ -237,6 +237,125 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/15/Lock-LockSupport/" itemprop="url">
+                  Lock: LockSupport
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-15T12:50:29+08:00" content="2017-01-15">
+              2017-01-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          LockSupport工具类是用来创建锁Lock和其他同步类的基本线程阻塞原语。通过park()和unpark()方法来阻塞和唤醒线程。
+LockSupport中的私有成员变量UNSAFE和parkBlockerOffset12private static final sun.misc.Unsafe
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/15/Lock-LockSupport/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
       
 
@@ -722,128 +841,6 @@ Lock与synchronizedLock接口出现之前，Java程序是靠synchronized关键�
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/07/线程-启动和终止/" itemprop="url">
-                  线程: 启动和终止
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-07T21:14:12+08:00" content="2017-01-07">
-              2017-01-07
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
-                    <span itemprop="name">Java SE</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          创建线程Java 中创建有两种方法：继承 Thread 类、实现 Runnable 接口，在程序开发中只要是多线程，肯定永远以实现 Runnable 接口为主。
-实现 Runnable 接口相比继承 Thread 类有如下优势：
-
-可以避免由于 Java 的单继承特性而带来的局限；
-增强程序的健壮性
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/07/线程-启动和终止/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -884,12 +881,12 @@ Lock与synchronizedLock接口出现之前，Java程序是靠synchronized关键�
                src="/images/avatar.png"
                alt="方龙" />
           <p class="site-author-name" itemprop="name">方龙</p>
-          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+          <p class="site-description motion-element" itemprop="description">梦想还是要有的，万一实现了呢</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">103</span>
+              <span class="site-state-item-count">104</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -897,7 +894,7 @@ Lock与synchronizedLock接口出现之前，Java程序是靠synchronized关键�
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -906,7 +903,7 @@ Lock与synchronizedLock接口出现之前，Java程序是靠synchronized关键�
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">130</span>
+                <span class="site-state-item-count">131</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

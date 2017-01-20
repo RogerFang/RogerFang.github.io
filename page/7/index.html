@@ -84,15 +84,15 @@
 
 
 
-<meta name="description" content="码路漫漫，且行且珍惜">
+<meta name="description" content="梦想还是要有的，万一实现了呢">
 <meta property="og:type" content="website">
 <meta property="og:title" content="方龙的博客">
 <meta property="og:url" content="http://yoursite.com/page/7/index.html">
 <meta property="og:site_name" content="方龙的博客">
-<meta property="og:description" content="码路漫漫，且行且珍惜">
+<meta property="og:description" content="梦想还是要有的，万一实现了呢">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="方龙的博客">
-<meta name="twitter:description" content="码路漫漫，且行且珍惜">
+<meta name="twitter:description" content="梦想还是要有的，万一实现了呢">
 
 
 
@@ -237,6 +237,128 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/05/JVM-Java虚拟机运行时数据区域/" itemprop="url">
+                  JVM: Java虚拟机运行时数据区域
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-05T14:32:43+08:00" content="2017-01-05">
+              2017-01-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          
+Java与C/C++之间有一堵由动态内存分配和垃圾收集技术所围成的“高墙”。
+
+Java虚拟机在执行Java程序的过程中会把它管理的内存划分为若干个不同的数据区域。
+程序计数器程序计数器（Program Counter Register）是一块线程私有的内存空间，可以看作是当前线程所执行的字节码的
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/05/JVM-Java虚拟机运行时数据区域/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
       
 
@@ -726,128 +848,6 @@ Class文件是一组以8位字节为基础单位的二进制流，各个数据�
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/02/JVM-类加载-2-类加载器ClassLoader/" itemprop="url">
-                  JVM: 类加载(2)-类加载器ClassLoader
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-02T23:10:37+08:00" content="2017-01-02">
-              2017-01-02
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
-                    <span itemprop="name">Java SE</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          类加载器只用于完成整个类加载过程的加载（Loading）动作：类的加载阶段中“通过一个类的全限定名去获取描述此类的二进制字节流”这个动作放到Java虚拟机外部去实现，以便让程序代码自己决定如何去获取所需要的类。
-
-类加载器在类层次划分、OSGI、热部署、代码加密等领域被广泛应用。
-
-类在虚拟机中的唯
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/02/JVM-类加载-2-类加载器ClassLoader/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -888,12 +888,12 @@ Class文件是一组以8位字节为基础单位的二进制流，各个数据�
                src="/images/avatar.png"
                alt="方龙" />
           <p class="site-author-name" itemprop="name">方龙</p>
-          <p class="site-description motion-element" itemprop="description">码路漫漫，且行且珍惜</p>
+          <p class="site-description motion-element" itemprop="description">梦想还是要有的，万一实现了呢</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">103</span>
+              <span class="site-state-item-count">104</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -901,7 +901,7 @@ Class文件是一组以8位字节为基础单位的二进制流，各个数据�
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -910,7 +910,7 @@ Class文件是一组以8位字节为基础单位的二进制流，各个数据�
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">130</span>
+                <span class="site-state-item-count">131</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
