@@ -94,7 +94,7 @@ Lifecycle接口Tomcat在设计上允许一个组件包含其他">
 <meta property="og:description" content="Tomcat中有很多组件，这些组件会随着Tomcat启动而一起启动，也会随着Tomcat关闭而一起关闭。通过实现org.apache.catalina.Lifecycle接口，可以达到统一启动/关闭这些组件的效果。
 生命周期涉及的三个重要接口或类：Lifecycle、LifecycleEvenet和LifecycleListener。
 Lifecycle接口Tomcat在设计上允许一个组件包含其他">
-<meta property="og:updated_time" content="2017-01-22T01:58:36.278Z">
+<meta property="og:updated_time" content="2017-01-22T04:42:02.527Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Tomcat(2): 生命周期Lifecycle">
 <meta name="twitter:description" content="Tomcat中有很多组件，这些组件会随着Tomcat启动而一起启动，也会随着Tomcat关闭而一起关闭。通过实现org.apache.catalina.Lifecycle接口，可以达到统一启动/关闭这些组件的效果。
@@ -132,16 +132,6 @@ Lifecycle接口Tomcat在设计上允许一个组件包含其他">
 
 
 
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "//hm.baidu.com/hm.js?a1eb6dc312a93939356214ab5491901a";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
-
 
 
 
@@ -154,7 +144,7 @@ Lifecycle接口Tomcat在设计上允许一个组件包含其他">
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
@@ -227,9 +217,32 @@ Lifecycle接口Tomcat在设计上允许一个组件包含其他">
       
 
       
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
     </ul>
   
 
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
   
 </nav>
 
@@ -325,9 +338,11 @@ Lifecycle接口Tomcat在设计上允许一个组件包含其他">
         <p>Tomcat中有很多组件，这些组件会随着Tomcat启动而一起启动，也会随着Tomcat关闭而一起关闭。通过实现<code>org.apache.catalina.Lifecycle</code>接口，可以达到统一启动/关闭这些组件的效果。</p>
 <p>生命周期涉及的三个重要接口或类：<code>Lifecycle</code>、<code>LifecycleEvenet</code>和<code>LifecycleListener</code>。</p>
 <h1 id="Lifecycle接口"><a href="#Lifecycle接口" class="headerlink" title="Lifecycle接口"></a>Lifecycle接口</h1><p>Tomcat在设计上允许一个组件包含其他组件，父组件负责启动/关闭它的子组件。这样，Tomcat的启动类只需要启动一个组件就可以将全部应用的组件都启动起来。这种单一启动/关闭机制是通过 Lifecycle 接口实现的。</p>
-<a id="more"></a>
+<p>Lifecycle接口中最重要的是<code>start()</code>方法和<code>stop()</code>方法。组件必须提供这两个方法的实现，供其父组件使用，以实现对其进行启动/关闭操作。</p>
+<p><code>addLifecycleListener()</code>、<code>findLifecycleListeners</code>和<code>removeLifecycleListener</code>是与事件监听器有关的。组件可以注册多个事件监听器来对发生在该组件上的某些事件进行监听。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Lifecycle</span> </span>&#123;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">// ----------------------------------------------------- Manifest Constants</span></div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * The LifecycleEvent type for the "component before init" event.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String BEFORE_INIT_EVENT = <span class="string">"before_init"</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * The LifecycleEvent type for the "component after init" event.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AFTER_INIT_EVENT = <span class="string">"after_init"</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * The LifecycleEvent type for the "component start" event.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String START_EVENT = <span class="string">"start"</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * The LifecycleEvent type for the "component before start" event.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String BEFORE_START_EVENT = <span class="string">"before_start"</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * The LifecycleEvent type for the "component after start" event.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AFTER_START_EVENT = <span class="string">"after_start"</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * The LifecycleEvent type for the "component stop" event.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String STOP_EVENT = <span class="string">"stop"</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * The LifecycleEvent type for the "component before stop" event.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String BEFORE_STOP_EVENT = <span class="string">"before_stop"</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * The LifecycleEvent type for the "component after stop" event.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AFTER_STOP_EVENT = <span class="string">"after_stop"</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * The LifecycleEvent type for the "component after destroy" event.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AFTER_DESTROY_EVENT = <span class="string">"after_destroy"</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * The LifecycleEvent type for the "component before destroy" event.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String BEFORE_DESTROY_EVENT = <span class="string">"before_destroy"</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * The LifecycleEvent type for the "periodic" event.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String PERIODIC_EVENT = <span class="string">"periodic"</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * The LifecycleEvent type for the "configure_start" event. Used by those</div><div class="line">     * components that use a separate component to perform configuration and</div><div class="line">     * need to signal when configuration should be performed - usually after</div><div class="line">     * &#123;<span class="doctag">@link</span> #BEFORE_START_EVENT&#125; and before &#123;<span class="doctag">@link</span> #START_EVENT&#125;.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String CONFIGURE_START_EVENT = <span class="string">"configure_start"</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * The LifecycleEvent type for the "configure_stop" event. Used by those</div><div class="line">     * components that use a separate component to perform configuration and</div><div class="line">     * need to signal when de-configuration should be performed - usually after</div><div class="line">     * &#123;<span class="doctag">@link</span> #STOP_EVENT&#125; and before &#123;<span class="doctag">@link</span> #AFTER_STOP_EVENT&#125;.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String CONFIGURE_STOP_EVENT = <span class="string">"configure_stop"</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">// --------------------------------------------------------- Public Methods</span></div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Add a LifecycleEvent listener to this component.</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> listener The listener to add</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addLifecycleListener</span><span class="params">(LifecycleListener listener)</span></span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Get the life cycle listeners associated with this life cycle.</div><div class="line">     *</div><div class="line">     * <span class="doctag">@return</span> An array containing the life cycle listeners associated with this</div><div class="line">     *         life cycle. If this component has no listeners registered, a</div><div class="line">     *         zero-length array is returned.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> LifecycleListener[] findLifecycleListeners();</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Remove a LifecycleEvent listener from this component.</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> listener The listener to remove</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeLifecycleListener</span><span class="params">(LifecycleListener listener)</span></span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Prepare the component for starting. This method should perform any</div><div class="line">     * initialization required post object creation. The following</div><div class="line">     * &#123;<span class="doctag">@link</span> LifecycleEvent&#125;s will be fired in the following order:</div><div class="line">     * &lt;ol&gt;</div><div class="line">     *   &lt;li&gt;INIT_EVENT: On the successful completion of component</div><div class="line">     *                   initialization.&lt;/li&gt;</div><div class="line">     * &lt;/ol&gt;</div><div class="line">     *</div><div class="line">     * <span class="doctag">@exception</span> LifecycleException if this component detects a fatal error</div><div class="line">     *  that prevents this component from being used</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> LifecycleException</span>;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Prepare for the beginning of active use of the public methods other than</div><div class="line">     * property getters/setters and life cycle methods of this component. This</div><div class="line">     * method should be called before any of the public methods other than</div><div class="line">     * property getters/setters and life cycle methods of this component are</div><div class="line">     * utilized. The following &#123;<span class="doctag">@link</span> LifecycleEvent&#125;s will be fired in the</div><div class="line">     * following order:</div><div class="line">     * &lt;ol&gt;</div><div class="line">     *   &lt;li&gt;BEFORE_START_EVENT: At the beginning of the method. It is as this</div><div class="line">     *                           point the state transitions to</div><div class="line">     *                           &#123;<span class="doctag">@link</span> LifecycleState#STARTING_PREP&#125;.&lt;/li&gt;</div><div class="line">     *   &lt;li&gt;START_EVENT: During the method once it is safe to call start() for</div><div class="line">     *                    any child components. It is at this point that the</div><div class="line">     *                    state transitions to &#123;<span class="doctag">@link</span> LifecycleState#STARTING&#125;</div><div class="line">     *                    and that the public methods other than property</div><div class="line">     *                    getters/setters and life cycle methods may be</div><div class="line">     *                    used.&lt;/li&gt;</div><div class="line">     *   &lt;li&gt;AFTER_START_EVENT: At the end of the method, immediately before it</div><div class="line">     *                          returns. It is at this point that the state</div><div class="line">     *                          transitions to &#123;<span class="doctag">@link</span> LifecycleState#STARTED&#125;.</div><div class="line">     *                          &lt;/li&gt;</div><div class="line">     * &lt;/ol&gt;</div><div class="line">     *</div><div class="line">     * <span class="doctag">@exception</span> LifecycleException if this component detects a fatal error</div><div class="line">     *  that prevents this component from being used</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> <span class="keyword">throws</span> LifecycleException</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Gracefully terminate the active use of the public methods other than</div><div class="line">     * property getters/setters and life cycle methods of this component. Once</div><div class="line">     * the STOP_EVENT is fired, the public methods other than property</div><div class="line">     * getters/setters and life cycle methods should not be used. The following</div><div class="line">     * &#123;<span class="doctag">@link</span> LifecycleEvent&#125;s will be fired in the following order:</div><div class="line">     * &lt;ol&gt;</div><div class="line">     *   &lt;li&gt;BEFORE_STOP_EVENT: At the beginning of the method. It is at this</div><div class="line">     *                          point that the state transitions to</div><div class="line">     *                          &#123;<span class="doctag">@link</span> LifecycleState#STOPPING_PREP&#125;.&lt;/li&gt;</div><div class="line">     *   &lt;li&gt;STOP_EVENT: During the method once it is safe to call stop() for</div><div class="line">     *                   any child components. It is at this point that the</div><div class="line">     *                   state transitions to &#123;<span class="doctag">@link</span> LifecycleState#STOPPING&#125;</div><div class="line">     *                   and that the public methods other than property</div><div class="line">     *                   getters/setters and life cycle methods may no longer be</div><div class="line">     *                   used.&lt;/li&gt;</div><div class="line">     *   &lt;li&gt;AFTER_STOP_EVENT: At the end of the method, immediately before it</div><div class="line">     *                         returns. It is at this point that the state</div><div class="line">     *                         transitions to &#123;<span class="doctag">@link</span> LifecycleState#STOPPED&#125;.</div><div class="line">     *                         &lt;/li&gt;</div><div class="line">     * &lt;/ol&gt;</div><div class="line">     *</div><div class="line">     * Note that if transitioning from &#123;<span class="doctag">@link</span> LifecycleState#FAILED&#125; then the</div><div class="line">     * three events above will be fired but the component will transition</div><div class="line">     * directly from &#123;<span class="doctag">@link</span> LifecycleState#FAILED&#125; to</div><div class="line">     * &#123;<span class="doctag">@link</span> LifecycleState#STOPPING&#125;, bypassing</div><div class="line">     * &#123;<span class="doctag">@link</span> LifecycleState#STOPPING_PREP&#125;</div><div class="line">     *</div><div class="line">     * <span class="doctag">@exception</span> LifecycleException if this component detects a fatal error</div><div class="line">     *  that needs to be reported</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> <span class="keyword">throws</span> LifecycleException</span>;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Prepare to discard the object. The following &#123;<span class="doctag">@link</span> LifecycleEvent&#125;s will</div><div class="line">     * be fired in the following order:</div><div class="line">     * &lt;ol&gt;</div><div class="line">     *   &lt;li&gt;DESTROY_EVENT: On the successful completion of component</div><div class="line">     *                      destruction.&lt;/li&gt;</div><div class="line">     * &lt;/ol&gt;</div><div class="line">     *</div><div class="line">     * <span class="doctag">@exception</span> LifecycleException if this component detects a fatal error</div><div class="line">     *  that prevents this component from being used</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> <span class="keyword">throws</span> LifecycleException</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Obtain the current state of the source component.</div><div class="line">     *</div><div class="line">     * <span class="doctag">@return</span> The current state of the source component.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> LifecycleState <span class="title">getState</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Obtain a textual representation of the current component state. Useful</div><div class="line">     * for JMX. The format of this string may vary between point releases and</div><div class="line">     * should not be relied upon to determine component state. To determine</div><div class="line">     * component state, use &#123;<span class="doctag">@link</span> #getState()&#125;.</div><div class="line">     *</div><div class="line">     * <span class="doctag">@return</span> The name of the current component state.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getStateName</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Marker interface used to indicate that the instance should only be used</div><div class="line">     * once. Calling &#123;<span class="doctag">@link</span> #stop()&#125; on an instance that supports this interface</div><div class="line">     * will automatically call &#123;<span class="doctag">@link</span> #destroy()&#125; after &#123;<span class="doctag">@link</span> #stop()&#125;</div><div class="line">     * completes.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">SingleUse</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="LifecycleEvent"><a href="#LifecycleEvent" class="headerlink" title="LifecycleEvent"></a>LifecycleEvent</h1><h1 id="LifecycleListener"><a href="#LifecycleListener" class="headerlink" title="LifecycleListener"></a>LifecycleListener</h1><p>实现了 Lifecycle 接口的组件可以触发以下事件：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * The LifecycleEvent type for the "component before init" event.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String BEFORE_INIT_EVENT = <span class="string">"before_init"</span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * The LifecycleEvent type for the "component after init" event.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AFTER_INIT_EVENT = <span class="string">"after_init"</span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * The LifecycleEvent type for the "component start" event.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String START_EVENT = <span class="string">"start"</span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * The LifecycleEvent type for the "component before start" event.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String BEFORE_START_EVENT = <span class="string">"before_start"</span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * The LifecycleEvent type for the "component after start" event.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AFTER_START_EVENT = <span class="string">"after_start"</span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * The LifecycleEvent type for the "component stop" event.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String STOP_EVENT = <span class="string">"stop"</span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * The LifecycleEvent type for the "component before stop" event.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String BEFORE_STOP_EVENT = <span class="string">"before_stop"</span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * The LifecycleEvent type for the "component after stop" event.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AFTER_STOP_EVENT = <span class="string">"after_stop"</span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * The LifecycleEvent type for the "component after destroy" event.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AFTER_DESTROY_EVENT = <span class="string">"after_destroy"</span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * The LifecycleEvent type for the "component before destroy" event.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String BEFORE_DESTROY_EVENT = <span class="string">"before_destroy"</span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * The LifecycleEvent type for the "periodic" event.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String PERIODIC_EVENT = <span class="string">"periodic"</span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * The LifecycleEvent type for the "configure_start" event. Used by those</div><div class="line"> * components that use a separate component to perform configuration and</div><div class="line"> * need to signal when configuration should be performed - usually after</div><div class="line"> * &#123;<span class="doctag">@link</span> #BEFORE_START_EVENT&#125; and before &#123;<span class="doctag">@link</span> #START_EVENT&#125;.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String CONFIGURE_START_EVENT = <span class="string">"configure_start"</span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * The LifecycleEvent type for the "configure_stop" event. Used by those</div><div class="line"> * components that use a separate component to perform configuration and</div><div class="line"> * need to signal when de-configuration should be performed - usually after</div><div class="line"> * &#123;<span class="doctag">@link</span> #STOP_EVENT&#125; and before &#123;<span class="doctag">@link</span> #AFTER_STOP_EVENT&#125;.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String CONFIGURE_STOP_EVENT = <span class="string">"configure_stop"</span>;</div></pre></td></tr></table></figure></p>
+<h1 id="LifecycleEvent"><a href="#LifecycleEvent" class="headerlink" title="LifecycleEvent"></a>LifecycleEvent</h1><p>生命周期事件是<code>org.apache.catalina.LifecycleEvent</code>的实例。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">LifecycleEvent</span> <span class="keyword">extends</span> <span class="title">EventObject</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">1L</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Construct a new LifecycleEvent with the specified parameters.</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> lifecycle Component on which this event occurred</div><div class="line">     * <span class="doctag">@param</span> type Event type (required)</div><div class="line">     * <span class="doctag">@param</span> data Event data (if any)</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LifecycleEvent</span><span class="params">(Lifecycle lifecycle, String type, Object data)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(lifecycle);</div><div class="line">        <span class="keyword">this</span>.type = type;</div><div class="line">        <span class="keyword">this</span>.data = data;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * The event data associated with this event.</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Object data;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * The event type this instance represents.</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String type;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * <span class="doctag">@return</span> the event data of this event.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getData</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> data;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * <span class="doctag">@return</span> the Lifecycle on which this event occurred.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> Lifecycle <span class="title">getLifecycle</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> (Lifecycle) getSource();</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * <span class="doctag">@return</span> the event type of this event.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getType</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.type;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="LifecycleListener"><a href="#LifecycleListener" class="headerlink" title="LifecycleListener"></a>LifecycleListener</h1><p>生命周期事件的监听器实现了<code>org.apache.catalina.LifecycleListener</code>接口。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">LifecycleListener</span> </span>&#123;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Acknowledge the occurrence of the specified event.</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> event LifecycleEvent that has occurred</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">lifecycleEvent</span><span class="params">(LifecycleEvent event)</span></span>;</div><div class="line"></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -360,6 +375,10 @@ Lifecycle接口Tomcat在设计上允许一个组件包含其他">
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/22/Hexo-自定义代码折叠/" rel="prev" title="Hexo 自定义代码折叠">
+                Hexo 自定义代码折叠 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -427,7 +446,7 @@ Lifecycle接口Tomcat在设计上允许一个组件包含其他">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">106</span>
+              <span class="site-state-item-count">107</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -435,7 +454,7 @@ Lifecycle接口Tomcat在设计上允许一个组件包含其他">
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -463,15 +482,6 @@ Lifecycle接口Tomcat在设计上允许一个组件包含其他">
                     <i class="fa fa-fw fa-github"></i>
                   
                   GitHub
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="https://www.zhihu.com/people/a-mu-mu-art" target="_blank" title="zhihu">
-                  
-                    <i class="fa fa-fw fa-globe"></i>
-                  
-                  zhihu
                 </a>
               </span>
             
@@ -601,7 +611,7 @@ Lifecycle接口Tomcat在设计上允许一个组件包含其他">
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
 
 
 
@@ -616,6 +626,149 @@ Lifecycle接口Tomcat在设计上允许一个组件包含其他">
 
   
   
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = false;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title >= 0 || index_content >= 0 ){
+                                isMatch = true;
+								if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            } 
+							
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
 
   
 

@@ -1563,7 +1563,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #3b12ff;
+  background: #ffc2af;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2614,4 +2614,33 @@ hr {
     width: auto;
     text-align: center;
   }
+}
+.highlight {
+  position: relative;
+}
+.code-fold {
+  overflow: hidden;
+  height: 1em;
+}
+.code-fold::before {
+  content: '双击展开';
+  display: block;
+  position: absolute;
+  right: 0em;
+  top: 0;
+  width: 10em;
+  height: 1em;
+  z-index: 10;
+  color: #fc0;
+}
+.code-unfold::before {
+  content: '双击关闭';
+  display: block;
+  position: absolute;
+  right: 0em;
+  top: 0;
+  width: 10em;
+  height: 1em;
+  z-index: 10;
+  color: #fc0;
 }

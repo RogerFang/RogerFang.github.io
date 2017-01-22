@@ -138,3 +138,21 @@ $(document).ready(function () {
     }
   };
 });
+
+// Author:Roger
+$(function(){
+  $(".highlight").dblclick(function(){
+    if ($(this).hasClass("code-fold")) {
+      $(this).removeClass("code-fold").addClass("code-unfold");
+    }else{
+      $(this).removeClass("code-unfold").addClass("code-fold");
+    }
+  });
+    $(".highlight").each(function(){
+      var obj = $(this);
+    if (!obj.hasClass("code-fold")) {
+      obj.addClass("code-fold");
+    }
+    });
+  }
+)
