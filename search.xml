@@ -5,7 +5,7 @@
     
     <entry>
       <title><![CDATA[Hexo 自定义代码折叠]]></title>
-      <url>http://yoursite.com/2017/01/22/Hexo-%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BB%A3%E7%A0%81%E6%8A%98%E5%8F%A0/</url>
+      <url>https://rogerfang.github.io/2017/01/22/Hexo-%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BB%A3%E7%A0%81%E6%8A%98%E5%8F%A0/</url>
       <content type="html"><![CDATA[<p>代码折叠功能在hexo中没有提供，需要自己自定义添加css和js。</p>
 <h1 id="自定义CSS"><a href="#自定义CSS" class="headerlink" title="自定义CSS"></a>自定义CSS</h1><p>将自定义的css样式加入到: <code>Blog目录/themes/next/source/css/_custom/custom.styl</code></p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.highlight</span>&#123;</div><div class="line">  <span class="attribute">position</span>: relative;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="selector-class">.code-fold</span>&#123;</div><div class="line">  <span class="attribute">overflow</span>: hidden;</div><div class="line">  <span class="attribute">height</span>: <span class="number">1em</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="selector-class">.code-fold</span><span class="selector-pseudo">::before</span>&#123;</div><div class="line">  <span class="attribute">content</span>: <span class="string">'双击展开'</span>;</div><div class="line">  <span class="attribute">display</span>: block;</div><div class="line">  <span class="attribute">position</span>: absolute;</div><div class="line">  <span class="attribute">right</span>: <span class="number">0em</span>;</div><div class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</div><div class="line">  <span class="attribute">width</span>: <span class="number">10em</span>;</div><div class="line">  <span class="attribute">height</span>: <span class="number">1em</span>;</div><div class="line">  <span class="attribute">z-index</span>: <span class="number">10</span>;</div><div class="line">  <span class="attribute">color</span>: <span class="number">#fc0</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="selector-class">.code-unfold</span><span class="selector-pseudo">::before</span>&#123;</div><div class="line">  <span class="attribute">content</span>: <span class="string">'双击关闭'</span>;</div><div class="line">  <span class="attribute">display</span>: block;</div><div class="line">  <span class="attribute">position</span>: absolute;</div><div class="line">  <span class="attribute">right</span>: <span class="number">0em</span>;</div><div class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</div><div class="line">  <span class="attribute">width</span>: <span class="number">10em</span>;</div><div class="line">  <span class="attribute">height</span>: <span class="number">1em</span>;</div><div class="line">  <span class="attribute">z-index</span>: <span class="number">10</span>;</div><div class="line">  <span class="attribute">color</span>: <span class="number">#fc0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -18,7 +18,7 @@
     
     <entry>
       <title><![CDATA[Tomcat(2): 生命周期Lifecycle]]></title>
-      <url>http://yoursite.com/2017/01/22/Tomcat-2-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9FLifecycle/</url>
+      <url>https://rogerfang.github.io/2017/01/22/Tomcat-2-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9FLifecycle/</url>
       <content type="html"><![CDATA[<p>Tomcat中有很多组件，这些组件会随着Tomcat启动而一起启动，也会随着Tomcat关闭而一起关闭。通过实现<code>org.apache.catalina.Lifecycle</code>接口，可以达到统一启动/关闭这些组件的效果。</p>
 <p>生命周期涉及的三个重要接口或类：<code>Lifecycle</code>、<code>LifecycleEvenet</code>和<code>LifecycleListener</code>。</p>
 <h1 id="Lifecycle接口"><a href="#Lifecycle接口" class="headerlink" title="Lifecycle接口"></a>Lifecycle接口</h1><p>Tomcat在设计上允许一个组件包含其他组件，父组件负责启动/关闭它的子组件。这样，Tomcat的启动类只需要启动一个组件就可以将全部应用的组件都启动起来。这种单一启动/关闭机制是通过 Lifecycle 接口实现的。</p>
@@ -32,7 +32,7 @@
     
     <entry>
       <title><![CDATA[Tomcat(1): 系统架构]]></title>
-      <url>http://yoursite.com/2017/01/21/Tomcat-1-%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/</url>
+      <url>https://rogerfang.github.io/2017/01/21/Tomcat-1-%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/</url>
       <content type="html"><![CDATA[<h1 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h1><p><img src="/images/tomcat/tomcat-system-architecture.png" alt="Tomcat系统架构"></p>
 <p>Tomcat的核心组件有两个：<strong>Connector（连接器）</strong>和<strong>Container（容器）</strong>。</p>
 <h1 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h1><p><strong>Server</strong>：是Tomcat的顶级容器，对外提供一个接口访问Service，对内负责管理维护Service集合，维护Service集合又包括管理Service的生命周期、寻找一个请求的Service、结束一个Service等。</p>
@@ -56,7 +56,7 @@
     
     <entry>
       <title><![CDATA[IDEA 搭建 Tomcat9 源码调试环境]]></title>
-      <url>http://yoursite.com/2017/01/20/IDEA-%E6%90%AD%E5%BB%BA-Tomcat9-%E6%BA%90%E7%A0%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/</url>
+      <url>https://rogerfang.github.io/2017/01/20/IDEA-%E6%90%AD%E5%BB%BA-Tomcat9-%E6%BA%90%E7%A0%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/</url>
       <content type="html"><![CDATA[<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><ol>
 <li>IDEA</li>
 <li>Tomcat源码：apache-tomcat-9.0.0.M17-src.zip 版本</li>
@@ -88,7 +88,7 @@
     
     <entry>
       <title><![CDATA[操作系统：内存管理]]></title>
-      <url>http://yoursite.com/2017/01/19/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</url>
+      <url>https://rogerfang.github.io/2017/01/19/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</url>
       <content type="html"><![CDATA[<h1 id="内存管理的方式"><a href="#内存管理的方式" class="headerlink" title="内存管理的方式"></a>内存管理的方式</h1><p>常见的由以下4种：</p>
 <ul>
 <li><strong>块式管理</strong><br>  把主存分成一大块一大块的，会造成很大的浪费，但是易于管理。</li>
@@ -112,7 +112,7 @@
     
     <entry>
       <title><![CDATA[操作系统：进程管理]]></title>
-      <url>http://yoursite.com/2017/01/19/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</url>
+      <url>https://rogerfang.github.io/2017/01/19/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</url>
       <content type="html"><![CDATA[<h1 id="进程和线程的区别"><a href="#进程和线程的区别" class="headerlink" title="进程和线程的区别"></a>进程和线程的区别</h1><p><strong>进程</strong>是一个执行中的程序的实例，它是系统进行资源分配和调度的一个独立单位。</p>
 <p><strong>线程</strong>是进程的一个实体，是CPU调度和分配的基本单位，线程基本上不拥有系统资源，只拥有一点在运行中必不可少的资源（如：程序计数器、寄存器和栈），但是它可以与同属一个进程的其他线程共享进程所拥有的所有资源。</p>
 <p>在实现了线程的操作系统中，进程是资源分配的基本单位，线程是调度的基本单位，是系统中并发执行的单元。</p>
@@ -157,7 +157,7 @@
     
     <entry>
       <title><![CDATA[网络与通信：传输层]]></title>
-      <url>http://yoursite.com/2017/01/19/%E7%BD%91%E7%BB%9C%E4%B8%8E%E9%80%9A%E4%BF%A1%EF%BC%9A%E4%BC%A0%E8%BE%93%E5%B1%82/</url>
+      <url>https://rogerfang.github.io/2017/01/19/%E7%BD%91%E7%BB%9C%E4%B8%8E%E9%80%9A%E4%BF%A1%EF%BC%9A%E4%BC%A0%E8%BE%93%E5%B1%82/</url>
       <content type="html"><![CDATA[<p>传输层主要功能为两台主机上的应用程序提供端到端的通信，通过端口号识别两台主机上相对应程序之间进行通信。</p>
 <blockquote>
 <p>网络层为主机之间提供逻辑通信，而传输层为应用程序之间提供端到端的逻辑通信。</p>
@@ -267,7 +267,7 @@
     
     <entry>
       <title><![CDATA[网络与通信：网络层]]></title>
-      <url>http://yoursite.com/2017/01/19/%E7%BD%91%E7%BB%9C%E4%B8%8E%E9%80%9A%E4%BF%A1%EF%BC%9A%E7%BD%91%E7%BB%9C%E5%B1%82/</url>
+      <url>https://rogerfang.github.io/2017/01/19/%E7%BD%91%E7%BB%9C%E4%B8%8E%E9%80%9A%E4%BF%A1%EF%BC%9A%E7%BD%91%E7%BB%9C%E5%B1%82/</url>
       <content type="html"><![CDATA[<p>网络层向上只提供简单灵活的、无连接的、尽最大努力交付的数据报服务。</p>
 <p>网络层把运输层产生的<strong>报文段</strong>或<strong>用户数据报</strong>封装成<strong>分组</strong>或<strong>包</strong>进行传送，在TCP/IP体系中，由于网络层使用IP协议，因此分组也叫做<strong>IP数据报</strong>，简称<strong>数据报</strong>。</p>
 <blockquote>
@@ -338,7 +338,7 @@
     
     <entry>
       <title><![CDATA[网络与通信：网络模型]]></title>
-      <url>http://yoursite.com/2017/01/19/%E7%BD%91%E7%BB%9C%E4%B8%8E%E9%80%9A%E4%BF%A1%EF%BC%9A%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/</url>
+      <url>https://rogerfang.github.io/2017/01/19/%E7%BD%91%E7%BB%9C%E4%B8%8E%E9%80%9A%E4%BF%A1%EF%BC%9A%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/</url>
       <content type="html"><![CDATA[<h1 id="OSI-七层模型"><a href="#OSI-七层模型" class="headerlink" title="OSI 七层模型"></a>OSI 七层模型</h1><p>OSI（Open System Interconnection，开放系统互连）七层网络模型称为开放式网络互连参考模型。它是国际标准组织制定的一个指导信息互连、互通和协作的网络规范。</p>
 <p>从逻辑上可以将其划分为七层模型：应用层、表示层、会话层、传输层、网络层、数据链路层和物理层。其中上3层称为高层，用于定义应用程序之间的通信和人机界面；下4层称为底层，用于定于数据如何进行端到端的传输，物理规范以及数据与光电信号间的转换。<br><img src="/images/network/osi-7-layer.png" alt=""></p>
 <p>每一层的功能：</p>
@@ -365,10 +365,10 @@
     
     <entry>
       <title><![CDATA[Executor框架]]></title>
-      <url>http://yoursite.com/2017/01/17/Executor%E6%A1%86%E6%9E%B6/</url>
+      <url>https://rogerfang.github.io/2017/01/17/Executor%E6%A1%86%E6%9E%B6/</url>
       <content type="html"><![CDATA[<p>Java的线程既是<strong>工作单元</strong>，也是<strong>执行机制</strong>。从JDK 5开始，把工作单元与执行机制分离开来。工作单元包括<code>Runnable</code>和<code>Callable</code>，而执行机制由<code>Executor</code>框架提供。</p>
 <h1 id="Executor框架"><a href="#Executor框架" class="headerlink" title="Executor框架"></a>Executor框架</h1><h2 id="Executor框架的两级调度模型"><a href="#Executor框架的两级调度模型" class="headerlink" title="Executor框架的两级调度模型"></a>Executor框架的两级调度模型</h2><blockquote>
-<p>对于Sun JDK来说，它的Windows版和Linux版都是使用一对一的线程模型实现的，一条Java线程就映射到一条<strong>轻量级进程</strong>(LWP)中。<br>参见：<a href="https://rogerfang.github.io/2017/01/06/Java%E4%B8%8E%E7%BA%BF%E7%A8%8B/" target="_blank" rel="external">Java与线程</a></p>
+<p>对于Sun JDK来说，它的Windows版和Linux版都是使用一对一的线程模型实现的，一条Java线程就映射到一条<strong>轻量级进程</strong>(LWP)中。<br>参见：<a href="https://rogerfang.github.io/2017/01/06/Java%E4%B8%8E%E7%BA%BF%E7%A8%8B/">Java与线程</a></p>
 </blockquote>
 <p>Executor框架的两级调度模型可以描述为：在上层，Java多线程程序通常把应用分解为若干个任务，然后使用<strong>用户级的调度器</strong>（Executor框架）将这些任务映射为固定数量的线程；在底层，操作系统内核将这些线程映射到硬件处理器上。<br><img src="../images/javase/executor-two-level-scheduling-model.png" alt=""></p>
 <h2 id="Executor框架的结构"><a href="#Executor框架的结构" class="headerlink" title="Executor框架的结构"></a>Executor框架的结构</h2><p>Executor框架主要由3部分组成：</p>
@@ -407,7 +407,7 @@
     
     <entry>
       <title><![CDATA[线程池]]></title>
-      <url>http://yoursite.com/2017/01/17/%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
+      <url>https://rogerfang.github.io/2017/01/17/%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
       <content type="html"><![CDATA[<p>线程池带来的好处：</p>
 <ol>
 <li><strong>降低资源消耗</strong><br> 通过重复利用已创建的线程降低线程创建和销毁造成的消耗。</li>
@@ -466,7 +466,7 @@
     
     <entry>
       <title><![CDATA[JUC集合框架(2): ConcurrentHashMap]]></title>
-      <url>http://yoursite.com/2017/01/16/JUC%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-2-ConcurrentHashMap/</url>
+      <url>https://rogerfang.github.io/2017/01/16/JUC%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-2-ConcurrentHashMap/</url>
       <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcurrentHashMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</span></div><div class="line">    <span class="keyword">implements</span> <span class="title">ConcurrentMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;, <span class="title">Serializable</span></div></pre></td></tr></table></figure>
 <p><code>ConcurrentSkipHashMap</code>相当于线程安全的<code>HashMap</code>，它继承于<code>AbstractMap</code>类，并实现了<code>ConcurrentMap</code>接口。</p>
 <p><strong>ConcurrentHashMap不允许key或value为null值</strong>。</p>
@@ -534,7 +534,7 @@
     
     <entry>
       <title><![CDATA[JUC集合框架(1): 概述]]></title>
-      <url>http://yoursite.com/2017/01/16/JUC%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-1-%E6%A6%82%E8%BF%B0/</url>
+      <url>https://rogerfang.github.io/2017/01/16/JUC%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-1-%E6%A6%82%E8%BF%B0/</url>
       <content type="html"><![CDATA[<p>JUC包中集合类可以分为3部分：List和Set、Map以及Queue。</p>
 <h1 id="List和Set"><a href="#List和Set" class="headerlink" title="List和Set"></a>List和Set</h1><p>JUC集合包中List和Set的实现类有：</p>
 <ul>
@@ -560,14 +560,14 @@
     
     <entry>
       <title><![CDATA[Lock: 并发工具类-Exchanger]]></title>
-      <url>http://yoursite.com/2017/01/15/Lock-%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BB-Exchanger/</url>
+      <url>https://rogerfang.github.io/2017/01/15/Lock-%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BB-Exchanger/</url>
       <content type="html"><![CDATA[<p>Exchanger是一个用于线程间协作的工具类，可以进行<strong>线程间的数据交换</strong>。<br>它提供一个<strong>同步点</strong>，在这个同步点，两个线程可以交换彼此的数据。这两个线程通过<code>exchange(V x)</code>方法交换数据，如果第一个线程先执行<code>exchange(V x)</code>方法，它会一直等待第二个线程也执行<code>exchange(V x)</code>方法，当两个线程同时到达同步点时，这两个线程就可以交换数据。</p>
 ]]></content>
     </entry>
     
     <entry>
       <title><![CDATA[Lock: 并发工具类-Semaphore]]></title>
-      <url>http://yoursite.com/2017/01/15/Lock-%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BB-Semaphore/</url>
+      <url>https://rogerfang.github.io/2017/01/15/Lock-%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BB-Semaphore/</url>
       <content type="html"><![CDATA[<p>Semaphore（信号量）是用来控制同时访问特定资源的线程数量，它通过协调各个线程，以保证合理的使用公共资源。</p>
 <p>信号量维护了一个信号量许可集。线程可以通过调用acquire()来获取信号量的许可；当信号量中有可用的许可时，线程能获取该许可；否则线程必须等待，直到有可用的许可为止。 线程可以通过release()来释放它所持有的信号量许可。</p>
 <p>Semaphore是通过自定义同步器以实现<strong>共享锁</strong>来完成<code>acquire()</code>和<code>release()</code>操作的，并支持公平/非公平锁。</p>
@@ -576,7 +576,7 @@
     
     <entry>
       <title><![CDATA[Lock: 并发工具类-CyclicBarrier]]></title>
-      <url>http://yoursite.com/2017/01/15/Lock-%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BB-CyclicBarrier/</url>
+      <url>https://rogerfang.github.io/2017/01/15/Lock-%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BB-CyclicBarrier/</url>
       <content type="html"><![CDATA[<p>CyclicBarrier可以让一组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，所有被屏障拦截的线程才会继续运行。</p>
 <h1 id="CountDownLatch和CyclicBarrier的区别"><a href="#CountDownLatch和CyclicBarrier的区别" class="headerlink" title="CountDownLatch和CyclicBarrier的区别"></a>CountDownLatch和CyclicBarrier的区别</h1><ol>
 <li>CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；而CyclicBarrier则是允许一组线程相互等待。</li>
@@ -594,7 +594,7 @@
     
     <entry>
       <title><![CDATA[Lock: 并发工具类-CountDownLatch]]></title>
-      <url>http://yoursite.com/2017/01/15/Lock-%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BB-CountDownLatch/</url>
+      <url>https://rogerfang.github.io/2017/01/15/Lock-%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BB-CountDownLatch/</url>
       <content type="html"><![CDATA[<p>在JDK并发包提供了几个常用的并发工具类：CountDownLatch、CyclicBarrier、Semaphore提供了一种<strong>并发流程控制</strong>的手段，而Exchanger工具类提供了在<strong>线程间交换数据</strong>的一种手段。</p>
 <p><strong>CountDownLatch允许一个或多个线程等待其他线程完成操作。</strong></p>
 <h1 id="CountDownLatch和CyclicBarrier的区别"><a href="#CountDownLatch和CyclicBarrier的区别" class="headerlink" title="CountDownLatch和CyclicBarrier的区别"></a>CountDownLatch和CyclicBarrier的区别</h1><ol>
@@ -615,7 +615,7 @@
     
     <entry>
       <title><![CDATA[Lock: Condition]]></title>
-      <url>http://yoursite.com/2017/01/15/Lock-Condition/</url>
+      <url>https://rogerfang.github.io/2017/01/15/Lock-Condition/</url>
       <content type="html"><![CDATA[<p>任意一个Java对象，都拥有一组监视器方法（定义在java.lang.Object上），主要包括<code>wait()</code>、<code>wait(long timeout)</code>、<code>notify()</code>、<code>notifyAll()</code>，这些方法与<code>synchronized</code>关键字配合，可以实现<strong>等待/通知机制</strong>。</p>
 <p>Condition的作用是对锁进行更精确的控制，也提供了类似Object的监视器方法。<br>Condition中的<code>await()</code>方法相当于Object的<code>wait()</code>方法，Condition中的<code>signal()</code>方法相当于Object的<code>notify()</code>方法，Condition中的<code>signalAll()</code>相当于Object的<code>notifyAll()</code>方法。</p>
 <blockquote>
@@ -650,7 +650,7 @@
     
     <entry>
       <title><![CDATA[Lock: LockSupport]]></title>
-      <url>http://yoursite.com/2017/01/15/Lock-LockSupport/</url>
+      <url>https://rogerfang.github.io/2017/01/15/Lock-LockSupport/</url>
       <content type="html"><![CDATA[<p>LockSupport工具类是用来创建锁Lock和其他同步类的基本线程阻塞原语。通过<code>park()</code>和<code>unpark()</code>方法来阻塞和唤醒线程。</p>
 <p>LockSupport中的私有成员变量<code>UNSAFE</code>和<code>parkBlockerOffset</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> sun.misc.Unsafe UNSAFE;</div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> parkBlockerOffset;</div></pre></td></tr></table></figure></p>
 <p><strong>UNSAFE</strong>：全名sun.misc.Unsafe用于可以直接操控内存，被JDK广泛用于自己的包中，如java.nio和java.util.concurrent。是JDK内部用的工具类。它通过暴露一些Java意义上说“不安全”的功能给Java层代码，来让JDK能够更多的使用Java代码来实现一些原本是平台相关的、需要使用native语言（例如C或C++）才可以实现的功能。该类不应该在JDK核心类库之外使用。</p>
@@ -665,7 +665,7 @@
     
     <entry>
       <title><![CDATA[Lock: 读写锁ReentrantReadWriteLock]]></title>
-      <url>http://yoursite.com/2017/01/15/Lock-%E8%AF%BB%E5%86%99%E9%94%81ReentrantReadWriteLock/</url>
+      <url>https://rogerfang.github.io/2017/01/15/Lock-%E8%AF%BB%E5%86%99%E9%94%81ReentrantReadWriteLock/</url>
       <content type="html"><![CDATA[<p>之前提到的ReentrantLock是<strong>排他锁</strong>，也就是同一时刻只允许一个线程进行访问。而<strong>读写锁</strong>在同一时刻可以允许多个读线程进行访问，但是在写线程访问时，所有的读线程和写线程均会被阻塞。</p>
 <blockquote>
 <p>读写锁维护了一对锁，一个读锁和一个写锁，通过<strong>分离读锁和写锁</strong>，使得并发性相比一般的排他锁有了很大的提升。</p>
@@ -695,7 +695,7 @@
     
     <entry>
       <title><![CDATA[Lock: 重入锁ReentrantLock]]></title>
-      <url>http://yoursite.com/2017/01/15/Lock-%E9%87%8D%E5%85%A5%E9%94%81ReentrantLock/</url>
+      <url>https://rogerfang.github.io/2017/01/15/Lock-%E9%87%8D%E5%85%A5%E9%94%81ReentrantLock/</url>
       <content type="html"><![CDATA[<p>重入锁ReentrantLock，表示该锁能够支持一个线程对资源的重复加锁。此外，还支持获取锁时的公平和非公平性选择，默认为非公平性的。</p>
 <blockquote>
 <p>synchronized关键字隐式的支持重进入。</p>
@@ -729,7 +729,7 @@
     
     <entry>
       <title><![CDATA[Lock: 队列同步器AbstractQueuedSynchronizer]]></title>
-      <url>http://yoursite.com/2017/01/07/Lock-%E9%98%9F%E5%88%97%E5%90%8C%E6%AD%A5%E5%99%A8/</url>
+      <url>https://rogerfang.github.io/2017/01/07/Lock-%E9%98%9F%E5%88%97%E5%90%8C%E6%AD%A5%E5%99%A8/</url>
       <content type="html"><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p><strong>队列同步器</strong>（AbstractQueuedSynchronizer，AQS），是用来构建<strong>锁</strong>或其他<strong>同步组件</strong>的基础框架，它使用了一个int成员变量表示<strong>同步状态</strong>，通过内置的<strong>FIFO队列</strong>来完成资源获取线程的排队工作。</p>
 <p>队列同步器是实现锁（也可以是任意同步组件）的关键，<strong>在锁的实现中聚合同步器，利用同步器实现锁的语义</strong>。可以这样理解：</p>
 <blockquote>
@@ -823,7 +823,7 @@
     
     <entry>
       <title><![CDATA[Lock: 概述]]></title>
-      <url>http://yoursite.com/2017/01/07/Lock-%E6%A6%82%E8%BF%B0/</url>
+      <url>https://rogerfang.github.io/2017/01/07/Lock-%E6%A6%82%E8%BF%B0/</url>
       <content type="html"><![CDATA[<p>锁是用来控制多个线程访问共享资源的方式，一般来说，一个锁能够防止多个线程同时访问 共享资源（但是有些锁可以允许多个线程并发的访问共享资源，如读写锁）。</p>
 <h1 id="Lock与synchronized"><a href="#Lock与synchronized" class="headerlink" title="Lock与synchronized"></a>Lock与synchronized</h1><p>Lock接口出现之前，Java程序是靠<code>synchronized</code>关键字实现锁功能的，而Java SE 5之后，并发包中新增了Lock接口（及其相关实现类），它们提供了与<code>synchronized</code>关键字类似的同步功能。</p>
 <p>Lock与synchronized关键字比较：Lock使用时需要显示地获取和释放锁，而synchronized块是隐式地获取和释放锁，但是Lock却拥有了锁获取和释放的可操作性、可中断的获取锁以及超时获取锁等多种synchronized关键字不具备的同步特性。</p>
@@ -841,7 +841,7 @@
     
     <entry>
       <title><![CDATA[线程: 启动和终止]]></title>
-      <url>http://yoursite.com/2017/01/07/%E7%BA%BF%E7%A8%8B-%E5%90%AF%E5%8A%A8%E5%92%8C%E7%BB%88%E6%AD%A2/</url>
+      <url>https://rogerfang.github.io/2017/01/07/%E7%BA%BF%E7%A8%8B-%E5%90%AF%E5%8A%A8%E5%92%8C%E7%BB%88%E6%AD%A2/</url>
       <content type="html"><![CDATA[<h1 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h1><p>Java 中创建有两种方法：继承 Thread 类、实现 Runnable 接口，在程序开发中只要是多线程，肯定永远以实现 Runnable 接口为主。</p>
 <p>实现 Runnable 接口相比继承 Thread 类有如下优势：</p>
 <ul>
@@ -869,7 +869,7 @@
     
     <entry>
       <title><![CDATA[JMM: final域的内存语义]]></title>
-      <url>http://yoursite.com/2017/01/07/JMM-final%E5%9F%9F%E7%9A%84%E5%86%85%E5%AD%98%E8%AF%AD%E4%B9%89/</url>
+      <url>https://rogerfang.github.io/2017/01/07/JMM-final%E5%9F%9F%E7%9A%84%E5%86%85%E5%AD%98%E8%AF%AD%E4%B9%89/</url>
       <content type="html"><![CDATA[<p>与volatile和锁相比，对final域的读写更像是普通变量的访问。</p>
 <h1 id="final域的重排序规则"><a href="#final域的重排序规则" class="headerlink" title="final域的重排序规则"></a>final域的重排序规则</h1><p>对于final域编译器和处理器需要遵守两个重排序规则：</p>
 <ol>
@@ -899,7 +899,7 @@
     
     <entry>
       <title><![CDATA[JMM: 锁的内存语义]]></title>
-      <url>http://yoursite.com/2017/01/07/JMM-%E9%94%81%E7%9A%84%E5%86%85%E5%AD%98%E8%AF%AD%E4%B9%89/</url>
+      <url>https://rogerfang.github.io/2017/01/07/JMM-%E9%94%81%E7%9A%84%E5%86%85%E5%AD%98%E8%AF%AD%E4%B9%89/</url>
       <content type="html"><![CDATA[<p>锁是Java并发编程中最重要的同步机制，锁除了可以让临界区互斥执行外，还可以让释放锁的线程向获取同一个锁的线程发送消息。</p>
 <h1 id="锁释放-获取内存语义"><a href="#锁释放-获取内存语义" class="headerlink" title="锁释放-获取内存语义"></a>锁释放-获取内存语义</h1><p>锁的<strong>释放</strong>内存语义：线程释放锁时，JMM会把该线程对应的本地内存中的共享变量刷新到主内存中。</p>
 <p>锁的<strong>获取</strong>内存语义：线程获取锁时，JMM会把线程对应的本地内存置为无效。从而使得被监视器（Monitor）保护的临界区代码必须从主内存中读取共享变量。</p>
@@ -938,7 +938,7 @@
     
     <entry>
       <title><![CDATA[JMM: volatile的内存语义]]></title>
-      <url>http://yoursite.com/2017/01/07/JMM-volatile%E7%9A%84%E5%86%85%E5%AD%98%E8%AF%AD%E4%B9%89/</url>
+      <url>https://rogerfang.github.io/2017/01/07/JMM-volatile%E7%9A%84%E5%86%85%E5%AD%98%E8%AF%AD%E4%B9%89/</url>
       <content type="html"><![CDATA[<p>volatile关键字可以保证变量的可见性，也就是新值能立即同步到主内存，以及使用前立即从主内存刷新。</p>
 <p><strong>可见性</strong>：对一个volatile变量的读，总是能看到（任意线程）对这个volatile变量最后的写入。<br><strong>原子性</strong>：对任意单个volatile变量的读/写具有原子性，但是对于复合操作如volatile++这种复合操作不具有原子性。</p>
 <h1 id="volatile写-读内存语义"><a href="#volatile写-读内存语义" class="headerlink" title="volatile写-读内存语义"></a>volatile写-读内存语义</h1><p>volatile<strong>写</strong>内存语义：当写一个volatile变量时，JMM会把该线程对应的本地内存中的共享变量值刷新到主内存。</p>
@@ -960,7 +960,7 @@
     
     <entry>
       <title><![CDATA[JMM: 顺序一致性]]></title>
-      <url>http://yoursite.com/2017/01/07/JMM-%E9%A1%BA%E5%BA%8F%E4%B8%80%E8%87%B4%E6%80%A7/</url>
+      <url>https://rogerfang.github.io/2017/01/07/JMM-%E9%A1%BA%E5%BA%8F%E4%B8%80%E8%87%B4%E6%80%A7/</url>
       <content type="html"><![CDATA[<blockquote>
 <p>顺序一致性内存模型是一个<strong>理论参考模型</strong>。</p>
 </blockquote>
@@ -998,7 +998,7 @@
     
     <entry>
       <title><![CDATA[Java与线程]]></title>
-      <url>http://yoursite.com/2017/01/06/Java%E4%B8%8E%E7%BA%BF%E7%A8%8B/</url>
+      <url>https://rogerfang.github.io/2017/01/06/Java%E4%B8%8E%E7%BA%BF%E7%A8%8B/</url>
       <content type="html"><![CDATA[<p>并发不一定依赖多线程（例如PHP的多进程并发），但是在Java里面讨论并发大多数和线程离不开。</p>
 <blockquote>
 <p>线程是比进程更轻量级的调用执行单位，是CPU调度的基本单位。</p>
@@ -1037,7 +1037,7 @@
     
     <entry>
       <title><![CDATA[JMM: Java内存模型]]></title>
-      <url>http://yoursite.com/2017/01/06/JMM-Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</url>
+      <url>https://rogerfang.github.io/2017/01/06/JMM-Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</url>
       <content type="html"><![CDATA[<h1 id="硬件效率与一致性"><a href="#硬件效率与一致性" class="headerlink" title="硬件效率与一致性"></a>硬件效率与一致性</h1><p>一般来说，“<strong>让计算机并发执行若干个运算任务</strong>”（多任务处理）可以“<strong>更充分地利用计算机处理器的效能</strong>”。但是其中一个重要的<strong>复杂性</strong>（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，<em>处理器还需要和内存交互</em>，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。</p>
 <p>由于计算机的存储设备与处理器的运算速度有几个数量级的差距，所以每个处理器增加自己的高速缓存（Cache）来作为内存与处理器之间的缓冲。将运算需要的数据复制到缓存中，让运算能快速进行，运算结束后再从缓存同步到内存中，这样处理器就无须等待缓慢的内存读写了。</p>
 <p>基于告诉缓存的存储交互很好地解决了处理器与内存的速度矛盾，但是也引入了一个新问题：<strong>缓存一致性</strong>（Cache Coherence）。当多个处理器的运算任务都涉及同一块主内存区域时，将可能导致缓存数据不一致。</p>
@@ -1144,7 +1144,7 @@
     
     <entry>
       <title><![CDATA[JVM: 垃圾收集器]]></title>
-      <url>http://yoursite.com/2017/01/05/JVM-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/</url>
+      <url>https://rogerfang.github.io/2017/01/05/JVM-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/</url>
       <content type="html"><![CDATA[<p>垃圾收集算法是内存回收的方法论，垃圾收集器是内存回收的具体实现。</p>
 <p>HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用于新生代和老年代的收集器，如果两个收集器之间存在连线，就说明可以搭配使用。<br><img src="../images/jvm/jvm-gc.png" alt=""></p>
 <h1 id="并发和并行"><a href="#并发和并行" class="headerlink" title="并发和并行"></a>并发和并行</h1><ul>
@@ -1221,7 +1221,7 @@
     
     <entry>
       <title><![CDATA[JVM: 垃圾回收机制]]></title>
-      <url>http://yoursite.com/2017/01/05/JVM-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/</url>
+      <url>https://rogerfang.github.io/2017/01/05/JVM-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/</url>
       <content type="html"><![CDATA[<p>垃圾回收可以有效的防止内存泄露，有效的使用空闲的内存。<strong>Java堆</strong>和<strong>方法区</strong>的内存分配和回收是动态的，因而垃圾收集器所关注的也是这部分内存。</p>
 <p>垃圾收集机制要考虑的两件事情：<br>（1）发现无用对象（如何判断对象是否还“存活”）；<br>（2）回收被无用对象占用的内存空间，使该空间可被程序再次使用（垃圾收集算法）。</p>
 <h1 id="对象“存活”？"><a href="#对象“存活”？" class="headerlink" title="对象“存活”？"></a>对象“存活”？</h1><p>垃圾回收的第一件事情就是要确定堆内存中有哪些对象还“存活”，哪写已“死去”。</p>
@@ -1246,7 +1246,7 @@
 </blockquote>
 <h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p>JDK 1.2中对引用的概念进行了扩充，将引用分为强引用、软引用、弱引用、虚引用4种，而不仅仅是只有被引用或没有被引用两种状态。</p>
 <blockquote>
-<p>参见：<a href="https://rogerfang.github.io/2016/12/31/Java-%E5%87%A0%E7%A7%8D%E5%BC%95%E7%94%A8/" target="_blank" rel="external">https://rogerfang.github.io/2016/12/31/Java-%E5%87%A0%E7%A7%8D%E5%BC%95%E7%94%A8/</a></p>
+<p>参见：<a href="https://rogerfang.github.io/2016/12/31/Java-%E5%87%A0%E7%A7%8D%E5%BC%95%E7%94%A8/">https://rogerfang.github.io/2016/12/31/Java-%E5%87%A0%E7%A7%8D%E5%BC%95%E7%94%A8/</a></p>
 </blockquote>
 <h1 id="回收方法区"><a href="#回收方法区" class="headerlink" title="回收方法区"></a>回收方法区</h1><p>在方法区中进行垃圾收集的性价比一般比较低，垃圾收集的主要内容包括两部分：<strong>废弃的常量</strong>和<strong>无用的类</strong>。</p>
 <ol>
@@ -1273,7 +1273,7 @@
     
     <entry>
       <title><![CDATA[JVM: HotSpot虚拟机中的对象]]></title>
-      <url>http://yoursite.com/2017/01/05/JVM-HotSpot%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%B8%AD%E7%9A%84%E5%AF%B9%E8%B1%A1/</url>
+      <url>https://rogerfang.github.io/2017/01/05/JVM-HotSpot%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%B8%AD%E7%9A%84%E5%AF%B9%E8%B1%A1/</url>
       <content type="html"><![CDATA[<p>探讨HotSpot虚拟机在Java堆中的对象分配、布局和访问过程。</p>
 <h1 id="对象的创建"><a href="#对象的创建" class="headerlink" title="对象的创建"></a>对象的创建</h1><blockquote>
 <p>这里仅讨论普通的Java对象，不涉及数组和Class对象等</p>
@@ -1318,7 +1318,7 @@
     
     <entry>
       <title><![CDATA[JVM: Java虚拟机运行时数据区域]]></title>
-      <url>http://yoursite.com/2017/01/05/JVM-Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F/</url>
+      <url>https://rogerfang.github.io/2017/01/05/JVM-Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F/</url>
       <content type="html"><![CDATA[<blockquote>
 <p>Java与C/C++之间有一堵由<strong>动态内存分配</strong>和<strong>垃圾收集技术</strong>所围成的“高墙”。</p>
 </blockquote>
@@ -1331,7 +1331,7 @@
 <p>此内存区域是唯一一个在Java虚拟机规范中没有规定任何<code>OutOfMemoryError</code>情况的区域。</p>
 <h1 id="Java虚拟机栈"><a href="#Java虚拟机栈" class="headerlink" title="Java虚拟机栈"></a>Java虚拟机栈</h1><p>Java虚拟机栈（VM Stack）也是<strong>线程私有</strong>的，它的生命周期与线程相同。虚拟机栈描述的是<strong>方法执行</strong>的内存模型，每个方法在执行时都会创建一个栈帧（Stack Frame），用于存储<em>局部变量表</em>、<em>操作数栈</em>、<em>动态连接</em>、<em>方法出口</em>等信息。<br><img src="/images/jvm/vm-stack-memory-model.png" alt=""></p>
 <blockquote>
-<p>具体栈帧结构可以参见：字节码执行引擎，<a href="https://rogerfang.github.io/2017/01/04/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E-1-%E6%A6%82%E8%BF%B0/" target="_blank" rel="external">https://rogerfang.github.io/2017/01/04/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E-1-%E6%A6%82%E8%BF%B0/</a></p>
+<p>具体栈帧结构可以参见：字节码执行引擎，<a href="https://rogerfang.github.io/2017/01/04/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E-1-%E6%A6%82%E8%BF%B0/">https://rogerfang.github.io/2017/01/04/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E-1-%E6%A6%82%E8%BF%B0/</a></p>
 </blockquote>
 <p>Java虚拟机规范对虚拟机栈规定了两种异常状况：如果线程请求的栈深度大于虚拟机所允许的深度，将抛出<code>StackOverflowError</code>异常。当扩展虚拟机栈动态扩展时，如果无法申请到足够的内存，将会抛出<code>OutOfMemoryError</code>异常。</p>
 <h1 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h1><p>本地方法栈（Native Method Stack）与虚拟机栈类似，只不过虚拟机栈为虚拟机执行Java方法（字节码）服务，而本地方法栈则为虚拟机使用到的Native方法服务。</p>
@@ -1362,7 +1362,7 @@
     
     <entry>
       <title><![CDATA[JVM: 字节码执行引擎(2)-方法调用]]></title>
-      <url>http://yoursite.com/2017/01/04/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E-2-%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8/</url>
+      <url>https://rogerfang.github.io/2017/01/04/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E-2-%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8/</url>
       <content type="html"><![CDATA[<p>方法调用不同于方法执行，方法调用阶段唯一的任务就是确定被调用方法的版本（即调用哪一个方法），暂时还不涉及方法内部的具体运行过程。</p>
 <h1 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h1><blockquote>
 <p>解析调用一定是个静态的过程，在编译期间就完全确定，在类加载的解析阶段就会把涉及的符号引用转换为可确定的直接引用，不会延迟到运行期再去完成。</p>
@@ -1426,7 +1426,7 @@
     
     <entry>
       <title><![CDATA[JVM: 字节码执行引擎(1)-概述]]></title>
-      <url>http://yoursite.com/2017/01/04/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E-1-%E6%A6%82%E8%BF%B0/</url>
+      <url>https://rogerfang.github.io/2017/01/04/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E-1-%E6%A6%82%E8%BF%B0/</url>
       <content type="html"><![CDATA[<p>执行引擎是JVM最核心的组成部分之一。</p>
 <p>虚拟机执行引擎在执行代码的时候，可能会有解释执行（通过解释器执行）和编译执行（通过JIT编译器产生本地代码执行）两种选择。</p>
 <blockquote>
@@ -1463,7 +1463,7 @@
     
     <entry>
       <title><![CDATA[Class文件(2): 字节码指令]]></title>
-      <url>http://yoursite.com/2017/01/03/Class%E6%96%87%E4%BB%B6-2-%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/</url>
+      <url>https://rogerfang.github.io/2017/01/03/Class%E6%96%87%E4%BB%B6-2-%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/</url>
       <content type="html"><![CDATA[<p>Java虚拟机字节码指令：由1个字节长度的<strong>操作码</strong>（代表着某种特定操作含义的数字），以及跟随其后的0至多个<strong>操作数</strong>（Operands，此操作所需的参数）而构成。</p>
 <blockquote>
 <p>再次强调Java虚拟机采用面向操作数栈而不是寄存器的架构，所以大多数的指令都包含操作数，而只有一个操作码。</p>
@@ -1537,7 +1537,7 @@
     
     <entry>
       <title><![CDATA[Class文件(1): 类文件结构]]></title>
-      <url>http://yoursite.com/2017/01/03/Class%E6%96%87%E4%BB%B6-1-%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
+      <url>https://rogerfang.github.io/2017/01/03/Class%E6%96%87%E4%BB%B6-1-%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
       <content type="html"><![CDATA[<blockquote>
 <p>Write Once, Run Anywhere.</p>
 </blockquote>
@@ -1990,7 +1990,7 @@
     
     <entry>
       <title><![CDATA[JVM: 类加载(2)-类加载器ClassLoader]]></title>
-      <url>http://yoursite.com/2017/01/02/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD-2-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8ClassLoader/</url>
+      <url>https://rogerfang.github.io/2017/01/02/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD-2-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8ClassLoader/</url>
       <content type="html"><![CDATA[<p>类加载器只用于完成整个类加载过程的加载（Loading）动作：类的加载阶段中“通过一个类的全限定名去获取描述此类的二进制字节流”这个动作放到Java虚拟机外部去实现，以便让程序代码自己决定如何去获取所需要的类。</p>
 <blockquote>
 <p>类加载器在类层次划分、OSGI、热部署、代码加密等领域被广泛应用。</p>
@@ -2019,7 +2019,7 @@
     
     <entry>
       <title><![CDATA[JVM: 类加载(1)-类加载机制]]></title>
-      <url>http://yoursite.com/2017/01/02/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD-1-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/</url>
+      <url>https://rogerfang.github.io/2017/01/02/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD-1-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/</url>
       <content type="html"><![CDATA[<p><strong>类加载机制</strong>：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型。</p>
 <blockquote>
 <p>Java可以动态扩展的特性就是依赖运行期动态加载和动态连接这个特点实现的。</p>
@@ -2113,7 +2113,7 @@
     
     <entry>
       <title><![CDATA[JVM: 后端编译(JIT编译器)]]></title>
-      <url>http://yoursite.com/2017/01/01/JVM-%E5%90%8E%E7%AB%AF%E7%BC%96%E8%AF%91-JIT%E7%BC%96%E8%AF%91%E5%99%A8/</url>
+      <url>https://rogerfang.github.io/2017/01/01/JVM-%E5%90%8E%E7%AB%AF%E7%BC%96%E8%AF%91-JIT%E7%BC%96%E8%AF%91%E5%99%A8/</url>
       <content type="html"><![CDATA[<h1 id="解释器与JIT编译器"><a href="#解释器与JIT编译器" class="headerlink" title="解释器与JIT编译器"></a>解释器与JIT编译器</h1><p>当程序需要迅速启动和执行的时候，JIT解释器可以首先发挥作用，省去编译的时间，立即执行。<br>在程序执行后，随着时间的推移，JIT编译器逐渐发挥作用，把越来越多的代码编译成本地机器码，可以获得更高的执行效率。</p>
 <blockquote>
 <p>可以使用解释器执行节约内存，反之使用JIT编译器来提升效率。</p>
@@ -2182,7 +2182,7 @@
     
     <entry>
       <title><![CDATA[前端编译(Javac编译器)]]></title>
-      <url>http://yoursite.com/2017/01/01/%E5%89%8D%E7%AB%AF%E7%BC%96%E8%AF%91-Javac%E7%BC%96%E8%AF%91%E5%99%A8/</url>
+      <url>https://rogerfang.github.io/2017/01/01/%E5%89%8D%E7%AB%AF%E7%BC%96%E8%AF%91-Javac%E7%BC%96%E8%AF%91%E5%99%A8/</url>
       <content type="html"><![CDATA[<p>Java语言中的“编译期”是一段“不确定”的操作过程。可能指的是以下三种：</p>
 <ul>
 <li><p><strong>前端编译器</strong></p>
@@ -2280,14 +2280,14 @@
 </blockquote>
 <p>对于<code>&lt;init&gt;()</code>而言是非静态语句块<code>{}</code>块和实例变量，对于<code>&lt;clinit&gt;()</code>而言是静态语句块<code>static{}</code>块和类变量。<br><code>&lt;clinit&gt;()</code>无需调用父类的<code>clinit()</code>方法，虚拟机会保证父类构造器的执行（类加载）。</p>
 <blockquote>
-<p>相关博客：<br><a href="https://rogerfang.github.io/2016/12/30/Java-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/" target="_blank" rel="external">https://rogerfang.github.io/2016/12/30/Java-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/</a></p>
+<p>相关博客：<br><a href="https://rogerfang.github.io/2016/12/30/Java-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/">https://rogerfang.github.io/2016/12/30/Java-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/</a></p>
 </blockquote>
 ]]></content>
     </entry>
     
     <entry>
       <title><![CDATA[C和Java编译执行的过程比较]]></title>
-      <url>http://yoursite.com/2017/01/01/C%E5%92%8CJava%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E7%9A%84%E8%BF%87%E7%A8%8B%E6%AF%94%E8%BE%83/</url>
+      <url>https://rogerfang.github.io/2017/01/01/C%E5%92%8CJava%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E7%9A%84%E8%BF%87%E7%A8%8B%E6%AF%94%E8%BE%83/</url>
       <content type="html"><![CDATA[<h1 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h1><p>不论是物理机还是虚拟机，大部分的程序代码从开始编译到最终转化成物理机的目标代码或虚拟机能执行的指令集之前，都会按照如下图所示的各个步骤进行：</p>
 <p><img src="/images/jvm/compile-process.png" alt=""></p>
 <p>其中绿色的模块可以选择性实现。分为<strong>解释执行</strong>和<strong>编译执行</strong>。</p>
@@ -2341,7 +2341,7 @@
     
     <entry>
       <title><![CDATA[Java 几种引用]]></title>
-      <url>http://yoursite.com/2016/12/31/Java-%E5%87%A0%E7%A7%8D%E5%BC%95%E7%94%A8/</url>
+      <url>https://rogerfang.github.io/2016/12/31/Java-%E5%87%A0%E7%A7%8D%E5%BC%95%E7%94%A8/</url>
       <content type="html"><![CDATA[<blockquote>
 <p>Java中存在四种引用：强引用、软引用、弱引用、虚引用。</p>
 </blockquote>
@@ -2361,7 +2361,7 @@
     
     <entry>
       <title><![CDATA[Java 反射原理解析]]></title>
-      <url>http://yoursite.com/2016/12/31/Java-%E5%8F%8D%E5%B0%84%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/</url>
+      <url>https://rogerfang.github.io/2016/12/31/Java-%E5%8F%8D%E5%B0%84%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/</url>
       <content type="html"><![CDATA[<blockquote>
 <p>Java的反射机制允许我们动态的调用某个对象的方法/构造函数、获取某个对象的属性等，而无需在编码时确定调用的对象。</p>
 </blockquote>
@@ -2383,7 +2383,7 @@
     
     <entry>
       <title><![CDATA[Java 动态代理与反射]]></title>
-      <url>http://yoursite.com/2016/12/31/Java-%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E4%B8%8E%E5%8F%8D%E5%B0%84/</url>
+      <url>https://rogerfang.github.io/2016/12/31/Java-%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E4%B8%8E%E5%8F%8D%E5%B0%84/</url>
       <content type="html"><![CDATA[<h1 id="代理"><a href="#代理" class="headerlink" title="代理"></a>代理</h1><p>代理模式的特征是代理类与委托类有相同的接口。</p>
 <blockquote>
 <p>为某个对象提供一个代理，通过代理类这一中间层，可以有效地隐藏和保护被代理的真实对象，以控制对这个对象的访问。</p>
@@ -2446,7 +2446,7 @@
     
     <entry>
       <title><![CDATA[Java 反射]]></title>
-      <url>http://yoursite.com/2016/12/31/Java-%E5%8F%8D%E5%B0%84/</url>
+      <url>https://rogerfang.github.io/2016/12/31/Java-%E5%8F%8D%E5%B0%84/</url>
       <content type="html"><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>反射能够让运行在JVM中的程序检测和修改运行时的行为，使用反射API可以在运行时获取对象的内部结构信息。</p>
 <blockquote>
 <p>JVM的类加载机制允许从多种源动态地加载Java类，但是动态类加载有一个重要的缺点，即我们在使用动态加载的类对象时，往往对这个类知之甚少，甚至于一无所知。这种情况下就需要使用一种动态编程技术——反射。</p>
@@ -2519,7 +2519,7 @@
     
     <entry>
       <title><![CDATA[Java 泛型Generics]]></title>
-      <url>http://yoursite.com/2016/12/30/Java-%E6%B3%9B%E5%9E%8BGenerics/</url>
+      <url>https://rogerfang.github.io/2016/12/30/Java-%E6%B3%9B%E5%9E%8BGenerics/</url>
       <content type="html"><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Java泛型(Generics)是JDK 1.5中引入的一个新特性，允许在定义类和接口的时候使用类型参数（type parameter）。声明的类型参数在使用时用具体的类型来替换，泛型最主要的应用是在JDK 1.5中的新集合类框架中。</p>
 <p>泛型使得编译器在编译时就可以发现很多错误，可以解决之前的集合类框架在使用过程中通常会出现的运行时类型错误。</p>
 <h1 id="类型擦除-type-erasure"><a href="#类型擦除-type-erasure" class="headerlink" title="类型擦除(type erasure)"></a>类型擦除(type erasure)</h1><p>类型擦除：使用泛型的时候加上类型参数，会在编译器进行编译的时候去掉。</p>
@@ -2569,7 +2569,7 @@
     
     <entry>
       <title><![CDATA[Java 初始化顺序]]></title>
-      <url>http://yoursite.com/2016/12/30/Java-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/</url>
+      <url>https://rogerfang.github.io/2016/12/30/Java-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/</url>
       <content type="html"><![CDATA[<p>初始化操作的执行顺序：</p>
 <ol>
 <li>所有静态成员/初始块先执行</li>
@@ -2583,7 +2583,7 @@
     
     <entry>
       <title><![CDATA[Java集合框架(15): HashMap和HashTable异同]]></title>
-      <url>http://yoursite.com/2016/12/30/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-15-HashMap%E5%92%8CHashTable%E5%BC%82%E5%90%8C/</url>
+      <url>https://rogerfang.github.io/2016/12/30/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-15-HashMap%E5%92%8CHashTable%E5%BC%82%E5%90%8C/</url>
       <content type="html"><![CDATA[<h1 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h1><blockquote>
 <p><code>HashMap</code>和<code>HashTable</code>都是存储“键值对”的散列表，都采用拉链法解决Hash冲突。</p>
 </blockquote>
@@ -2608,7 +2608,7 @@
     
     <entry>
       <title><![CDATA[Java集合框架(14): HashTable源码分析]]></title>
-      <url>http://yoursite.com/2016/12/30/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-14-HashTable%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
+      <url>https://rogerfang.github.io/2016/12/30/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-14-HashTable%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
       <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hashtable</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</span></div><div class="line">    <span class="keyword">extends</span> <span class="title">Dictionary</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</div><div class="line">    <span class="keyword">implements</span> <span class="title">Map</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></div></pre></td></tr></table></figure>
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><code>HashTable</code>和<code>HashMap</code>一样都是实现了哈希表，存储的内容是key-value映射。<code>HashTable</code>采用<strong>拉链法</strong>处理Hash冲突。</p>
 <ol>
@@ -2630,7 +2630,7 @@
     
     <entry>
       <title><![CDATA[Java集合框架(13): fail-fast]]></title>
-      <url>http://yoursite.com/2016/12/30/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-13-fail-fast/</url>
+      <url>https://rogerfang.github.io/2016/12/30/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-13-fail-fast/</url>
       <content type="html"><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>fail-fast机制是java集合框架中的一种错误机制。当多个线程对同一个<strong>集合的结构</strong>进行操作时，可能会产生fail-fast，出现<code>java.util.ConcurrentModificationException</code>。</p>
 <h1 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h1><p>fail-fast机制，是一种错误检测机制，只能被用来检测错误，因为JDK并不保证fail-fast机制一定发生。</p>
 <ol>
@@ -2647,7 +2647,7 @@
     
     <entry>
       <title><![CDATA[Java集合框架(12): TreeSet源码分析]]></title>
-      <url>http://yoursite.com/2016/12/30/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-12-TreeSet%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
+      <url>https://rogerfang.github.io/2016/12/30/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-12-TreeSet%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
       <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeSet</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractSet</span>&lt;<span class="title">E</span>&gt;</span></div><div class="line">    <span class="keyword">implements</span> <span class="title">NavigableSet</span>&lt;<span class="title">E</span>&gt;, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></div></pre></td></tr></table></figure>
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><code>TreeSet</code>是基于<code>TreeMap</code>实现的，它的作用是提供有序的Set集合，其中的元素支持两种排序方式：<strong>自然排序</strong>和<code>Comparator</code>方式。</p>
 <p><code>TreeSet</code>为基本操作(add、remove和contains)提供受保证的复杂度$O(\log{N})$。是非线程安全的。</p>
@@ -2662,7 +2662,7 @@
     
     <entry>
       <title><![CDATA[Java集合框架(11): LinkedHashSet源码分析]]></title>
-      <url>http://yoursite.com/2016/12/30/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-11-LinkedHashSet%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
+      <url>https://rogerfang.github.io/2016/12/30/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-11-LinkedHashSet%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
       <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkedHashSet</span>&lt;<span class="title">E</span>&gt;</span></div><div class="line">    <span class="keyword">extends</span> <span class="title">HashSet</span>&lt;<span class="title">E</span>&gt;</div><div class="line">    <span class="keyword">implements</span> <span class="title">Set</span>&lt;<span class="title">E</span>&gt;, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></div></pre></td></tr></table></figure>
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><code>LinkedHashSet</code>继承自<code>HashSet</code>，<code>LinkedHashSet</code>调用父类<code>HashSet</code>的构造函数(default修饰)，让其底层实现为<code>LinkedHashMap</code>。</p>
 <p><code>LinkedHashSet</code>的元素可以按照<strong>插入顺序</strong>来访问。</p>
@@ -2671,7 +2671,7 @@
     
     <entry>
       <title><![CDATA[Java集合框架(10): HashSet源码分析]]></title>
-      <url>http://yoursite.com/2016/12/30/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-10-HashSet%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
+      <url>https://rogerfang.github.io/2016/12/30/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-10-HashSet%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
       <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HashSet</span>&lt;<span class="title">E</span>&gt;</span></div><div class="line">    <span class="keyword">extends</span> <span class="title">AbstractSet</span>&lt;<span class="title">E</span>&gt;</div><div class="line">    <span class="keyword">implements</span> <span class="title">Set</span>&lt;<span class="title">E</span>&gt;, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></div></pre></td></tr></table></figure>
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><code>Set</code>接口扩展自<code>Collection</code>接口，规定<code>Set</code>的实例不包含重复的元素。</p>
 <ol>
@@ -2695,7 +2695,7 @@
     
     <entry>
       <title><![CDATA[Java集合框架(9): IdentityHashMap源码分析]]></title>
-      <url>http://yoursite.com/2016/12/29/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-9-IdentityHashMap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
+      <url>https://rogerfang.github.io/2016/12/29/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-9-IdentityHashMap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
       <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IdentityHashMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</span></div><div class="line">    <span class="keyword">extends</span> <span class="title">AbstractMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</div><div class="line">    <span class="keyword">implements</span> <span class="title">Map</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span>, <span class="title">Cloneable</span></div></pre></td></tr></table></figure>
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><code>IdentityHashMap</code>在平时并不常用，通过例子来简单感受下。</p>
 <blockquote>
@@ -2737,11 +2737,11 @@
     
     <entry>
       <title><![CDATA[Java集合框架(8): TreeMap源码分析]]></title>
-      <url>http://yoursite.com/2016/12/29/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-8-TreeMap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
+      <url>https://rogerfang.github.io/2016/12/29/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-8-TreeMap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
       <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</span></div><div class="line">    <span class="keyword">extends</span> <span class="title">AbstractMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</div><div class="line">    <span class="keyword">implements</span> <span class="title">NavigableMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></div></pre></td></tr></table></figure>
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><code>TreeMap</code>是一种基于<strong>红黑树</strong>实现的key-value结构，非线程安全的。<br>如果没有使用自定义的Comparator对Key为null进行相应的处理，则不支持Key为null。</p>
 <blockquote>
-<p>关于红黑树的介绍可以参见：<a href="https://rogerfang.github.io/2016/10/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-9-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E7%BA%A2%E9%BB%91%E6%A0%91/" target="_blank" rel="external">https://rogerfang.github.io/2016/10/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-9-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E7%BA%A2%E9%BB%91%E6%A0%91/</a></p>
+<p>关于红黑树的介绍可以参见：<a href="https://rogerfang.github.io/2016/10/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-9-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E7%BA%A2%E9%BB%91%E6%A0%91/">https://rogerfang.github.io/2016/10/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-9-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E7%BA%A2%E9%BB%91%E6%A0%91/</a></p>
 </blockquote>
 <p>在使用集合视图在<code>HashMap</code>中迭代时，是不能保证迭代顺序的；<code>LinkedHashMap</code>使用了双向链表，保证按照插入顺序或访问顺序进行迭代。<code>TreeMap</code>支持<strong>按键</strong>进行排序，可以由传入的比较器（Comparator）来控制（当然，自己也可以实现Comparator利用value进行排序）。</p>
 <blockquote>
@@ -2778,7 +2778,7 @@
     
     <entry>
       <title><![CDATA[Java集合框架(7): LinkedHashMap源码分析]]></title>
-      <url>http://yoursite.com/2016/12/29/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-7-LinkedHashMap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
+      <url>https://rogerfang.github.io/2016/12/29/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-7-LinkedHashMap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
       <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkedHashMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</span></div><div class="line">    <span class="keyword">extends</span> <span class="title">HashMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</div><div class="line">    <span class="keyword">implements</span> <span class="title">Map</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</div></pre></td></tr></table></figure>
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>LinkedHashMap是HashMap的子类，也是对Map接口的一种基于链表和哈希表的实现，不过扩展了HashMap增加了双向链表的实现。</p>
 <blockquote>
@@ -2807,7 +2807,7 @@
     
     <entry>
       <title><![CDATA[Java集合框架(6): HashMap源码分析]]></title>
-      <url>http://yoursite.com/2016/12/28/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-6-HashMap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
+      <url>https://rogerfang.github.io/2016/12/28/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-6-HashMap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
       <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HashMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</span></div><div class="line">    <span class="keyword">implements</span> <span class="title">Map</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;, <span class="title">Cloneable</span>, <span class="title">Serializable</span></div></pre></td></tr></table></figure>
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>HashMap是一种基于哈希表(hash table)实现的map，数组中每一个元素都是一个链表，把数组中的每一格成为一个（bin或bucket）。</p>
 <p>HashTable 的实现和 HashMap 非常相似，不过 HashTable 对每个方法进行了 Synchronize 同步以保证在多线程场景下的数据一致性，这种实现比较低效。在多线程场景下可以使用 Map m = Collections.synchronizedMap(new HashMap(…)); 或并发包中的 ConcurrentHashMap。</p>
@@ -2865,7 +2865,7 @@
     
     <entry>
       <title><![CDATA[Java集合框架(5): Stack源码分析]]></title>
-      <url>http://yoursite.com/2016/12/28/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-5-Stack%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
+      <url>https://rogerfang.github.io/2016/12/28/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-5-Stack%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
       <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Stack</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Vector</span>&lt;<span class="title">E</span>&gt;</span></div></pre></td></tr></table></figure>
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><ol>
 <li>Stack是继承Vector，实现了栈相关的操作。</li>
@@ -2882,7 +2882,7 @@
     
     <entry>
       <title><![CDATA[Java集合框架(4): Vector源码分析]]></title>
-      <url>http://yoursite.com/2016/12/28/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-4-Vector%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
+      <url>https://rogerfang.github.io/2016/12/28/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-4-Vector%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
       <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Vector</span>&lt;<span class="title">E</span>&gt;</span></div><div class="line">    <span class="keyword">extends</span> <span class="title">AbstractList</span>&lt;<span class="title">E</span>&gt;</div><div class="line">    <span class="keyword">implements</span> <span class="title">List</span>&lt;<span class="title">E</span>&gt;, <span class="title">RandomAccess</span>, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></div></pre></td></tr></table></figure>
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><ol>
 <li>Vector和ArrayList一样是基于<strong>数组</strong>实现的，是一个<strong>动态</strong>数组，其容量能自动增长。</li>
@@ -2911,7 +2911,7 @@
     
     <entry>
       <title><![CDATA[Java集合框架(3): LinkedList源码分析]]></title>
-      <url>http://yoursite.com/2016/12/27/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-3-LinkedList%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
+      <url>https://rogerfang.github.io/2016/12/27/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-3-LinkedList%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
       <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkedList</span>&lt;<span class="title">E</span>&gt;</span></div><div class="line">    <span class="keyword">extends</span> <span class="title">AbstractSequentialList</span>&lt;<span class="title">E</span>&gt;</div><div class="line">    <span class="keyword">implements</span> <span class="title">List</span>&lt;<span class="title">E</span>&gt;, <span class="title">Deque</span>&lt;<span class="title">E</span>&gt;, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></div></pre></td></tr></table></figure>
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><ol>
 <li>LinkedList是基于双向循环链表（从源码中可以很容易看出）实现的，实现了List和Deque接口，除了可以当做链表来操作外，它还可以当做栈、队列和双端队列来使用。</li>
@@ -2983,7 +2983,7 @@
     
     <entry>
       <title><![CDATA[Java集合框架(2): ArrayList源码分析]]></title>
-      <url>http://yoursite.com/2016/12/27/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-2-ArrayList%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
+      <url>https://rogerfang.github.io/2016/12/27/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-2-ArrayList%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
       <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArrayList</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractList</span>&lt;<span class="title">E</span>&gt;</span></div><div class="line">        <span class="keyword">implements</span> <span class="title">List</span>&lt;<span class="title">E</span>&gt;, <span class="title">RandomAccess</span>, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></div></pre></td></tr></table></figure>
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><ol>
 <li>ArrayList是基于<strong>数组</strong>实现的，是一个<strong>动态</strong>数组，其容量能自动增长。</li>
@@ -3013,7 +3013,7 @@
     
     <entry>
       <title><![CDATA[Java集合框架(1): 概述]]></title>
-      <url>http://yoursite.com/2016/12/27/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-1-%E6%A6%82%E8%BF%B0/</url>
+      <url>https://rogerfang.github.io/2016/12/27/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6-1-%E6%A6%82%E8%BF%B0/</url>
       <content type="html"><![CDATA[<p>Java集合框架下大致可以分为如下五个部分：<strong>List列表</strong>、<strong>Set集合</strong>、<strong>Map映射</strong>、<strong>迭代器</strong>（Iterator、Enumeration）、<strong>工具类</strong>（Arrays、Collections）。</p>
 <p><img src="/images/collections/java-collection-framework.png" alt=""></p>
 <h1 id="Collection"><a href="#Collection" class="headerlink" title="Collection"></a>Collection</h1><p>Collection是List、Set等集合高度抽象出来的接口，它包含了这些集合的基本操作，它主要又分为两大部分：List和Set。</p>
@@ -3031,7 +3031,7 @@
     
     <entry>
       <title><![CDATA[Elasticsearch(1): windows环境下安装]]></title>
-      <url>http://yoursite.com/2016/12/21/Elasticsearch-1-windows%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85/</url>
+      <url>https://rogerfang.github.io/2016/12/21/Elasticsearch-1-windows%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85/</url>
       <content type="html"><![CDATA[<h1 id="Elasticsearch安装"><a href="#Elasticsearch安装" class="headerlink" title="Elasticsearch安装"></a>Elasticsearch安装</h1><ol>
 <li><p>官网下载: <code>https://www.elastic.co/downloads/elasticsearch</code></p>
 </li>
@@ -3081,7 +3081,7 @@
     
     <entry>
       <title><![CDATA[Docker(1): 初步使用]]></title>
-      <url>http://yoursite.com/2016/12/09/Docker-1-%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8/</url>
+      <url>https://rogerfang.github.io/2016/12/09/Docker-1-%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8/</url>
       <content type="html"><![CDATA[<h1 id="Docker安装"><a href="#Docker安装" class="headerlink" title="Docker安装"></a>Docker安装</h1><p>系统环境CentOS7</p>
 <ol>
 <li>安装：<code>yum install docker</code></li>
@@ -3108,7 +3108,7 @@
     
     <entry>
       <title><![CDATA[JPA 2.0 动态类型安全查询]]></title>
-      <url>http://yoursite.com/2016/12/07/JPA-2-0-%E5%8A%A8%E6%80%81%E7%B1%BB%E5%9E%8B%E5%AE%89%E5%85%A8%E6%9F%A5%E8%AF%A2/</url>
+      <url>https://rogerfang.github.io/2016/12/07/JPA-2-0-%E5%8A%A8%E6%80%81%E7%B1%BB%E5%9E%8B%E5%AE%89%E5%85%A8%E6%9F%A5%E8%AF%A2/</url>
       <content type="html"><![CDATA[<p>JPA 2.0版本(JSR 317)引入的关键特性之一就是Criteria API，所带来的好处就是：查询可以通过Java编译器来验证其正确性，而且还提供了能够在运行时动态地构建查询的机制。</p>
 <p>使用Criteria API开发Java编译器能够检查其正确定的查询，从而减少运行时的错误，这种查询优于传统的基于字符串的Java Persistence Query Language(JPQL)查询。</p>
 <h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p><strong>持久化单元</strong>（Persist Unit）就是关于一组Entity的命名配置。持久化单元是一个静态概念。<br><strong>持久化上下文</strong>（Persist Context）就是一个受管的Entity实例的集合。每一个持久化上下文都关联一个持久化单元，持久化上下文不可能脱离持久化单元独立存在。持久化上下文是一个动态概念。尽管持久化上下文非常重要，但是开发者不直接与之打交道，持久化上下文在程序中是透明的，我们通过<strong>EntityManager</strong>间接管理它。<br><strong>实体的生命周期</strong>：新实体（new），持久化态（managed），游离态（detached），删除状态（removed）。</p>
@@ -3167,7 +3167,7 @@
     
     <entry>
       <title><![CDATA[Spring Boot:项目启动执行CommandLineRunner]]></title>
-      <url>http://yoursite.com/2016/12/06/Spring-Boot-%E9%A1%B9%E7%9B%AE%E5%90%AF%E5%8A%A8%E6%89%A7%E8%A1%8CCommandLineRunner/</url>
+      <url>https://rogerfang.github.io/2016/12/06/Spring-Boot-%E9%A1%B9%E7%9B%AE%E5%90%AF%E5%8A%A8%E6%89%A7%E8%A1%8CCommandLineRunner/</url>
       <content type="html"><![CDATA[<p>Spring Boot提供了一个借口CommandLineRunner，实现这个接口可以使得在项目启动时去执行一些操作。@Order注解来规定调用所有CommandLineRunner实例的顺序。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.roger.commandline;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.springframework.boot.CommandLineRunner;</div><div class="line"><span class="keyword">import</span> org.springframework.core.annotation.Order;</div><div class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</div><div class="line"></div><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="meta">@Order</span>(value = <span class="number">1</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FirstCommandLineRunner</span> <span class="keyword">implements</span> <span class="title">CommandLineRunner</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">(String... strings)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        System.out.println(<span class="string">"&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;first command line runner: "</span> + strings);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 ]]></content>
@@ -3175,7 +3175,7 @@
     
     <entry>
       <title><![CDATA[Spring Boot:普通类调用Spring Bean对象]]></title>
-      <url>http://yoursite.com/2016/12/06/Spring-Boot-%E6%99%AE%E9%80%9A%E7%B1%BB%E8%B0%83%E7%94%A8Spring-Bean%E5%AF%B9%E8%B1%A1/</url>
+      <url>https://rogerfang.github.io/2016/12/06/Spring-Boot-%E6%99%AE%E9%80%9A%E7%B1%BB%E8%B0%83%E7%94%A8Spring-Bean%E5%AF%B9%E8%B1%A1/</url>
       <content type="html"><![CDATA[<p>编写的SpringUtil在Spring Boot可以扫描的包下或者使用@ComponentScan引入自定义的包了，只需要使得SpringUtil实现接口：ApplicationContextAware，然后加上@Component 注解即可。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.roger.util;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.springframework.beans.BeansException;</div><div class="line"><span class="keyword">import</span> org.springframework.context.ApplicationContext;</div><div class="line"><span class="keyword">import</span> org.springframework.context.ApplicationContextAware;</div><div class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 普通类使用Spring Bean对象</div><div class="line"> */</div><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringUtil</span> <span class="keyword">implements</span> <span class="title">ApplicationContextAware</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ApplicationContext ctx = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setApplicationContext</span><span class="params">(ApplicationContext applicationContext)</span> <span class="keyword">throws</span> BeansException </span>&#123;</div><div class="line">        <span class="keyword">if</span> (ctx == <span class="keyword">null</span>)&#123;</div><div class="line">            ctx = applicationContext;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 获取ApplicationContext</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ApplicationContext <span class="title">getApplicationContext</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> ctx;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 通过Bean name获取Bean</div><div class="line">     * <span class="doctag">@param</span> name</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">getBean</span><span class="params">(String name)</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> ctx.getBean(name);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 通过Bean class获取Bean</div><div class="line">     * <span class="doctag">@param</span> clazz</div><div class="line">     * <span class="doctag">@param</span> &lt;T&gt;</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">T <span class="title">getBean</span><span class="params">(Class&lt;T&gt; clazz)</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> ctx.getBean(clazz);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 通过Bean name以及Class返回指定的Bean</div><div class="line">     * <span class="doctag">@param</span> name</div><div class="line">     * <span class="doctag">@param</span> clazz</div><div class="line">     * <span class="doctag">@param</span> &lt;T&gt;</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">T <span class="title">getBean</span><span class="params">(String name, Class&lt;T&gt; clazz)</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> ctx.getBean(name, clazz);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 ]]></content>
@@ -3183,7 +3183,7 @@
     
     <entry>
       <title><![CDATA[Spring Boot(数据访问):JDBC和JPA]]></title>
-      <url>http://yoursite.com/2016/12/06/Spring-Boot-%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE-JDBC%E5%92%8CJPA/</url>
+      <url>https://rogerfang.github.io/2016/12/06/Spring-Boot-%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE-JDBC%E5%92%8CJPA/</url>
       <content type="html"><![CDATA[<ul>
 <li><strong>JDBC的自动配置</strong><br>spring-boot-starter-data-jpa依赖于spring-boot-starter-jdbc，而Spring Boot对JDBC做了一些自动配置，源码放置在org.springframework.boot.autoconfigure.jdbc下，通过”spring.datasource”为前缀的属性自动配置DataSouce；Spring Boot自动开启了注解事务的支持(@EnableTransactionManagement)；还配置了一个jdbcTemplate。</li>
 <li><strong>JPA的自动配置</strong><br>Spring Boot默认JPA的实现者是Hibernate，使用JPA只需要添加spring-boot-starter-data-jpa，然后再定义DataSource、实体类和数据访问层，无需任何额外配置。</li>
@@ -3242,7 +3242,7 @@
     
     <entry>
       <title><![CDATA[Spring: IoC原理]]></title>
-      <url>http://yoursite.com/2016/11/15/Spring-IoC%E5%8E%9F%E7%90%86/</url>
+      <url>https://rogerfang.github.io/2016/11/15/Spring-IoC%E5%8E%9F%E7%90%86/</url>
       <content type="html"><![CDATA[<h1 id="IoC控制反转"><a href="#IoC控制反转" class="headerlink" title="IoC控制反转"></a>IoC控制反转</h1><p>&emsp;&emsp;1996年，Michael Mattson在一篇有关探讨面向对象框架的文章中，首先提出了IOC(Inversion of Control)这个概念。IOC理论提出的观点：借助于“第三方”实现具有依赖关系的对象之间的解耦。全部对象的控制权全部上缴给“第三方”IOC容器，所以，IOC容器成了整个系统的关键核心，它起到了一种类似“粘合剂”的作用，把系统中的所有对象粘合在一起发挥作用。</p>
 <blockquote>
 <p>控制反转为了解决<strong>对象之间耦合度过高</strong>的问题。</p>
@@ -3256,7 +3256,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(36): 图- 最小生成树Prim]]></title>
-      <url>http://yoursite.com/2016/11/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-36-%E5%9B%BE-%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91Prim/</url>
+      <url>https://rogerfang.github.io/2016/11/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-36-%E5%9B%BE-%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91Prim/</url>
       <content type="html"><![CDATA[<p>&emsp;&emsp;Kruskal算法是一步步将森林中的树进行合并；而Prim算法是通过每次增加一条边来建立一棵树。</p>
 <p>&emsp;&emsp;Prim算法基本思想：首先选择任意一个顶点，从该顶点开始构造生成树；接下来要找出一条边添加到生成树，这需要枚举每一个树顶点到每一个非树顶点的所有边，然后找到最短边加入到生成树。重复以上步骤，直到所有顶点都加入到生成树中。</p>
 <p><strong>难点</strong>：如何找出下一个添加到树的边。</p>
@@ -3266,7 +3266,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(35): 图- 最小生成树Kruskal]]></title>
-      <url>http://yoursite.com/2016/11/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-35-%E5%9B%BE-%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91Kruskal/</url>
+      <url>https://rogerfang.github.io/2016/11/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-35-%E5%9B%BE-%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91Kruskal/</url>
       <content type="html"><![CDATA[<blockquote>
 <p>最小生成树：在含有n个顶点的连通图中选择n-1条边，构成一棵极小连通子图，并使该连通子图中n-1条边上权值之和达到最小，则称其为连通图的最小生成树。</p>
 </blockquote>
@@ -3276,7 +3276,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(34): 不相交集（并查集）]]></title>
-      <url>http://yoursite.com/2016/11/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-34-%E4%B8%8D%E7%9B%B8%E4%BA%A4%E9%9B%86%EF%BC%88%E5%B9%B6%E6%9F%A5%E9%9B%86%EF%BC%89/</url>
+      <url>https://rogerfang.github.io/2016/11/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-34-%E4%B8%8D%E7%9B%B8%E4%BA%A4%E9%9B%86%EF%BC%88%E5%B9%B6%E6%9F%A5%E9%9B%86%EF%BC%89/</url>
       <content type="html"><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>&emsp;&emsp;不相交集（Disjoint-set）也称并查集（Union-find set），对于n个不同且不相交元素， 不相交集为支持以下两种操作的数据结构。</p>
 <ul>
 <li>找出给定元素所属的集合</li>
@@ -3306,7 +3306,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(33): 图- 最短路径(解决负权边)Bellman-Ford]]></title>
-      <url>http://yoursite.com/2016/11/08/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-33-%E5%9B%BE-%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84-%E8%A7%A3%E5%86%B3%E8%B4%9F%E6%9D%83%E8%BE%B9-Bellman-Ford/</url>
+      <url>https://rogerfang.github.io/2016/11/08/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-33-%E5%9B%BE-%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84-%E8%A7%A3%E5%86%B3%E8%B4%9F%E6%9D%83%E8%BE%B9-Bellman-Ford/</url>
       <content type="html"><![CDATA[<blockquote>
 <p>Dijkstra算法虽然好，但是不能解决带负权边的图。</p>
 </blockquote>
@@ -3321,7 +3321,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(32): 图- 单源最短路径Dijkstra]]></title>
-      <url>http://yoursite.com/2016/11/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-32-%E5%9B%BE-%E5%8D%95%E6%BA%90%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84Dijkstra/</url>
+      <url>https://rogerfang.github.io/2016/11/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-32-%E5%9B%BE-%E5%8D%95%E6%BA%90%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84Dijkstra/</url>
       <content type="html"><![CDATA[<p>&emsp;&emsp;迪杰斯特拉(Dijkstra)算法是典型最短路径算法，用于计算一个节点到其他节点的最短路径。它的主要特点是以起始点为中心向外层层扩展(广度优先搜索思想)，直到扩展到终点为止。<br>&emsp;&emsp;Dijkstra算法每次找到离源点最近的一个顶点，然后以该顶点为中心进行扩展，最终得到源点到其余所有点的最短路径。</p>
 <p>算法的<strong>基本思想</strong>：</p>
 <ol>
@@ -3340,7 +3340,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(31): 图- 多源最短路径Floyd-Warshall]]></title>
-      <url>http://yoursite.com/2016/11/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-31-%E5%9B%BE-%E5%A4%9A%E6%BA%90%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84Floyd-Warshall/</url>
+      <url>https://rogerfang.github.io/2016/11/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-31-%E5%9B%BE-%E5%A4%9A%E6%BA%90%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84Floyd-Warshall/</url>
       <content type="html"><![CDATA[<p>&emsp;&emsp;Floyd-Warshall 算法采用动态规划方案来解决在一个<strong>有向图</strong> G = (V, E) 上每对顶点间的最短路径问题，即全源最短路径问题（All-Pairs Shortest Paths Problem），其中图G允许存在权值为负的边，但不存在权值为负的回路。Floyd-Warshall 算法的时间复杂度为$O(V^3)$。</p>
 <p>&emsp;&emsp;算法的<strong>基本思想</strong>：求两个顶点间的最短路径，允许经过一个或多个顶点进行中转。例如，最开始只允许经过1号顶点进行中转，接下来只允许经过1号和2号顶点进行中转······允许经过1~n号所有顶点进行中转，求得任意两点之间的最短路径。</p>
 <blockquote>
@@ -3353,21 +3353,21 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(30): 图- 广度优先搜索(BFS)]]></title>
-      <url>http://yoursite.com/2016/11/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-30-%E5%9B%BE-%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-BFS/</url>
+      <url>https://rogerfang.github.io/2016/11/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-30-%E5%9B%BE-%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-BFS/</url>
       <content type="html"><![CDATA[<p>&emsp;&emsp;从图中某顶点v出发，在访问了v之后依次访问v的各个未曾访问过的邻接点，然后分别从这些邻接点出发依次访问它们的邻接点，并使得“先被访问的顶点的邻接点先于后被访问的顶点的邻接点被访问，直至图中所有已被访问的顶点的邻接点都被访问到。如果此时图中尚有顶点未被访问，则需要另选一个未曾被访问过的顶点作为新的起始点，重复上述过程，直至图中所有顶点都被访问到为止。</p>
 ]]></content>
     </entry>
     
     <entry>
       <title><![CDATA[数据结构与算法(29): 图- 深度优先搜索(DFS)]]></title>
-      <url>http://yoursite.com/2016/11/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-29-%E5%9B%BE-%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-DFS/</url>
+      <url>https://rogerfang.github.io/2016/11/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-29-%E5%9B%BE-%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-DFS/</url>
       <content type="html"><![CDATA[<p>&emsp;&emsp;假设初始状态是图中所有顶点均未被访问，则从某个顶点v出发，首先访问该顶点，然后依次从它的各个未被访问的邻接点出发深度优先搜索遍历图，直至图中所有和v有路径相通的顶点都被访问到。 若此时尚有其他顶点未被访问到，则另选一个未被访问的顶点作起始点，重复上述过程，直至图中所有顶点都被访问到为止。</p>
 ]]></content>
     </entry>
     
     <entry>
       <title><![CDATA[数据结构与算法(28): 图- 拓扑排序]]></title>
-      <url>http://yoursite.com/2016/11/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-28-%E5%9B%BE-%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/</url>
+      <url>https://rogerfang.github.io/2016/11/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-28-%E5%9B%BE-%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/</url>
       <content type="html"><![CDATA[<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p>&emsp;&emsp;拓扑排序(Topological Order)是指：将一个有向无环图(Directed Acyclic Graph, DAG)进行排序而得到一个有序的线性序列。拓扑排序不必是唯一的，任何合理的排序都是可以的。</p>
 <h1 id="算法步骤"><a href="#算法步骤" class="headerlink" title="算法步骤"></a>算法步骤</h1><ol>
 <li>构造一个队列Q和拓扑排序的结果队列T；</li>
@@ -3382,7 +3382,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(27): 图- 理论基础]]></title>
-      <url>http://yoursite.com/2016/11/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-27-%E5%9B%BE-%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/</url>
+      <url>https://rogerfang.github.io/2016/11/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-27-%E5%9B%BE-%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/</url>
       <content type="html"><![CDATA[<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><blockquote>
 <p>一个图(graph)G=(V, E)由顶点(vertex)的集V和边(edge)的的集E组成。</p>
 </blockquote>
@@ -3415,7 +3415,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(26): 散列]]></title>
-      <url>http://yoursite.com/2016/11/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-26-%E6%95%A3%E5%88%97/</url>
+      <url>https://rogerfang.github.io/2016/11/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-26-%E6%95%A3%E5%88%97/</url>
       <content type="html"><![CDATA[<blockquote>
 <p>散列是一种用于以常数平均时间执行插入、删除和查找的技术。</p>
 </blockquote>
@@ -3450,7 +3450,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(25): 排序- 外部排序]]></title>
-      <url>http://yoursite.com/2016/11/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-25-%E6%8E%92%E5%BA%8F-%E5%A4%96%E9%83%A8%E6%8E%92%E5%BA%8F/</url>
+      <url>https://rogerfang.github.io/2016/11/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-25-%E6%8E%92%E5%BA%8F-%E5%A4%96%E9%83%A8%E6%8E%92%E5%BA%8F/</url>
       <content type="html"><![CDATA[<p>&emsp;&emsp;外部排序指的是大文件的排序，即待排序的记录存储在外存储器上，待排序的文件无法一次装入内存，需要在内存和外部存储器之间进行多次数据交换，以达到排序整个文件的目的。外部排序最常用的算法是多路归并排序，即将原文件分解成多个能够一次性装入内存的部分，分别把每一部分调入内存完成排序。然后，对已经排序的子文件进行多路归并排序。</p>
 <p>&emsp;&emsp;大部分内部排序算法都用到内存可直接寻址的事实。如果输入数据再磁盘上，那么所有这些操作都失去了它们的效率，因为磁带上的元素只能被顺序访问。<br>&emsp;&emsp;外排序通常采用的是一种“排序-归并”的策略。在排序阶段，先读入能放在内存中的数据量，将其排序输出到一个临时文件，依次进行，将待排序数据组织为多个有序的临时文件。而后在归并阶段将这些个临时文件组合成一个大的有序文件，也即排序结果。</p>
 <p>感谢：<a href="http://noteton.com/u/%E5%85%94%E7%88%B7%E7%88%B1%E5%90%83%E7%82%B8%E9%85%B1%E9%9D%A2/684/external-sorting" target="_blank" rel="external">http://noteton.com/u/%E5%85%94%E7%88%B7%E7%88%B1%E5%90%83%E7%82%B8%E9%85%B1%E9%9D%A2/684/external-sorting</a></p>
@@ -3459,7 +3459,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(24): 排序- 桶排序]]></title>
-      <url>http://yoursite.com/2016/11/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-24-%E6%8E%92%E5%BA%8F-%E6%A1%B6%E6%8E%92%E5%BA%8F/</url>
+      <url>https://rogerfang.github.io/2016/11/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-24-%E6%8E%92%E5%BA%8F-%E6%A1%B6%E6%8E%92%E5%BA%8F/</url>
       <content type="html"><![CDATA[<p>&emsp;&emsp;桶排序(Bucket Sort)的原理很简单，它是将数组分到有限数量的桶子里。</p>
 <p>&emsp;&emsp;假设待排序的数组a中共有N个整数，并且已知数组a中数据的范围[0, MAX)。在桶排序时，创建容量为MAX的桶数组r，并将桶数组元素都初始化为0；将容量为MAX的桶数组中的每一个单元都看作一个”桶”。<br>&emsp;&emsp;在排序时，逐个遍历数组a，将数组a的值，作为”桶数组r”的下标。当a中数据被读取时，就将桶的值加1。例如，读取到数组a[3]=5，则将r[5]的值+1。</p>
 <p>感谢:<a href="http://www.cnblogs.com/skywang12345/p/3602737.html" target="_blank" rel="external">http://www.cnblogs.com/skywang12345/p/3602737.html</a></p>
@@ -3468,7 +3468,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(23): 排序- 快速排序]]></title>
-      <url>http://yoursite.com/2016/11/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-23-%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/</url>
+      <url>https://rogerfang.github.io/2016/11/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-23-%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/</url>
       <content type="html"><![CDATA[<p>&emsp;&emsp;快速排序的<strong>基本思想</strong>：选择一个基准数，通过一趟排序将要排序的数据分割成独立的两部分；其中一部分的所有数据都比另外一部分的所有数据都要小。然后，再按此方法对这两部分数据分别进行快速排序，整个排序过程递归进行，以达到有序序列。</p>
 <blockquote>
 <p>快速排序的每一轮处理其实就是将一轮的基准数归位。</p>
@@ -3481,7 +3481,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(22): 排序- 归并排序]]></title>
-      <url>http://yoursite.com/2016/11/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-22-%E6%8E%92%E5%BA%8F-%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/</url>
+      <url>https://rogerfang.github.io/2016/11/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-22-%E6%8E%92%E5%BA%8F-%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/</url>
       <content type="html"><![CDATA[<p>&emsp;&emsp;归并排序的<strong>基本思想</strong>：将两个有序数列合并成一个有序数列，具体实现包括“从上往下”和“从下往上”2种方式。<br>&emsp;&emsp;时间<strong>复杂度</strong>：O($N\log{N}$)。<br>&emsp;&emsp;归并排序是<strong>稳定</strong>的。</p>
 <ol>
 <li><strong>从下往上</strong>的归并排序：将待排序的数列分成若干个长度为1的子数列，然后将这些数列两两合并；得到若干个长度为2的有序数列，再将这些数列两两合并；重复下去直到合并成一个数列为止。</li>
@@ -3499,7 +3499,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(21): 排序- 堆排序]]></title>
-      <url>http://yoursite.com/2016/11/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-21-%E6%8E%92%E5%BA%8F-%E5%A0%86%E6%8E%92%E5%BA%8F/</url>
+      <url>https://rogerfang.github.io/2016/11/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-21-%E6%8E%92%E5%BA%8F-%E5%A0%86%E6%8E%92%E5%BA%8F/</url>
       <content type="html"><![CDATA[<p>&emsp;&emsp;堆排序是指利用堆这种数据结构所涉及的一种排序算法。最大堆通常被用来进行”升序”排序，而最小堆通常被用来进行”降序”排序。<br>&emsp;&emsp;最小堆进行降序的<strong>基本思想</strong>：<br>&emsp;&emsp;1. 初始化堆：将数据构造成最小堆。<br>&emsp;&emsp;2. 交换数据：将a[0] (最小值)和a[n-1]进行交换，并重新调整最小堆。每次deleteMin都确定一个数的顺序。</p>
 <p>&emsp;&emsp;时间<strong>复杂度</strong>：O($N\log{N}$)。<br>&emsp;&emsp;堆排序是<strong>不稳定</strong>的。它在交换数据的时候，是比较父结点和子节点之间的数据，所以，即便是存在两个数值相等的兄弟节点，它们的相对顺序在排序也可能发生变化。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">	<span class="comment">/**</span></div><div class="line">     * 堆排序：从大到小(最小堆)</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HeapSort</span> <span class="keyword">extends</span> <span class="title">Sort</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>[] a)</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = a.length / <span class="number">2</span>; i &gt;= <span class="number">0</span>; i--) &#123;</div><div class="line">            percolateDown(a, i, a.length);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = a.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</div><div class="line">            <span class="comment">// deleteMin 放到数组最后</span></div><div class="line">            swap(a, <span class="number">0</span>, i);</div><div class="line">            percolateDown(a, <span class="number">0</span>, i);</div><div class="line">            System.out.println(<span class="string">"--------第"</span>+(a.length - i)+<span class="string">"趟---------"</span>);</div><div class="line">            print(a);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 用于buildHeap和deleteMin</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> a</div><div class="line">     * <span class="doctag">@param</span> index 开始下滤的索引</div><div class="line">     * <span class="doctag">@param</span> n     堆的逻辑大小</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">percolateDown</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> index, <span class="keyword">int</span> n)</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> child;</div><div class="line">        <span class="keyword">int</span> tmp;</div><div class="line">        <span class="keyword">for</span> (tmp = a[index]; leftChild(index) &lt; n; index = child) &#123;</div><div class="line">            child = leftChild(index);</div><div class="line">            <span class="keyword">if</span> (child != n - <span class="number">1</span> &amp;&amp; a[child] &gt; a[child + <span class="number">1</span>]) &#123;</div><div class="line">                <span class="comment">// 右儿子</span></div><div class="line">                child++;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span> (tmp &gt; a[child]) &#123;</div><div class="line">                a[index] = a[child];</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        a[index] = tmp;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">leftChild</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">2</span> * i + <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -3509,7 +3509,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(20): 排序- 希尔排序]]></title>
-      <url>http://yoursite.com/2016/11/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-20-%E6%8E%92%E5%BA%8F-%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F/</url>
+      <url>https://rogerfang.github.io/2016/11/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-20-%E6%8E%92%E5%BA%8F-%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F/</url>
       <content type="html"><![CDATA[<blockquote>
 <p>希尔排序是插入排序的一种，它是针对直接插入排序算法的改进。该方法又称缩减增量排序，因DL．Shell于1959年提出而得名。</p>
 </blockquote>
@@ -3521,7 +3521,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(19): 排序- 插入排序]]></title>
-      <url>http://yoursite.com/2016/11/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-19-%E6%8E%92%E5%BA%8F-%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/</url>
+      <url>https://rogerfang.github.io/2016/11/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-19-%E6%8E%92%E5%BA%8F-%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/</url>
       <content type="html"><![CDATA[<p>&emsp;&emsp;插入排序的<strong>基本思想</strong>：把n个待排序的元素看成为一个有序表和一个无序表。开始时有序表中只包含1个元素，无序表中包含有n-1个元素，排序过程中每次从无序表中取出第一个元素，将它插入到有序表中的适当位置，使之成为新的有序表，重复n-1次可完成排序过程。<br>&emsp;&emsp;时间<strong>复杂度</strong>：O($N^{2}$)。<br>&emsp;&emsp;插入排序是<strong>稳定</strong>的。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">    <span class="comment">/**</span></div><div class="line">     * 插入排序：从大到小</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InsertSort</span> <span class="keyword">extends</span> <span class="title">Sort</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>[] a)</span></span>&#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; a.length; i++)&#123;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = i; j &gt; <span class="number">0</span>; j--)&#123;</div><div class="line">                <span class="keyword">if</span> (a[j] &gt; a[j-<span class="number">1</span>])&#123;</div><div class="line">                    swap(a, j, j-<span class="number">1</span>);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            System.out.println(<span class="string">"------第"</span>+i+<span class="string">"趟-------"</span>);</div><div class="line">            print(a);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>感谢:<a href="http://www.cnblogs.com/skywang12345/p/3596881.html" target="_blank" rel="external">http://www.cnblogs.com/skywang12345/p/3596881.html</a></p>
@@ -3530,7 +3530,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(18): 排序- 选择排序]]></title>
-      <url>http://yoursite.com/2016/11/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-18-%E6%8E%92%E5%BA%8F-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F/</url>
+      <url>https://rogerfang.github.io/2016/11/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-18-%E6%8E%92%E5%BA%8F-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F/</url>
       <content type="html"><![CDATA[<p>&emsp;&emsp;选择排序的<strong>基本思想</strong>：首先在未排序的数列中找到最小(or最大)元素，然后将其存放到数列的起始位置；接着，再从剩余未排序的元素中继续寻找最小(or最大)元素，然后放到已排序序列的末尾。以此类推，直到所有元素均排序完毕。<br>&emsp;&emsp;时间<strong>复杂度</strong>：O($N^{2}$)。<br>&emsp;&emsp;选择排序是<strong>稳定</strong>的。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">    <span class="comment">/**</span></div><div class="line">     * 选择排序：从大到小</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SelectSort</span> <span class="keyword">extends</span> <span class="title">Sort</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>[] a)</span></span>&#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; a.length - <span class="number">1</span>; i++)&#123;</div><div class="line">            <span class="keyword">int</span> max = i;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = i+<span class="number">1</span>; j &lt; a.length; j++)&#123;</div><div class="line">                <span class="keyword">if</span> (a[j] &gt; a[max])&#123;</div><div class="line">                    max = j;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            swap(a, i, max);</div><div class="line"></div><div class="line">            System.out.println(<span class="string">"------第"</span>+(i+<span class="number">1</span>)+<span class="string">"趟-------"</span>);</div><div class="line">            print(a);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>感谢:<a href="http://www.cnblogs.com/skywang12345/p/3597641.html" target="_blank" rel="external">http://www.cnblogs.com/skywang12345/p/3597641.html</a></p>
@@ -3539,7 +3539,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(17): 排序- 冒泡排序]]></title>
-      <url>http://yoursite.com/2016/11/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-17-%E6%8E%92%E5%BA%8F-%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F/</url>
+      <url>https://rogerfang.github.io/2016/11/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-17-%E6%8E%92%E5%BA%8F-%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F/</url>
       <content type="html"><![CDATA[<p>&emsp;&emsp;冒泡排序的<strong>基本思想</strong>：每次比较相邻的两个元素，如果它们顺序错误就把它们交换过来。其中每一趟排序只能将一个数归位。<br>&emsp;&emsp;时间<strong>复杂度</strong>是O($N^{2}$)。<br>&emsp;&emsp;冒泡排序是<strong>稳定</strong>的。</p>
 <blockquote>
 <p>算法稳定性 – 假设在数列中存在a[i]=a[j]，若在排序之前，a[i]在a[j]前面；并且排序之后，a[i]仍然在a[j]前面。则这个排序算法是稳定的。</p>
@@ -3551,31 +3551,31 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(15): 堆- 斐波那契堆]]></title>
-      <url>http://yoursite.com/2016/11/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-15-%E5%A0%86-%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E5%A0%86/</url>
+      <url>https://rogerfang.github.io/2016/11/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-15-%E5%A0%86-%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E5%A0%86/</url>
       <content type="html"></content>
     </entry>
     
     <entry>
       <title><![CDATA[数据结构与算法(16): 堆- 二项队列]]></title>
-      <url>http://yoursite.com/2016/11/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-16-%E5%A0%86-%E4%BA%8C%E9%A1%B9%E9%98%9F%E5%88%97/</url>
+      <url>https://rogerfang.github.io/2016/11/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-16-%E5%A0%86-%E4%BA%8C%E9%A1%B9%E9%98%9F%E5%88%97/</url>
       <content type="html"></content>
     </entry>
     
     <entry>
       <title><![CDATA[数据结构与算法(13): 堆- 斜堆]]></title>
-      <url>http://yoursite.com/2016/11/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-13-%E5%A0%86-%E6%96%9C%E5%A0%86/</url>
+      <url>https://rogerfang.github.io/2016/11/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-13-%E5%A0%86-%E6%96%9C%E5%A0%86/</url>
       <content type="html"></content>
     </entry>
     
     <entry>
       <title><![CDATA[数据结构与算法(14): 堆- 左式堆]]></title>
-      <url>http://yoursite.com/2016/11/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-14-%E5%A0%86-%E5%B7%A6%E5%BC%8F%E5%A0%86/</url>
+      <url>https://rogerfang.github.io/2016/11/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-14-%E5%A0%86-%E5%B7%A6%E5%BC%8F%E5%A0%86/</url>
       <content type="html"></content>
     </entry>
     
     <entry>
       <title><![CDATA[数据结构与算法(12): 堆- 二叉堆]]></title>
-      <url>http://yoursite.com/2016/10/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-12-%E5%A0%86-%E4%BA%8C%E5%8F%89%E5%A0%86/</url>
+      <url>https://rogerfang.github.io/2016/10/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-12-%E5%A0%86-%E4%BA%8C%E5%8F%89%E5%A0%86/</url>
       <content type="html"><![CDATA[<p>堆有两个性质，即结构性和堆序性。将任意节点不大于（不小于）其子节点的堆叫做最小堆（最大堆）。</p>
 <ul>
 <li>结构性<blockquote>
@@ -3594,13 +3594,13 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(11): 树形结构- B树]]></title>
-      <url>http://yoursite.com/2016/10/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-11-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-B%E6%A0%91/</url>
+      <url>https://rogerfang.github.io/2016/10/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-11-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-B%E6%A0%91/</url>
       <content type="html"></content>
     </entry>
     
     <entry>
       <title><![CDATA[数据结构与算法(10): 树形结构- 哈夫曼树]]></title>
-      <url>http://yoursite.com/2016/10/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-10-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91/</url>
+      <url>https://rogerfang.github.io/2016/10/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-10-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91/</url>
       <content type="html"><![CDATA[<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p>&emsp;&emsp;给定n个权值作为n个叶子结点，构造一棵二叉树，若树的带权路径长度达到最小，则这棵树被称为哈夫曼树。</p>
 <ul>
 <li>路径和路径长度<blockquote>
@@ -3629,7 +3629,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(9): 树形结构- 红黑树]]></title>
-      <url>http://yoursite.com/2016/10/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-9-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E7%BA%A2%E9%BB%91%E6%A0%91/</url>
+      <url>https://rogerfang.github.io/2016/10/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-9-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E7%BA%A2%E9%BB%91%E6%A0%91/</url>
       <content type="html"><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>&emsp;&emsp;红黑二叉查找树（红黑树）：基本思想是用标准的二叉查找树（完全由2-节点构成）和一些额外的信息（替换3-节点）来表示2-3树。<br>&emsp;&emsp;红链接：将两个2-节点连接起来构成一个3-节点。<br>&emsp;&emsp;黑链接：是2-3树中的普通链接。</p>
 <p>红黑树另一种定义是含有红黑链接并满足下列条件的二叉查找树：<br>&emsp;&emsp;1. 红链接均为左链接；<br>&emsp;&emsp;2. 没有任何一个节点同时有两条红链接相连；<br>&emsp;&emsp;3. 该树是<strong>完美黑色平衡的</strong>，即任意空链接到根节点的路径上的黑链接数量相同。</p>
 <p>颜色表示，为了方便做出以下规定：<br>&emsp;&emsp;1. 根节点为黑色；<br>&emsp;&emsp;2. 空节点为黑色。</p>
@@ -3651,7 +3651,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(8): 树形结构- 2-3树]]></title>
-      <url>http://yoursite.com/2016/10/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-8-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-2-3%E6%A0%91/</url>
+      <url>https://rogerfang.github.io/2016/10/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-8-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-2-3%E6%A0%91/</url>
       <content type="html"><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><blockquote>
 <p>红黑树是一种平衡二叉树，其目标是为了优化二叉搜索树，防止极端情况下时间复杂度的退化。</p>
 </blockquote>
@@ -3677,7 +3677,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(7): 树形结构-伸展树]]></title>
-      <url>http://yoursite.com/2016/10/28/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-7-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E4%BC%B8%E5%B1%95%E6%A0%91/</url>
+      <url>https://rogerfang.github.io/2016/10/28/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-7-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E4%BC%B8%E5%B1%95%E6%A0%91/</url>
       <content type="html"><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><blockquote>
 <p>伸展树（Splay Tree）和AVL树一样是一种特殊的二叉查找树。</p>
 </blockquote>
@@ -3730,7 +3730,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(6): 树形结构-AVL树]]></title>
-      <url>http://yoursite.com/2016/10/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-6-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-AVL%E6%A0%91/</url>
+      <url>https://rogerfang.github.io/2016/10/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-6-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-AVL%E6%A0%91/</url>
       <content type="html"><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><blockquote>
 <p>AVL树是根据它的发明者Adelson-Velsky和Landis命名的。</p>
 </blockquote>
@@ -3749,7 +3749,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(5): 树形结构-二叉查找树]]></title>
-      <url>http://yoursite.com/2016/10/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-5-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/</url>
+      <url>https://rogerfang.github.io/2016/10/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-5-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/</url>
       <content type="html"><![CDATA[<h1 id="性质"><a href="#性质" class="headerlink" title="性质"></a>性质</h1><ul>
 <li>若左子树不为空，则左子树上所有节点的值均小于它的根节点的值；</li>
 <li>若右子树不为空，则右子树上所有节点的值均大于它的根节点的值。</li>
@@ -3763,7 +3763,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(4): 树形结构-树&二叉树]]></title>
-      <url>http://yoursite.com/2016/10/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-4-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E6%A0%91-%E4%BA%8C%E5%8F%89%E6%A0%91/</url>
+      <url>https://rogerfang.github.io/2016/10/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-4-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E6%A0%91-%E4%BA%8C%E5%8F%89%E6%A0%91/</url>
       <content type="html"><![CDATA[<h1 id="树"><a href="#树" class="headerlink" title="树"></a>树</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p><strong>树</strong>：是n(n&gt;=0)个节点的有限集。</p>
 <ul>
 <li>当n=0时，称为<strong>空树</strong></li>
@@ -3840,7 +3840,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(3): 线性结构-队列]]></title>
-      <url>http://yoursite.com/2016/10/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-3-%E7%BA%BF%E6%80%A7%E7%BB%93%E6%9E%84-%E9%98%9F%E5%88%97/</url>
+      <url>https://rogerfang.github.io/2016/10/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-3-%E7%BA%BF%E6%80%A7%E7%BB%93%E6%9E%84-%E9%98%9F%E5%88%97/</url>
       <content type="html"><![CDATA[<p><strong>队列</strong>：一种线性存储结构，和栈一样也是一种操作受限的表。</p>
 <ul>
 <li>队列中数据是按照”先进先出（FIFO）“方式进出队列的。</li>
@@ -3861,7 +3861,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(2): 线性结构-栈]]></title>
-      <url>http://yoursite.com/2016/10/25/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-2-%E7%BA%BF%E6%80%A7%E7%BB%93%E6%9E%84-%E6%A0%88/</url>
+      <url>https://rogerfang.github.io/2016/10/25/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-2-%E7%BA%BF%E6%80%A7%E7%BB%93%E6%9E%84-%E6%A0%88/</url>
       <content type="html"><![CDATA[<p><strong>栈</strong>：一种线性存储结构，是限制插入和删除只能在一个位置上进行的表，该位置是表的末端，叫做<strong>栈顶</strong>。</p>
 <ul>
 <li>栈中数据是按照“先进后出（LIFO）”方式进行出栈的</li>
@@ -3952,7 +3952,7 @@
     
     <entry>
       <title><![CDATA[数据结构与算法(1): 线性结构-表]]></title>
-      <url>http://yoursite.com/2016/10/25/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-1-%E7%BA%BF%E6%80%A7%E7%BB%93%E6%9E%84-%E8%A1%A8/</url>
+      <url>https://rogerfang.github.io/2016/10/25/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-1-%E7%BA%BF%E6%80%A7%E7%BB%93%E6%9E%84-%E8%A1%A8/</url>
       <content type="html"><![CDATA[<h1 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h1><p>数组能够顺序存储相同类型的多个数据，数据的元素在内存上的存储地址是连续的。在声明数组的时候，需要指定数组的名称，它含有的数据类型以及数组的长度。<br><strong>特点</strong>：数据是连续的，随机访问速度快。<br>（在Java中Collection集合中提供了ArrayList和Vector实现动态数组）</p>
 <h1 id="表（线性表）"><a href="#表（线性表）" class="headerlink" title="表（线性表）"></a>表（线性表）</h1><p>线性表：零个或多个数据元素的有限序列。线性表中数据元素之间的关系是<strong><em>一对一的关系</em></strong>，即除了第一个和最后一个数据元素之外，其它数据元素都是首尾相接的。</p>
 <blockquote>

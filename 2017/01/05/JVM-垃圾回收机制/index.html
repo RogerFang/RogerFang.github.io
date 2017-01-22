@@ -90,7 +90,7 @@
 引用计数法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM: 垃圾回收机制">
-<meta property="og:url" content="http://yoursite.com/2017/01/05/JVM-垃圾回收机制/index.html">
+<meta property="og:url" content="https://rogerfang.github.io/2017/01/05/JVM-垃圾回收机制/index.html">
 <meta property="og:site_name" content="方龙的博客">
 <meta property="og:description" content="垃圾回收可以有效的防止内存泄露，有效的使用空闲的内存。Java堆和方法区的内存分配和回收是动态的，因而垃圾收集器所关注的也是这部分内存。
 垃圾收集机制要考虑的两件事情：（1）发现无用对象（如何判断对象是否还“存活”）；（2）回收被无用对象占用的内存空间，使该空间可被程序再次使用（垃圾收集算法）。
@@ -123,7 +123,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/01/05/JVM-垃圾回收机制/"/>
+  <link rel="canonical" href="https://rogerfang.github.io/2017/01/05/JVM-垃圾回收机制/"/>
 
 
   <title> JVM: 垃圾回收机制 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
@@ -362,7 +362,7 @@
 </blockquote>
 <h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p>JDK 1.2中对引用的概念进行了扩充，将引用分为强引用、软引用、弱引用、虚引用4种，而不仅仅是只有被引用或没有被引用两种状态。</p>
 <blockquote>
-<p>参见：<a href="https://rogerfang.github.io/2016/12/31/Java-%E5%87%A0%E7%A7%8D%E5%BC%95%E7%94%A8/" target="_blank" rel="external">https://rogerfang.github.io/2016/12/31/Java-%E5%87%A0%E7%A7%8D%E5%BC%95%E7%94%A8/</a></p>
+<p>参见：<a href="https://rogerfang.github.io/2016/12/31/Java-%E5%87%A0%E7%A7%8D%E5%BC%95%E7%94%A8/">https://rogerfang.github.io/2016/12/31/Java-%E5%87%A0%E7%A7%8D%E5%BC%95%E7%94%A8/</a></p>
 </blockquote>
 <h1 id="回收方法区"><a href="#回收方法区" class="headerlink" title="回收方法区"></a>回收方法区</h1><p>在方法区中进行垃圾收集的性价比一般比较低，垃圾收集的主要内容包括两部分：<strong>废弃的常量</strong>和<strong>无用的类</strong>。</p>
 <ol>

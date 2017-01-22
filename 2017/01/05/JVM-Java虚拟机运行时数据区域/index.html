@@ -91,15 +91,15 @@ Java虚拟机在执行Java程序的过程中会把它管理的内存划分为若
 由于JVM的多线程是通过线程轮流切换并分配处理器执行时间的方式来实现的，在任何一个确定">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM: Java虚拟机运行时数据区域">
-<meta property="og:url" content="http://yoursite.com/2017/01/05/JVM-Java虚拟机运行时数据区域/index.html">
+<meta property="og:url" content="https://rogerfang.github.io/2017/01/05/JVM-Java虚拟机运行时数据区域/index.html">
 <meta property="og:site_name" content="方龙的博客">
 <meta property="og:description" content="Java与C/C++之间有一堵由动态内存分配和垃圾收集技术所围成的“高墙”。
 
 Java虚拟机在执行Java程序的过程中会把它管理的内存划分为若干个不同的数据区域。
 程序计数器程序计数器（Program Counter Register）是一块线程私有的内存空间，可以看作是当前线程所执行的字节码的行号指示器。
 由于JVM的多线程是通过线程轮流切换并分配处理器执行时间的方式来实现的，在任何一个确定">
-<meta property="og:image" content="http://yoursite.com/images/jvm/jvm-runtime-data-area.png">
-<meta property="og:image" content="http://yoursite.com/images/jvm/vm-stack-memory-model.png">
+<meta property="og:image" content="https://rogerfang.github.io/images/jvm/jvm-runtime-data-area.png">
+<meta property="og:image" content="https://rogerfang.github.io/images/jvm/vm-stack-memory-model.png">
 <meta property="og:updated_time" content="2017-01-05T07:58:23.790Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM: Java虚拟机运行时数据区域">
@@ -108,7 +108,7 @@ Java虚拟机在执行Java程序的过程中会把它管理的内存划分为若
 Java虚拟机在执行Java程序的过程中会把它管理的内存划分为若干个不同的数据区域。
 程序计数器程序计数器（Program Counter Register）是一块线程私有的内存空间，可以看作是当前线程所执行的字节码的行号指示器。
 由于JVM的多线程是通过线程轮流切换并分配处理器执行时间的方式来实现的，在任何一个确定">
-<meta name="twitter:image" content="http://yoursite.com/images/jvm/jvm-runtime-data-area.png">
+<meta name="twitter:image" content="https://rogerfang.github.io/images/jvm/jvm-runtime-data-area.png">
 
 
 
@@ -129,7 +129,7 @@ Java虚拟机在执行Java程序的过程中会把它管理的内存划分为若
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/01/05/JVM-Java虚拟机运行时数据区域/"/>
+  <link rel="canonical" href="https://rogerfang.github.io/2017/01/05/JVM-Java虚拟机运行时数据区域/"/>
 
 
   <title> JVM: Java虚拟机运行时数据区域 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
@@ -356,7 +356,7 @@ Java虚拟机在执行Java程序的过程中会把它管理的内存划分为若
 <p>此内存区域是唯一一个在Java虚拟机规范中没有规定任何<code>OutOfMemoryError</code>情况的区域。</p>
 <h1 id="Java虚拟机栈"><a href="#Java虚拟机栈" class="headerlink" title="Java虚拟机栈"></a>Java虚拟机栈</h1><p>Java虚拟机栈（VM Stack）也是<strong>线程私有</strong>的，它的生命周期与线程相同。虚拟机栈描述的是<strong>方法执行</strong>的内存模型，每个方法在执行时都会创建一个栈帧（Stack Frame），用于存储<em>局部变量表</em>、<em>操作数栈</em>、<em>动态连接</em>、<em>方法出口</em>等信息。<br><img src="/images/jvm/vm-stack-memory-model.png" alt=""></p>
 <blockquote>
-<p>具体栈帧结构可以参见：字节码执行引擎，<a href="https://rogerfang.github.io/2017/01/04/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E-1-%E6%A6%82%E8%BF%B0/" target="_blank" rel="external">https://rogerfang.github.io/2017/01/04/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E-1-%E6%A6%82%E8%BF%B0/</a></p>
+<p>具体栈帧结构可以参见：字节码执行引擎，<a href="https://rogerfang.github.io/2017/01/04/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E-1-%E6%A6%82%E8%BF%B0/">https://rogerfang.github.io/2017/01/04/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E-1-%E6%A6%82%E8%BF%B0/</a></p>
 </blockquote>
 <p>Java虚拟机规范对虚拟机栈规定了两种异常状况：如果线程请求的栈深度大于虚拟机所允许的深度，将抛出<code>StackOverflowError</code>异常。当扩展虚拟机栈动态扩展时，如果无法申请到足够的内存，将会抛出<code>OutOfMemoryError</code>异常。</p>
 <h1 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h1><p>本地方法栈（Native Method Stack）与虚拟机栈类似，只不过虚拟机栈为虚拟机执行Java方法（字节码）服务，而本地方法栈则为虚拟机使用到的Native方法服务。</p>

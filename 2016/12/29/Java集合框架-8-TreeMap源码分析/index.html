@@ -88,7 +88,7 @@
 简介TreeMap是一种基于红黑树实现的key-value结构，非线程安全的。如果没有使用自定义的Comparator对">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java集合框架(8): TreeMap源码分析">
-<meta property="og:url" content="http://yoursite.com/2016/12/29/Java集合框架-8-TreeMap源码分析/index.html">
+<meta property="og:url" content="https://rogerfang.github.io/2016/12/29/Java集合框架-8-TreeMap源码分析/index.html">
 <meta property="og:site_name" content="方龙的博客">
 <meta property="og:description" content="123public class TreeMap&amp;lt;K,V&amp;gt;    extends AbstractMap&amp;lt;K,V&amp;gt;    implements NavigableMap&amp;lt;K,V&amp;gt;, Cloneable, java.io.Serializable
 简介TreeMap是一种基于红黑树实现的key-value结构，非线程安全的。如果没有使用自定义的Comparator对">
@@ -117,7 +117,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/12/29/Java集合框架-8-TreeMap源码分析/"/>
+  <link rel="canonical" href="https://rogerfang.github.io/2016/12/29/Java集合框架-8-TreeMap源码分析/"/>
 
 
   <title> Java集合框架(8): TreeMap源码分析 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
@@ -335,7 +335,7 @@
         <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</span></div><div class="line">    <span class="keyword">extends</span> <span class="title">AbstractMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</div><div class="line">    <span class="keyword">implements</span> <span class="title">NavigableMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></div></pre></td></tr></table></figure>
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><code>TreeMap</code>是一种基于<strong>红黑树</strong>实现的key-value结构，非线程安全的。<br>如果没有使用自定义的Comparator对Key为null进行相应的处理，则不支持Key为null。</p>
 <blockquote>
-<p>关于红黑树的介绍可以参见：<a href="https://rogerfang.github.io/2016/10/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-9-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E7%BA%A2%E9%BB%91%E6%A0%91/" target="_blank" rel="external">https://rogerfang.github.io/2016/10/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-9-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E7%BA%A2%E9%BB%91%E6%A0%91/</a></p>
+<p>关于红黑树的介绍可以参见：<a href="https://rogerfang.github.io/2016/10/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-9-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E7%BA%A2%E9%BB%91%E6%A0%91/">https://rogerfang.github.io/2016/10/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-9-%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84-%E7%BA%A2%E9%BB%91%E6%A0%91/</a></p>
 </blockquote>
 <p>在使用集合视图在<code>HashMap</code>中迭代时，是不能保证迭代顺序的；<code>LinkedHashMap</code>使用了双向链表，保证按照插入顺序或访问顺序进行迭代。<code>TreeMap</code>支持<strong>按键</strong>进行排序，可以由传入的比较器（Comparator）来控制（当然，自己也可以实现Comparator利用value进行排序）。</p>
 <blockquote>

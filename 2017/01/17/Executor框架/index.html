@@ -89,22 +89,22 @@ Executor框架Executor框架的两级调度模型
 对于Sun JDK来说，它的Windows版和Linux版都是使用一对一的线程模型实现的，一条Java线程就映射到一条轻量级进程(LWP)中。参见：Java与线程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Executor框架">
-<meta property="og:url" content="http://yoursite.com/2017/01/17/Executor框架/index.html">
+<meta property="og:url" content="https://rogerfang.github.io/2017/01/17/Executor框架/index.html">
 <meta property="og:site_name" content="方龙的博客">
 <meta property="og:description" content="Java的线程既是工作单元，也是执行机制。从JDK 5开始，把工作单元与执行机制分离开来。工作单元包括Runnable和Callable，而执行机制由Executor框架提供。
 Executor框架Executor框架的两级调度模型
 对于Sun JDK来说，它的Windows版和Linux版都是使用一对一的线程模型实现的，一条Java线程就映射到一条轻量级进程(LWP)中。参见：Java与线程">
-<meta property="og:image" content="http://yoursite.com/../images/javase/executor-two-level-scheduling-model.png">
-<meta property="og:image" content="http://yoursite.com/images/javase/executor-framework-interface-class.png">
-<meta property="og:image" content="http://yoursite.com/images/javase/executor-framework-use.png">
-<meta property="og:image" content="http://yoursite.com/images/javase/futuretask-get-cancel-state.png">
+<meta property="og:image" content="https://rogerfang.github.io/../images/javase/executor-two-level-scheduling-model.png">
+<meta property="og:image" content="https://rogerfang.github.io/images/javase/executor-framework-interface-class.png">
+<meta property="og:image" content="https://rogerfang.github.io/images/javase/executor-framework-use.png">
+<meta property="og:image" content="https://rogerfang.github.io/images/javase/futuretask-get-cancel-state.png">
 <meta property="og:updated_time" content="2017-01-17T12:54:57.772Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Executor框架">
 <meta name="twitter:description" content="Java的线程既是工作单元，也是执行机制。从JDK 5开始，把工作单元与执行机制分离开来。工作单元包括Runnable和Callable，而执行机制由Executor框架提供。
 Executor框架Executor框架的两级调度模型
 对于Sun JDK来说，它的Windows版和Linux版都是使用一对一的线程模型实现的，一条Java线程就映射到一条轻量级进程(LWP)中。参见：Java与线程">
-<meta name="twitter:image" content="http://yoursite.com/../images/javase/executor-two-level-scheduling-model.png">
+<meta name="twitter:image" content="https://rogerfang.github.io/../images/javase/executor-two-level-scheduling-model.png">
 
 
 
@@ -125,7 +125,7 @@ Executor框架Executor框架的两级调度模型
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/01/17/Executor框架/"/>
+  <link rel="canonical" href="https://rogerfang.github.io/2017/01/17/Executor框架/"/>
 
 
   <title> Executor框架 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
@@ -342,7 +342,7 @@ Executor框架Executor框架的两级调度模型
       
         <p>Java的线程既是<strong>工作单元</strong>，也是<strong>执行机制</strong>。从JDK 5开始，把工作单元与执行机制分离开来。工作单元包括<code>Runnable</code>和<code>Callable</code>，而执行机制由<code>Executor</code>框架提供。</p>
 <h1 id="Executor框架"><a href="#Executor框架" class="headerlink" title="Executor框架"></a>Executor框架</h1><h2 id="Executor框架的两级调度模型"><a href="#Executor框架的两级调度模型" class="headerlink" title="Executor框架的两级调度模型"></a>Executor框架的两级调度模型</h2><blockquote>
-<p>对于Sun JDK来说，它的Windows版和Linux版都是使用一对一的线程模型实现的，一条Java线程就映射到一条<strong>轻量级进程</strong>(LWP)中。<br>参见：<a href="https://rogerfang.github.io/2017/01/06/Java%E4%B8%8E%E7%BA%BF%E7%A8%8B/" target="_blank" rel="external">Java与线程</a></p>
+<p>对于Sun JDK来说，它的Windows版和Linux版都是使用一对一的线程模型实现的，一条Java线程就映射到一条<strong>轻量级进程</strong>(LWP)中。<br>参见：<a href="https://rogerfang.github.io/2017/01/06/Java%E4%B8%8E%E7%BA%BF%E7%A8%8B/">Java与线程</a></p>
 </blockquote>
 <p>Executor框架的两级调度模型可以描述为：在上层，Java多线程程序通常把应用分解为若干个任务，然后使用<strong>用户级的调度器</strong>（Executor框架）将这些任务映射为固定数量的线程；在底层，操作系统内核将这些线程映射到硬件处理器上。<br><img src="../images/javase/executor-two-level-scheduling-model.png" alt=""></p>
 <h2 id="Executor框架的结构"><a href="#Executor框架的结构" class="headerlink" title="Executor框架的结构"></a>Executor框架的结构</h2><p>Executor框架主要由3部分组成：</p>
