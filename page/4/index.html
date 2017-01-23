@@ -272,8 +272,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/15/Lock-并发工具类-Exchanger/" itemprop="url">
-                  Lock: 并发工具类-Exchanger
+                <a class="post-title-link" href="/2017/01/06/Java与线程/" itemprop="url">
+                  Java与线程
                 </a>
               
             
@@ -286,8 +286,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-15T17:11:35+08:00" content="2017-01-15">
-              2017-01-15
+            <time itemprop="dateCreated" datetime="2017-01-06T22:29:24+08:00" content="2017-01-06">
+              2017-01-06
             </time>
           </span>
 
@@ -335,11 +335,16 @@
       
         
           
-          Exchanger是一个用于线程间协作的工具类，可以进行线程间的数据交换。它提供一个同步点，在这个同步点，两个线程可以交换彼此的数据。这两个线程通过exchange(V x)方法交换数据，如果第一个线程先执行exchange(V x)方法，它会一直等待第二个线程也执行exchange(V x)方法，
+          并发不一定依赖多线程（例如PHP的多进程并发），但是在Java里面讨论并发大多数和线程离不开。
+
+线程是比进程更轻量级的调用执行单位，是CPU调度的基本单位。
+
+线程的引入，可以把一个进程的资源分配和执行调度分开，各个线程共享资源，又可以独立调度。
+线程的实现实现线程主要有3种方式：使用内核线程实现
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/15/Lock-并发工具类-Exchanger/#more" rel="contents">
+            <a class="btn" href="/2017/01/06/Java与线程/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -390,8 +395,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/15/Lock-并发工具类-Semaphore/" itemprop="url">
-                  Lock: 并发工具类-Semaphore
+                <a class="post-title-link" href="/2017/01/06/JMM-Java内存模型/" itemprop="url">
+                  JMM: Java内存模型
                 </a>
               
             
@@ -404,8 +409,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-15T14:21:40+08:00" content="2017-01-15">
-              2017-01-15
+            <time itemprop="dateCreated" datetime="2017-01-06T18:27:02+08:00" content="2017-01-06">
+              2017-01-06
             </time>
           </span>
 
@@ -453,12 +458,12 @@
       
         
           
-          Semaphore（信号量）是用来控制同时访问特定资源的线程数量，它通过协调各个线程，以保证合理的使用公共资源。
-信号量维护了一个信号量许可集。线程可以通过调用acquire()来获取信号量的许可；当信号量中有可用的许可时，线程能获取该许可；否则线程必须等待，直到有可用的许可为止。 线程可以通过re
+          硬件效率与一致性一般来说，“让计算机并发执行若干个运算任务”（多任务处理）可以“更充分地利用计算机处理器的效能”。但是其中一个重要的复杂性（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，处理器还需要和内存交互，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。
+由于计算机的存
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/15/Lock-并发工具类-Semaphore/#more" rel="contents">
+            <a class="btn" href="/2017/01/06/JMM-Java内存模型/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -509,8 +514,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/15/Lock-并发工具类-CyclicBarrier/" itemprop="url">
-                  Lock: 并发工具类-CyclicBarrier
+                <a class="post-title-link" href="/2017/01/05/JVM-垃圾收集器/" itemprop="url">
+                  JVM: 垃圾收集器
                 </a>
               
             
@@ -523,8 +528,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-15T14:21:14+08:00" content="2017-01-15">
-              2017-01-15
+            <time itemprop="dateCreated" datetime="2017-01-05T22:15:26+08:00" content="2017-01-05">
+              2017-01-05
             </time>
           </span>
 
@@ -572,13 +577,14 @@
       
         
           
-          CyclicBarrier可以让一组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，所有被屏障拦截的线程才会继续运行。
-CountDownLatch和CyclicBarrier的区别
-CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；而CyclicBa
+          垃圾收集算法是内存回收的方法论，垃圾收集器是内存回收的具体实现。
+HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用于新生代和老年代的收集器，如果两个收集器之间存在连线，就说明可以搭配使用。
+并发和并行
+并行（Parallel）：并行就是同时执行。  多条垃圾收集线程并行工作，但用户线
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/15/Lock-并发工具类-CyclicBarrier/#more" rel="contents">
+            <a class="btn" href="/2017/01/05/JVM-垃圾收集器/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -629,8 +635,8 @@ CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；�
             
               
                 
-                <a class="post-title-link" href="/2017/01/15/Lock-并发工具类-CountDownLatch/" itemprop="url">
-                  Lock: 并发工具类-CountDownLatch
+                <a class="post-title-link" href="/2017/01/05/JVM-垃圾回收机制/" itemprop="url">
+                  JVM: 垃圾回收机制
                 </a>
               
             
@@ -643,8 +649,8 @@ CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-15T14:20:41+08:00" content="2017-01-15">
-              2017-01-15
+            <time itemprop="dateCreated" datetime="2017-01-05T18:29:43+08:00" content="2017-01-05">
+              2017-01-05
             </time>
           </span>
 
@@ -692,13 +698,13 @@ CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；�
       
         
           
-          在JDK并发包提供了几个常用的并发工具类：CountDownLatch、CyclicBarrier、Semaphore提供了一种并发流程控制的手段，而Exchanger工具类提供了在线程间交换数据的一种手段。
-CountDownLatch允许一个或多个线程等待其他线程完成操作。
-CountDownL
+          垃圾回收可以有效的防止内存泄露，有效的使用空闲的内存。Java堆和方法区的内存分配和回收是动态的，因而垃圾收集器所关注的也是这部分内存。
+垃圾收集机制要考虑的两件事情：（1）发现无用对象（如何判断对象是否还“存活”）；（2）回收被无用对象占用的内存空间，使该空间可被程序再次使用（垃圾收集算法）。
+对
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/15/Lock-并发工具类-CountDownLatch/#more" rel="contents">
+            <a class="btn" href="/2017/01/05/JVM-垃圾回收机制/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -749,8 +755,8 @@ CountDownL
             
               
                 
-                <a class="post-title-link" href="/2017/01/15/Lock-Condition/" itemprop="url">
-                  Lock: Condition
+                <a class="post-title-link" href="/2017/01/05/JVM-HotSpot虚拟机中的对象/" itemprop="url">
+                  JVM: HotSpot虚拟机中的对象
                 </a>
               
             
@@ -763,8 +769,8 @@ CountDownL
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-15T13:22:49+08:00" content="2017-01-15">
-              2017-01-15
+            <time itemprop="dateCreated" datetime="2017-01-05T16:26:02+08:00" content="2017-01-05">
+              2017-01-05
             </time>
           </span>
 
@@ -812,12 +818,627 @@ CountDownL
       
         
           
-          任意一个Java对象，都拥有一组监视器方法（定义在java.lang.Object上），主要包括wait()、wait(long timeout)、notify()、notifyAll()，这些方法与synchronized关键字配合，可以实现等待/通知机制。
-Condition的作用是对锁进行更精
+          探讨HotSpot虚拟机在Java堆中的对象分配、布局和访问过程。
+对象的创建
+这里仅讨论普通的Java对象，不涉及数组和Class对象等
+
+对象的创建过程：
+
+虚拟机遇到一条new指令时，首先去检查这个指令的参数是否能够在常量池中定位到一个类的符号引用，比检查这个符号引用代表的类是否已被加载、解析
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/15/Lock-Condition/#more" rel="contents">
+            <a class="btn" href="/2017/01/05/JVM-HotSpot虚拟机中的对象/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/05/JVM-Java虚拟机运行时数据区域/" itemprop="url">
+                  JVM: Java虚拟机运行时数据区域
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-05T14:32:43+08:00" content="2017-01-05">
+              2017-01-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          
+Java与C/C++之间有一堵由动态内存分配和垃圾收集技术所围成的“高墙”。
+
+Java虚拟机在执行Java程序的过程中会把它管理的内存划分为若干个不同的数据区域。
+程序计数器程序计数器（Program Counter Register）是一块线程私有的内存空间，可以看作是当前线程所执行的字节码的
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/05/JVM-Java虚拟机运行时数据区域/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/04/JVM-字节码执行引擎-2-方法调用/" itemprop="url">
+                  JVM: 字节码执行引擎(2)-方法调用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-04T15:24:50+08:00" content="2017-01-04">
+              2017-01-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          方法调用不同于方法执行，方法调用阶段唯一的任务就是确定被调用方法的版本（即调用哪一个方法），暂时还不涉及方法内部的具体运行过程。
+解析
+解析调用一定是个静态的过程，在编译期间就完全确定，在类加载的解析阶段就会把涉及的符号引用转换为可确定的直接引用，不会延迟到运行期再去完成。
+
+所有方法调用中的目标方
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/04/JVM-字节码执行引擎-2-方法调用/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/04/JVM-字节码执行引擎-1-概述/" itemprop="url">
+                  JVM: 字节码执行引擎(1)-概述
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-04T14:18:38+08:00" content="2017-01-04">
+              2017-01-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          执行引擎是JVM最核心的组成部分之一。
+虚拟机执行引擎在执行代码的时候，可能会有解释执行（通过解释器执行）和编译执行（通过JIT编译器产生本地代码执行）两种选择。
+
+虚拟机是一个相对于物理机的概念，它们都有代码执行能力，其区别是物理机的执行引擎是直接建立在处理器、硬件、指令集和操作系统层面上的，而虚
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/04/JVM-字节码执行引擎-1-概述/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/03/Class文件-2-字节码指令/" itemprop="url">
+                  Class文件(2): 字节码指令
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-03T18:39:09+08:00" content="2017-01-03">
+              2017-01-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          Java虚拟机字节码指令：由1个字节长度的操作码（代表着某种特定操作含义的数字），以及跟随其后的0至多个操作数（Operands，此操作所需的参数）而构成。
+
+再次强调Java虚拟机采用面向操作数栈而不是寄存器的架构，所以大多数的指令都包含操作数，而只有一个操作码。
+
+
+指令的操作码长度为1个字节，
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/03/Class文件-2-字节码指令/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/03/Class文件-1-类文件结构/" itemprop="url">
+                  Class文件(1): 类文件结构
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-03T18:38:49+08:00" content="2017-01-03">
+              2017-01-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          
+Write Once, Run Anywhere.
+
+各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——字节码（ByteCode），是构成平台无关性的基石。
+Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格按照顺序紧凑地排列在Class文件中，中间没有任何分隔符。当遇到
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/03/Class文件-1-类文件结构/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -851,7 +1472,7 @@ Condition的作用是对锁进行更精
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -900,7 +1521,7 @@ Condition的作用是对锁进行更精
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

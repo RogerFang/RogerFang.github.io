@@ -272,8 +272,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/15/Lock-LockSupport/" itemprop="url">
-                  Lock: LockSupport
+                <a class="post-title-link" href="/2017/01/02/JVM-类加载-2-类加载器ClassLoader/" itemprop="url">
+                  JVM: 类加载(2)-类加载器ClassLoader
                 </a>
               
             
@@ -286,8 +286,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-15T12:50:29+08:00" content="2017-01-15">
-              2017-01-15
+            <time itemprop="dateCreated" datetime="2017-01-02T23:10:37+08:00" content="2017-01-02">
+              2017-01-02
             </time>
           </span>
 
@@ -335,12 +335,15 @@
       
         
           
-          LockSupport工具类是用来创建锁Lock和其他同步类的基本线程阻塞原语。通过park()和unpark()方法来阻塞和唤醒线程。
-LockSupport中的私有成员变量UNSAFE和parkBlockerOffset12private static final sun.misc.Unsafe
+          类加载器只用于完成整个类加载过程的加载（Loading）动作：类的加载阶段中“通过一个类的全限定名去获取描述此类的二进制字节流”这个动作放到Java虚拟机外部去实现，以便让程序代码自己决定如何去获取所需要的类。
+
+类加载器在类层次划分、OSGI、热部署、代码加密等领域被广泛应用。
+
+类在虚拟机中的唯
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/15/Lock-LockSupport/#more" rel="contents">
+            <a class="btn" href="/2017/01/02/JVM-类加载-2-类加载器ClassLoader/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -391,8 +394,8 @@ LockSupport中的私有成员变量UNSAFE和parkBlockerOffset12private static fi
             
               
                 
-                <a class="post-title-link" href="/2017/01/15/Lock-读写锁ReentrantReadWriteLock/" itemprop="url">
-                  Lock: 读写锁ReentrantReadWriteLock
+                <a class="post-title-link" href="/2017/01/02/JVM-类加载-1-类加载机制/" itemprop="url">
+                  JVM: 类加载(1)-类加载机制
                 </a>
               
             
@@ -405,8 +408,8 @@ LockSupport中的私有成员变量UNSAFE和parkBlockerOffset12private static fi
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-15T11:03:44+08:00" content="2017-01-15">
-              2017-01-15
+            <time itemprop="dateCreated" datetime="2017-01-02T23:10:10+08:00" content="2017-01-02">
+              2017-01-02
             </time>
           </span>
 
@@ -454,15 +457,15 @@ LockSupport中的私有成员变量UNSAFE和parkBlockerOffset12private static fi
       
         
           
-          之前提到的ReentrantLock是排他锁，也就是同一时刻只允许一个线程进行访问。而读写锁在同一时刻可以允许多个读线程进行访问，但是在写线程访问时，所有的读线程和写线程均会被阻塞。
+          类加载机制：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型。
 
-读写锁维护了一对锁，一个读锁和一个写锁，通过分离读锁和写锁，使得并发性相比一般的排他锁有了很大的提升。
+Java可以动态扩展的特性就是依赖运行期动态加载和动态连接这个特点实现的。
 
-读写锁保
+类加载的时机类的生命周期类从被加载到虚拟机内存中开始，到卸载出内存为止，整个生
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/15/Lock-读写锁ReentrantReadWriteLock/#more" rel="contents">
+            <a class="btn" href="/2017/01/02/JVM-类加载-1-类加载机制/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -513,8 +516,8 @@ LockSupport中的私有成员变量UNSAFE和parkBlockerOffset12private static fi
             
               
                 
-                <a class="post-title-link" href="/2017/01/15/Lock-重入锁ReentrantLock/" itemprop="url">
-                  Lock: 重入锁ReentrantLock
+                <a class="post-title-link" href="/2017/01/01/JVM-后端编译-JIT编译器/" itemprop="url">
+                  JVM: 后端编译(JIT编译器)
                 </a>
               
             
@@ -527,8 +530,8 @@ LockSupport中的私有成员变量UNSAFE和parkBlockerOffset12private static fi
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-15T10:08:54+08:00" content="2017-01-15">
-              2017-01-15
+            <time itemprop="dateCreated" datetime="2017-01-01T23:42:14+08:00" content="2017-01-01">
+              2017-01-01
             </time>
           </span>
 
@@ -576,17 +579,15 @@ LockSupport中的私有成员变量UNSAFE和parkBlockerOffset12private static fi
       
         
           
-          重入锁ReentrantLock，表示该锁能够支持一个线程对资源的重复加锁。此外，还支持获取锁时的公平和非公平性选择，默认为非公平性的。
+          解释器与JIT编译器当程序需要迅速启动和执行的时候，JIT解释器可以首先发挥作用，省去编译的时间，立即执行。在程序执行后，随着时间的推移，JIT编译器逐渐发挥作用，把越来越多的代码编译成本地机器码，可以获得更高的执行效率。
 
-synchronized关键字隐式的支持重进入。
+可以使用解释器执行节约内存，反之使用JIT编译器来提升效率。
 
-实现重进入重进入是指任意线程在获取到锁之后能够再次获取该锁而不会被锁所阻塞。该特性要解决两个问题：
-
-线程再
+HotSp
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/15/Lock-重入锁ReentrantLock/#more" rel="contents">
+            <a class="btn" href="/2017/01/01/JVM-后端编译-JIT编译器/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -637,8 +638,8 @@ synchronized关键字隐式的支持重进入。
             
               
                 
-                <a class="post-title-link" href="/2017/01/07/Lock-队列同步器/" itemprop="url">
-                  Lock: 队列同步器AbstractQueuedSynchronizer
+                <a class="post-title-link" href="/2017/01/01/前端编译-Javac编译器/" itemprop="url">
+                  前端编译(Javac编译器)
                 </a>
               
             
@@ -651,8 +652,8 @@ synchronized关键字隐式的支持重进入。
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-07T23:11:15+08:00" content="2017-01-07">
-              2017-01-07
+            <time itemprop="dateCreated" datetime="2017-01-01T15:02:16+08:00" content="2017-01-01">
+              2017-01-01
             </time>
           </span>
 
@@ -700,12 +701,23 @@ synchronized关键字隐式的支持重进入。
       
         
           
-          概述队列同步器（AbstractQueuedSynchronizer，AQS），是用来构建锁或其他同步组件的基础框架，它使用了一个int成员变量表示同步状态，通过内置的FIFO队列来完成资源获取线程的排队工作。
-队列同步器是实现锁（也可以是任意同步组件）的关键，在锁的实现中聚合同步器，利用同步器实现
+          Java语言中的“编译期”是一段“不确定”的操作过程。可能指的是以下三种：
+
+前端编译器
+
+把.java文件转变成.class文件的过程。
+
+  例如：Sun的javac、Eclipse JDT中的增量式编译器（ECJ）
+
+后端编译器
+
+把字节码转变成机器码的过程。
+
+  例如：JIT编译器（分为c
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/07/Lock-队列同步器/#more" rel="contents">
+            <a class="btn" href="/2017/01/01/前端编译-Javac编译器/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -756,8 +768,8 @@ synchronized关键字隐式的支持重进入。
             
               
                 
-                <a class="post-title-link" href="/2017/01/07/Lock-概述/" itemprop="url">
-                  Lock: 概述
+                <a class="post-title-link" href="/2017/01/01/C和Java编译执行的过程比较/" itemprop="url">
+                  C和Java编译执行的过程比较
                 </a>
               
             
@@ -770,8 +782,8 @@ synchronized关键字隐式的支持重进入。
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-07T22:54:54+08:00" content="2017-01-07">
-              2017-01-07
+            <time itemprop="dateCreated" datetime="2017-01-01T11:05:40+08:00" content="2017-01-01">
+              2017-01-01
             </time>
           </span>
 
@@ -819,12 +831,622 @@ synchronized关键字隐式的支持重进入。
       
         
           
-          锁是用来控制多个线程访问共享资源的方式，一般来说，一个锁能够防止多个线程同时访问 共享资源（但是有些锁可以允许多个线程并发的访问共享资源，如读写锁）。
-Lock与synchronizedLock接口出现之前，Java程序是靠synchronized关键字实现锁功能的，而Java SE 5之后，并发包
+          编译不论是物理机还是虚拟机，大部分的程序代码从开始编译到最终转化成物理机的目标代码或虚拟机能执行的指令集之前，都会按照如下图所示的各个步骤进行：
+
+其中绿色的模块可以选择性实现。分为解释执行和编译执行。
+
+上图中间的那条分支是解释执行的过程（即一条字节码一条字节码地解释执行，如 JavaScript
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/07/Lock-概述/#more" rel="contents">
+            <a class="btn" href="/2017/01/01/C和Java编译执行的过程比较/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/31/Java-几种引用/" itemprop="url">
+                  Java 几种引用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-31T23:47:56+08:00" content="2016-12-31">
+              2016-12-31
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          
+Java中存在四种引用：强引用、软引用、弱引用、虚引用。
+
+强引用强引用（Strong Reference）：是最普通的引用类型，只要强引用存在，GC就不会进行垃圾回收。当内存空间不足，Java虚拟机宁愿抛出OutOfMemoryError错误，使程序异常终止，也不会靠随意回收具有强引用的对象来解
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/12/31/Java-几种引用/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/31/Java-反射原理解析/" itemprop="url">
+                  Java 反射原理解析
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-31T22:09:50+08:00" content="2016-12-31">
+              2016-12-31
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          
+Java的反射机制允许我们动态的调用某个对象的方法/构造函数、获取某个对象的属性等，而无需在编码时确定调用的对象。
+
+Method
+JDK中Method.invoke()实际上并不是自己实现的反射调用逻辑，而是委托给sun.reflect.MethodAccessor来处理的。
+
+首先要了解Met
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/12/31/Java-反射原理解析/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/31/Java-动态代理与反射/" itemprop="url">
+                  Java 动态代理与反射
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-31T18:56:26+08:00" content="2016-12-31">
+              2016-12-31
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          代理代理模式的特征是代理类与委托类有相同的接口。
+
+为某个对象提供一个代理，通过代理类这一中间层，可以有效地隐藏和保护被代理的真实对象，以控制对这个对象的访问。
+
+代理类主要负责为委托类预处理消息、过滤消息、把消息转发给委托类以及事后处理等。
+根据代理类的创建时间不同可以分为静态代理和动态代理。静态
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/12/31/Java-动态代理与反射/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/31/Java-反射/" itemprop="url">
+                  Java 反射
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-31T11:22:58+08:00" content="2016-12-31">
+              2016-12-31
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          简介反射能够让运行在JVM中的程序检测和修改运行时的行为，使用反射API可以在运行时获取对象的内部结构信息。
+
+JVM的类加载机制允许从多种源动态地加载Java类，但是动态类加载有一个重要的缺点，即我们在使用动态加载的类对象时，往往对这个类知之甚少，甚至于一无所知。这种情况下就需要使用一种动态编程技
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/12/31/Java-反射/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/30/Java-泛型Generics/" itemprop="url">
+                  Java 泛型Generics
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-30T20:12:16+08:00" content="2016-12-30">
+              2016-12-30
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          简介Java泛型(Generics)是JDK 1.5中引入的一个新特性，允许在定义类和接口的时候使用类型参数（type parameter）。声明的类型参数在使用时用具体的类型来替换，泛型最主要的应用是在JDK 1.5中的新集合类框架中。
+泛型使得编译器在编译时就可以发现很多错误，可以解决之前的集合
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/12/30/Java-泛型Generics/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -858,7 +1480,7 @@ Lock与synchronizedLock接口出现之前，Java程序是靠synchronized关键�
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -907,7 +1529,7 @@ Lock与synchronizedLock接口出现之前，Java程序是靠synchronized关键�
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

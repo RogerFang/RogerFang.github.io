@@ -272,8 +272,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/19/网络与通信：网络模型/" itemprop="url">
-                  网络与通信：网络模型
+                <a class="post-title-link" href="/2017/01/15/Lock-LockSupport/" itemprop="url">
+                  Lock: LockSupport
                 </a>
               
             
@@ -286,8 +286,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-19T08:54:11+08:00" content="2017-01-19">
-              2017-01-19
+            <time itemprop="dateCreated" datetime="2017-01-15T12:50:29+08:00" content="2017-01-15">
+              2017-01-15
             </time>
           </span>
 
@@ -300,8 +300,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/网络与通信/" itemprop="url" rel="index">
-                    <span itemprop="name">网络与通信</span>
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
                   </a>
                 </span>
 
@@ -335,12 +335,12 @@
       
         
           
-          OSI 七层模型OSI（Open System Interconnection，开放系统互连）七层网络模型称为开放式网络互连参考模型。它是国际标准组织制定的一个指导信息互连、互通和协作的网络规范。
-从逻辑上可以将其划分为七层模型：应用层、表示层、会话层、传输层、网络层、数据链路层和物理层。其中上3层
+          LockSupport工具类是用来创建锁Lock和其他同步类的基本线程阻塞原语。通过park()和unpark()方法来阻塞和唤醒线程。
+LockSupport中的私有成员变量UNSAFE和parkBlockerOffset12private static final sun.misc.Unsafe
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/19/网络与通信：网络模型/#more" rel="contents">
+            <a class="btn" href="/2017/01/15/Lock-LockSupport/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -391,8 +391,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/17/Executor框架/" itemprop="url">
-                  Executor框架
+                <a class="post-title-link" href="/2017/01/15/Lock-读写锁ReentrantReadWriteLock/" itemprop="url">
+                  Lock: 读写锁ReentrantReadWriteLock
                 </a>
               
             
@@ -405,8 +405,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-17T16:43:15+08:00" content="2017-01-17">
-              2017-01-17
+            <time itemprop="dateCreated" datetime="2017-01-15T11:03:44+08:00" content="2017-01-15">
+              2017-01-15
             </time>
           </span>
 
@@ -419,8 +419,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaSE</span>
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
                   </a>
                 </span>
 
@@ -454,13 +454,15 @@
       
         
           
-          Java的线程既是工作单元，也是执行机制。从JDK 5开始，把工作单元与执行机制分离开来。工作单元包括Runnable和Callable，而执行机制由Executor框架提供。
-Executor框架Executor框架的两级调度模型
-对于Sun JDK来说，它的Windows版和Linux版都是使用
+          之前提到的ReentrantLock是排他锁，也就是同一时刻只允许一个线程进行访问。而读写锁在同一时刻可以允许多个读线程进行访问，但是在写线程访问时，所有的读线程和写线程均会被阻塞。
+
+读写锁维护了一对锁，一个读锁和一个写锁，通过分离读锁和写锁，使得并发性相比一般的排他锁有了很大的提升。
+
+读写锁保
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/17/Executor框架/#more" rel="contents">
+            <a class="btn" href="/2017/01/15/Lock-读写锁ReentrantReadWriteLock/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -511,8 +513,8 @@ Executor框架Executor框架的两级调度模型
             
               
                 
-                <a class="post-title-link" href="/2017/01/17/线程池/" itemprop="url">
-                  线程池
+                <a class="post-title-link" href="/2017/01/15/Lock-重入锁ReentrantLock/" itemprop="url">
+                  Lock: 重入锁ReentrantLock
                 </a>
               
             
@@ -525,8 +527,8 @@ Executor框架Executor框架的两级调度模型
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-17T13:07:46+08:00" content="2017-01-17">
-              2017-01-17
+            <time itemprop="dateCreated" datetime="2017-01-15T10:08:54+08:00" content="2017-01-15">
+              2017-01-15
             </time>
           </span>
 
@@ -539,8 +541,8 @@ Executor框架Executor框架的两级调度模型
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaSE</span>
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
                   </a>
                 </span>
 
@@ -574,19 +576,17 @@ Executor框架Executor框架的两级调度模型
       
         
           
-          线程池带来的好处：
+          重入锁ReentrantLock，表示该锁能够支持一个线程对资源的重复加锁。此外，还支持获取锁时的公平和非公平性选择，默认为非公平性的。
 
-降低资源消耗 通过重复利用已创建的线程降低线程创建和销毁造成的消耗。
-提高响应速度 当任务到达时，任务可以不需要等到线程创建就能立即执行。
-提高线程的可管理性 线程是稀缺资源，使用线程池可以统一分配、调优和监控。
+synchronized关键字隐式的支持重进入。
 
-实现原理当提交一个新任务到线程池时，线程池的主要处理流程
+实现重进入重进入是指任意线程在获取到锁之后能够再次获取该锁而不会被锁所阻塞。该特性要解决两个问题：
 
-判
+线程再
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/17/线程池/#more" rel="contents">
+            <a class="btn" href="/2017/01/15/Lock-重入锁ReentrantLock/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -637,8 +637,8 @@ Executor框架Executor框架的两级调度模型
             
               
                 
-                <a class="post-title-link" href="/2017/01/16/JUC集合框架-2-ConcurrentHashMap/" itemprop="url">
-                  JUC集合框架(2): ConcurrentHashMap
+                <a class="post-title-link" href="/2017/01/07/Lock-队列同步器/" itemprop="url">
+                  Lock: 队列同步器AbstractQueuedSynchronizer
                 </a>
               
             
@@ -651,8 +651,8 @@ Executor框架Executor框架的两级调度模型
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-16T11:03:06+08:00" content="2017-01-16">
-              2017-01-16
+            <time itemprop="dateCreated" datetime="2017-01-07T23:11:15+08:00" content="2017-01-07">
+              2017-01-07
             </time>
           </span>
 
@@ -665,8 +665,8 @@ Executor框架Executor框架的两级调度模型
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/JUC集合框架/" itemprop="url" rel="index">
-                    <span itemprop="name">JUC集合框架</span>
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
                   </a>
                 </span>
 
@@ -700,12 +700,12 @@ Executor框架Executor框架的两级调度模型
       
         
           
-          12public class ConcurrentHashMap&lt;K,V&gt; extends AbstractMap&lt;K,V&gt;    implements ConcurrentMap&lt;K,V&gt;, Serializable
-ConcurrentSkipHashMap相
+          概述队列同步器（AbstractQueuedSynchronizer，AQS），是用来构建锁或其他同步组件的基础框架，它使用了一个int成员变量表示同步状态，通过内置的FIFO队列来完成资源获取线程的排队工作。
+队列同步器是实现锁（也可以是任意同步组件）的关键，在锁的实现中聚合同步器，利用同步器实现
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/16/JUC集合框架-2-ConcurrentHashMap/#more" rel="contents">
+            <a class="btn" href="/2017/01/07/Lock-队列同步器/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -756,8 +756,8 @@ ConcurrentSkipHashMap相
             
               
                 
-                <a class="post-title-link" href="/2017/01/16/JUC集合框架-1-概述/" itemprop="url">
-                  JUC集合框架(1): 概述
+                <a class="post-title-link" href="/2017/01/07/Lock-概述/" itemprop="url">
+                  Lock: 概述
                 </a>
               
             
@@ -770,8 +770,8 @@ ConcurrentSkipHashMap相
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-16T10:30:10+08:00" content="2017-01-16">
-              2017-01-16
+            <time itemprop="dateCreated" datetime="2017-01-07T22:54:54+08:00" content="2017-01-07">
+              2017-01-07
             </time>
           </span>
 
@@ -784,8 +784,8 @@ ConcurrentSkipHashMap相
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/JUC集合框架/" itemprop="url" rel="index">
-                    <span itemprop="name">JUC集合框架</span>
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
                   </a>
                 </span>
 
@@ -819,15 +819,618 @@ ConcurrentSkipHashMap相
       
         
           
-          JUC包中集合类可以分为3部分：List和Set、Map以及Queue。
-List和SetJUC集合包中List和Set的实现类有：
-
-CopyOnWriteArrayList  CopyOnWriteArrayList相当于线程安全的ArrayList，它实现了List接口。
-CopyOnWrit
+          锁是用来控制多个线程访问共享资源的方式，一般来说，一个锁能够防止多个线程同时访问 共享资源（但是有些锁可以允许多个线程并发的访问共享资源，如读写锁）。
+Lock与synchronizedLock接口出现之前，Java程序是靠synchronized关键字实现锁功能的，而Java SE 5之后，并发包
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/16/JUC集合框架-1-概述/#more" rel="contents">
+            <a class="btn" href="/2017/01/07/Lock-概述/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/07/线程-启动和终止/" itemprop="url">
+                  线程: 启动和终止
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-07T21:14:12+08:00" content="2017-01-07">
+              2017-01-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          创建线程Java 中创建有两种方法：继承 Thread 类、实现 Runnable 接口，在程序开发中只要是多线程，肯定永远以实现 Runnable 接口为主。
+实现 Runnable 接口相比继承 Thread 类有如下优势：
+
+可以避免由于 Java 的单继承特性而带来的局限；
+增强程序的健壮性
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/07/线程-启动和终止/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/07/JMM-final域的内存语义/" itemprop="url">
+                  JMM: final域的内存语义
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-07T16:56:42+08:00" content="2017-01-07">
+              2017-01-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          与volatile和锁相比，对final域的读写更像是普通变量的访问。
+final域的重排序规则对于final域编译器和处理器需要遵守两个重排序规则：
+
+在构造函数内对一个final域的写入，与随后把这个被构造对象的引用赋值给一个引用变量，这两个操作之间不能重排序。
+初次读一个包含final域的对象
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/07/JMM-final域的内存语义/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/07/JMM-锁的内存语义/" itemprop="url">
+                  JMM: 锁的内存语义
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-07T15:17:25+08:00" content="2017-01-07">
+              2017-01-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          锁是Java并发编程中最重要的同步机制，锁除了可以让临界区互斥执行外，还可以让释放锁的线程向获取同一个锁的线程发送消息。
+锁释放-获取内存语义锁的释放内存语义：线程释放锁时，JMM会把该线程对应的本地内存中的共享变量刷新到主内存中。
+锁的获取内存语义：线程获取锁时，JMM会把线程对应的本地内存置为无
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/07/JMM-锁的内存语义/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/07/JMM-volatile的内存语义/" itemprop="url">
+                  JMM: volatile的内存语义
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-07T14:05:43+08:00" content="2017-01-07">
+              2017-01-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          volatile关键字可以保证变量的可见性，也就是新值能立即同步到主内存，以及使用前立即从主内存刷新。
+可见性：对一个volatile变量的读，总是能看到（任意线程）对这个volatile变量最后的写入。原子性：对任意单个volatile变量的读/写具有原子性，但是对于复合操作如volatile++
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/07/JMM-volatile的内存语义/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/07/JMM-顺序一致性/" itemprop="url">
+                  JMM: 顺序一致性
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-07T13:06:06+08:00" content="2017-01-07">
+              2017-01-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          
+顺序一致性内存模型是一个理论参考模型。
+
+数据竞争与顺序一致性当程序未正确同步时，就会存在数据竞争。
+Java内存模型规范对数据竞争的定义：在一个线程中写一个变量，在另一个线程读同一个变量，而且写和读没有通过同步来排序。
+如果程序是正确同步的，程序的执行将具有顺序一致性。即程序的执行结果与该程序在
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/07/JMM-顺序一致性/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -861,7 +1464,7 @@ CopyOnWrit
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -910,7 +1513,7 @@ CopyOnWrit
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

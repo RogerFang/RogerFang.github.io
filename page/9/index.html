@@ -272,8 +272,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/02/JVM-类加载-2-类加载器ClassLoader/" itemprop="url">
-                  JVM: 类加载(2)-类加载器ClassLoader
+                <a class="post-title-link" href="/2016/11/06/数据结构与算法-29-图-深度优先搜索-DFS/" itemprop="url">
+                  数据结构与算法(29): 图- 深度优先搜索(DFS)
                 </a>
               
             
@@ -286,8 +286,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-02T23:10:37+08:00" content="2017-01-02">
-              2017-01-02
+            <time itemprop="dateCreated" datetime="2016-11-06T14:00:00+08:00" content="2016-11-06">
+              2016-11-06
             </time>
           </span>
 
@@ -300,8 +300,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
-                    <span itemprop="name">Java SE</span>
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
                   </a>
                 </span>
 
@@ -335,15 +335,11 @@
       
         
           
-          类加载器只用于完成整个类加载过程的加载（Loading）动作：类的加载阶段中“通过一个类的全限定名去获取描述此类的二进制字节流”这个动作放到Java虚拟机外部去实现，以便让程序代码自己决定如何去获取所需要的类。
-
-类加载器在类层次划分、OSGI、热部署、代码加密等领域被广泛应用。
-
-类在虚拟机中的唯
+          &emsp;&emsp;假设初始状态是图中所有顶点均未被访问，则从某个顶点v出发，首先访问该顶点，然后依次从它的各个未被访问的邻接点出发深度优先搜索遍历图，直至图中所有和v有路径相通的顶点都被访问到。 若此时尚有其他顶点未被访问到，则另选一个未被访问的顶点作起始点，重复上述过程，直至图中所有顶点都被
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/02/JVM-类加载-2-类加载器ClassLoader/#more" rel="contents">
+            <a class="btn" href="/2016/11/06/数据结构与算法-29-图-深度优先搜索-DFS/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -394,8 +390,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/02/JVM-类加载-1-类加载机制/" itemprop="url">
-                  JVM: 类加载(1)-类加载机制
+                <a class="post-title-link" href="/2016/11/06/数据结构与算法-28-图-拓扑排序/" itemprop="url">
+                  数据结构与算法(28): 图- 拓扑排序
                 </a>
               
             
@@ -408,8 +404,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-02T23:10:10+08:00" content="2017-01-02">
-              2017-01-02
+            <time itemprop="dateCreated" datetime="2016-11-06T10:57:57+08:00" content="2016-11-06">
+              2016-11-06
             </time>
           </span>
 
@@ -422,8 +418,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
-                    <span itemprop="name">Java SE</span>
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
                   </a>
                 </span>
 
@@ -457,15 +453,14 @@
       
         
           
-          类加载机制：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型。
-
-Java可以动态扩展的特性就是依赖运行期动态加载和动态连接这个特点实现的。
-
-类加载的时机类的生命周期类从被加载到虚拟机内存中开始，到卸载出内存为止，整个生
+          定义&emsp;&emsp;拓扑排序(Topological Order)是指：将一个有向无环图(Directed Acyclic Graph, DAG)进行排序而得到一个有序的线性序列。拓扑排序不必是唯一的，任何合理的排序都是可以的。
+算法步骤
+构造一个队列Q和拓扑排序的结果队列T；
+把所有没有依
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/02/JVM-类加载-1-类加载机制/#more" rel="contents">
+            <a class="btn" href="/2016/11/06/数据结构与算法-28-图-拓扑排序/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -516,8 +511,8 @@ Java可以动态扩展的特性就是依赖运行期动态加载和动态连接�
             
               
                 
-                <a class="post-title-link" href="/2017/01/01/JVM-后端编译-JIT编译器/" itemprop="url">
-                  JVM: 后端编译(JIT编译器)
+                <a class="post-title-link" href="/2016/11/06/数据结构与算法-27-图-理论基础/" itemprop="url">
+                  数据结构与算法(27): 图- 理论基础
                 </a>
               
             
@@ -530,8 +525,8 @@ Java可以动态扩展的特性就是依赖运行期动态加载和动态连接�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-01T23:42:14+08:00" content="2017-01-01">
-              2017-01-01
+            <time itemprop="dateCreated" datetime="2016-11-06T09:38:57+08:00" content="2016-11-06">
+              2016-11-06
             </time>
           </span>
 
@@ -544,8 +539,8 @@ Java可以动态扩展的特性就是依赖运行期动态加载和动态连接�
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
-                    <span itemprop="name">Java SE</span>
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
                   </a>
                 </span>
 
@@ -579,15 +574,22 @@ Java可以动态扩展的特性就是依赖运行期动态加载和动态连接�
       
         
           
-          解释器与JIT编译器当程序需要迅速启动和执行的时候，JIT解释器可以首先发挥作用，省去编译的时间，立即执行。在程序执行后，随着时间的推移，JIT编译器逐渐发挥作用，把越来越多的代码编译成本地机器码，可以获得更高的执行效率。
+          定义
+一个图(graph)G=(V, E)由顶点(vertex)的集V和边(edge)的的集E组成。
 
-可以使用解释器执行节约内存，反之使用JIT编译器来提升效率。
 
-HotSp
+无向图无向图所有的边都是不区分方向的。
+
+有向图有向图所有的边都是有方向的。
+
+
+
+邻接：顶点w和顶点v邻接当且仅当$(v, w) \in E$。
+度：在无向图中，顶点的度是邻接到该顶点的边的数
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/01/JVM-后端编译-JIT编译器/#more" rel="contents">
+            <a class="btn" href="/2016/11/06/数据结构与算法-27-图-理论基础/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -638,8 +640,8 @@ HotSp
             
               
                 
-                <a class="post-title-link" href="/2017/01/01/前端编译-Javac编译器/" itemprop="url">
-                  前端编译(Javac编译器)
+                <a class="post-title-link" href="/2016/11/04/数据结构与算法-26-散列/" itemprop="url">
+                  数据结构与算法(26): 散列
                 </a>
               
             
@@ -652,8 +654,8 @@ HotSp
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-01T15:02:16+08:00" content="2017-01-01">
-              2017-01-01
+            <time itemprop="dateCreated" datetime="2016-11-04T15:46:35+08:00" content="2016-11-04">
+              2016-11-04
             </time>
           </span>
 
@@ -666,8 +668,8 @@ HotSp
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/ava-SE/" itemprop="url" rel="index">
-                    <span itemprop="name">ava SE</span>
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
                   </a>
                 </span>
 
@@ -701,23 +703,15 @@ HotSp
       
         
           
-          Java语言中的“编译期”是一段“不确定”的操作过程。可能指的是以下三种：
+          
+散列是一种用于以常数平均时间执行插入、删除和查找的技术。
 
-前端编译器
-
-把.java文件转变成.class文件的过程。
-
-  例如：Sun的javac、Eclipse JDT中的增量式编译器（ECJ）
-
-后端编译器
-
-把字节码转变成机器码的过程。
-
-  例如：JIT编译器（分为c
+散列表(Hash Table)就是一种以键-值存储数据的结构。
+使用哈希查找有两个步骤:&emsp;&emsp;1. 使用散列函数将被查找的键转换为存储单元的索引。在理想的情况下，不同的键会被转换为不同的索引值，但是在有些情况下多个键被散
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/01/前端编译-Javac编译器/#more" rel="contents">
+            <a class="btn" href="/2016/11/04/数据结构与算法-26-散列/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -768,8 +762,8 @@ HotSp
             
               
                 
-                <a class="post-title-link" href="/2017/01/01/C和Java编译执行的过程比较/" itemprop="url">
-                  C和Java编译执行的过程比较
+                <a class="post-title-link" href="/2016/11/04/数据结构与算法-25-排序-外部排序/" itemprop="url">
+                  数据结构与算法(25): 排序- 外部排序
                 </a>
               
             
@@ -782,8 +776,8 @@ HotSp
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-01T11:05:40+08:00" content="2017-01-01">
-              2017-01-01
+            <time itemprop="dateCreated" datetime="2016-11-04T14:22:14+08:00" content="2016-11-04">
+              2016-11-04
             </time>
           </span>
 
@@ -796,8 +790,8 @@ HotSp
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
-                    <span itemprop="name">Java SE</span>
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
                   </a>
                 </span>
 
@@ -831,15 +825,611 @@ HotSp
       
         
           
-          编译不论是物理机还是虚拟机，大部分的程序代码从开始编译到最终转化成物理机的目标代码或虚拟机能执行的指令集之前，都会按照如下图所示的各个步骤进行：
-
-其中绿色的模块可以选择性实现。分为解释执行和编译执行。
-
-上图中间的那条分支是解释执行的过程（即一条字节码一条字节码地解释执行，如 JavaScript
+          &emsp;&emsp;外部排序指的是大文件的排序，即待排序的记录存储在外存储器上，待排序的文件无法一次装入内存，需要在内存和外部存储器之间进行多次数据交换，以达到排序整个文件的目的。外部排序最常用的算法是多路归并排序，即将原文件分解成多个能够一次性装入内存的部分，分别把每一部分调入内存完成排序。然
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/01/C和Java编译执行的过程比较/#more" rel="contents">
+            <a class="btn" href="/2016/11/04/数据结构与算法-25-排序-外部排序/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/11/04/数据结构与算法-24-排序-桶排序/" itemprop="url">
+                  数据结构与算法(24): 排序- 桶排序
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-04T14:10:14+08:00" content="2016-11-04">
+              2016-11-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          &emsp;&emsp;桶排序(Bucket Sort)的原理很简单，它是将数组分到有限数量的桶子里。
+&emsp;&emsp;假设待排序的数组a中共有N个整数，并且已知数组a中数据的范围[0, MAX)。在桶排序时，创建容量为MAX的桶数组r，并将桶数组元素都初始化为0；将容量为MAX的桶数组中的
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/11/04/数据结构与算法-24-排序-桶排序/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/11/04/数据结构与算法-23-排序-快速排序/" itemprop="url">
+                  数据结构与算法(23): 排序- 快速排序
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-04T12:10:14+08:00" content="2016-11-04">
+              2016-11-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          &emsp;&emsp;快速排序的基本思想：选择一个基准数，通过一趟排序将要排序的数据分割成独立的两部分；其中一部分的所有数据都比另外一部分的所有数据都要小。然后，再按此方法对这两部分数据分别进行快速排序，整个排序过程递归进行，以达到有序序列。
+
+快速排序的每一轮处理其实就是将一轮的基准数归位。
+
+
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/11/04/数据结构与算法-23-排序-快速排序/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/11/03/数据结构与算法-22-排序-归并排序/" itemprop="url">
+                  数据结构与算法(22): 排序- 归并排序
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-03T19:10:14+08:00" content="2016-11-03">
+              2016-11-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          &emsp;&emsp;归并排序的基本思想：将两个有序数列合并成一个有序数列，具体实现包括“从上往下”和“从下往上”2种方式。&emsp;&emsp;时间复杂度：O($N\log{N}$)。&emsp;&emsp;归并排序是稳定的。
+
+从下往上的归并排序：将待排序的数列分成若干个长度为1的子数列，然
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/11/03/数据结构与算法-22-排序-归并排序/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/11/03/数据结构与算法-21-排序-堆排序/" itemprop="url">
+                  数据结构与算法(21): 排序- 堆排序
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-03T13:10:14+08:00" content="2016-11-03">
+              2016-11-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          &emsp;&emsp;堆排序是指利用堆这种数据结构所涉及的一种排序算法。最大堆通常被用来进行”升序”排序，而最小堆通常被用来进行”降序”排序。&emsp;&emsp;最小堆进行降序的基本思想：&emsp;&emsp;1. 初始化堆：将数据构造成最小堆。&emsp;&emsp;2. 交换数据：将a[
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/11/03/数据结构与算法-21-排序-堆排序/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/11/03/数据结构与算法-20-排序-希尔排序/" itemprop="url">
+                  数据结构与算法(20): 排序- 希尔排序
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-03T12:30:14+08:00" content="2016-11-03">
+              2016-11-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          
+希尔排序是插入排序的一种，它是针对直接插入排序算法的改进。该方法又称缩减增量排序，因DL．Shell于1959年提出而得名。
+
+&emsp;&emsp;希尔排序实质上是一种分组插入方法。它的基本思想是：对于n个待排序的数列，取一个小于n的整数gap(gap被称为步长)将待排序元素分成若干个组子序列
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/11/03/数据结构与算法-20-排序-希尔排序/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -873,7 +1463,7 @@ HotSp
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -922,7 +1512,7 @@ HotSp
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
