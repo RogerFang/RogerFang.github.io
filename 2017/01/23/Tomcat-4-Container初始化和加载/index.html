@@ -1,0 +1,826 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="Container分成4个级别的容器：Engine、Host、Context、Wrapper，它们是父子关系。
+
+初始化Container容器的初始化入口在org.apache.catalina.startup.Catalina类的load()方法中，其中调用了Digester digester = createStartDigester();得到Digester对象（其中设置了许多的解析规则），">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tomcat(4): Container初始化和加载">
+<meta property="og:url" content="https://rogerfang.github.io/2017/01/23/Tomcat-4-Container初始化和加载/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="Container分成4个级别的容器：Engine、Host、Context、Wrapper，它们是父子关系。
+
+初始化Container容器的初始化入口在org.apache.catalina.startup.Catalina类的load()方法中，其中调用了Digester digester = createStartDigester();得到Digester对象（其中设置了许多的解析规则），">
+<meta property="og:image" content="https://rogerfang.github.io/images/tomcat/tomcat-container.png">
+<meta property="og:updated_time" content="2017-01-23T07:48:45.672Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tomcat(4): Container初始化和加载">
+<meta name="twitter:description" content="Container分成4个级别的容器：Engine、Host、Context、Wrapper，它们是父子关系。
+
+初始化Container容器的初始化入口在org.apache.catalina.startup.Catalina类的load()方法中，其中调用了Digester digester = createStartDigester();得到Digester对象（其中设置了许多的解析规则），">
+<meta name="twitter:image" content="https://rogerfang.github.io/images/tomcat/tomcat-container.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://rogerfang.github.io/2017/01/23/Tomcat-4-Container初始化和加载/"/>
+
+
+  <title> Tomcat(4): Container初始化和加载 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Tomcat(4): Container初始化和加载
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-23T10:09:31+08:00" content="2017-01-23">
+              2017-01-23
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/tomcat/" itemprop="url" rel="index">
+                    <span itemprop="name">tomcat</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Container分成4个级别的容器：Engine、Host、Context、Wrapper，它们是父子关系。</p>
+<p><img src="/images/tomcat/tomcat-container.png" alt=""></p>
+<h1 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h1><p>Container容器的初始化入口在<code>org.apache.catalina.startup.Catalina</code>类的<code>load()</code>方法中，其中调用了<code>Digester digester = createStartDigester();</code>得到Digester对象（其中设置了许多的解析规则），之后调用<code>digester.parse()</code>对<code>conf/server.xml</code>进行解析生成对象及其相互关系。</p>
+<blockquote>
+<p>Digeter是apache的common项目，是对 SAX 的封装，作用是将 XML 转化成对象。</p>
+</blockquote>
+<figure class="highlight java"><figcaption><span>Catalina.createStartDigester()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 用于设置解析时用到的规则</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">protected</span> Digester <span class="title">createStartDigester</span><span class="params">()</span> </span>&#123;</div><div class="line">    ……</div><div class="line"></div><div class="line">    <span class="comment">// 如果遇到”Server“元素起始符;则创建"org.apache.catalina.core.StandardServer"的一个实例对象，并压入堆栈;如果"Server"元素的"className"属性存在，那么用这个属性的值所指定的class来创建实例对象，并压入堆栈。</span></div><div class="line">    digester.addObjectCreate(<span class="string">"Server"</span>,</div><div class="line">                             <span class="string">"org.apache.catalina.core.StandardServer"</span>,</div><div class="line">                             <span class="string">"className"</span>);</div><div class="line"></div><div class="line">    <span class="comment">// 从server.xml读取"Server"元素的所有&#123;属性:值&#125;配对,用对应的Setter方法将属性值设置到堆栈顶层元素(Server)。</span></div><div class="line">    digester.addSetProperties(<span class="string">"Server"</span>);</div><div class="line"></div><div class="line">    <span class="comment">// 遇到"Server"结束符时，调用“次顶层元素(Catalina)”的"setServer"方法，设置对象间的关系。</span></div><div class="line">    digester.addSetNext(<span class="string">"Server"</span>,</div><div class="line">                        <span class="string">"setServer"</span>,</div><div class="line">                        <span class="string">"org.apache.catalina.Server"</span>);</div><div class="line">    ……</div><div class="line">    <span class="comment">//遇到标签使用规则</span></div><div class="line">    digester.addRuleSet(<span class="keyword">new</span> HostRuleSet(<span class="string">"Server/Service/Engine/"</span>));</div><div class="line">    ……</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>digester对<code>conf/server.xml</code>设置的标签动作有5种调用：</p>
+<ul>
+<li>addObjectCreate：遇到起始标签的元素，初始化一个实例对象入栈</li>
+<li>addSetProperties：遇到某个属性名，使用setter来赋值</li>
+<li>addSetNext：遇到结束标签的元素，调用相应的方法</li>
+<li>addRule：调用rule的begin 、body、end、finish方法来解析xml，入栈和出栈给对象赋值</li>
+<li>addRuleSet：调用addRuleInstances来解析xml标签</li>
+</ul>
+<h2 id="Server、Service解析"><a href="#Server、Service解析" class="headerlink" title="Server、Service解析"></a>Server、Service解析</h2><p><code>conf/server.xml</code>中，Calatina的Server对象是<code>StandardServer</code>，Service对象是<code>StandardService</code>。以下代码来自<code>Catalina.createStartDigester()</code>方法，涉及Server和Service部分并省略了部分子节点。<br><figure class="highlight java"><figcaption><span>Catalina.createStartDigester()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Server</span></div><div class="line">digester.addObjectCreate(<span class="string">"Server"</span>,</div><div class="line">                         <span class="string">"org.apache.catalina.core.StandardServer"</span>,</div><div class="line">                         <span class="string">"className"</span>);</div><div class="line">digester.addSetProperties(<span class="string">"Server"</span>);</div><div class="line">digester.addSetNext(<span class="string">"Server"</span>,</div><div class="line">                    <span class="string">"setServer"</span>,</div><div class="line">                    <span class="string">"org.apache.catalina.Server"</span>);</div><div class="line"></div><div class="line"><span class="comment">// Service</span></div><div class="line">digester.addObjectCreate(<span class="string">"Server/Service"</span>,</div><div class="line">                         <span class="string">"org.apache.catalina.core.StandardService"</span>,</div><div class="line">                         <span class="string">"className"</span>);</div><div class="line">digester.addSetProperties(<span class="string">"Server/Service"</span>);</div><div class="line">digester.addSetNext(<span class="string">"Server/Service"</span>,</div><div class="line">                    <span class="string">"addService"</span>,</div><div class="line">                    <span class="string">"org.apache.catalina.Service"</span>);</div><div class="line"><span class="comment">// Service:Executor</span></div><div class="line">digester.addObjectCreate(<span class="string">"Server/Service/Executor"</span>,</div><div class="line">                 <span class="string">"org.apache.catalina.core.StandardThreadExecutor"</span>,</div><div class="line">                 <span class="string">"className"</span>);</div><div class="line">digester.addSetProperties(<span class="string">"Server/Service/Executor"</span>);</div><div class="line"></div><div class="line">digester.addSetNext(<span class="string">"Server/Service/Executor"</span>,</div><div class="line">                    <span class="string">"addExecutor"</span>,</div><div class="line">                    <span class="string">"org.apache.catalina.Executor"</span>);</div><div class="line"></div><div class="line"><span class="comment">// Service:Connector</span></div><div class="line">digester.addRule(<span class="string">"Server/Service/Connector"</span>,</div><div class="line">                 <span class="keyword">new</span> ConnectorCreateRule());</div><div class="line">digester.addRule(<span class="string">"Server/Service/Connector"</span>, <span class="keyword">new</span> SetAllPropertiesRule(</div><div class="line">        <span class="keyword">new</span> String[]&#123;<span class="string">"executor"</span>, <span class="string">"sslImplementationName"</span>, <span class="string">"protocol"</span>&#125;));</div><div class="line">digester.addSetNext(<span class="string">"Server/Service/Connector"</span>,</div><div class="line">                    <span class="string">"addConnector"</span>,</div><div class="line">                    <span class="string">"org.apache.catalina.connector.Connector"</span>);</div></pre></td></tr></table></figure></p>
+<h2 id="Engine、Host、Context解析"><a href="#Engine、Host、Context解析" class="headerlink" title="Engine、Host、Context解析"></a>Engine、Host、Context解析</h2><p>以下代码来自<code>Catalina.createStartDigester()</code>方法。其中<code>EngineRuleSet</code>、<code>HostRuleSet</code>、<code>ContextRuleSet</code>都定义了相应的解析规则。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Engine</span></div><div class="line">digester.addRuleSet(<span class="keyword">new</span> EngineRuleSet(<span class="string">"Server/Service/"</span>));</div><div class="line"><span class="comment">// Host</span></div><div class="line">digester.addRuleSet(<span class="keyword">new</span> HostRuleSet(<span class="string">"Server/Service/Engine/"</span>));</div><div class="line"><span class="comment">// Context</span></div><div class="line">digester.addRuleSet(<span class="keyword">new</span> ContextRuleSet(<span class="string">"Server/Service/Engine/Host/"</span>));</div></pre></td></tr></table></figure></p>
+<h1 id="Context容器加载web服务与热部署"><a href="#Context容器加载web服务与热部署" class="headerlink" title="Context容器加载web服务与热部署"></a>Context容器加载web服务与热部署</h1><p>Tomcat 通过BackgroundProcessor来实现Context的加载web服务和热部署：Tomcat 的 Engine 会启动一个线程，该线程每10s会发送一个事件，监听到该事件的部署配置类会自动去扫描 webapp 文件夹下的war包，将其加载成一个Context，即启动一个web服务。</p>
+<p>##开启线程，执行BackGroupProcessor</p>
+<ol>
+<li><p><code>StandardEngine</code>的<code>startInternal()</code>方法调用父类<code>ContainerBase</code>的<code>startInternal()</code>方法，其中调用<code>threadStart()</code>方法开启一个线程。</p>
+ <figure class="highlight java"><figcaption><span>ContainerBase.threadStart()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Start the background thread that will periodically check for</div><div class="line"> * session timeouts.</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">threadStart</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (thread != <span class="keyword">null</span>)</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    <span class="keyword">if</span> (backgroundProcessorDelay &lt;= <span class="number">0</span>)</div><div class="line">        <span class="keyword">return</span>;</div><div class="line"></div><div class="line">    threadDone = <span class="keyword">false</span>;</div><div class="line">    String threadName = <span class="string">"ContainerBackgroundProcessor["</span> + toString() + <span class="string">"]"</span>;</div><div class="line">    thread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> ContainerBackgroundProcessor(), threadName);</div><div class="line">    thread.setDaemon(<span class="keyword">true</span>);</div><div class="line">    thread.start();</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>2.该线程每10s会调用一次processChildren。</p>
+<pre><code><figure class="highlight java"><figcaption><span>ContainerBase.ContainerBackgroundProcessor</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Private thread class to invoke the backgroundProcess method</div><div class="line"> * of this container and its children after a fixed delay.</div><div class="line"> */</div><div class="line"><span class="keyword">protected</span> <span class="class"><span class="keyword">class</span> <span class="title">ContainerBackgroundProcessor</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        Throwable t = <span class="keyword">null</span>;</div><div class="line">        String unexpectedDeathMessage = sm.getString(</div><div class="line">                <span class="string">"containerBase.backgroundProcess.unexpectedThreadDeath"</span>,</div><div class="line">                Thread.currentThread().getName());</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">while</span> (!threadDone) &#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    <span class="comment">// 在StandardEngine中构造方法设置默认backgroundProcessorDelay=10，即10s调用一次</span></div><div class="line">                    Thread.sleep(backgroundProcessorDelay * <span class="number">1000L</span>);</div><div class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                    <span class="comment">// Ignore</span></div><div class="line">                &#125;</div><div class="line">                <span class="keyword">if</span> (!threadDone) &#123;</div><div class="line">                    processChildren(ContainerBase.<span class="keyword">this</span>);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (RuntimeException|Error e) &#123;</div><div class="line">            t = e;</div><div class="line">            <span class="keyword">throw</span> e;</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">if</span> (!threadDone) &#123;</div><div class="line">                log.error(unexpectedDeathMessage, t);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</code></pre><p>3.在<code>processChildren()</code>方法中又调用其子组件Engine、Host、Context、Wrapper及其相关组件的<code>backgroundProcess()</code>方法。</p>
+<pre><code>`fireLifecycleEvent()`：对容器的监听对象发送Lifecycle.PERIODIC_EVENT事件，调用LifecycleListener的lifecycleEvent。
+
+<figure class="highlight java"><figcaption><span>ContainerBase.backgroundProcess()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Execute a periodic task, such as reloading, etc. This method will be</div><div class="line"> * invoked inside the classloading context of this container.</div><div class="line"> */</div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">backgroundProcess</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    ...</div><div class="line">    fireLifecycleEvent(Lifecycle.PERIODIC_EVENT, <span class="keyword">null</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+<figure class="highlight java"><figcaption><span>StandardContext.backgroundProcess()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">backgroundProcess</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (!getState().isAvailable())</div><div class="line">        <span class="keyword">return</span>;</div><div class="line"></div><div class="line">    Loader loader = getLoader();</div><div class="line">    <span class="keyword">if</span> (loader != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="comment">// WebappLoader</span></div><div class="line">            loader.backgroundProcess();</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            log.warn(sm.getString(</div><div class="line">                    <span class="string">"standardContext.backgroundProcess.loader"</span>, loader), e);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    Manager manager = getManager();</div><div class="line">    <span class="keyword">if</span> (manager != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            manager.backgroundProcess();</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            log.warn(sm.getString(</div><div class="line">                    <span class="string">"standardContext.backgroundProcess.manager"</span>, manager),</div><div class="line">                    e);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    WebResourceRoot resources = getResources();</div><div class="line">    <span class="keyword">if</span> (resources != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            resources.backgroundProcess();</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            log.warn(sm.getString(</div><div class="line">                    <span class="string">"standardContext.backgroundProcess.resources"</span>,</div><div class="line">                    resources), e);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">super</span>.backgroundProcess();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</code></pre><p>4.调用 WebappLoader 的<code>backgroundProcess()</code>方法，<code>reloadable</code>即为是否开启热部署，而<code>modified()</code>则是当前文件是否有修改的判断，当开启了热部署且有修改就会调用Context的reload方法进行重加载，实现web服务的<strong>热部署</strong>。<br><figure class="highlight java"><figcaption><span>WebappLoader.backgroundProcess()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">backgroundProcess</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (reloadable &amp;&amp; modified()) &#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            Thread.currentThread().setContextClassLoader</div><div class="line">                (WebappLoader.class.getClassLoader());</div><div class="line">            <span class="keyword">if</span> (context != <span class="keyword">null</span>) &#123;</div><div class="line">                context.reload();</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">if</span> (context != <span class="keyword">null</span> &amp;&amp; context.getLoader() != <span class="keyword">null</span>) &#123;</div><div class="line">                Thread.currentThread().setContextClassLoader</div><div class="line">                    (context.getLoader().getClassLoader());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="加载Web服务"><a href="#加载Web服务" class="headerlink" title="加载Web服务"></a>加载Web服务</h2><p>在上述BackgroundProcessor的第3步中，调用<code>fireLifecycleEvent()</code>方法对容器的监听对象发送<code>Lifecycle.PERIODIC_EVENT</code>事件。</p>
+<p>而在Digester<strong>解析</strong>规则定义阶段，Host的解析规则通过添加<code>HostRuleSet</code>完成，该类在对<code>StandardHost</code>解析时会增加一个<code>HostConfig</code>监听器。</p>
+<p><code>HostConfig</code>对该事件的响应方法<code>lifecycleEvent()</code>中调用其<code>check()</code>方法，在<code>check()</code>方法中会调用其<code>deployApps()</code>方法完成 Web Application的部署。</p>
+<blockquote>
+<p>部署的过程，其实就是创建了Context对象，并添加到Host中。</p>
+</blockquote>
+<figure class="highlight java"><figcaption><span>HostConfig</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">lifecycleEvent</span><span class="params">(LifecycleEvent event)</span> </span>&#123;</div><div class="line">	...</div><div class="line"></div><div class="line">    <span class="comment">// Process the event that has occurred</span></div><div class="line">    <span class="comment">// 事件对应的处理</span></div><div class="line">    <span class="keyword">if</span> (event.getType().equals(Lifecycle.PERIODIC_EVENT)) &#123;</div><div class="line">        check();</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event.getType().equals(Lifecycle.BEFORE_START_EVENT)) &#123;</div><div class="line">        beforeStart();</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event.getType().equals(Lifecycle.START_EVENT)) &#123;</div><div class="line">        start();</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event.getType().equals(Lifecycle.STOP_EVENT)) &#123;</div><div class="line">        stop();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Check status of all webapps.</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">check</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (host.getAutoDeploy()) &#123;</div><div class="line">        <span class="comment">// Check for resources modification to trigger redeployment</span></div><div class="line">        DeployedApplication[] apps =</div><div class="line">            deployed.values().toArray(<span class="keyword">new</span> DeployedApplication[<span class="number">0</span>]);</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; apps.length; i++) &#123;</div><div class="line">            <span class="keyword">if</span> (!isServiced(apps[i].name))</div><div class="line">                checkResources(apps[i], <span class="keyword">false</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// Check for old versions of applications that can now be undeployed</span></div><div class="line">        <span class="keyword">if</span> (host.getUndeployOldVersions()) &#123;</div><div class="line">            checkUndeploy();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// Hotdeploy applications</span></div><div class="line">        deployApps();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Deploy applications for any directories or WAR files that are found</div><div class="line"> * in our "application root" directory.</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">deployApps</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    File appBase = host.getAppBaseFile();</div><div class="line">    File configBase = host.getConfigBaseFile();</div><div class="line">    String[] filteredAppPaths = filterAppPaths(appBase.list());</div><div class="line">    <span class="comment">// Deploy XML descriptors from configBase</span></div><div class="line">    deployDescriptors(configBase, configBase.list());</div><div class="line">    <span class="comment">// Deploy WARs</span></div><div class="line">    deployWARs(appBase, filteredAppPaths);</div><div class="line">    <span class="comment">// Deploy expanded folders</span></div><div class="line">    deployDirectories(appBase, filteredAppPaths);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>WebApp由三种<strong>部署方式</strong>：</p>
+<ul>
+<li>在server.xml的Host标签中声明Context标签</li>
+<li>将war包放入webapps中</li>
+<li>context.xml配置方式</li>
+</ul>
+<p><strong>部署的过程</strong>：就是通过任务框架<code>ExecutorService</code>执行一个具体的部署任务（这些任务类作为<code>HostConfig</code>的内部类）。每个部署任务执行过程都有下面一块代码完成Context对象的实例化并为其添加一个<code>ContextConfig</code>监听器，以及将其添加到对应的Host中。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// StandardHost中configClass默认为"org.apache.catalina.startup.ContextConfig"</span></div><div class="line">Class&lt;?&gt; clazz = Class.forName(host.getConfigClass());</div><div class="line">LifecycleListener listener =</div><div class="line">    (LifecycleListener) clazz.newInstance();</div><div class="line">context.addLifecycleListener(listener);</div><div class="line"></div><div class="line">host.addChild(context);</div></pre></td></tr></table></figure></p>
+<h1 id="Wrapper加载"><a href="#Wrapper加载" class="headerlink" title="Wrapper加载"></a>Wrapper加载</h1><p>在上面的 Context 部署的过程中有一步是给 Context 添加<code>ContextConfig</code>监听器。<br>而在 StandardContext 的<code>startInternal()</code>方法中，发送了监听事件<code>CONFIGURE_START_EVENT</code>。</p>
+<figure class="highlight java"><figcaption><span>StandardContext.startInternal()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Notify our interested LifecycleListeners</span></div><div class="line">fireLifecycleEvent(Lifecycle.CONFIGURE_START_EVENT, <span class="keyword">null</span>);</div></pre></td></tr></table></figure>
+<p><code>ContextConfig</code>监听到该事件，调用<code>configureStart()</code>方法，在该方法中调用<code>webConfig()</code>完成web.xml解析，生成servlet、filter等信息，并配置加载Wrapper。</p>
+<blockquote>
+<p>Wrapper 代表一个 Servlet，它负责管理一个 Servlet，包括的 Servlet 的装载、初始化、执行以及资源回收。</p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/22/Tomcat-3-初始化和启动概述/" rel="next" title="Tomcat(3): 初始化和启动概述">
+                <i class="fa fa-chevron-left"></i> Tomcat(3): 初始化和启动概述
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">梦想还是要有的，万一实现了呢</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">109</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">131</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#初始化"><span class="nav-number">1.</span> <span class="nav-text">初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Server、Service解析"><span class="nav-number">1.1.</span> <span class="nav-text">Server、Service解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Engine、Host、Context解析"><span class="nav-number">1.2.</span> <span class="nav-text">Engine、Host、Context解析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Context容器加载web服务与热部署"><span class="nav-number">2.</span> <span class="nav-text">Context容器加载web服务与热部署</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#加载Web服务"><span class="nav-number">2.1.</span> <span class="nav-text">加载Web服务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Wrapper加载"><span class="nav-number">3.</span> <span class="nav-text">Wrapper加载</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = false;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title >= 0 || index_content >= 0 ){
+                                isMatch = true;
+								if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            } 
+							
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
