@@ -95,7 +95,7 @@
 
 初始化Container容器的初始化入口在org.apache.catalina.startup.Catalina类的load()方法中，其中调用了Digester digester = createStartDigester();得到Digester对象（其中设置了许多的解析规则），">
 <meta property="og:image" content="https://rogerfang.github.io/images/tomcat/tomcat-container.png">
-<meta property="og:updated_time" content="2017-01-23T07:48:45.672Z">
+<meta property="og:updated_time" content="2017-01-24T14:09:40.767Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Tomcat(4): Container初始化和加载">
 <meta name="twitter:description" content="Container分成4个级别的容器：Engine、Host、Context、Wrapper，它们是父子关系。
@@ -390,6 +390,8 @@
 <blockquote>
 <p>Wrapper 代表一个 Servlet，它负责管理一个 Servlet，包括的 Servlet 的装载、初始化、执行以及资源回收。</p>
 </blockquote>
+<hr>
+<p>感谢：<br>阿里技术专家，楚岩：<a href="https://yq.aliyun.com/tags/type_blog-tagid_2702/?spm=5176.8091938.0.0.FiZvcG" target="_blank" rel="external">Tomcat源码分析系列博客</a></p>
 
       
     </div>
@@ -422,6 +424,10 @@
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/24/Tomcat-5-Connector初始化和加载/" rel="prev" title="Tomcat(5): Connector初始化和加载">
+                Tomcat(5): Connector初始化和加载 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -489,7 +495,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">109</span>
+              <span class="site-state-item-count">110</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

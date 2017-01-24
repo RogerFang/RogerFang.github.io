@@ -4,6 +4,34 @@
   
     
     <entry>
+      <title><![CDATA[Tomcat(5): Connector初始化和加载]]></title>
+      <url>https://rogerfang.github.io/2017/01/24/Tomcat-5-Connector%E5%88%9D%E5%A7%8B%E5%8C%96%E5%92%8C%E5%8A%A0%E8%BD%BD/</url>
+      <content type="html"><![CDATA[<p>Connector 组件的主要任务：</p>
+<ol>
+<li>监听端口，创建服务端与客户端的连接；</li>
+<li>获取客户端请求的Socket数据，并对Socket数据进行解析和包装成Http请求数据格式；</li>
+<li>将包装后的数据交给Container处理。</li>
+</ol>
+<p>Connector有两个属性：<code>protocolHandler</code>（协议处理器）和<code>adapter</code>（适配器），其中<code>protocolHandler</code>完成步骤(1)(2)，<code>adapter</code>完成步骤(3)。</p>
+<p>三种不带Ajp的协议，客户端与Tomcat服务器<strong>直接连接</strong>：</p>
+<ul>
+<li>Http11NioProtocol———-默认方式，NIO方式的支持http1.1协议</li>
+<li>Http11Nio2Protocol———-NIO2方式的支持http1.1协议</li>
+<li>Http11AprProtocol———-使用ARP技术的支持http1.1协议（ARP：Apache portable runtime)</li>
+</ul>
+<p>三种带Ajp的协议为定向包协议，即WEB服务器通过 TCP连接和SERVLET容器连接，例如tomcat和Apache、Nginx等前端服务器连接：</p>
+<ul>
+<li>AjpNioProtocol—————NIO方式的支持Ajp协议</li>
+<li>AjpNio2Protocol—————NIO2方式的支持Ajp协议</li>
+<li>AjpAprProtocol—————使用ARP技术的支持Ajp协议</li>
+</ul>
+<h1 id="Connector配置"><a href="#Connector配置" class="headerlink" title="Connector配置"></a>Connector配置</h1><figure class="highlight xml"><figcaption><span>conf/server.xml</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">Connector</span> <span class="attr">port</span>=<span class="string">"8080"</span> <span class="attr">protocol</span>=<span class="string">"HTTP/1.1"</span> <span class="attr">connectionTimeout</span>=<span class="string">"20000"</span> <span class="attr">redirectPort</span>=<span class="string">"8443"</span> /&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">Connector</span> <span class="attr">port</span>=<span class="string">"8009"</span> <span class="attr">protocol</span>=<span class="string">"AJP/1.3"</span> <span class="attr">redirectPort</span>=<span class="string">"8443"</span> /&gt;</span></div></pre></td></tr></table></figure>
+<h1 id="Connector初始化"><a href="#Connector初始化" class="headerlink" title="Connector初始化"></a>Connector初始化</h1><h1 id="Connector启动"><a href="#Connector启动" class="headerlink" title="Connector启动"></a>Connector启动</h1><hr>
+<p>感谢：<br>阿里技术专家，楚岩：<a href="https://yq.aliyun.com/tags/type_blog-tagid_2702/?spm=5176.8091938.0.0.FiZvcG" target="_blank" rel="external">Tomcat源码分析系列博客</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[Tomcat(4): Container初始化和加载]]></title>
       <url>https://rogerfang.github.io/2017/01/23/Tomcat-4-Container%E5%88%9D%E5%A7%8B%E5%8C%96%E5%92%8C%E5%8A%A0%E8%BD%BD/</url>
       <content type="html"><![CDATA[<p>Container分成4个级别的容器：Engine、Host、Context、Wrapper，它们是父子关系。</p>
@@ -59,6 +87,8 @@
 <blockquote>
 <p>Wrapper 代表一个 Servlet，它负责管理一个 Servlet，包括的 Servlet 的装载、初始化、执行以及资源回收。</p>
 </blockquote>
+<hr>
+<p>感谢：<br>阿里技术专家，楚岩：<a href="https://yq.aliyun.com/tags/type_blog-tagid_2702/?spm=5176.8091938.0.0.FiZvcG" target="_blank" rel="external">Tomcat源码分析系列博客</a></p>
 ]]></content>
     </entry>
     

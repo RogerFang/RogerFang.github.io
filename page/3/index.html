@@ -272,6 +272,125 @@
             
               
                 
+                <a class="post-title-link" href="/2017/01/15/Lock-Condition/" itemprop="url">
+                  Lock: Condition
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-15T13:22:49+08:00" content="2017-01-15">
+              2017-01-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          任意一个Java对象，都拥有一组监视器方法（定义在java.lang.Object上），主要包括wait()、wait(long timeout)、notify()、notifyAll()，这些方法与synchronized关键字配合，可以实现等待/通知机制。
+Condition的作用是对锁进行更精
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/15/Lock-Condition/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/01/15/Lock-LockSupport/" itemprop="url">
                   Lock: LockSupport
                 </a>
@@ -1337,129 +1456,6 @@ final域的重排序规则对于final域编译器和处理器需要遵守两个�
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/07/JMM-顺序一致性/" itemprop="url">
-                  JMM: 顺序一致性
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-07T13:06:06+08:00" content="2017-01-07">
-              2017-01-07
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
-                    <span itemprop="name">Java SE</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          
-顺序一致性内存模型是一个理论参考模型。
-
-数据竞争与顺序一致性当程序未正确同步时，就会存在数据竞争。
-Java内存模型规范对数据竞争的定义：在一个线程中写一个变量，在另一个线程读同一个变量，而且写和读没有通过同步来排序。
-如果程序是正确同步的，程序的执行将具有顺序一致性。即程序的执行结果与该程序在
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/07/JMM-顺序一致性/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1505,7 +1501,7 @@ Java内存模型规范对数据竞争的定义：在一个线程中写一个变�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">109</span>
+              <span class="site-state-item-count">110</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
