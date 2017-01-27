@@ -84,15 +84,28 @@
 
 
 
-<meta name="description" content="梦想还是要有的，万一实现了呢">
-<meta property="og:type" content="website">
-<meta property="og:title" content="方龙的博客">
-<meta property="og:url" content="https://rogerfang.github.io/tags/CountDownLatch/index.html">
+<meta name="description" content="题目给定一个double类型的浮点数base和int类型的整数exponent。求base的exponent次方。不得使用库函数，同时不需要考虑大数问题。
+分析这个题目看似简单，但是有很多问题需要考虑。
+
+边界问题 当底数base是0且指数是负数时，需要做特殊处理。
+浮点型equal问题 计算机表示小数（float和double）都有误差，因而不能直接使用等号（==）进行比较。如果两个小数的差的绝">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SwordPointToOffer(11): 数值的整数次方">
+<meta property="og:url" content="https://rogerfang.github.io/2017/01/27/SwordPointToOffer-11-数值的整数次方/index.html">
 <meta property="og:site_name" content="方龙的博客">
-<meta property="og:description" content="梦想还是要有的，万一实现了呢">
+<meta property="og:description" content="题目给定一个double类型的浮点数base和int类型的整数exponent。求base的exponent次方。不得使用库函数，同时不需要考虑大数问题。
+分析这个题目看似简单，但是有很多问题需要考虑。
+
+边界问题 当底数base是0且指数是负数时，需要做特殊处理。
+浮点型equal问题 计算机表示小数（float和double）都有误差，因而不能直接使用等号（==）进行比较。如果两个小数的差的绝">
+<meta property="og:updated_time" content="2017-01-27T14:18:03.052Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="方龙的博客">
-<meta name="twitter:description" content="梦想还是要有的，万一实现了呢">
+<meta name="twitter:title" content="SwordPointToOffer(11): 数值的整数次方">
+<meta name="twitter:description" content="题目给定一个double类型的浮点数base和int类型的整数exponent。求base的exponent次方。不得使用库函数，同时不需要考虑大数问题。
+分析这个题目看似简单，但是有很多问题需要考虑。
+
+边界问题 当底数base是0且指数是负数时，需要做特殊处理。
+浮点型equal问题 计算机表示小数（float和double）都有误差，因而不能直接使用等号（==）进行比较。如果两个小数的差的绝">
 
 
 
@@ -113,10 +126,10 @@
 
 
 
-  <link rel="canonical" href="https://rogerfang.github.io/tags/CountDownLatch/"/>
+  <link rel="canonical" href="https://rogerfang.github.io/2017/01/27/SwordPointToOffer-11-数值的整数次方/"/>
 
 
-  <title> 标签: CountDownLatch | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title> SwordPointToOffer(11): 数值的整数次方 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -137,7 +150,7 @@
     
   
 
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left  ">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
@@ -248,46 +261,141 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        CountDownLatch
-        <small>标签</small>
-      </h2>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                SwordPointToOffer(11): 数值的整数次方
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-27T21:56:05+08:00" content="2017-01-27">
+              2017-01-27
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/SwordPointToOffer/" itemprop="url" rel="index">
+                    <span itemprop="name">SwordPointToOffer</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
+      
+        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>给定一个double类型的浮点数base和int类型的整数exponent。求base的exponent次方。<br>不得使用库函数，同时不需要考虑大数问题。</p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>这个题目看似简单，但是有很多问题需要考虑。</p>
+<ol>
+<li>边界问题<br> 当底数base是0且指数是负数时，需要做特殊处理。</li>
+<li>浮点型equal问题<br> 计算机表示小数（float和double）都有误差，因而不能直接使用等号（==）进行比较。如果两个小数的差的绝对值很小，就可以认为它们相等。</li>
+<li>效率问题<br> 可以不用进行exponent次乘法完成指数计算，比如：求一个树的32次方，如果已经计算得到了16次方，那么只需要在16次方的基础上再平方一次就可以了。</li>
+</ol>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NumberExponentialOperation</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">Power</span><span class="params">(<span class="keyword">double</span> base, <span class="keyword">int</span> exponent)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span>(equal(base, <span class="number">0.0</span>) &amp;&amp; exponent &lt; <span class="number">0</span>)&#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"invalid input"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">int</span> absExponent = exponent;</div><div class="line">        <span class="keyword">if</span>(exponent &lt; <span class="number">0</span>)&#123;</div><div class="line">            absExponent = -exponent;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">double</span> result = doPowerWithExponent(base, absExponent);</div><div class="line">        <span class="keyword">if</span>(exponent &lt; <span class="number">0</span>)&#123;</div><div class="line">            result = <span class="number">1.0</span>/result;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">double</span> <span class="title">doPowerWithExponent</span><span class="params">(<span class="keyword">double</span> base, <span class="keyword">int</span> exponent)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span>(exponent == <span class="number">0</span>)&#123;</div><div class="line">            <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span>(exponent == <span class="number">1</span>)&#123;</div><div class="line">            <span class="keyword">return</span> base;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">double</span> result = doPowerWithExponent(base, exponent &gt;&gt; <span class="number">1</span>);</div><div class="line">        result *= result;</div><div class="line">        <span class="keyword">if</span>((exponent &amp; <span class="number">0x1</span>) == <span class="number">1</span>)&#123;</div><div class="line">            result *= base;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">equal</span><span class="params">(<span class="keyword">double</span> d1, <span class="keyword">double</span> d2)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span>((d1 - d2 &gt; -<span class="number">0.0000001</span>) &amp;&amp; (d1 - d2 &lt; <span class="number">0.0000001</span>))&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;<span class="keyword">else</span></div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+      
+    </div>
 
-      <h1 class="post-title">
+    <div>
+      
         
-            <a class="post-title-link" href="/2017/01/15/Lock-并发工具类-CountDownLatch/" itemprop="url">
-              
-                <span itemprop="name">Lock: 并发工具类-CountDownLatch</span>
-              
-            </a>
+
+      
+    </div>
+
+    <div>
+      
         
-      </h1>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-01-15T14:20:41+08:00"
-              content="2017-01-15" >
-          01-15
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/26/SwordPointToOffer-10-二进制中1的个数/" rel="next" title="SwordPointToOffer(10): 二进制中1的个数">
+                <i class="fa fa-chevron-left"></i> SwordPointToOffer(10): 二进制中1的个数
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -295,6 +403,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -314,8 +426,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -376,6 +497,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#题目"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分析"><span class="nav-number">2.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现"><span class="nav-number">3.</span> <span class="nav-text">实现</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -472,6 +604,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
 
   
 
