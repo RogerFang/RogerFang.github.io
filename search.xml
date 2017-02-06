@@ -4,6 +4,133 @@
   
     
     <entry>
+      <title><![CDATA[SwordPointToOffer(35): 第一个只出现一次的字符]]></title>
+      <url>https://rogerfang.github.io/2017/02/06/SwordPointToOffer-35-%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8F%AA%E5%87%BA%E7%8E%B0%E4%B8%80%E6%AC%A1%E7%9A%84%E5%AD%97%E7%AC%A6/</url>
+      <content type="html"><![CDATA[<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>在字符串中找出第一个只出现一次的字符。如输入“abaccdeff”，则输出“b”。</p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>字符是长度为8的数据类型，一共有256种可能，可以用一个数组模拟哈希表记录统计的次数。</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FirstNotRepeatingChar</span> </span>&#123;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">handle</span><span class="params">(String str)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span> (str == <span class="keyword">null</span> || str.length() &lt;= <span class="number">0</span>)</div><div class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</div><div class="line">        </div><div class="line">        <span class="keyword">char</span>[] chars = str.toCharArray();</div><div class="line">        <span class="keyword">int</span>[] hashTable = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">256</span>];</div><div class="line">        </div><div class="line">        <span class="keyword">for</span> (<span class="keyword">char</span> c: chars)&#123;</div><div class="line">            hashTable[c]++;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; chars.length; i++)&#123;</div><div class="line">            <span class="keyword">if</span> (hashTable[chars[i]] == <span class="number">1</span>)</div><div class="line">                <span class="keyword">return</span> i;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[SwordPointToOffer(34): 丑数]]></title>
+      <url>https://rogerfang.github.io/2017/02/06/SwordPointToOffer-34-%E4%B8%91%E6%95%B0/</url>
+      <content type="html"><![CDATA[<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>我们把只包含因子2、3和5的数称作丑数。求按从小到大的顺序的第1500个丑数。例如6、8都是丑数，但14不是，习惯上把1称为第一个丑数。</p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><p>逐个判断每个整数是不是丑数，直观但不够高效。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isUgly</span><span class="params">(<span class="keyword">int</span> num)</span></span>&#123;</div><div class="line">	<span class="keyword">while</span>(num%<span class="number">2</span> == <span class="number">0</span>)</div><div class="line">    	num /= <span class="number">2</span>;</div><div class="line">	<span class="keyword">while</span>(num%<span class="number">3</span> == <span class="number">0</span>)</div><div class="line">    	num /= <span class="number">3</span>;</div><div class="line">	<span class="keyword">while</span>(num%<span class="number">5</span> == <span class="number">0</span>)</div><div class="line">    	num /= <span class="number">5</span>;</div><div class="line">	<span class="keyword">return</span> num == <span class="number">1</span>?<span class="keyword">true</span>:<span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><p>保存已经找到丑数，用空间换时间的解法。</p>
+<p>根据丑数的定义， 丑数应该是另一个丑数乘以 2、3 或者 5 的结果（1 除外）。因此我们可以创建一个数组，里面的数字是排好序的丑数，每一个丑数都是前面的丑数乘以 2、3 或者 5 得到的。</p>
+<p>把已有的每个丑数分别都乘以 2、3 和 5，事实上这不是必须的。因为已有的丑数是按顺序存放在数组中的。对乘以 2 而言， 肯定存在某一个丑数 T2，排在它之前的每一个丑数乘以 2 得到的结果都会小于已有最大的丑数，在它之后的每一个丑数乘以 2 得到的结果都会太大。我们只需<strong>记下这个丑数的位置</strong>， 同时每次生成新的丑数的时候，去更新这个 T2。对乘以 3 和 5 而言， 也存在着同样的 T3 和 T5。</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><figure class="highlight java"><figcaption><span>方法二</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UglyNumber</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">handle</span><span class="params">(<span class="keyword">int</span> index)</span></span>&#123;</div><div class="line">        ArrayList&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">        list.add(<span class="number">1</span>);</div><div class="line">        <span class="keyword">int</span> t2 = <span class="number">0</span>;</div><div class="line">        <span class="keyword">int</span> t3 = <span class="number">0</span>;</div><div class="line">        <span class="keyword">int</span> t5 = <span class="number">0</span>;</div><div class="line">        <span class="keyword">while</span> (list.size() &lt; index)&#123;</div><div class="line">            <span class="keyword">int</span> m2 = list.get(t2) * <span class="number">2</span>;</div><div class="line">            <span class="keyword">int</span> m3 = list.get(t3) * <span class="number">3</span>;</div><div class="line">            <span class="keyword">int</span> m5 = list.get(t5) * <span class="number">5</span>;</div><div class="line">            <span class="keyword">int</span> min  = min(m2, m3, m5);</div><div class="line">            list.add(min);</div><div class="line">            <span class="keyword">if</span> (m2 == min) t2++;</div><div class="line">            <span class="keyword">if</span> (m3 == min) t3++;</div><div class="line">            <span class="keyword">if</span> (m5 == min) t5++;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> list.get(index - <span class="number">1</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">min</span><span class="params">(<span class="keyword">int</span> m2, <span class="keyword">int</span> m3, <span class="keyword">int</span> m5)</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> Math.min(m2, Math.min(m3, m5));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[SwordPointToOffer(33): 把数组排成最小的数]]></title>
+      <url>https://rogerfang.github.io/2017/02/06/SwordPointToOffer-33-%E6%8A%8A%E6%95%B0%E7%BB%84%E6%8E%92%E6%88%90%E6%9C%80%E5%B0%8F%E7%9A%84%E6%95%B0/</url>
+      <content type="html"><![CDATA[<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>输入一个正整数数组，把数组里所有数字都拼接起来排成一个数，打印能拼接处的所有数字中最小的一个。例如输入数组{3,32,321}，则打印出能排成的最小数字321323。</p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><p>求出所有数字的全排列，然后拼接起来，最后求出最大值。n个数字总共有 $n!$个排列。</p>
+<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><p>找到一个排序规则，数组根据这个规则排序之后能排成一个最小的数字。要确定排序规则，就要比较两个数字，也就是给出两个数字 m 和 n，我们需要确定一个规则判断 m 和 n 哪个应该排在前面，而不是仅仅比较这两个数字的值哪个更大。</p>
+<p>两个数a和b，排序规则如下：</p>
+<ul>
+<li>若ab &gt; ba 则 a &gt; b，</li>
+<li>若ab &lt; ba 则 a &lt; b，</li>
+<li>若ab = ba 则 a = b；</li>
+</ul>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.Arrays;</div><div class="line"><span class="keyword">import</span> java.util.Comparator;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SortArrayForMinNumber</span> </span>&#123;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">handle</span><span class="params">(<span class="keyword">int</span>[] data)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span> (data == <span class="keyword">null</span> || data.length == <span class="number">0</span>)</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        String[] strings = <span class="keyword">new</span> String[data.length];</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; data.length; ++i)&#123;</div><div class="line">            <span class="keyword">if</span> (data[i] &lt;= <span class="number">0</span>)</div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"invalid input!"</span>);</div><div class="line">            strings[i] = String.valueOf(data[i]);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        Arrays.sort(strings, <span class="keyword">new</span> Comparator&lt;String&gt;() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(String o1, String o2)</span> </span>&#123;</div><div class="line">                String s1 = o1 + o2;</div><div class="line">                String s2 = o2 + o1;</div><div class="line">                <span class="keyword">return</span> s1.compareTo(s2);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        StringBuilder sb = <span class="keyword">new</span> StringBuilder();</div><div class="line">        <span class="keyword">for</span> (String s: strings)&#123;</div><div class="line">            sb.append(s);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> sb.toString();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[SwordPointToOffer(32): 从1到n整数中1出现的次数]]></title>
+      <url>https://rogerfang.github.io/2017/02/06/SwordPointToOffer-32-%E4%BB%8E1%E5%88%B0n%E6%95%B4%E6%95%B0%E4%B8%AD1%E5%87%BA%E7%8E%B0%E7%9A%84%E6%AC%A1%E6%95%B0/</url>
+      <content type="html"><![CDATA[<p>#题目<br>输入一个整数n，求从1到n这n个整数的十进制表示中1出现的次数。例如输入12，从1到12这些整数中国包含1的数字有1,10,11和12，1一共出现了5次。</p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>如果直接累加1到n中每个整数出现1的次数，采用做除法和求余运算以求出该数字中1出现的次数。如果输入数字n，n有$O(\log{n})$位，因此该算法的时间复杂度是$O(n\log{n})$。运算效率不高。</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p><strong>从数字规律着手明显提高时间效率的解法</strong>。</p>
+<p><strong>数字的规律</strong>：<br>从右往左，给每位标号1,2,3…，当统计x的次数时，需要分两种情况讨论：$x\in[1,9]$和 $x=0$。</p>
+<h3 id="x-in-1-9-情况"><a href="#x-in-1-9-情况" class="headerlink" title="$x\in[1,9]$情况"></a>$x\in[1,9]$情况</h3><p>第<code>i</code>位上的数字记为<code>t</code>时，高位记为<code>a</code>，低位记为<code>b</code>，因此一个整数可以记为<code>atb</code>形式。<br>分下面三种情况：</p>
+<ol>
+<li>当<code>t &lt; x</code>时，高位可取<code>[0, a-1]</code>，第i位的计数为 $a\times10^{i-1}$。</li>
+<li>当<code>t = x</code>时，高位可取<code>[0, a]</code>，此时还受低位的影响，第i位的计数为 $a\times10^{i-1} + (b+1)$。</li>
+<li>当<code>t &gt; x</code>时，高位可取<code>[0, a]</code>，此时不受低位的影响，第i位的计数为 $(a+1)\times10^{i-1}$。</li>
+</ol>
+<h3 id="x-0-情况"><a href="#x-0-情况" class="headerlink" title="$x=0$情况"></a>$x=0$情况</h3><p>第<code>i</code>位上的数字记为<code>t</code>时，高位记为<code>a</code>，低位记为<code>b</code>，因此一个整数可以记为<code>atb</code>形式。<br>分下面两种种情况：</p>
+<ol>
+<li>当<code>t = 0</code>时，高位可取<code>[1, a]</code>，此时还受低位的影响，第i位的计数为 $(a-1)\times10^{i-1} + (b+1)$。</li>
+<li>当<code>t &gt; 0</code>时，高位可取<code>[1, a]</code>，此时不受低位的影响，第i位的计数为 $a\times10^{i-1}$。</li>
+</ol>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 求出1到n整数中出现x(1&lt;=x&lt;=9)的次数</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NumberOfX</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        System.out.println(handle(<span class="number">13</span>, <span class="number">1</span>));</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">handle</span><span class="params">(<span class="keyword">int</span> num, <span class="keyword">int</span> x)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (num &lt; <span class="number">1</span>)</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"invalid input!"</span>);</div><div class="line"></div><div class="line">        <span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line">        <span class="keyword">int</span> high = num;</div><div class="line">        <span class="keyword">int</span> low, cur, tmp;</div><div class="line">        <span class="keyword">int</span> i = <span class="number">1</span>;</div><div class="line">        <span class="keyword">while</span> (high != <span class="number">0</span>) &#123;</div><div class="line">            high = num / (<span class="keyword">int</span>) Math.pow(<span class="number">10</span>, i);</div><div class="line">            tmp = num % (<span class="keyword">int</span>) Math.pow(<span class="number">10</span>, i);</div><div class="line">            cur = tmp / (<span class="keyword">int</span>) Math.pow(<span class="number">10</span>, i - <span class="number">1</span>);</div><div class="line">            low = tmp % (<span class="keyword">int</span>) Math.pow(<span class="number">10</span>, i - <span class="number">1</span>);</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (cur == x) &#123;</div><div class="line">                sum += high * (<span class="keyword">int</span>) Math.pow(<span class="number">10</span>, i - <span class="number">1</span>) + low + <span class="number">1</span>;</div><div class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (cur &lt; x) &#123;</div><div class="line">                sum += high * (<span class="keyword">int</span>) Math.pow(<span class="number">10</span>, i - <span class="number">1</span>);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                sum += (high + <span class="number">1</span>) * (<span class="keyword">int</span>) Math.pow(<span class="number">10</span>, i - <span class="number">1</span>);</div><div class="line">            &#125;</div><div class="line">            ++i;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> sum;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[SwordPointToOffer(31): 连续子数组的最大和]]></title>
+      <url>https://rogerfang.github.io/2017/02/06/SwordPointToOffer-31-%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%A4%A7%E5%92%8C/</url>
+      <content type="html"><![CDATA[<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>输入一个整型数组，数组里有正数也有负数。数组中一个或连续的多个正数组成一个子数组。求所有子数组的和的最大值。要求时间复杂度为O(n)。</p>
+<p>例如：输入的数组为{1,-2,3,10,-4,7,2,-5}，和最大的子数组为{3,10,-4,7,2}，因此输出为该子数组的和18。</p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>如果使用枚举所有子数组进行求和比较，长度为n的数组由 n(n+1)/2 个子数组，因而时间复杂度是$O(n^2)$。</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p><strong>举例分析数组的规律</strong></p>
+<p>试着从头到尾逐个累加示例数组中的每个数字。初始化和为 0。第一步加上第一个数字 1， 此时和为 1。接下来第二步加上数字 -2，和就变成了 -1。第三步刷上数字3。我们注意到由于此前累计的和是 －1 ，小于 0，那如果用-1 加上 3 ，得到的和是 2 ， 比 3 本身还小。也就是说从第一个数字开始的子数组的和会小于从第三个数字开始的子数组的和。因此我们不用考虑从第一个数字开始的子数组，之前累计的和也被抛弃。</p>
+<p>从第三个数字重新开始累加，此时得到的和是 3。接下来第四步加 10，得到和为 13 。第五步加上 -4， 和为 9。我们发现由于 -4 是一个负数，因此累加 -4 之后得到的和比原来的和还要小。因此我们要把之前得到的和 13 保存下来，它有可能是最大的子数组的和。第六步加上数字 7，9 加 7 的结果是 16，此时和比之前最大的和 13 还要大， 把最大的子数组的和由 13 更新为 16。第七步加上 2，累加得到的和为 18，同时我们也要更新最大子数组的和。第八步加上最后一个数字 -5，由于得到的和为 13 ，小于此前最大的和 18，因此最终最大的子数组的和为 18 ，对应的子数组是｛3, 10, -4, 7, 2｝。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>操作</th>
+<th>累加的子数组和</th>
+<th>最大的子数组和</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>加1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>加-2</td>
+<td>-1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>抛弃前面的和-1，加3</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>加10</td>
+<td>13</td>
+<td>13</td>
+</tr>
+<tr>
+<td>5</td>
+<td>加-4</td>
+<td>9</td>
+<td>13</td>
+</tr>
+<tr>
+<td>6</td>
+<td>加7</td>
+<td>16</td>
+<td>16</td>
+</tr>
+<tr>
+<td>7</td>
+<td>加2</td>
+<td>18</td>
+<td>18</td>
+</tr>
+<tr>
+<td>8</td>
+<td>加-5</td>
+<td>13</td>
+<td>18</td>
+</tr>
+</tbody>
+</table>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GreatestSumOfSubarrays1</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span>[] data1 = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">1</span>,-<span class="number">2</span>,<span class="number">3</span>,<span class="number">10</span>,-<span class="number">4</span>,<span class="number">7</span>,<span class="number">2</span>,-<span class="number">5</span>&#125;;</div><div class="line">        <span class="keyword">int</span>[] data2 = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;-<span class="number">5</span>,-<span class="number">2</span>,-<span class="number">1</span>,-<span class="number">6</span>,-<span class="number">9</span>&#125;;</div><div class="line">        </div><div class="line">        System.out.println(handle(data1));</div><div class="line">        System.out.println(handle(data2));</div><div class="line"></div><div class="line">        <span class="comment">// System.out.println(0x7fffffff);</span></div><div class="line">        <span class="comment">// System.out.println(0x80000000);</span></div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">handle</span><span class="params">(<span class="keyword">int</span>[] data)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span> (data == <span class="keyword">null</span> || data.length &lt;= <span class="number">0</span>)</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"invalid input!"</span>);</div><div class="line">        </div><div class="line">        <span class="keyword">int</span> cumulativeSum = <span class="number">0</span>;</div><div class="line">        <span class="keyword">int</span> greatestSum = <span class="number">0x80000000</span>;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; data.length; i++)&#123;</div><div class="line">            <span class="keyword">if</span> (cumulativeSum &lt;= <span class="number">0</span>)&#123;</div><div class="line">                cumulativeSum = data[i];</div><div class="line">            &#125;<span class="keyword">else</span> &#123;</div><div class="line">                cumulativeSum += data[i];</div><div class="line">            &#125;</div><div class="line">            </div><div class="line">            <span class="keyword">if</span> (cumulativeSum &gt; greatestSum)&#123;</div><div class="line">                greatestSum = cumulativeSum;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> greatestSum;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[SwordPointToOffer(30): 最小的k个数]]></title>
       <url>https://rogerfang.github.io/2017/02/06/SwordPointToOffer-30-%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E6%95%B0/</url>
       <content type="html"><![CDATA[<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>输入n个整数，找出其中最小的k个数。例如输入 4、5、1、6、2、7、3、8，则最小的4个数字是1、2、3、4。</p>
