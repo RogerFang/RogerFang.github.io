@@ -4,6 +4,29 @@
   
     
     <entry>
+      <title><![CDATA[Java 内存管理]]></title>
+      <url>https://rogerfang.github.io/2017/02/12/Java-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</url>
+      <content type="html"><![CDATA[<h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><p>Java 的内存管理就是对象的分配和释放问题。</p>
+<p><strong>分配</strong> ：内存的分配是由程序完成的，程序员需要通过关键字<code>new</code>为每个对象申请内存空间 (基本类型除外)，所有的对象都在堆 (Heap)中分配空间。</p>
+<p><strong>释放</strong> ：对象的释放是由<strong>垃圾回收机制</strong>决定和执行的，这样做确实简化了程序员的工作。但同时，它也加重了 JVM 的工作。因为，GC 为了能够正确释放对象，GC 必须监控每一个对象的运行状态，包括对象的申请、引用、被引用、赋值等，GC 都需要进行监控。</p>
+<h1 id="内存泄漏"><a href="#内存泄漏" class="headerlink" title="内存泄漏"></a>内存泄漏</h1><p>在 Java 中，内存泄漏就是存在一些被分配的对象，这些对象有下面两个特点：</p>
+<ul>
+<li>首先，这些<strong>对象是可达的</strong>，即在有向图中，存在通路可以与其相连（也就是说仍存在该内存对象的引用）；</li>
+<li>其次，这些<strong>对象是无用的</strong>，即程序以后不会再使用这些对象。<br>如果对象满足这两个条件，这些对象就可以判定为 Java 中的内存泄漏，这些对象不会被 GC 所回收，然而它却占用内存。</li>
+</ul>
+<h1 id="内存分配策略"><a href="#内存分配策略" class="headerlink" title="内存分配策略"></a>内存分配策略</h1><p>几条普遍的内存分配规则：</p>
+<ul>
+<li>对象优先在Eden分配：大多数情况下，对象在新生代Eden区中分配。当Eden区没有足够的空间进行分配的时候，虚拟机将发起一次Minor GC。</li>
+<li>大对象直接进入老年代：所谓大对象指的是需要大量连续内存空间的Java对象，最典型的的大对象就是那种很长的字符串及数组。</li>
+<li>长期存活的对象将进入老年代：虚拟机给每个对象定义了一个对象年龄计数器。如果对象在Eden每熬过一次Minor GC，年龄增加1，当年龄增加到一定成都，就会晋升到老年代中。</li>
+</ul>
+<h1 id="垃圾回收机制"><a href="#垃圾回收机制" class="headerlink" title="垃圾回收机制"></a>垃圾回收机制</h1><p>垃圾回收是一种<strong>动态存储管理</strong>技术，它自动地释放不再被程序引用的对象，按照特定的垃圾收集算法来实现资源自动回收的功能。当一个对象不再被引用的时候，内存回收它占领的空间，以便空间被后来的新对象使用，以免造成内存泄露。</p>
+<p>垃圾收集器是自动运行的，一般情况下，无需显示的请求垃圾收集器，程序运行时，垃圾收集器会不时检查对象的各个引用，并回收无引用对象所占用的空间。调用System类中的静态方法 gc() 可以运行垃圾收集器，但并不能保证立即回收指定对象。</p>
+<p>具体请看：<a href="https://rogerfang.github.io/2017/01/05/JVM-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/">JVM: 垃圾回收机制</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[Java 序列化]]></title>
       <url>https://rogerfang.github.io/2017/02/12/Java-%E5%BA%8F%E5%88%97%E5%8C%96/</url>
       <content type="html"><![CDATA[<p>Java序列化技术的基础是被序列化的类需要实现 Serializable 接口，使用 ObjectInputStream 和 ObjectOutputStream 进行对象的读写。</p>
