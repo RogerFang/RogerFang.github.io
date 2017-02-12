@@ -86,7 +86,7 @@
 
 <meta name="description" content="垃圾回收可以有效的防止内存泄露，有效的使用空闲的内存。Java堆和方法区的内存分配和回收是动态的，因而垃圾收集器所关注的也是这部分内存。
 垃圾收集机制要考虑的两件事情：（1）发现无用对象（如何判断对象是否还“存活”）；（2）回收被无用对象占用的内存空间，使该空间可被程序再次使用（垃圾收集算法）。
-对象“存活”？垃圾回收的第一件事情就是要确定堆内存中有哪些对象还“存活”，哪写已“死去”。
+对象“存活”？垃圾回收的第一件事情就是要确定堆内存中有哪些对象还“存活”，哪些已“死去”。
 引用计数法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM: 垃圾回收机制">
@@ -94,14 +94,14 @@
 <meta property="og:site_name" content="方龙的博客">
 <meta property="og:description" content="垃圾回收可以有效的防止内存泄露，有效的使用空闲的内存。Java堆和方法区的内存分配和回收是动态的，因而垃圾收集器所关注的也是这部分内存。
 垃圾收集机制要考虑的两件事情：（1）发现无用对象（如何判断对象是否还“存活”）；（2）回收被无用对象占用的内存空间，使该空间可被程序再次使用（垃圾收集算法）。
-对象“存活”？垃圾回收的第一件事情就是要确定堆内存中有哪些对象还“存活”，哪写已“死去”。
+对象“存活”？垃圾回收的第一件事情就是要确定堆内存中有哪些对象还“存活”，哪些已“死去”。
 引用计数法">
-<meta property="og:updated_time" content="2017-01-05T16:03:21.471Z">
+<meta property="og:updated_time" content="2017-02-12T05:04:26.284Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM: 垃圾回收机制">
 <meta name="twitter:description" content="垃圾回收可以有效的防止内存泄露，有效的使用空闲的内存。Java堆和方法区的内存分配和回收是动态的，因而垃圾收集器所关注的也是这部分内存。
 垃圾收集机制要考虑的两件事情：（1）发现无用对象（如何判断对象是否还“存活”）；（2）回收被无用对象占用的内存空间，使该空间可被程序再次使用（垃圾收集算法）。
-对象“存活”？垃圾回收的第一件事情就是要确定堆内存中有哪些对象还“存活”，哪写已“死去”。
+对象“存活”？垃圾回收的第一件事情就是要确定堆内存中有哪些对象还“存活”，哪些已“死去”。
 引用计数法">
 
 
@@ -305,8 +305,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
-                    <span itemprop="name">Java SE</span>
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
                   </a>
                 </span>
 
@@ -340,7 +340,7 @@
       
         <p>垃圾回收可以有效的防止内存泄露，有效的使用空闲的内存。<strong>Java堆</strong>和<strong>方法区</strong>的内存分配和回收是动态的，因而垃圾收集器所关注的也是这部分内存。</p>
 <p>垃圾收集机制要考虑的两件事情：<br>（1）发现无用对象（如何判断对象是否还“存活”）；<br>（2）回收被无用对象占用的内存空间，使该空间可被程序再次使用（垃圾收集算法）。</p>
-<h1 id="对象“存活”？"><a href="#对象“存活”？" class="headerlink" title="对象“存活”？"></a>对象“存活”？</h1><p>垃圾回收的第一件事情就是要确定堆内存中有哪些对象还“存活”，哪写已“死去”。</p>
+<h1 id="对象“存活”？"><a href="#对象“存活”？" class="headerlink" title="对象“存活”？"></a>对象“存活”？</h1><p>垃圾回收的第一件事情就是要确定堆内存中有哪些对象还“存活”，哪些已“死去”。</p>
 <h2 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h2><p>引用计数（Reference Counting）是垃圾收集器中的早期策略。在这种方法中，堆中每个对象实例都有一个引用计数。</p>
 <p>当一个对象被创建时，且将该对象实例分配给一个变量，该变量计数设置为1。当任何其它变量被赋值为这个对象的引用时，计数加1；但当一个对象实例的某个引用超过了生命周期或者被设置为一个新值时，对象实例的引用计数器减1。任何引用计数器为0的对象实例可以被当作垃圾收集。当一个对象实例被垃圾收集时，它引用的任何对象实例的引用计数器减1。</p>
 <ul>
@@ -495,7 +495,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">174</span>
+              <span class="site-state-item-count">175</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -503,7 +503,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -512,7 +512,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">133</span>
+                <span class="site-state-item-count">134</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

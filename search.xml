@@ -4,6 +4,30 @@
   
     
     <entry>
+      <title><![CDATA[Java 序列化]]></title>
+      <url>https://rogerfang.github.io/2017/02/12/Java-%E5%BA%8F%E5%88%97%E5%8C%96/</url>
+      <content type="html"><![CDATA[<p>Java序列化技术的基础是被序列化的类需要实现 Serializable 接口，使用 ObjectInputStream 和 ObjectOutputStream 进行对象的读写。</p>
+<h1 id="默认的序列化机制"><a href="#默认的序列化机制" class="headerlink" title="默认的序列化机制"></a>默认的序列化机制</h1><p>如果仅仅只是让某个类实现Serializable接口，而没有其它任何处理的话，则就是使用默认序列化机制。使用默认机制，在序列化对象时，不仅会序列化当前对象本身，还会对该对象引用的其它对象也进行序列化，同样地，这些其它对象引用的另外对象也将被序列化，以此类推。所以，如果一个对象包含的成员变量是容器类对象，而这些容器所含有的元素也是容器类对象，那么这个序列化的过程就会较复杂，开销也较大。</p>
+<h1 id="序列化ID"><a href="#序列化ID" class="headerlink" title="序列化ID"></a>序列化ID</h1><p>虚拟机是否允许反序列化，不仅取决于<strong>类路径</strong>和<strong>功能代码</strong>是否一致，一个非常重要的一点是两个类的<strong>序列化 ID 是否一致</strong>（就是 private static final long serialVersionUID = 1L）。</p>
+<p>序列化ID生成有两种策略：一种是固定的 1L，另一种是随机生成一个不重复的long类型数据。服务端随机生成的序列化 ID 的作用是，有些时候，通过改变序列化 ID 可以用来限制某些客户端的使用（<strong>版本更新</strong>）。</p>
+<h1 id="静态变量序列化"><a href="#静态变量序列化" class="headerlink" title="静态变量序列化"></a>静态变量序列化</h1><p><strong>序列化不保存静态变量。</strong></p>
+<h1 id="父类的序列化和Transient关键字"><a href="#父类的序列化和Transient关键字" class="headerlink" title="父类的序列化和Transient关键字"></a>父类的序列化和Transient关键字</h1><p>一个子类实现了 Serializable 接口，要想将父类对象也序列化，就需要让<strong>父类也实现 Serializable接口</strong>。如果父类不实现的话，就需要有<strong>默认的无参构造函数</strong>。</p>
+<p>在父类没有实现 Serializable接口时，虚拟机不会序列化父对象，而一个 Java 对象的构造必须先有父对象，才有子对象，反序列化也不例外。所以反序列化时，为了构造父对象，只能调用父类的无参构造函数作为默认的父对象。</p>
+<p>Transient 关键字的作用是控制变量的序列化，在变量声明前加上该关键字，可以阻止该变量被序列化到文件中，在被反序列化后，transient 变量的值被设为初始值，如 int 型的是 0，对象型的是 null。</p>
+<h1 id="敏感字段加密"><a href="#敏感字段加密" class="headerlink" title="敏感字段加密"></a>敏感字段加密</h1><p>在序列化过程中，虚拟机会试图调用对象类里的 writeObject 和 readObject 方法，进行用户自定义的序列化和反序列化，如果没有这样的方法，则默认调用是 ObjectOutputStream 的 defaultWriteObject 方法以及 ObjectInputStream 的 defaultReadObject 方法。用户自定义的 writeObject 和 readObject 方法可以允许用户控制序列化的过程，比如可以在序列化的过程中动态改变序列化的数值。基于这个原理，可以在实际应用中得到使用，用于敏感字段的加密工作。</p>
+<h1 id="序列化存储规则"><a href="#序列化存储规则" class="headerlink" title="序列化存储规则"></a>序列化存储规则</h1><p>Java 序列化机制为了节省磁盘空间，具有特定的存储规则，当写入文件的为<strong>同一对象</strong>时，并不会再将对象的内容进行存储，而只是再次存储一份引用，增加的字节存储空间就是新增引用和一些控制信息的空间。反序列化时，恢复引用关系，多个引用指向唯一的对象，二者相等。存储规则极大的节省了存储空间。</p>
+<p>将一对象两次进行序列化保存时，写入一次后修改对象属性值再次保存第二次，这种情况下，虚拟机根据引用关系知道有一个相同对象已经写入到文件中，因此只保存第二次写的引用。所以读取时，都是第一次保存的对象。</p>
+<h1 id="Externalizable接口"><a href="#Externalizable接口" class="headerlink" title="Externalizable接口"></a>Externalizable接口</h1><p>无论是使用<code>transient</code>关键字，还是使用<code>writeObject()</code>和<code>readObject()</code>方法，其实都是基于<code>Serializable</code>接口的序列化。JDK中提供了另一个序列化接口–<code>Externalizable</code>，使用该接口之后，之前基于 Serializable 接口的序列化机制就将失效。</p>
+<p><code>Externalizable</code>继承于Serializable，当使用该接口时，序列化的细节需要由程序员去完成。如果<code>writeExternal()</code>与<code>readExternal()</code>方法未作任何处理，那么该序列化行为将不会保存/读取任何一个字段。</p>
+<p>另外，若使用<code>Externalizable</code>进行序列化，当读取对象时，<strong>会调用被序列化类的无参构造器去（而且是public修饰）创建一个新的对象</strong>，然后再将被保存对象的字段的值分别填充到新对象中。（<code>Serializable</code>不会调用任何构造方法，而是直接还原对象）</p>
+<h1 id="readResovle-序列化时的对象替换"><a href="#readResovle-序列化时的对象替换" class="headerlink" title="readResovle()序列化时的对象替换"></a>readResovle()序列化时的对象替换</h1><p>在有些情况下，可能会希望在序列化的时候使用另外一个对象来代替当前对象。</p>
+<p>其中的动机可能是当前对象中包含了一些不希望被序列化的域，比如这些域都是从另外一个域派生而来的；也可能是希望隐藏实际的类层次结构；还有可能是添加自定义的对象管理逻辑，如保证某个类在JVM中只有一个实例。<br>相对于把无关的域都设成transient来说，使用对象替换是一个更好的选择，提供了更多的灵活性。</p>
+<hr>
+<p>感谢：<br><a href="https://www.ibm.com/developerworks/cn/java/j-lo-serial/#ibm-pcon" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/java/j-lo-serial/#ibm-pcon</a><br><a href="http://www.blogjava.net/jiangshachina/archive/2012/02/13/369898.html" target="_blank" rel="external">http://www.blogjava.net/jiangshachina/archive/2012/02/13/369898.html</a><br><a href="http://www.infoq.com/cn/articles/cf-java-object-serialization-rmi" target="_blank" rel="external">http://www.infoq.com/cn/articles/cf-java-object-serialization-rmi</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[SwordPointToOffer(66): 矩阵中的路径]]></title>
       <url>https://rogerfang.github.io/2017/02/11/SwordPointToOffer-66-%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/</url>
       <content type="html"><![CDATA[<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>请设计一个函数，用来判断在一个矩阵中是否存在一条包含某字符串所有字符的路径。路径可以从矩阵中的任意一个格子开始，每一步可以在矩阵中向左，向右，向上，向下移动一个格子。如果一条路径经过了矩阵中的某一个格子，则该路径不能再进入该格子。 例如 a b c e s f c s a d e e 矩阵中包含一条字符串”bccced”的路径，但是矩阵中不包含”abcb”路径，因为字符串的第一个字符b占据了矩阵中的第一行第二个格子之后，路径不能再次进入该格子。</p>
@@ -2132,7 +2156,7 @@
       <title><![CDATA[JVM: 垃圾收集器]]></title>
       <url>https://rogerfang.github.io/2017/01/05/JVM-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/</url>
       <content type="html"><![CDATA[<p>垃圾收集算法是内存回收的方法论，垃圾收集器是内存回收的具体实现。</p>
-<p>HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用于新生代和老年代的收集器，如果两个收集器之间存在连线，就说明可以搭配使用。<br><img src="../images/jvm/jvm-gc.png" alt=""></p>
+<p>HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用于新生代和老年代的收集器，如果两个收集器之间存在连线，就说明可以搭配使用。<br><img src="/images/jvm/jvm-gc.png" alt=""></p>
 <h1 id="并发和并行"><a href="#并发和并行" class="headerlink" title="并发和并行"></a>并发和并行</h1><ul>
 <li>并行（Parallel）：并行就是同时执行。<br>  多条垃圾收集线程并行工作，但用户线程仍处于等待状态。</li>
 <li>并发（Concurrent）：多个操作可以在重叠的时间段内就那些。<br>  用户线程与垃圾收集线程同时执行，但不一定是并行执行，可能会交替执行。</li>
@@ -2210,7 +2234,7 @@
       <url>https://rogerfang.github.io/2017/01/05/JVM-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/</url>
       <content type="html"><![CDATA[<p>垃圾回收可以有效的防止内存泄露，有效的使用空闲的内存。<strong>Java堆</strong>和<strong>方法区</strong>的内存分配和回收是动态的，因而垃圾收集器所关注的也是这部分内存。</p>
 <p>垃圾收集机制要考虑的两件事情：<br>（1）发现无用对象（如何判断对象是否还“存活”）；<br>（2）回收被无用对象占用的内存空间，使该空间可被程序再次使用（垃圾收集算法）。</p>
-<h1 id="对象“存活”？"><a href="#对象“存活”？" class="headerlink" title="对象“存活”？"></a>对象“存活”？</h1><p>垃圾回收的第一件事情就是要确定堆内存中有哪些对象还“存活”，哪写已“死去”。</p>
+<h1 id="对象“存活”？"><a href="#对象“存活”？" class="headerlink" title="对象“存活”？"></a>对象“存活”？</h1><p>垃圾回收的第一件事情就是要确定堆内存中有哪些对象还“存活”，哪些已“死去”。</p>
 <h2 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h2><p>引用计数（Reference Counting）是垃圾收集器中的早期策略。在这种方法中，堆中每个对象实例都有一个引用计数。</p>
 <p>当一个对象被创建时，且将该对象实例分配给一个变量，该变量计数设置为1。当任何其它变量被赋值为这个对象的引用时，计数加1；但当一个对象实例的某个引用超过了生命周期或者被设置为一个新值时，对象实例的引用计数器减1。任何引用计数器为0的对象实例可以被当作垃圾收集。当一个对象实例被垃圾收集时，它引用的任何对象实例的引用计数器减1。</p>
 <ul>
