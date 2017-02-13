@@ -4,6 +4,75 @@
   
     
     <entry>
+      <title><![CDATA[hashCode()和equals()]]></title>
+      <url>https://rogerfang.github.io/2017/02/13/hashcode-%E5%92%8Cequals/</url>
+      <content type="html"><![CDATA[<h1 id="hashcode的作用"><a href="#hashcode的作用" class="headerlink" title="hashcode的作用"></a>hashcode的作用</h1><p>Java中的hashCode方法就是根据一定的规则将与对象相关的信息（比如对象的存储地址，对象的字段等）映射成一个数值，这个数值称作为散列值。</p>
+<p>虽然，每个Java类都包含hashCode() 函数。但是，仅仅当创建并某个“类的散列表”(HashMap，Hashtable，HashSet)时，该类的hashCode() 才有用(作用是：确定该类的每一个对象在散列表中的位置；其它情况下(例如，创建类的单个对象，或者创建类的对象数组等等)，类的hashCode() 没有作用。</p>
+<h1 id="hashCode和equals方法"><a href="#hashCode和equals方法" class="headerlink" title="hashCode和equals方法"></a>hashCode和equals方法</h1><ol>
+<li>hashCode的存在主要是用于查找的快捷性，如Hashtable，HashMap等，hashCode是用来在散列存储结构中确定对象的存储地址的；</li>
+<li>如果两个对象相同，就是适用于equals(java.lang.Object) 方法，那么这两个对象的hashCode一定要相同；</li>
+<li>如果对象的equals方法被重写，那么对象的hashCode也尽量重写，并且产生hashCode使用的对象，一定要和equals方法中使用的一致，否则就会违反上面提到的第2点；</li>
+<li>两个对象的hashCode相同，并不一定表示两个对象就相同，也就是不一定适用于equals(java.lang.Object)方法，只能够说明这两个对象在散列存储结构中，如Hashtable，他们“存放在同一个篮子里”。</li>
+</ol>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[数据库事务]]></title>
+      <url>https://rogerfang.github.io/2017/02/13/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/</url>
+      <content type="html"><![CDATA[<p>一个事务是可以被看作一系列SQL语句的集合。这些操作要么全部执行，要么全部不执行，是一个不可分割的工作单位。</p>
+<h1 id="事务的ACID特性"><a href="#事务的ACID特性" class="headerlink" title="事务的ACID特性"></a>事务的ACID特性</h1><h2 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h2><p>原子性（Atomicity）：事务对数据的修改，要么全都执行，要么全都不执行。一个事务对同一数据项的多次读取的结果一定是相同的。</p>
+<h2 id="一致性"><a href="#一致性" class="headerlink" title="一致性"></a>一致性</h2><p>一致性（Consistency）：指数据库事务不能破坏关系数据的完整性以及业务逻辑上的一致性。</p>
+<p>有些时候这种一致性由数据库的内部规则保证，例如数据的类型必须正确，数据值必须在规定的范围内，等等；另外一些时候这种一致性由应用保证的，例如一般情况下银行账务余额不能是负数，信用卡消费不能超过该卡的信用额度等。</p>
+<h2 id="隔离性"><a href="#隔离性" class="headerlink" title="隔离性"></a>隔离性</h2><p>隔离性（Isolation）：并发的事务是相互隔离的。即一个事务内部的操作及正在操作的数据必须封锁起来，对其他事务是不可见的。</p>
+<h2 id="持久性"><a href="#持久性" class="headerlink" title="持久性"></a>持久性</h2><p>持久性（Durability）：只要事务成功结束，它对数据库所做的更新就必须永久保存下来。</p>
+<p>即使发生系统崩溃，重新启动数据库系统后，数据库还能恢复到事务成功结束时的状态。</p>
+<h1 id="并发异常情况"><a href="#并发异常情况" class="headerlink" title="并发异常情况"></a>并发异常情况</h1><h2 id="脏读"><a href="#脏读" class="headerlink" title="脏读"></a>脏读</h2><p>脏读（Dirty Read）：某个事务读取的数据是另一个事务正在处理的数据。而另一个事务可能会回滚，造成第一个事务读取的数据是错误的。</p>
+<h2 id="不可重复读"><a href="#不可重复读" class="headerlink" title="不可重复读"></a>不可重复读</h2><p>不可重复读（Non-repeatable Read）：在一个事务里两次读入数据，但另一个事务已经更改了第一个事务涉及到的数据，造成第一个事务读入旧数据。</p>
+<h2 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h2><p>幻读（Phantom Read）：事务在操作过程中进行两次查询，第二次查询的结果包含了第一次查询中未出现的数据（这里并不要求两次查询的SQL语句相同）。这是因为在两次查询过程中有另外一个事务插入数据造成的。</p>
+<h2 id="丢失更新"><a href="#丢失更新" class="headerlink" title="丢失更新"></a>丢失更新</h2><p>丢失更新（Lost Update）：</p>
+<p>第一类：当两个事务更新相同的数据源，如果第一个事务被提交，第二个却被撤销，那么连同第一个事务做的更新也被撤销。<br>第二类：有两个并发事务同时读取同一行数据，然后其中一个对它进行修改提交，而另一个也进行了修改提交。这就会造成第一次写操作失效。</p>
+<h1 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h1><h2 id="Read-Uncommitted"><a href="#Read-Uncommitted" class="headerlink" title="Read Uncommitted"></a>Read Uncommitted</h2><p>读未提交数据。事务在执行过程既可以看到其他事务没有提交的新插入数据，也可看到其他事务已经提交的对已有记录的更新。</p>
+<p>Read Uncommitted会出现<strong>脏读</strong>。</p>
+<h2 id="Read-Committed"><a href="#Read-Committed" class="headerlink" title="Read Committed"></a>Read Committed</h2><p>读已提交数据。事务在执行过程中可以看到其他事务已提交的新插入记录，也可看到其他事务已提交的对已有记录的更新。</p>
+<p>Read Committed不允许脏读，会出现<strong>不可重复读</strong>。</p>
+<h2 id="Repeatable-Read"><a href="#Repeatable-Read" class="headerlink" title="Repeatable Read"></a>Repeatable Read</h2><p>可重复读。事务在执行过程中可以看到其他事务已提交的新插入记录，但不能看到其他事务已提交的对已有记录的更新。</p>
+<p>Repeatable Read不允许脏读和不可重复读，会出现<strong>幻读</strong>。</p>
+<h2 id="Serializable"><a href="#Serializable" class="headerlink" title="Serializable"></a>Serializable</h2><p> 串行化。一个事务在执行过程完全看不到其他事务对数据库所做的更新。当两个事务同时访问相同数据时，第一个事务必须等第二个事务完成后才能访问。</p>
+<p>Serializable可以防止出丢失更新外所有的一致性问题。</p>
+<h1 id="事务隔离的实现——锁"><a href="#事务隔离的实现——锁" class="headerlink" title="事务隔离的实现——锁"></a>事务隔离的实现——锁</h1><h2 id="共享锁（S锁）"><a href="#共享锁（S锁）" class="headerlink" title="共享锁（S锁）"></a>共享锁（S锁）</h2><p>用于只读操作(SELECT)，锁定共享的资源。共享锁不会阻止其他用户读，但是阻止其他的用户写和修改。</p>
+<h2 id="更新锁（U锁）"><a href="#更新锁（U锁）" class="headerlink" title="更新锁（U锁）"></a>更新锁（U锁）</h2><p>用于可更新的资源中。防止当多个会话在读取、锁定以及随后可能进行的资源更新时发生常见形式的死锁。</p>
+<h2 id="独占锁（X锁）"><a href="#独占锁（X锁）" class="headerlink" title="独占锁（X锁）"></a>独占锁（X锁）</h2><p>也叫排他锁，一次只能有一个独占锁用在一个资源上，并且阻止其他所有的锁包括共享锁。写是独占锁，可以有效的防止“脏读”。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[数据库范式]]></title>
+      <url>https://rogerfang.github.io/2017/02/13/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%8C%83%E5%BC%8F/</url>
+      <content type="html"><![CDATA[<p>范式是为了消除重复数据减少冗余数据，从而让数据库内的数据更好的组织，让磁盘空间得到更有效利用的一种标准化标准，满足高等级的范式的先决条件是满足低等级范式。</p>
+<h1 id="第一范式（1NF）"><a href="#第一范式（1NF）" class="headerlink" title="第一范式（1NF）"></a>第一范式（1NF）</h1><p><strong>第一范式（1NF）</strong>：是指数据库表中的每一列都是不可再分的基本数据项。</p>
+<p>如果可以再分或者出现重复属性，就可能需要定义一个新的实体，新实体与原实体构成一对多的关系。</p>
+<blockquote>
+<p>在任何一个关系数据库中，第一范式（1NF）是对关系模式的基本要求，不满足第一范式（1NF）的数据库就不是关系数据库。</p>
+</blockquote>
+<h1 id="第二范式（2NF）"><a href="#第二范式（2NF）" class="headerlink" title="第二范式（2NF）"></a>第二范式（2NF）</h1><p><strong>第二范式（2NF）</strong>：要求数据库表中的每个实例或行必须被唯一地区分。通常需要给表加上一列作为唯一标识符，这个属性列被称为<strong>主键</strong>或<strong>主关键字</strong>。</p>
+<p>第二范式（2NF）要求实体的<strong>属性完全依赖于主键</strong>。</p>
+<p>所谓<strong>完全依赖</strong>是指不能存在仅部分属性依赖主键，如果存在，那么这个属性和主键的这一部分应该分离出来形成一个新的实体，新实体和原实体之间是一对多的关系。为实现区分通常要为表加上一个列，以存储各个实例的唯一标识。</p>
+<h1 id="第三范式（3NF）"><a href="#第三范式（3NF）" class="headerlink" title="第三范式（3NF）"></a>第三范式（3NF）</h1><p><strong>第三范式（3NF）</strong>：要求一个数据库表中不包含已经在其他表中包含的非主键信息。</p>
+<p>第三范式要求属性不依赖其他表的非主键（消除传递依赖）。</p>
+<p>例如，一个部门信息表，其中每个部门都有编号（dept_id）、部门名称、部门简介等信息。那么在员工信息表中列出 dep_id 后就不能再将部门名称、部门简介与部门有关的信息再加入员工信息表中。</p>
+<p>也就是表中属性{A,B,C}不能存在传递依赖：A-&gt;B-&gt;C。</p>
+<h1 id="BC范式（BCNF）"><a href="#BC范式（BCNF）" class="headerlink" title="BC范式（BCNF）"></a>BC范式（BCNF）</h1><p>BC范式是在第三范式基础上的一种特殊情况，要求主属性不依赖于主属性。</p>
+<h1 id="函数依赖"><a href="#函数依赖" class="headerlink" title="函数依赖"></a>函数依赖</h1><p>设R(U)是属性集U上的关系模式。X，Y是U的子集。若对于R(U)的任意一个可能的关系r,r中不可能存在两个元组在X上的属性值相等，而在Y上的属性值不相等，则称X函数确定Y或者Y函数依赖于X。记为X-&gt;Y。</p>
+<h1 id="完全函数依赖"><a href="#完全函数依赖" class="headerlink" title="完全函数依赖"></a>完全函数依赖</h1><p>在R(U)中，如果Y函数依赖于X,并且对于X的任何一个真子集X’，都有Y不函数依赖于X’， 则称Y对X完全函数依赖。否则称Y对X部分函数依赖。</p>
+<h1 id="传递函数依赖"><a href="#传递函数依赖" class="headerlink" title="传递函数依赖"></a>传递函数依赖</h1><p>在R(U)中，如果X-&gt;Y, Y-&gt;Z, 则称Z对X传递函数依赖。</p>
+<h1 id="候选键（候选码）"><a href="#候选键（候选码）" class="headerlink" title="候选键（候选码）"></a>候选键（候选码）</h1><p>设K是一个R(U)中的属性或属性集合(注意可以是属性集合，也即多个属性的组合)，若K完全函数确定U，则K为R的候选键(Candidate key);</p>
+<p>通俗地说就是，能够确定全部属性的某个属性或某组属性，称为候选键。若候选键多于一个，则选定其中一个作为主键。</p>
+<h1 id="主属性"><a href="#主属性" class="headerlink" title="主属性"></a>主属性</h1><p>包含在任何一个候选键中的属性，叫做主属性(Prime attribute),不包含在任何候选键中的属性称为非主属性或非键属性或非关键字段。</p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[Java 内存管理]]></title>
       <url>https://rogerfang.github.io/2017/02/12/Java-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</url>
       <content type="html"><![CDATA[<h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><p>Java 的内存管理就是对象的分配和释放问题。</p>
