@@ -4,6 +4,47 @@
   
     
     <entry>
+      <title><![CDATA[Java异常]]></title>
+      <url>https://rogerfang.github.io/2017/02/15/Java%E5%BC%82%E5%B8%B8/</url>
+      <content type="html"><![CDATA[<p>异常情形是指阻止当前方法或者作用域继续执行的问题。</p>
+<h1 id="为什么要使用异常"><a href="#为什么要使用异常" class="headerlink" title="为什么要使用异常"></a>为什么要使用异常</h1><blockquote>
+<p>异常的处理机制可以确保我们程序的健壮性，提高系统可用率。</p>
+</blockquote>
+<p>在没有异常机制的时候我们是这样处理的：通过函数的返回值来判断是否发生了异常（这个返回值通常是已经约定好了的），调用该函数的程序负责检查并且分析返回值。虽然可以解决异常问题，但是这样做存在几个缺陷：</p>
+<ol>
+<li><strong>容易混淆</strong>。异常约定返回值和真实返回值冲突。</li>
+<li><strong>代码可读性差</strong>。将异常处理代码和程序代码混淆在一起将会降低代码的可读性。</li>
+<li>由调用函数来分析异常，这要求程序员对库函数有很深的了解。</li>
+</ol>
+<p>使用异常机制它能够<strong>降低错误处理代码的复杂度</strong>，如果不使用异常，那么就必须检查特定的错误，并在程序中的许多地方去处理它，而如果使用异常，那就不必在方法调用处进行检查，因为异常机制将保证能够捕获这个错误，并且，只需在一个地方处理错误，即所谓的异常处理程序中。</p>
+<h1 id="异常类层次结构"><a href="#异常类层次结构" class="headerlink" title="异常类层次结构"></a>异常类层次结构</h1><p><img src="/images/javase/exception_classes.png" alt=""></p>
+<p><strong>Throwable</strong>有两个子类：Error（错误）和Exception（异常）。</p>
+<p><strong>Error</strong>：是程序无法处理的错误，表示运行程序中较严重的问题。这些异常发生时JVM一般会选择线程终止。<br><strong>Exception</strong>：是程序本身可以处理的异常。又分为CheckedException(受检异常)和UncheckedException(非受检异常)。其中受检异常发生在编译阶段，必须使用<code>try ... catch</code>或者<code>throws</code>否则编译不通过。而非受检异常发生在运行期，具有不确定性，主要是由于程序的逻辑问题引起的。</p>
+<h1 id="异常处理机制"><a href="#异常处理机制" class="headerlink" title="异常处理机制"></a>异常处理机制</h1><p>Java中的异常处理机制为：抛出异常和捕获异常。</p>
+<h2 id="抛出异常"><a href="#抛出异常" class="headerlink" title="抛出异常"></a>抛出异常</h2><p>当一个方法出现错误引发异常时，方法创建异常对象并交付运行时系统，异常对象中包含了异常类型和异常出现时的程序状态等异常信息。运行时系统负责寻找处置异常的代码并执行。</p>
+<h2 id="捕获异常"><a href="#捕获异常" class="headerlink" title="捕获异常"></a>捕获异常</h2><p>在方法抛出异常之后，运行时系统将转为寻找合适的<strong>异常处理器</strong>（exception handler）。潜在的异常处理器是<strong>异常发生时依次存留在调用栈中的方法的集合</strong>。当异常处理器所能处理的异常类型与方法抛出的异常类型相符时，即为合适的异常处理器。</p>
+<p>运行时系统从发生异常的方法开始，依次回查调用栈中的方法，直至找到含有合适异常处理器的方法并执行。当运行时系统遍历调用栈而未找到合适的异常处理器，则运行时系统终止。同时，意味着Java程序的终止。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[表连接JOIN]]></title>
+      <url>https://rogerfang.github.io/2017/02/14/%E8%A1%A8%E8%BF%9E%E6%8E%A5JOIN/</url>
+      <content type="html"><![CDATA[<h1 id="内连接"><a href="#内连接" class="headerlink" title="内连接"></a>内连接</h1><p>内连接：用比较运算符比较要连接的列的值，<code>JOIN</code>或<code>INNER JOIN</code>。</p>
+<p>eg: <code>select * from t1 join t2 on t1.id = t2.id;</code></p>
+<h1 id="外连接"><a href="#外连接" class="headerlink" title="外连接"></a>外连接</h1><p>外连接包括：<code>LEFT JOIN</code>、<code>RIGHT JOIN</code>或<code>FULL JOIN</code>。</p>
+<h2 id="LEFT-JOIN"><a href="#LEFT-JOIN" class="headerlink" title="LEFT JOIN"></a>LEFT JOIN</h2><p>左连接：<code>LEFT JOIN</code>或<code>LEFT OUTER JOIN</code>，包括指定的左表的所有行，如果左表的某行在右表中没有匹配行，则在相关联的结果集行中右表的所选列为空值。</p>
+<p>eg: <code>select * from t1 left join t2 on t1.id = t2.id;</code></p>
+<h2 id="RIGHT-JOIN"><a href="#RIGHT-JOIN" class="headerlink" title="RIGHT JOIN"></a>RIGHT JOIN</h2><p>右连接：<code>RIGHT JOIN</code>或<code>RIGHT OUTER JOIN</code>，包括指定的右表的所有行，如果右表的某行中没有匹配行，则在相关联的结果集行中左表的所选列为空值。</p>
+<p>eg: <code>select * from t1 right join t2 on t1.id = t2.id;</code></p>
+<h2 id="FULL-JOIN"><a href="#FULL-JOIN" class="headerlink" title="FULL JOIN"></a>FULL JOIN</h2><p>全连接：<code>FULL JOIN</code>或<code>FULL OUTER JOIN</code>，返回左表和右表中的所有行，当某行在另一个表中没有匹配行时，则另一个表的所选列为空值。</p>
+<p>eg: <code>select * from t1 full join t2 on t1.id = t2.id;</code></p>
+<h1 id="交叉连接"><a href="#交叉连接" class="headerlink" title="交叉连接"></a>交叉连接</h1><p>交叉连接：<code>CROSS JOIN</code>，没有WHERE子句的交叉连接将产生连接所涉及的表的笛卡尔积。（结果集大小为两表的行数之积）</p>
+<p>eg: <code>select * from t1 cross join t2;</code>等价于<code>select * from t1,t2;</code></p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[SQL优化]]></title>
       <url>https://rogerfang.github.io/2017/02/14/SQL%E4%BC%98%E5%8C%96/</url>
       <content type="html"><![CDATA[<h1 id="SQL优化的一般步骤"><a href="#SQL优化的一般步骤" class="headerlink" title="SQL优化的一般步骤"></a>SQL优化的一般步骤</h1><h2 id="通过show-status命令了解SQL执行频率"><a href="#通过show-status命令了解SQL执行频率" class="headerlink" title="通过show status命令了解SQL执行频率"></a>通过show status命令了解SQL执行频率</h2><p>MySQL通过<code>show [session|global] status</code>命令可以提供服务器状态信息，默认是session(当前连接)，global会显示自数据库上次启动至今。</p>
@@ -1393,8 +1434,8 @@
     </entry>
     
     <entry>
-      <title><![CDATA[网络与通信：传输层]]></title>
-      <url>https://rogerfang.github.io/2017/01/19/%E7%BD%91%E7%BB%9C%E4%B8%8E%E9%80%9A%E4%BF%A1%EF%BC%9A%E4%BC%A0%E8%BE%93%E5%B1%82/</url>
+      <title><![CDATA[传输层]]></title>
+      <url>https://rogerfang.github.io/2017/01/19/%E4%BC%A0%E8%BE%93%E5%B1%82/</url>
       <content type="html"><![CDATA[<p>传输层主要功能为两台主机上的应用程序提供端到端的通信，通过端口号识别两台主机上相对应程序之间进行通信。</p>
 <blockquote>
 <p>网络层为主机之间提供逻辑通信，而传输层为应用程序之间提供端到端的逻辑通信。</p>
@@ -1503,8 +1544,8 @@
     </entry>
     
     <entry>
-      <title><![CDATA[网络与通信：网络层]]></title>
-      <url>https://rogerfang.github.io/2017/01/19/%E7%BD%91%E7%BB%9C%E4%B8%8E%E9%80%9A%E4%BF%A1%EF%BC%9A%E7%BD%91%E7%BB%9C%E5%B1%82/</url>
+      <title><![CDATA[网络层]]></title>
+      <url>https://rogerfang.github.io/2017/01/19/%E7%BD%91%E7%BB%9C%E5%B1%82/</url>
       <content type="html"><![CDATA[<p>网络层向上只提供简单灵活的、无连接的、尽最大努力交付的数据报服务。</p>
 <p>网络层把运输层产生的<strong>报文段</strong>或<strong>用户数据报</strong>封装成<strong>分组</strong>或<strong>包</strong>进行传送，在TCP/IP体系中，由于网络层使用IP协议，因此分组也叫做<strong>IP数据报</strong>，简称<strong>数据报</strong>。</p>
 <blockquote>
@@ -1574,8 +1615,8 @@
     </entry>
     
     <entry>
-      <title><![CDATA[网络与通信：网络模型]]></title>
-      <url>https://rogerfang.github.io/2017/01/19/%E7%BD%91%E7%BB%9C%E4%B8%8E%E9%80%9A%E4%BF%A1%EF%BC%9A%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/</url>
+      <title><![CDATA[网络模型]]></title>
+      <url>https://rogerfang.github.io/2017/01/19/%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/</url>
       <content type="html"><![CDATA[<h1 id="OSI-七层模型"><a href="#OSI-七层模型" class="headerlink" title="OSI 七层模型"></a>OSI 七层模型</h1><p>OSI（Open System Interconnection，开放系统互连）七层网络模型称为开放式网络互连参考模型。它是国际标准组织制定的一个指导信息互连、互通和协作的网络规范。</p>
 <p>从逻辑上可以将其划分为七层模型：应用层、表示层、会话层、传输层、网络层、数据链路层和物理层。其中上3层称为高层，用于定义应用程序之间的通信和人机界面；下4层称为底层，用于定于数据如何进行端到端的传输，物理规范以及数据与光电信号间的转换。<br><img src="/images/network/osi-7-layer.png" alt=""></p>
 <p>每一层的功能：</p>
