@@ -100,7 +100,8 @@ AOP的具体实现由两种：编译期静态织入和运行期动态代理。
 
 AspectJ 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功能，其他很多 AOP 框架都借鉴或采纳其中的一些思想。AspectJ是通过特殊命令在编译时对目标类进行增强。
 与 A">
-<meta property="og:updated_time" content="2017-02-16T01:32:04.790Z">
+<meta property="og:image" content="https://rogerfang.github.io/../images/spring/aop_introduce_advice.png">
+<meta property="og:updated_time" content="2017-02-16T08:43:37.195Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring: AOP原理">
 <meta name="twitter:description" content="AOPAOP，面向切面变成，将系统公共服务（例如，日志记录、事务管理、缓存、性能监测等）从核心业务逻辑中剥离出封装成独立的模块（切面）。
@@ -109,6 +110,7 @@ AOP的具体实现由两种：编译期静态织入和运行期动态代理。
 
 AspectJ 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功能，其他很多 AOP 框架都借鉴或采纳其中的一些思想。AspectJ是通过特殊命令在编译时对目标类进行增强。
 与 A">
+<meta name="twitter:image" content="https://rogerfang.github.io/../images/spring/aop_introduce_advice.png">
 
 
 
@@ -351,35 +353,107 @@ AspectJ 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功�
 <p><strong>AspectJ</strong> 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功能，其他很多 AOP 框架都借鉴或采纳其中的一些思想。<br>AspectJ是通过特殊命令在<strong>编译时</strong>对目标类进行增强。</p>
 <p>与 AspectJ 相同的是，<strong>Spring AOP</strong> 同样需要对目标类进行增强，也就是生成新的 AOP 代理类；与 AspectJ 不同的是，Spring AOP 无需使用任何特殊命令对 Java 源代码进行编译，它采用<strong>运行时</strong>动态地、在内存中临时生成“代理类”的方式来生成 AOP 代理。</p>
 <h1 id="Spring-AOP"><a href="#Spring-AOP" class="headerlink" title="Spring AOP"></a>Spring AOP</h1><p>Spring AOP的原理：通过动态代理生成代理对象，代理对象的方法则通过在目标对象的切入点动态织入增强处理，从而完成对目标方法的增强。</p>
-<p>Spring 允许使用 AspectJ Annotation 用于定义切面（Aspect）、切入点（Pointcut）和增强处理（Advice），Spring 框架则可识别并根据这些 Annotation 来生成 AOP 代理。Spring 只是使用了和 AspectJ 一样的注解，但并没有使用 AspectJ 的编译器或者织入器（Weaver），底层依然使用的是 Spring AOP，依然是在运行时动态生成 AOP 代理，并不依赖于 AspectJ 的编译器或者织入器。</p>
-<h2 id="Spring中启用对-AspectJ配置的支持"><a href="#Spring中启用对-AspectJ配置的支持" class="headerlink" title="Spring中启用对 @AspectJ配置的支持"></a>Spring中启用对 @AspectJ配置的支持</h2><ol>
-<li>需要在Spring配置文件中添加<code>&lt;aop:aspectj-autoproxy/&gt;</code>。</li>
-<li>还需要配置一个Bean的后处理器（BeanPostProcessor），它会为容器中的Bean生成AOP代理。<code>&lt;bean class=&quot;org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator&quot;/&gt;</code><br>启动对 @AspectJ 的支持后，可以给Bean添加<code>@Aspect</code>注解，Spring会自动识别该Bean并将其作为切面(Aspect)处理。</li>
-</ol>
+<p>Spring 允许使用 AspectJ Annotation 用于定义切面（Aspect）、切入点（Pointcut）和增强处理（Advice），Spring 框架则可识别并根据这些 Annotation 来生成 AOP 代理。Spring 只是使用了和 AspectJ 5一样的注解，但并没有使用 AspectJ 的编译器或者织入器（Weaver），底层依然使用的是 Spring AOP，依然是在运行时动态生成 AOP 代理，并不依赖于 AspectJ 的编译器或者织入器。</p>
+<h2 id="Spring中启用对-AspectJ配置的支持"><a href="#Spring中启用对-AspectJ配置的支持" class="headerlink" title="Spring中启用对 @AspectJ配置的支持"></a>Spring中启用对 @AspectJ配置的支持</h2><p>需要在Spring XML配置文件中添加<code>&lt;aop:aspectj-autoproxy/&gt;</code>或者在Spring的JavaConfig中的配置类上使用<code>@EnableAspectJAutoProxy</code>注解启用自动代理功能。</p>
+<p>启动对 @AspectJ 的支持后，可以给Bean添加<code>@Aspect</code>注解，Spring会自动识别该Bean并将其作为切面(Aspect)处理。</p>
 <blockquote>
 <p>当某个Bean被<code>@Aspect</code>注解后，Spring容器不会再对该Bean进行增强。</p>
 </blockquote>
 <p>Spring AOP 框架对 AOP 代理类的处理原则是：如果目标对象的实现类实现了接口，Spring AOP 将会采用 <strong>JDK 动态代理</strong>来生成 AOP 代理类；如果目标对象的实现类没有实现接口，Spring AOP 将会采用 <strong>CGLIB</strong> 来生成 AOP 代理类——不过这个选择过程对开发者完全透明、开发者也无需关心。</p>
 <p>相关：<a href="https://rogerfang.github.io/2016/12/31/Java-%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E4%B8%8E%E5%8F%8D%E5%B0%84/">Java动态代理</a></p>
-<h2 id="通知"><a href="#通知" class="headerlink" title="通知"></a>通知</h2><ol>
-<li><p>传统Spring AOP通知接口</p>
-<p> | 通知 | 接口 | 描述 |<br> |——–|——–|——|<br> |前置通知|MethodBeforeAdvice|目标方法执行前实施增强|<br> |后置通知|MethodReturiningAdvice|目标方法执行后实施增强|<br> |环绕通知|MethodInterceptor|目标方法执行前后实施增强|<br> |异常抛出通知|ThrowsAdvice|目前方法抛出异常后实施增强|<br> |引介通知|IntroductionInterceptor|在目标类中添加新的方法和属性|</p>
-</li>
-<li><p>AspectJ AOP注解</p>
-<p> | 通知 | 接口 | 描述 |<br> |——–|——–|——|<br> |前置通知|@Before|相当于 BeforeAdvice|<br> |后置通知|@AfterReturning|相当于 AfterReturningAdvice|<br> |环绕通知|@Around|相当于 MethodInterceptor|<br> |异常抛出通知|@AfterThrowing|相当于 ThrowAdvice|<br> |引介通知|@DeclareParents|相当于 IntroductionInterceptor|<br> |最终通知|@After|不管是否异常，通知都会执行|</p>
-</li>
-</ol>
-<h2 id="配置切面"><a href="#配置切面" class="headerlink" title="配置切面"></a>配置切面</h2><ol>
+<h2 id="通知"><a href="#通知" class="headerlink" title="通知"></a>通知</h2><p>1.传统Spring AOP通知接口</p>
+<table>
+<thead>
+<tr>
+<th>通知</th>
+<th>接口</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>前置通知</td>
+<td>MethodBeforeAdvice</td>
+<td>目标方法执行前实施增强</td>
+</tr>
+<tr>
+<td>后置通知</td>
+<td>AfterReturningAdvice</td>
+<td>目标方法执行后实施增强</td>
+</tr>
+<tr>
+<td>环绕通知</td>
+<td>MethodInterceptor</td>
+<td>目标方法执行前后实施增强</td>
+</tr>
+<tr>
+<td>异常抛出通知</td>
+<td>ThrowsAdvice</td>
+<td>目前方法抛出异常后实施增强</td>
+</tr>
+<tr>
+<td>引入通知</td>
+<td>IntroductionInterceptor</td>
+<td>在目标类中添加新的方法和属性</td>
+</tr>
+</tbody>
+</table>
+<p>2.AspectJ AOP注解</p>
+<table>
+<thead>
+<tr>
+<th>通知</th>
+<th>接口</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>前置通知</td>
+<td>@Before</td>
+<td>相当于 BeforeAdvice</td>
+</tr>
+<tr>
+<td>后置通知</td>
+<td>@AfterReturning</td>
+<td>相当于 AfterReturningAdvice</td>
+</tr>
+<tr>
+<td>环绕通知</td>
+<td>@Around</td>
+<td>相当于 MethodInterceptor</td>
+</tr>
+<tr>
+<td>异常抛出通知</td>
+<td>@AfterThrowing</td>
+<td>相当于 ThrowAdvice</td>
+</tr>
+<tr>
+<td>引入通知</td>
+<td>@DeclareParents</td>
+<td>相当于 IntroductionInterceptor</td>
+</tr>
+<tr>
+<td>最终通知</td>
+<td>@After</td>
+<td>不管是否异常，通知都会执行</td>
+</tr>
+</tbody>
+</table>
+<h2 id="引入通知"><a href="#引入通知" class="headerlink" title="引入通知"></a>引入通知</h2><p><img src="../images/spring/aop_introduce_advice.png" alt=""><br>通过引入通知来增强被通知的bean，看起来像是增加了新功能。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="meta">@Aspect</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EncoreableAspect</span></span>&#123;</div><div class="line">	<span class="comment">/**</span></div><div class="line">     * value指定哪种类型的Bean需要进行引入增强，“+”表示Performance的所有子类。</div><div class="line">     * defaultImpl指定提供引入功能的实现类。</div><div class="line">     */</div><div class="line">    <span class="meta">@DeclareParents</span>(value=<span class="string">"concert.Permormance+"</span>, defaultImpl=DefaultEncoreable.class)</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Encoreable encoreable;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="配置切面"><a href="#配置切面" class="headerlink" title="配置切面"></a>配置切面</h2><h3 id="XML配置"><a href="#XML配置" class="headerlink" title="XML配置"></a>XML配置</h3><ol>
 <li><p>传统Spring AOP</p>
- <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">aop:advisor</span> <span class="attr">advice-ref</span>=<span class="string">".."</span> <span class="attr">point-ref</span>=<span class="string">".."</span>&gt;</span></div></pre></td></tr></table></figure>
+ <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">   <span class="tag">&lt;<span class="name">aop:config</span>&gt;</span></div><div class="line">   	<span class="tag">&lt;<span class="name">aop:advisor</span> <span class="attr">advice-ref</span>=<span class="string">".."</span> <span class="attr">point-ref</span>=<span class="string">".."</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">aop:config</span>&gt;</span></div></pre></td></tr></table></figure>
 <p> 定义Spring传统的AOP切面，只支持一个pointcut和一个advice，并且该advice必须实现相应的通知接口。</p>
 </li>
 <li><p>AspectJ AOP</p>
- <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">aop:aspect</span> <span class="attr">ref</span>=<span class="string">"advice"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">aop:pointcut</span> <span class="attr">id</span>=<span class="string">"pointcut.."</span> <span class="attr">expression</span>=<span class="string">"execution(...)"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">aop:before</span> <span class="attr">method</span>=<span class="string">".."</span> <span class="attr">pointcut-ref</span>=<span class="string">"pointcut"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">aop:after-returning</span> <span class="attr">method</span>=<span class="string">".."</span> <span class="attr">pointcut-ref</span>=<span class="string">"pointcut"</span> <span class="attr">returning</span>=<span class="string">"rtval"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">aop:aspect</span>&gt;</span></div></pre></td></tr></table></figure>
+ <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">aop:config</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">aop:aspect</span> <span class="attr">ref</span>=<span class="string">"aspect1"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">aop:pointcut</span> <span class="attr">id</span>=<span class="string">"pointcut1"</span> <span class="attr">expression</span>=<span class="string">"execution(...)"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">aop:before</span> <span class="attr">method</span>=<span class="string">".."</span> <span class="attr">pointcut-ref</span>=<span class="string">"pointcut1"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">aop:after-returning</span> <span class="attr">method</span>=<span class="string">".."</span> <span class="attr">pointcut-ref</span>=<span class="string">"pointcut1"</span> <span class="attr">returning</span>=<span class="string">"rtval"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">aop:aspect</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">aop:config</span>&gt;</span></div></pre></td></tr></table></figure>
 <p> 定义AspectJ切面的，可以包含多个pointcut和advice，并且advice不需要实现相应的Advice接口，只需要指明对应的方法名。</p>
 </li>
 </ol>
-
+<h3 id="注解配置"><a href="#注解配置" class="headerlink" title="注解配置"></a>注解配置</h3><figure class="highlight java"><figcaption><span>LogAspect</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.aspectj.lang.ProceedingJoinPoint;</div><div class="line"><span class="keyword">import</span> org.aspectj.lang.annotation.*;</div><div class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</div><div class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</div><div class="line"></div><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="meta">@Aspect</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LogAspect</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Pointcut</span>(<span class="string">"execution(* com.roger.springaopdemo..*Service.* (..)) &amp;&amp; !bean(logService)"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">business</span><span class="params">()</span></span>&#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    <span class="keyword">private</span> LogService logService;</div><div class="line"></div><div class="line">    <span class="meta">@Before</span>(<span class="string">"business()"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span></span>&#123;</div><div class="line">        logService.logTime();</div><div class="line">        System.out.println(<span class="string">"Logging: before"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@AfterReturning</span>(value = <span class="string">"business()"</span>, returning = <span class="string">"rtval"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterReturning</span><span class="params">(Object rtval)</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"Logging: after returning"</span>);  </div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Around</span>(<span class="string">"business()"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">around</span><span class="params">(ProceedingJoinPoint pjp)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">        System.out.println(<span class="string">"Logging: around begin, args:"</span> + pjp.getArgs());</div><div class="line">        Object rtval = pjp.proceed();</div><div class="line">        System.out.println(<span class="string">"Logging: around end"</span>);</div><div class="line">        <span class="keyword">return</span> rtval;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@AfterThrowing</span>(value = <span class="string">"business()"</span>, throwing = <span class="string">"ex"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afhterThrowing</span><span class="params">(Exception ex)</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"Logging: after throwing, ex="</span> + ex.getMessage());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@After</span>(<span class="string">"business()"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">after</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"Logging: after"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><figcaption><span>UserService</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> com.roger.springaopdemo.model.User;</div><div class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</div><div class="line"></div><div class="line"><span class="meta">@Service</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserService</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">findById</span><span class="params">(Integer id)</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> User(<span class="number">1</span>, <span class="string">"Roger"</span>, <span class="number">24</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">update</span><span class="params">(User user)</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">(User user)</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">deleteById</span><span class="params">(Integer id)</span></span>&#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Delete Error"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><figcaption><span>LogService</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</div><div class="line"></div><div class="line"><span class="meta">@Service</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LogService</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">logTime</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"Log Time: "</span> + System.currentTimeMillis());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
       
     </div>
 
@@ -417,6 +491,10 @@ AspectJ 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功�
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/16/Java注解/" rel="prev" title="Java注解">
+                Java注解 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -484,7 +562,7 @@ AspectJ 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">185</span>
+              <span class="site-state-item-count">194</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -492,7 +570,7 @@ AspectJ 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功�
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -501,7 +579,7 @@ AspectJ 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功�
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">135</span>
+                <span class="site-state-item-count">137</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -541,7 +619,7 @@ AspectJ 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功�
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#AOP"><span class="nav-number">1.</span> <span class="nav-text">AOP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-AOP"><span class="nav-number">2.</span> <span class="nav-text">Spring AOP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring中启用对-AspectJ配置的支持"><span class="nav-number">2.1.</span> <span class="nav-text">Spring中启用对 @AspectJ配置的支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通知"><span class="nav-number">2.2.</span> <span class="nav-text">通知</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置切面"><span class="nav-number">2.3.</span> <span class="nav-text">配置切面</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#AOP"><span class="nav-number">1.</span> <span class="nav-text">AOP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-AOP"><span class="nav-number">2.</span> <span class="nav-text">Spring AOP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring中启用对-AspectJ配置的支持"><span class="nav-number">2.1.</span> <span class="nav-text">Spring中启用对 @AspectJ配置的支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通知"><span class="nav-number">2.2.</span> <span class="nav-text">通知</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入通知"><span class="nav-number">2.3.</span> <span class="nav-text">引入通知</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置切面"><span class="nav-number">2.4.</span> <span class="nav-text">配置切面</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#XML配置"><span class="nav-number">2.4.1.</span> <span class="nav-text">XML配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注解配置"><span class="nav-number">2.4.2.</span> <span class="nav-text">注解配置</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
         </section>

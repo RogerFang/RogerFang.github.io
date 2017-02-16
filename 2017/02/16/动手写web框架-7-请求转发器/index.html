@@ -1,0 +1,795 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="类似于Spring MVC中的DispatcherServlet，所以我们也需要编写一个Servlet，让它处理所有的请求。
+
+从HttpServletRequest对象中获取请求方法和请求路径；
+通过ControllerHelper获取Request对应的Handler，Handler包括Controller的类以及处理方法Method；
+从HttpServletRequest对象中获取所有参数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="动手写web框架(7): 请求转发器">
+<meta property="og:url" content="https://rogerfang.github.io/2017/02/16/动手写web框架-7-请求转发器/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="类似于Spring MVC中的DispatcherServlet，所以我们也需要编写一个Servlet，让它处理所有的请求。
+
+从HttpServletRequest对象中获取请求方法和请求路径；
+通过ControllerHelper获取Request对应的Handler，Handler包括Controller的类以及处理方法Method；
+从HttpServletRequest对象中获取所有参数">
+<meta property="og:updated_time" content="2017-02-16T08:30:45.498Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="动手写web框架(7): 请求转发器">
+<meta name="twitter:description" content="类似于Spring MVC中的DispatcherServlet，所以我们也需要编写一个Servlet，让它处理所有的请求。
+
+从HttpServletRequest对象中获取请求方法和请求路径；
+通过ControllerHelper获取Request对应的Handler，Handler包括Controller的类以及处理方法Method；
+从HttpServletRequest对象中获取所有参数">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://rogerfang.github.io/2017/02/16/动手写web框架-7-请求转发器/"/>
+
+
+  <title> 动手写web框架(7): 请求转发器 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                动手写web框架(7): 请求转发器
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-16T15:53:51+08:00" content="2017-02-16">
+              2017-02-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/动手写web框架/" itemprop="url" rel="index">
+                    <span itemprop="name">动手写web框架</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>类似于Spring MVC中的<code>DispatcherServlet</code>，所以我们也需要编写一个Servlet，让它处理所有的请求。</p>
+<ol>
+<li>从<code>HttpServletRequest</code>对象中获取请求方法和请求路径；</li>
+<li>通过<code>ControllerHelper</code>获取<code>Request</code>对应的<code>Handler</code>，Handler包括Controller的类以及处理方法Method；</li>
+<li>从<code>HttpServletRequest</code>对象中获取所有参数，封装到一个<code>Param</code>对象中；</li>
+<li>通过反射调用Controller实例中对应的Method方法，并获取返回值；</li>
+<li>如果返回值是<code>View</code>类型，则返回一个Jsp页面；如果是<code>Data</code>类型，则返回一个JSON数据。</li>
+</ol>
+<figure class="highlight java"><figcaption><span>DispatcherServlet</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> org.smart4j.framework;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.commons.lang3.ArrayUtils;</div><div class="line"><span class="keyword">import</span> org.apache.commons.lang3.StringUtils;</div><div class="line"><span class="keyword">import</span> org.smart4j.framework.bean.Data;</div><div class="line"><span class="keyword">import</span> org.smart4j.framework.bean.Handler;</div><div class="line"><span class="keyword">import</span> org.smart4j.framework.bean.Param;</div><div class="line"><span class="keyword">import</span> org.smart4j.framework.bean.View;</div><div class="line"><span class="keyword">import</span> org.smart4j.framework.helper.BeanHelper;</div><div class="line"><span class="keyword">import</span> org.smart4j.framework.helper.ConfigHelper;</div><div class="line"><span class="keyword">import</span> org.smart4j.framework.helper.ControllerHelper;</div><div class="line"><span class="keyword">import</span> org.smart4j.framework.util.CodecUtil;</div><div class="line"><span class="keyword">import</span> org.smart4j.framework.util.JsonUtil;</div><div class="line"><span class="keyword">import</span> org.smart4j.framework.util.ReflectionUtil;</div><div class="line"><span class="keyword">import</span> org.smart4j.framework.util.StreamUtil;</div><div class="line"></div><div class="line"><span class="keyword">import</span> javax.servlet.ServletConfig;</div><div class="line"><span class="keyword">import</span> javax.servlet.ServletContext;</div><div class="line"><span class="keyword">import</span> javax.servlet.ServletException;</div><div class="line"><span class="keyword">import</span> javax.servlet.ServletRegistration;</div><div class="line"><span class="keyword">import</span> javax.servlet.annotation.WebServlet;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServlet;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.io.PrintWriter;</div><div class="line"><span class="keyword">import</span> java.lang.reflect.Method;</div><div class="line"><span class="keyword">import</span> java.util.Enumeration;</div><div class="line"><span class="keyword">import</span> java.util.HashMap;</div><div class="line"><span class="keyword">import</span> java.util.Map;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Created by Roger on 2016/11/23.</div><div class="line"> */</div><div class="line"><span class="meta">@WebServlet</span>(urlPatterns = <span class="string">"/*"</span>, loadOnStartup = <span class="number">0</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DispatcherServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(ServletConfig config)</span> <span class="keyword">throws</span> ServletException </span>&#123;</div><div class="line">        <span class="keyword">super</span>.init(config);</div><div class="line"></div><div class="line">        <span class="comment">// 初始化Helper类</span></div><div class="line">        HelperLoader.init();</div><div class="line"></div><div class="line">        ServletContext servletContext = config.getServletContext();</div><div class="line">        <span class="comment">// 注册处理jsp的servlet</span></div><div class="line">        <span class="comment">// 传入一个"jsp"参数, 意味着从容器中获取JspServlet(这个Servlet由容器实现, The JSP page compiler and execution servlet)</span></div><div class="line">        ServletRegistration jspServlet = servletContext.getServletRegistration(<span class="string">"jsp"</span>);</div><div class="line">        jspServlet.addMapping(ConfigHelper.getAppJspPath() + <span class="string">"*"</span>);</div><div class="line"></div><div class="line">        <span class="comment">// 注册处理静态资源的默认servlet</span></div><div class="line">        <span class="comment">// 传入一个"default"参数, 意味着从容器中获取DefaultServlet(这个Servlet由容器实现, 它负责处理普通的静态资源响应)</span></div><div class="line">        ServletRegistration defaultServlet = servletContext.getServletRegistration(<span class="string">"default"</span>);</div><div class="line">        defaultServlet.addMapping(ConfigHelper.getAppAssetPath() + <span class="string">"*"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</div><div class="line">        <span class="comment">// 获取请求方法与请求路径</span></div><div class="line">        String requestMethod = req.getMethod().toLowerCase();</div><div class="line">        String requestPath = req.getPathInfo();</div><div class="line"></div><div class="line">        <span class="comment">// 获取Action处理器</span></div><div class="line">        Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);</div><div class="line">        <span class="keyword">if</span> (handler != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="comment">// 获取Controller类及其实例</span></div><div class="line">            Class&lt;?&gt; controllerCls = handler.getControllerClass();</div><div class="line">            Object controllerBean = BeanHelper.getBean(controllerCls);</div><div class="line"></div><div class="line">            <span class="comment">// 创建请求参数对象</span></div><div class="line">            Map&lt;String, Object&gt; paramMap = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">            Enumeration&lt;String&gt; paramNames = req.getParameterNames();</div><div class="line">            <span class="keyword">while</span> (paramNames.hasMoreElements())&#123;</div><div class="line">                String paramName = paramNames.nextElement();</div><div class="line">                String paramValue = req.getParameter(paramName);</div><div class="line">                paramMap.put(paramName, paramValue);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            String body = CodecUtil.decodeURL(StreamUtil.getString(req.getInputStream()));</div><div class="line">            <span class="keyword">if</span> (StringUtils.isNotEmpty(body))&#123;</div><div class="line">                String[] params = StringUtils.split(body, <span class="string">"&amp;"</span>);</div><div class="line">                <span class="keyword">if</span> (ArrayUtils.isNotEmpty(params))&#123;</div><div class="line">                    <span class="keyword">for</span> (String param: params)&#123;</div><div class="line">                        String[] array = StringUtils.split(param, <span class="string">"="</span>);</div><div class="line">                        <span class="keyword">if</span> (ArrayUtils.isNotEmpty(array))&#123;</div><div class="line">                            String paramName = array[<span class="number">0</span>];</div><div class="line">                            String paramValue = array[<span class="number">1</span>];</div><div class="line">                            paramMap.put(paramName, paramValue);</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            Param param = <span class="keyword">new</span> Param(paramMap);</div><div class="line">            <span class="comment">// 调用Action方法</span></div><div class="line">            Method actionMethod = handler.getActionMethod();</div><div class="line">            Object result = ReflectionUtil.invokeMethod(controllerBean, actionMethod, param);</div><div class="line">            <span class="comment">// 处理Action方法返回值</span></div><div class="line">            <span class="keyword">if</span> (result <span class="keyword">instanceof</span> View)&#123;</div><div class="line">                View view = (View) result;</div><div class="line">                String path = view.getPath();</div><div class="line">                <span class="keyword">if</span> (StringUtils.isNotEmpty(path))&#123;</div><div class="line">                    <span class="keyword">if</span> (path.startsWith(<span class="string">"/"</span>))&#123;</div><div class="line">                        resp.sendRedirect(req.getContextPath() + path);</div><div class="line">                    &#125;<span class="keyword">else</span> &#123;</div><div class="line">                        Map&lt;String, Object&gt; model = view.getModel();</div><div class="line">                        <span class="keyword">for</span> (Map.Entry&lt;String, Object&gt; entry: model.entrySet())&#123;</div><div class="line">                            req.setAttribute(entry.getKey(), entry.getValue());</div><div class="line">                        &#125;</div><div class="line">                        req.getRequestDispatcher(ConfigHelper.getAppJspPath() + path).forward(req, resp);</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span> (result <span class="keyword">instanceof</span> Data)&#123;</div><div class="line">                <span class="comment">// 返回json数据</span></div><div class="line">                Data data = (Data) result;</div><div class="line">                Object model = data.getModel();</div><div class="line">                <span class="keyword">if</span> (model != <span class="keyword">null</span>)&#123;</div><div class="line">                    resp.setContentType(<span class="string">"application/json"</span>);</div><div class="line">                    resp.setCharacterEncoding(<span class="string">"UTF-8"</span>);</div><div class="line">                    PrintWriter writer = resp.getWriter();</div><div class="line">                    writer.write(JsonUtil.toJson(model));</div><div class="line">                    writer.flush();</div><div class="line">                    writer.close();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><figcaption><span>Param</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> org.smart4j.framework.bean;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.smart4j.framework.util.CastUtil;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.Map;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 请求参数对象</div><div class="line"> * Created by Roger on 2016/11/23.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Param</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Map&lt;String, Object&gt; paramMap;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Param</span><span class="params">(Map&lt;String, Object&gt; paramMap)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.paramMap = paramMap;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getLong</span><span class="params">(String name)</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> CastUtil.castLong(paramMap.get(name));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getInt</span><span class="params">(String name)</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> CastUtil.castInt(paramMap.get(name));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">getDouble</span><span class="params">(String name)</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> CastUtil.castDouble(paramMap.get(name));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">getBoolean</span><span class="params">(String name)</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> CastUtil.castBoolean(paramMap.get(name));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title">getParamMap</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> paramMap;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><figcaption><span>View</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> org.smart4j.framework.bean;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.HashMap;</div><div class="line"><span class="keyword">import</span> java.util.Map;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 视图对象</div><div class="line"> * Created by Roger on 2016/11/23.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">View</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 视图路径</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> String path;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 模型数据</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> Map&lt;String, Object&gt; model;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">View</span><span class="params">(String path)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.path = path;</div><div class="line">        model = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> View <span class="title">addAttr</span><span class="params">(String key, Object value)</span></span>&#123;</div><div class="line">        model.put(key, value);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getPath</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> path;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title">getModel</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> model;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><figcaption><span>Data</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> org.smart4j.framework.bean;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 数据对象</div><div class="line"> * Created by Roger on 2016/11/23.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Data</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 模型数据</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> Object model;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Data</span><span class="params">(Object model)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.model = model;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getModel</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> model;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><figcaption><span>StreamUtil</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> org.smart4j.framework.util;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.slf4j.Logger;</div><div class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.BufferedReader;</div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.io.InputStream;</div><div class="line"><span class="keyword">import</span> java.io.InputStreamReader;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 流操作工具集</div><div class="line"> * Created by Roger on 2016/11/23.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">StreamUtil</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(StreamUtil.class);</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getString</span><span class="params">(InputStream is)</span></span>&#123;</div><div class="line">        StringBuilder sb = <span class="keyword">new</span> StringBuilder();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(is));</div><div class="line">            String line;</div><div class="line">            <span class="keyword">while</span> ((line = br.readLine()) != <span class="keyword">null</span>)&#123;</div><div class="line">                sb.append(line);</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">            LOGGER.error(<span class="string">"get string failure"</span>, e);</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> sb.toString();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><figcaption><span>CodecUtil</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> org.smart4j.framework.util;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.slf4j.Logger;</div><div class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.UnsupportedEncodingException;</div><div class="line"><span class="keyword">import</span> java.net.URLDecoder;</div><div class="line"><span class="keyword">import</span> java.net.URLEncoder;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 编码与解码工具集</div><div class="line"> * Created by Roger on 2016/11/23.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">CodecUtil</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(CodecUtil.class);</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 将URL编码</div><div class="line">     * <span class="doctag">@param</span> source</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">encodeURL</span><span class="params">(String source)</span></span>&#123;</div><div class="line">        String target;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            target = URLEncoder.encode(source, <span class="string">"UTF-8"</span>);</div><div class="line">        &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</div><div class="line">            LOGGER.error(<span class="string">"encode url failure"</span>, e);</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> target;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 将URL解码</div><div class="line">     * <span class="doctag">@param</span> source</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">decodeURL</span><span class="params">(String source)</span></span>&#123;</div><div class="line">        String target;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            target = URLDecoder.decode(source, <span class="string">"UTF-8"</span>);</div><div class="line">        &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</div><div class="line">            LOGGER.error(<span class="string">"decode url failure"</span>, e);</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> target;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><figcaption><span>JsonUtil</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> org.smart4j.framework.util;</div><div class="line"></div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.core.JsonProcessingException;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</div><div class="line"><span class="keyword">import</span> org.slf4j.Logger;</div><div class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Created by Roger on 2016/11/23.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">JsonUtil</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(JsonUtil.class);</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ObjectMapper OBJECT_MAPPER = <span class="keyword">new</span> ObjectMapper();</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">String <span class="title">toJson</span><span class="params">(T obj)</span></span>&#123;</div><div class="line">        String json;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            json = OBJECT_MAPPER.writeValueAsString(obj);</div><div class="line">        &#125; <span class="keyword">catch</span> (JsonProcessingException e) &#123;</div><div class="line">            LOGGER.error(<span class="string">"convert POJO to JSON failure"</span>, e);</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> json;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">T <span class="title">fromJson</span><span class="params">(String json, Class&lt;T&gt; type)</span></span>&#123;</div><div class="line">        T pojo;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            pojo = OBJECT_MAPPER.readValue(json, type);</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">            LOGGER.error(<span class="string">"convert JSON to POJO failure"</span>, e);</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> pojo;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/16/动手写web框架-6-初始化框架/" rel="next" title="动手写web框架(6): 初始化框架">
+                <i class="fa fa-chevron-left"></i> 动手写web框架(6): 初始化框架
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/16/动手写web框架-8-AOP实现/" rel="prev" title="动手写web框架(8): AOP实现">
+                动手写web框架(8): AOP实现 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">梦想还是要有的，万一实现了呢</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">194</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">137</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = false;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title >= 0 || index_content >= 0 ){
+                                isMatch = true;
+								if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            } 
+							
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
