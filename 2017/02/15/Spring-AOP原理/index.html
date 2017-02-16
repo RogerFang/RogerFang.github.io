@@ -100,7 +100,7 @@ AOP的具体实现由两种：编译期静态织入和运行期动态代理。
 
 AspectJ 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功能，其他很多 AOP 框架都借鉴或采纳其中的一些思想。AspectJ是通过特殊命令在编译时对目标类进行增强。
 与 A">
-<meta property="og:updated_time" content="2017-02-15T16:27:32.956Z">
+<meta property="og:updated_time" content="2017-02-16T01:32:04.790Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring: AOP原理">
 <meta name="twitter:description" content="AOPAOP，面向切面变成，将系统公共服务（例如，日志记录、事务管理、缓存、性能监测等）从核心业务逻辑中剥离出封装成独立的模块（切面）。
@@ -365,7 +365,9 @@ AspectJ 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功�
 <li><p>传统Spring AOP通知接口</p>
 <p> | 通知 | 接口 | 描述 |<br> |——–|——–|——|<br> |前置通知|MethodBeforeAdvice|目标方法执行前实施增强|<br> |后置通知|MethodReturiningAdvice|目标方法执行后实施增强|<br> |环绕通知|MethodInterceptor|目标方法执行前后实施增强|<br> |异常抛出通知|ThrowsAdvice|目前方法抛出异常后实施增强|<br> |引介通知|IntroductionInterceptor|在目标类中添加新的方法和属性|</p>
 </li>
-<li>AspectJ AOP注解<br> | 通知 | 接口 | 描述 |<br> |——–|——–|——|<br> |前置通知|@Before|相当于 BeforeAdvice|<br> |后置通知|@AfterReturning|相当于 AfterReturningAdvice|<br> |环绕通知|@Around|相当于 MethodInterceptor|<br> |异常抛出通知|@AfterThrowing|相当于 ThrowAdvice|<br> |引介通知|@DeclareParents|相当于 IntroductionInterceptor|<br> |最终通知|@After|不管是否异常，通知都会执行|</li>
+<li><p>AspectJ AOP注解</p>
+<p> | 通知 | 接口 | 描述 |<br> |——–|——–|——|<br> |前置通知|@Before|相当于 BeforeAdvice|<br> |后置通知|@AfterReturning|相当于 AfterReturningAdvice|<br> |环绕通知|@Around|相当于 MethodInterceptor|<br> |异常抛出通知|@AfterThrowing|相当于 ThrowAdvice|<br> |引介通知|@DeclareParents|相当于 IntroductionInterceptor|<br> |最终通知|@After|不管是否异常，通知都会执行|</p>
+</li>
 </ol>
 <h2 id="配置切面"><a href="#配置切面" class="headerlink" title="配置切面"></a>配置切面</h2><ol>
 <li><p>传统Spring AOP</p>
