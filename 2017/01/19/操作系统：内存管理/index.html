@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="内存,Cache替换算法," />
+  <meta name="keywords" content="内存,替换算法," />
 
 
 
@@ -84,31 +84,22 @@
 
 
 
-<meta name="description" content="内存管理的方式常见的由以下4种：
-
-块式管理  把主存分成一大块一大块的，会造成很大的浪费，但是易于管理。
-页式管理  把主存分为一页一页的，每一页的空间要比每一块的空间小很多。空间利用率会高很多。
-段式管理  把主存分为一段一段的，每一段的空间又比每一页的小很多。这会导致一个程序片断可能会被分为几十段，这样很多时间又会浪费在计算每一段的物理地址上。
-段页式管理（最常用） 结合了段式管理和页式管理">
+<meta name="description" content="内存管理的方式页式管理用户程序的地址空间被划分成若干固定大小的区域，称为“页”，相应地，内存空间分成若干个物理块，页和块的大小相等。可将用户程序的任一页放在内存的任一块中，实现了离散分配。
+系统为每个进程建立一张页表，用于记录进程逻辑页面与内存物理页面之间的对应关系。页表的作用是实现从页号到物理块号的地址映射。
+分页方式的优点是：页长固定，因而便于构造页表、易于管理，且不存在外碎片。但分页方式的缺">
 <meta property="og:type" content="article">
 <meta property="og:title" content="操作系统：内存管理">
 <meta property="og:url" content="https://rogerfang.github.io/2017/01/19/操作系统：内存管理/index.html">
 <meta property="og:site_name" content="方龙的博客">
-<meta property="og:description" content="内存管理的方式常见的由以下4种：
-
-块式管理  把主存分成一大块一大块的，会造成很大的浪费，但是易于管理。
-页式管理  把主存分为一页一页的，每一页的空间要比每一块的空间小很多。空间利用率会高很多。
-段式管理  把主存分为一段一段的，每一段的空间又比每一页的小很多。这会导致一个程序片断可能会被分为几十段，这样很多时间又会浪费在计算每一段的物理地址上。
-段页式管理（最常用） 结合了段式管理和页式管理">
-<meta property="og:updated_time" content="2017-01-19T15:45:44.974Z">
+<meta property="og:description" content="内存管理的方式页式管理用户程序的地址空间被划分成若干固定大小的区域，称为“页”，相应地，内存空间分成若干个物理块，页和块的大小相等。可将用户程序的任一页放在内存的任一块中，实现了离散分配。
+系统为每个进程建立一张页表，用于记录进程逻辑页面与内存物理页面之间的对应关系。页表的作用是实现从页号到物理块号的地址映射。
+分页方式的优点是：页长固定，因而便于构造页表、易于管理，且不存在外碎片。但分页方式的缺">
+<meta property="og:updated_time" content="2017-02-17T03:11:17.749Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统：内存管理">
-<meta name="twitter:description" content="内存管理的方式常见的由以下4种：
-
-块式管理  把主存分成一大块一大块的，会造成很大的浪费，但是易于管理。
-页式管理  把主存分为一页一页的，每一页的空间要比每一块的空间小很多。空间利用率会高很多。
-段式管理  把主存分为一段一段的，每一段的空间又比每一页的小很多。这会导致一个程序片断可能会被分为几十段，这样很多时间又会浪费在计算每一段的物理地址上。
-段页式管理（最常用） 结合了段式管理和页式管理">
+<meta name="twitter:description" content="内存管理的方式页式管理用户程序的地址空间被划分成若干固定大小的区域，称为“页”，相应地，内存空间分成若干个物理块，页和块的大小相等。可将用户程序的任一页放在内存的任一块中，实现了离散分配。
+系统为每个进程建立一张页表，用于记录进程逻辑页面与内存物理页面之间的对应关系。页表的作用是实现从页号到物理块号的地址映射。
+分页方式的优点是：页长固定，因而便于构造页表、易于管理，且不存在外碎片。但分页方式的缺">
 
 
 
@@ -344,24 +335,34 @@
       
 
       
-        <h1 id="内存管理的方式"><a href="#内存管理的方式" class="headerlink" title="内存管理的方式"></a>内存管理的方式</h1><p>常见的由以下4种：</p>
-<ul>
-<li><strong>块式管理</strong><br>  把主存分成一大块一大块的，会造成很大的浪费，但是易于管理。</li>
-<li><strong>页式管理</strong><br>  把主存分为一页一页的，每一页的空间要比每一块的空间小很多。空间利用率会高很多。</li>
-<li><strong>段式管理</strong><br>  把主存分为一段一段的，每一段的空间又比每一页的小很多。这会导致一个程序片断可能会被分为几十段，这样很多时间又会浪费在计算每一段的物理地址上。</li>
-<li><strong>段页式管理</strong>（最常用）<br> 结合了段式管理和页式管理的优点。把主存分为若干段，每个段又分为若干页。段页式管理每取一数据需要访问3次内存。</li>
-</ul>
+        <h1 id="内存管理的方式"><a href="#内存管理的方式" class="headerlink" title="内存管理的方式"></a>内存管理的方式</h1><h2 id="页式管理"><a href="#页式管理" class="headerlink" title="页式管理"></a>页式管理</h2><p><strong>用户程序的地址空间被划分成若干固定大小的区域，称为“页”</strong>，相应地，内存空间分成若干个物理块，页和块的大小相等。可将用户程序的任一页放在内存的任一块中，实现了离散分配。</p>
+<p>系统为每个进程建立一张<strong>页表</strong>，用于记录进程逻辑页面与内存物理页面之间的对应关系。页表的作用是实现从页号到物理块号的地址映射。</p>
+<p>分页方式的<strong>优点</strong>是：页长固定，因而便于构造页表、易于管理，且不存在外碎片。<br>但分页方式的<strong>缺点</strong>是：页长与程序的逻辑大小不相关。</p>
+<h2 id="段式管理"><a href="#段式管理" class="headerlink" title="段式管理"></a>段式管理</h2><p><strong>段是按照程序的自然分界划分的长度可以动态改变的区域。</strong>通常，程序员把子程序、操作数和常数等不同类型的数据划分到不同的段中，并且每个程序可以有多个相同类型的段。</p>
+<p>将用户程序地址空间分成若干个大小不等的段，每段可以定义一组相对完整的逻辑信息。存储分配时，以段为单位，段与段在内存中可以不相邻接，也实现了离散分配。</p>
+<p>每个程序设置一个<strong>段表</strong>，段表的每一个表项对应一个段，每个表项至少包括三个字段：有效位（指明该段是否已经调入主存）、段起址(该段在实存中的首地址)和段长（记录该段的实际长度）。</p>
+<h2 id="段页式管理-（最常用）"><a href="#段页式管理-（最常用）" class="headerlink" title="段页式管理**（最常用）"></a>段页式管理**（最常用）</h2><p>段页式存储组织是分段式和分页式结合的存储组织方法，这样可充分利用分段管理和分页管理的优点。</p>
+<ol>
+<li>用<strong>分段</strong>方法来分配和管理虚拟存储器。程序的地址空间按逻辑单位分成基本独立的段，而每一段有自己的段名，再把每段分成固定大小的若干页。</li>
+<li>用<strong>分页</strong>方法来分配和管理实存。即把整个主存分成与上述页大小相等的存储块，可装入作业的任何一页。程序对内存的调入或调出是按页进行的。但它又可按段实现共享和保护。</li>
+</ol>
+<p>段页式管理每取一数据需要访问 3 次内存：第一次是由段表地址寄存器得段表始址后访问段表，由此取出对应段的页表在内存中的地址。第二次则是访问页表得到所要访问的物理地址。第三次才能访问真正需要访问的物理单元。</p>
 <h1 id="分段和分页"><a href="#分段和分页" class="headerlink" title="分段和分页"></a>分段和分页</h1><p><strong>页</strong>是信息的物理单位，分页就是为了实现离散分配方式，提高内存的利用率。分页仅仅是由于系统管理的需要，而不是用户的需要。页的大小由系统确定。</p>
 <p><strong>段</strong>是信息的逻辑单位，它含有一组其意义相对完整的信息。分段的目的是为了能更好的满足用户的需要。段的长度不固定取决于用户所编写的程序。</p>
 <h1 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h1><p>虚拟内存时计算机内存管理的一种技术，相对于物理内存而言。</p>
 <p>虚拟内存使得应用程序认为它拥有连续可用的内存，允许程序员编写并运行比实际系统拥有的内存大得多的程序。而实际上，它通常是被分割成多个物理内存碎片。</p>
-<h1 id="Cache替换算法"><a href="#Cache替换算法" class="headerlink" title="Cache替换算法"></a>Cache替换算法</h1><p>Cache替换算法例如：</p>
+<h1 id="替换算法"><a href="#替换算法" class="headerlink" title="替换算法"></a>替换算法</h1><p>页面置换：在地址映射过程中，若在页面中发现所要访问的页面不在内存中，则产生缺页中断(page fault)。当发生缺页中断时操作系统必须在内存选择一个页面将其移出内存，以便为即将调入的页面让出空间。</p>
+<p>替换算法常见的有以下几种：</p>
 <ol>
-<li><strong>RAND</strong><br> Rand随机算法的思想是：设置随机数产生器，依据产生的随机数确定替换块，将其替换。</li>
+<li><strong>OPT</strong><br> OPT（Optional Replacement，最佳替换算法）算法的思想是：替换下次访问距当前时间最长的页。opt算法需要知道操作系统将来的事件，显然不可能实现，只作为一种衡量其他算法的标准。</li>
 <li><strong>FIFO</strong><br> FIFO（先进先出算法）算法的思想是：如果一个数据是最先进入的，那么可以认为在将来它被访问的可能性很小。空间满的时候，最先进入的数据会被最早置换（淘汰）掉。</li>
-<li><strong>LRU</strong><br> LRU(The Least Recently Used，最久未使用算法)算法的思想是：如果一个数据在最近一段时间没有被访问到，那么可以认为在将来它被访问的可能性也很小。因此，当空间满时，最久没有访问的数据最先被置换（淘汰）。</li>
-<li><strong>LFU</strong><br> LFU（Least Frequently Used ，最不经常使用算法）算法的思想是：如果一个数据在最近一段时间很少被访问到，那么可以认为在将来它被访问的可能性也很小。因此，当空间满时，最小频率访问的数据最先被淘汰。</li>
+<li><strong>LRU</strong><br> LRU(Least Recently Used，最近未使用算法)算法的思想是：如果一个数据在最近一段时间没有被访问到，那么可以认为在将来它被访问的可能性也很小。因此，当空间满时，最久未被使用的数据最先被置换（淘汰）。</li>
+<li><strong>LFU</strong><br> LFU（Least Frequently Used，最不经常使用算法）算法的思想是：如果一个数据在最近一段时间很少被访问到，那么可以认为在将来它被访问的可能性也很小。因此，当空间满时，访问次数最少的数据最先被置换（淘汰）。</li>
+<li><strong>CLOCK</strong><br> LRU算法的性能接近于OPT,但是实现起来比较困难，且开销大；FIFO算法实现简单，但性能差。所以操作系统的设计者尝试了很多算法，试图用比较小的开销接近LRU的性能，这类算法都是CLOCK算法的变体。<br> 时钟页替换算法把<strong>各个页面组织成环形链表的形式</strong>，类似于一个钟的表面。给每个页帧关联一个<strong>使用位</strong>。当该页第一次装入内存或者被重新访问到时，将使用位置为1。每次需要替换时，查找使用位被置为0的第一个帧进行替换。在扫描过程中，如果碰到使用位为1的帧，将使用位置为0，在继续扫描。如果所谓帧的使用位都为0，则替换第一个帧。<br> 同时有一个指针指向下次开始扫描的位置，每次替换后更改指针指向下一页。</li>
+<li><strong>RAND</strong><br> Rand随机算法的思想是：设置随机数产生器，依据产生的随机数确定替换块，将其替换。</li>
 </ol>
+<hr>
+<p>感谢：<br><a href="http://blog.csdn.net/zephyr_be_brave/article/details/8944967" target="_blank" rel="external">http://blog.csdn.net/zephyr_be_brave/article/details/8944967</a></p>
 
       
     </div>
@@ -386,7 +387,7 @@
           
             <a href="/tags/内存/" rel="tag">#内存</a>
           
-            <a href="/tags/Cache替换算法/" rel="tag">#Cache替换算法</a>
+            <a href="/tags/替换算法/" rel="tag">#替换算法</a>
           
         </div>
       
@@ -473,7 +474,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">196</span>
+              <span class="site-state-item-count">197</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -490,7 +491,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">138</span>
+                <span class="site-state-item-count">139</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -530,7 +531,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#内存管理的方式"><span class="nav-number">1.</span> <span class="nav-text">内存管理的方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分段和分页"><span class="nav-number">2.</span> <span class="nav-text">分段和分页</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#虚拟内存"><span class="nav-number">3.</span> <span class="nav-text">虚拟内存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Cache替换算法"><span class="nav-number">4.</span> <span class="nav-text">Cache替换算法</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#内存管理的方式"><span class="nav-number">1.</span> <span class="nav-text">内存管理的方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#页式管理"><span class="nav-number">1.1.</span> <span class="nav-text">页式管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#段式管理"><span class="nav-number">1.2.</span> <span class="nav-text">段式管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#段页式管理-（最常用）"><span class="nav-number">1.3.</span> <span class="nav-text">段页式管理**（最常用）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分段和分页"><span class="nav-number">2.</span> <span class="nav-text">分段和分页</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#虚拟内存"><span class="nav-number">3.</span> <span class="nav-text">虚拟内存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#替换算法"><span class="nav-number">4.</span> <span class="nav-text">替换算法</span></a></li></ol></div>
             
           </div>
         </section>

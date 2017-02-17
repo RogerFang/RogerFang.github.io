@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="线程,进程,用户线程,内核线程," />
+  <meta name="keywords" content="线程,进程,用户线程,内核线程,进程通信," />
 
 
 
@@ -96,7 +96,7 @@
 线程是进程的一个实体，是CPU调度和分配的基本单位，线程基本上不拥有系统资源，只拥有一点在运行中必不可少的资源（如：程序计数器、寄存器和栈），但是它可以与同属一个进程的其他线程共享进程所拥有的所有资源。
 在实现了线程的操作系统中，进程是资源分配的基本单位，线程是调度的基本单位，是系统中并发执行的单元。
 引入线">
-<meta property="og:updated_time" content="2017-01-19T14:52:13.565Z">
+<meta property="og:updated_time" content="2017-02-17T01:39:14.002Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统：进程管理">
 <meta name="twitter:description" content="进程和线程的区别进程是一个执行中的程序的实例，它是系统进行资源分配和调度的一个独立单位。
@@ -377,6 +377,16 @@
 <li>同一进程中只能同时有一个线程在运行，因为操作系统内核不知道用户线程的存在，此时处理器时间片分配是以进程为基本单位的，如果一个线程阻塞会导致整个进程挂起。</li>
 <li>页面失效也会产生类似的问题。</li>
 </ul>
+<h1 id="进程通信-IPC"><a href="#进程通信-IPC" class="headerlink" title="进程通信 IPC"></a>进程通信 IPC</h1><p>进程通信（Inter-Process Communication）的方式包括以下几种：</p>
+<ol>
+<li><strong>管道</strong>（Pipe）及<strong>有名管道</strong>（FIFO, named pipe）：在内核中开辟一块缓冲区（称为管道）用于通信，管道可用于具有亲缘关系进程间的通信，有名管道克服了管道没有名字的限制，因此，除具有管道所具有的功能外，它还允许无亲缘关系进程间的通信；</li>
+<li><strong>信号</strong>（Signal）：信号是比较复杂的通信方式，用于通知接受进程有某种事件发生，除了用于进程间通信外，进程还可以发送信号给进程本身。</li>
+<li><strong>消息队列</strong>：消息队列是消息的链接表，包括Posix消息队列system V消息队列。有足够权限的进程可以向队列中添加消息，被赋予读权限的进程则可以读走队列中的消息。消息队列克服了信号承载信息量少，管道只能承载无格式字节流以及缓冲区大小受限等缺点。</li>
+<li><strong>共享内存</strong>：使得多个进程可以访问同一块内存空间，是最快的可用IPC形式。是针对其他通信机制运行效率较低而设计的。往往与其它通信机制，如信号量结合使用，来达到进程间的同步及互斥。</li>
+<li><strong>信号量</strong>（semaphore）：主要作为进程间以及同一进程不同线程之间的同步手段。</li>
+<li><strong>Socket</strong>：更为一般的进程间通信机制，可用于不同机器之间的进程间通信。起初是由Unix系统的BSD分支开发出来的，但现在一般可以移植到其它类Unix系统上：Linux和System V的变种都支持套接字。</li>
+<li>文件和记录锁定：为避免两个进程间同时要求访问同一共享资源而引起访问和操作的混乱，在进程对共享资源进行访问前必须对其进行锁定，该进程访问完后再释放。这是UNIX为共享资源提供的互斥性保障。</li>
+</ol>
 
       
     </div>
@@ -406,6 +416,8 @@
             <a href="/tags/用户线程/" rel="tag">#用户线程</a>
           
             <a href="/tags/内核线程/" rel="tag">#内核线程</a>
+          
+            <a href="/tags/进程通信/" rel="tag">#进程通信</a>
           
         </div>
       
@@ -492,7 +504,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">196</span>
+              <span class="site-state-item-count">197</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -509,7 +521,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">138</span>
+                <span class="site-state-item-count">139</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -549,7 +561,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#进程和线程的区别"><span class="nav-number">1.</span> <span class="nav-text">进程和线程的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程同步机制"><span class="nav-number">2.</span> <span class="nav-text">线程同步机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内核线程和用户线程"><span class="nav-number">3.</span> <span class="nav-text">内核线程和用户线程</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#进程和线程的区别"><span class="nav-number">1.</span> <span class="nav-text">进程和线程的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程同步机制"><span class="nav-number">2.</span> <span class="nav-text">线程同步机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内核线程和用户线程"><span class="nav-number">3.</span> <span class="nav-text">内核线程和用户线程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程通信-IPC"><span class="nav-number">4.</span> <span class="nav-text">进程通信 IPC</span></a></li></ol></div>
             
           </div>
         </section>
