@@ -100,7 +100,7 @@ Mybatis支持对Executor、StatementHandler、ParameterHandler和ResultSetHandle
 
 所有可能被拦截的处理类都会生成一个代理。
 代理类在执行对应方法时，判断要不要执行插">
-<meta property="og:updated_time" content="2017-02-19T17:03:05.143Z">
+<meta property="og:updated_time" content="2017-02-20T04:59:43.985Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Mybatis: 插件及分页">
 <meta name="twitter:description" content="插件Mybatis采用责任链模式，通过动态代理组织多个拦截器（插件），通过这些拦截器可以改变Mybatis的默认行为（诸如SQL重写之类的）。
@@ -387,7 +387,12 @@ Mybatis支持对Executor、StatementHandler、ParameterHandler和ResultSetHandle
 <figure class="highlight java"><figcaption><span>Invocation</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> org.apache.ibatis.plugin;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.lang.reflect.InvocationTargetException;</div><div class="line"><span class="keyword">import</span> java.lang.reflect.Method;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Invocation</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="keyword">private</span> Object target;</div><div class="line">  <span class="keyword">private</span> Method method;</div><div class="line">  <span class="keyword">private</span> Object[] args;</div><div class="line"></div><div class="line">  ...</div><div class="line">  <span class="function"><span class="keyword">public</span> Object <span class="title">proceed</span><span class="params">()</span> <span class="keyword">throws</span> InvocationTargetException, IllegalAccessException </span>&#123;</div><div class="line">    <span class="keyword">return</span> method.invoke(target, args);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>详情参见：<a href="http://blog.csdn.net/hupanfeng/article/details/9247379" target="_blank" rel="external">Mybatis 插件原理</a></p>
 <h1 id="分页"><a href="#分页" class="headerlink" title="分页"></a>分页</h1><p>Mybatis的分页功能是基于内存的分页，也就是查出所有记录再按照偏移量offset和limit取出结果。在大数据量的情况下不适用，下面两个插件都是通过拦截<code>Executor</code>等重写sql语句实现数据库的物理分页。</p>
-<p>分页插件：</p>
+<h2 id="逻辑分页-内存分页"><a href="#逻辑分页-内存分页" class="headerlink" title="逻辑分页(内存分页)"></a>逻辑分页(内存分页)</h2><p>Mybatis 自身通过 <code>RowBounds</code>来完成内存分页的。<br><figure class="highlight java"><figcaption><span>Test</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">List&lt;Actor&gt; actorsInMem = mapper.selectAll(<span class="keyword">new</span> RowBounds(<span class="number">10</span>, <span class="number">5</span>));</div><div class="line"><span class="keyword">for</span> (Actor actor: actorsInMem)&#123;</div><div class="line">    System.out.println(actor);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><figcaption><span>ActorMapper</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function">List&lt;Actor&gt; <span class="title">selectAll</span><span class="params">(RowBounds rowBounds)</span></span>;</div></pre></td></tr></table></figure>
+<figure class="highlight"><figcaption><span>ActorMapper.xml</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;select id="selectAll" resultMap="BaseResultMap"&gt;</div><div class="line">    select</div><div class="line">    &lt;include refid="Base_Column_List"/&gt;</div><div class="line">    from actor</div><div class="line">&lt;/select&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><figcaption><span>输出结果(第3页数据)</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Actor&#123;actorId=<span class="number">11</span>, firstName=<span class="string">'ZERO'</span>, lastName=<span class="string">'CAGE'</span>, lastUpdate=Wed Feb <span class="number">15</span> <span class="number">04</span>:<span class="number">34</span>:<span class="number">33</span> CST <span class="number">2006</span>&#125;</div><div class="line">Actor&#123;actorId=<span class="number">12</span>, firstName=<span class="string">'KARL'</span>, lastName=<span class="string">'BERRY'</span>, lastUpdate=Wed Feb <span class="number">15</span> <span class="number">04</span>:<span class="number">34</span>:<span class="number">33</span> CST <span class="number">2006</span>&#125;</div><div class="line">Actor&#123;actorId=<span class="number">13</span>, firstName=<span class="string">'UMA'</span>, lastName=<span class="string">'WOOD'</span>, lastUpdate=Wed Feb <span class="number">15</span> <span class="number">04</span>:<span class="number">34</span>:<span class="number">33</span> CST <span class="number">2006</span>&#125;</div><div class="line">Actor&#123;actorId=<span class="number">14</span>, firstName=<span class="string">'VIVIEN'</span>, lastName=<span class="string">'BERGEN'</span>, lastUpdate=Wed Feb <span class="number">15</span> <span class="number">04</span>:<span class="number">34</span>:<span class="number">33</span> CST <span class="number">2006</span>&#125;</div><div class="line">Actor&#123;actorId=<span class="number">15</span>, firstName=<span class="string">'CUBA'</span>, lastName=<span class="string">'OLIVIER'</span>, lastUpdate=Wed Feb <span class="number">15</span> <span class="number">04</span>:<span class="number">34</span>:<span class="number">33</span> CST <span class="number">2006</span>&#125;</div></pre></td></tr></table></figure>
+<h2 id="物理分页"><a href="#物理分页" class="headerlink" title="物理分页"></a>物理分页</h2><p>物理分页就是在SQL查询过程中实现分页，不同的数据库厂商，实现也会不同。MySql通过在sql语句中添加offset和limit实现。</p>
+<p>分页插件实现，通过添加拦截器，对<code>Executor</code>进行拦截，然后重写sql：</p>
 <ul>
 <li><a href="https://github.com/miemiedev/mybatis-paginator" target="_blank" rel="external">mybatis-paginator</a></li>
 <li><a href="https://github.com/pagehelper/Mybatis-PageHelper" target="_blank" rel="external">Mybatis-PageHelper</a></li>
@@ -425,6 +430,10 @@ Mybatis支持对Executor、StatementHandler、ParameterHandler和ResultSetHandle
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/20/Spring-IoC实现/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -492,7 +501,7 @@ Mybatis支持对Executor、StatementHandler、ParameterHandler和ResultSetHandle
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">200</span>
+              <span class="site-state-item-count">203</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -549,7 +558,7 @@ Mybatis支持对Executor、StatementHandler、ParameterHandler和ResultSetHandle
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#插件"><span class="nav-number">1.</span> <span class="nav-text">插件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Executor"><span class="nav-number">1.1.</span> <span class="nav-text">Executor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Interceptor"><span class="nav-number">1.2.</span> <span class="nav-text">Interceptor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Plugin"><span class="nav-number">1.3.</span> <span class="nav-text">Plugin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Invocation"><span class="nav-number">1.4.</span> <span class="nav-text">Invocation</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分页"><span class="nav-number">2.</span> <span class="nav-text">分页</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#插件"><span class="nav-number">1.</span> <span class="nav-text">插件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Executor"><span class="nav-number">1.1.</span> <span class="nav-text">Executor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Interceptor"><span class="nav-number">1.2.</span> <span class="nav-text">Interceptor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Plugin"><span class="nav-number">1.3.</span> <span class="nav-text">Plugin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Invocation"><span class="nav-number">1.4.</span> <span class="nav-text">Invocation</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分页"><span class="nav-number">2.</span> <span class="nav-text">分页</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑分页-内存分页"><span class="nav-number">2.1.</span> <span class="nav-text">逻辑分页(内存分页)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#物理分页"><span class="nav-number">2.2.</span> <span class="nav-text">物理分页</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

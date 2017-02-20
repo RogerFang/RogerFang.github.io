@@ -4,6 +4,86 @@
   
     
     <entry>
+      <title><![CDATA[Spring: Bean对IoC容器的感知]]></title>
+      <url>https://rogerfang.github.io/2017/02/20/Spring-Bean%E5%AF%B9IoC%E5%AE%B9%E5%99%A8%E7%9A%84%E6%84%9F%E7%9F%A5/</url>
+      <content type="html"><![CDATA[<p>如果Bean需要直接对IoC容器进行操作，就需要在Bean中设定对容器的感知。Spring IoC容器是通过特定的 aware 接口来完成的。</p>
+<ul>
+<li><code>BeanNameAware</code>: 可以在 Bean 中得到它在IoC容器中的Bean 实例名称。</li>
+<li><code>BeanFactoryAware</code>: 可以在 Bean 中得到Bean所在IoC容器，从而直接使用容器的服务。</li>
+<li><code>ApplicationContextAware</code>: 可以在 Bean 中得到应用上下文。</li>
+<li><code>MessageSourceAware</code>: 可以得到消息源。</li>
+<li><code>ResourceLoaderAware</code>: 可以得到<code>ResourceLoader</code>，从而可以加载外部对应的<code>Resource</code>资源。</li>
+</ul>
+<p>在设置Bean的属性之后，调用初始化回调方法（后置处理器<code>BeanPostProcessor</code>的两个方法）之前，Spring会调用aware接口中的setter方法。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Spring: BeanFactory和FactoryBean]]></title>
+      <url>https://rogerfang.github.io/2017/02/20/Spring-BeanFactory%E5%92%8CFactoryBean/</url>
+      <content type="html"><![CDATA[<h1 id="BeanFactory"><a href="#BeanFactory" class="headerlink" title="BeanFactory"></a>BeanFactory</h1><p>BeanFactory 定义了IoC容器应该遵守的最底层和最基本的编程规范。所有的Bean都是由BeanFactory来进行管理的。</p>
+<h1 id="FactoryBean"><a href="#FactoryBean" class="headerlink" title="FactoryBean"></a>FactoryBean</h1><p>FactoryBean 就是一个Bean，只不过这是一个<strong>能产生或修饰对象生成</strong>的工厂Bean。是为了方便Factory实例在Spring IoC中的配置而产生的。<br><figure class="highlight java"><figcaption><span>FactoryBean</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">FactoryBean</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	<span class="function">T <span class="title">getObject</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>;</div><div class="line">	Class&lt;?&gt; getObjectType();</div><div class="line">	<span class="function"><span class="keyword">boolean</span> <span class="title">isSingleton</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>一般情况下，Spring通过反射机制利用<bean>的class属性指定实现类来实例化Bean。在某些情况下，实例化Bean过程比较复杂，如果按照传统的方式，则需要在<bean>中提供大量的配置信息。配置的方式的灵活性是受限的，这时采用编写代码的方式可能会得到一个简单的方案。</bean></bean></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ApplicationContext context = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"classpath:applicationContext.xml"</span>);</div><div class="line">FooFactoryBean ffb=context.getBean(<span class="string">"&amp;fooFactoryBean"</span>);</div></pre></td></tr></table></figure>
+<p>BeanFactory的属性<code>String FACTORY_BEAN_PREFIX = &quot;&amp;&quot;;</code>专门为 FactoryBean 设置的，FactoryBean的实现类默认返回的对象是<code>getObject()</code>的类型，如果我们就要返回FactoryBean的实现本身的实例就要用到这个前缀&amp;了。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title></title>
+      <url>https://rogerfang.github.io/2017/02/20/Spring-IoC%E5%AE%9E%E7%8E%B0/</url>
+      <content type="html"><![CDATA[<hr>
+<p>title: ‘Spring: IoC实现’<br>date: 2017-02-20 15:18:38<br>categories:</p>
+<ul>
+<li>Spring<br>tags:</li>
+<li>IoC</li>
+</ul>
+<hr>
+<h1 id="IoC容器"><a href="#IoC容器" class="headerlink" title="IoC容器"></a>IoC容器</h1><p>Spring中有两个主要的容器系列：<code>BeanFactory</code>和<code>ApplicationContext</code>。</p>
+<ul>
+<li><code>BeanFactory</code>: 定义了IoC容器的基本功能。</li>
+<li><code>ApplicationContext</code>: 在简单容器的基础上，通过继承<code>MessageSource</code>、<code>ResourceLoader</code>、<code>ApplicationEventPublisher</code>等接口增加了许多面向框架的特性。</li>
+</ul>
+<p>Spring通过定义<code>BeanDefinition</code>来管理各种Bean以及它们之间的依赖关系，是对它们的抽象，是IoC容器的核心数据结构。</p>
+<h2 id="BeanFactory容器原理"><a href="#BeanFactory容器原理" class="headerlink" title="BeanFactory容器原理"></a>BeanFactory容器原理</h2><p>在Spring中默认把<code>DefaultListableBeanFactory</code>作为一个功能完整的IoC容器。<br><img src="/images/spring/spring-ioc-beanfactory.png" alt=""></p>
+<p><code>java 编程式使用IoC容器
+ClassPathResource res = new ClassPathResource(&quot;spring-beans.xml&quot;);
+DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
+XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
+readr.loadBeanDefinitions(res);</code><br>Spring中使用<code>Resource</code>来封装<code>BeanDefinition</code>的信息源（XML文件），IoC容器通过<code>Resource</code>来定位<code>BeanDefinition</code>的信息，从而完成容器的初始化和依赖注入过程。</p>
+<p>通过调用<code>XmlBeanDefinitionReader</code>的<code>loadDefinitions()</code>方法从<code>Resource</code>中开始载入<code>BeanDefinition</code>。</p>
+<h2 id="ApplicationContext容器原理"><a href="#ApplicationContext容器原理" class="headerlink" title="ApplicationContext容器原理"></a>ApplicationContext容器原理</h2><p><code>ApplicationContext</code>容器扩展了<code>MessageSource</code>接口，可以支持国际化的实现，开发多语言版本；具体的<code>ApplicationContext</code>实现都是继承了<code>DefaultResourceLoader</code>的子类，可以从不同的地方得到<code>BeanDefinition</code>的资源；同时还继承了<code>ApplicationEventPublisher</code>接口，从而在应用上下文中引入了事件机制，这些事件机制和Bean的生命周期的结合为Bean的管理提供了便利。</p>
+<p><code>ApplicationContext</code>是通过<code>refresh()</code>方法来启动IoC容器的，同时还会对<code>BeanDefinition</code>的信息源进行封装成<code>Resource</code>（例如 ClassPathResource、FileSystemResource等）。</p>
+<h1 id="IoC容器的初始化"><a href="#IoC容器的初始化" class="headerlink" title="IoC容器的初始化"></a>IoC容器的初始化</h1><p>IoC容器的初始化分为3个过程：</p>
+<ol>
+<li><code>Resource</code> 的定位过程，即<code>BeanDefinition</code>的资源定位。</li>
+<li><code>BeanDefinition</code> 的载入和解析。</li>
+<li><code>BeanDefinition</code> 在IoC容器中的注册。</li>
+</ol>
+<p>XML -&gt; Resource -&gt; Document -&gt; BeanDefinition</p>
+<h2 id="Resource定位"><a href="#Resource定位" class="headerlink" title="Resource定位"></a>Resource定位</h2><p>使用<code>DefaultListableBeanFactory</code>时，需要自己去定位<code>Resource</code>，并提供相应的<code>BeanDefinitionReader</code>来对这些信息进行处理。<code>DefaultListableFactory</code>是一个纯粹的IoC容器。</p>
+<p>而在<code>ApplicationContext</code>中已经提供了一系列<code>Resource</code>定位的实现以及<code>BeanDefinitionReader</code>。</p>
+<h2 id="BeanDefinition的载入和解析"><a href="#BeanDefinition的载入和解析" class="headerlink" title="BeanDefinition的载入和解析"></a>BeanDefinition的载入和解析</h2><p>IoC容器的载入过程，是把定义的Bean转化成Spring内部表示的数据结构（BeanDefinition）的过程。</p>
+<p><code>BeanDefinition</code>载入分为两部分，首先通过调用XML的解析器得到<code>Document</code>对象，然后通过<code>DocumentReader</code>完成对<code>Document</code>对象的解析（按照Spring的Bean规则，默认是使用<code>DefaultBeanDefinitionDocumentReader</code>）。</p>
+<p>在<code>DefaultBeanDefinitionDocumentReader</code>中通过调用<code>BeanDefinitonParserDelegate</code>的<code>processBeanDefinition()</code>方法来实现，处理的结果是生成<code>BeanDefinitionHolder</code>对象持有。<code>BeanDefinitionHolder</code>对象除了持有<code>BeanDefinition</code>对象外，还有其他与<code>BeanDefinition</code>的使用相关的信息，比如 Bean 的名字、别名集合等。</p>
+<h2 id="BeanDefinition在IoC容器中的注册"><a href="#BeanDefinition在IoC容器中的注册" class="headerlink" title="BeanDefinition在IoC容器中的注册"></a>BeanDefinition在IoC容器中的注册</h2><p>通过对<code>BeanDefinition</code>的载入和解析过程，在IoC容器内已经建立相应的数据结构和数据表示，但是这些数据还不能供IoC容器直接使用，需要对这些<code>BeanDefinition</code>对象进行注册。<br>IoC容器中通过一个<code>ConcurrentHashMap</code>来保持和维护这些加载的<code>BeanDefinition</code>。</p>
+<p>注册完，整个IoC容器的初始化就完成了。</p>
+<h1 id="IoC容器的依赖注入"><a href="#IoC容器的依赖注入" class="headerlink" title="IoC容器的依赖注入"></a>IoC容器的依赖注入</h1><blockquote>
+<p>依赖注入的过程是在用户第一次向IoC容器索要 Bean 时触发的，也可以通过设置<code>lazy-init=false</code>属性让容器完成对 Bean 的预实例化（其实也是一个完成依赖注入的过程）。</p>
+</blockquote>
+<p>触发依赖注入的入口在<code>BeanFactory</code>提供的<code>getBean()</code>方法中。具体的依赖注入发生时在<code>BeanWrapper</code>的实现类<code>BeanWrapperImpl</code>中<code>setPropertyValue()</code>方法中实现。</p>
+<p>在Bean的创建和对象依赖注入的过程中，需要根据<code>BeanDefinition</code>中的信息递归的完成。一个递归是在上下文中查找需要的Bean和创建Bean的递归调用。另一个递归是在依赖注入时，通过递归调用容器的<code>getBean()</code>方法，得到当前Bean依赖的Bean，同时也触发对依赖Bean的创建和注入。</p>
+<h1 id="Bean的生命周期"><a href="#Bean的生命周期" class="headerlink" title="Bean的生命周期"></a>Bean的生命周期</h1><ol>
+<li>Bean实例的创建</li>
+<li>为Bean实例设置属性</li>
+<li>调用Bean的初始化方法</li>
+<li>应用Bean</li>
+<li>容器关闭时调用Bean的销毁方法。</li>
+</ol>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[Mybatis: 插件及分页]]></title>
       <url>https://rogerfang.github.io/2017/02/19/Mybatis-%E6%8F%92%E4%BB%B6%E5%8F%8A%E5%88%86%E9%A1%B5/</url>
       <content type="html"><![CDATA[<h1 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h1><p>Mybatis采用<strong>责任链模式</strong>，通过<strong>动态代理</strong>组织多个拦截器（插件），通过这些拦截器可以改变Mybatis的默认行为（诸如SQL重写之类的）。</p>
@@ -39,7 +119,12 @@
 <figure class="highlight java"><figcaption><span>Invocation</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> org.apache.ibatis.plugin;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.lang.reflect.InvocationTargetException;</div><div class="line"><span class="keyword">import</span> java.lang.reflect.Method;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Invocation</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="keyword">private</span> Object target;</div><div class="line">  <span class="keyword">private</span> Method method;</div><div class="line">  <span class="keyword">private</span> Object[] args;</div><div class="line"></div><div class="line">  ...</div><div class="line">  <span class="function"><span class="keyword">public</span> Object <span class="title">proceed</span><span class="params">()</span> <span class="keyword">throws</span> InvocationTargetException, IllegalAccessException </span>&#123;</div><div class="line">    <span class="keyword">return</span> method.invoke(target, args);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>详情参见：<a href="http://blog.csdn.net/hupanfeng/article/details/9247379" target="_blank" rel="external">Mybatis 插件原理</a></p>
 <h1 id="分页"><a href="#分页" class="headerlink" title="分页"></a>分页</h1><p>Mybatis的分页功能是基于内存的分页，也就是查出所有记录再按照偏移量offset和limit取出结果。在大数据量的情况下不适用，下面两个插件都是通过拦截<code>Executor</code>等重写sql语句实现数据库的物理分页。</p>
-<p>分页插件：</p>
+<h2 id="逻辑分页-内存分页"><a href="#逻辑分页-内存分页" class="headerlink" title="逻辑分页(内存分页)"></a>逻辑分页(内存分页)</h2><p>Mybatis 自身通过 <code>RowBounds</code>来完成内存分页的。<br><figure class="highlight java"><figcaption><span>Test</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">List&lt;Actor&gt; actorsInMem = mapper.selectAll(<span class="keyword">new</span> RowBounds(<span class="number">10</span>, <span class="number">5</span>));</div><div class="line"><span class="keyword">for</span> (Actor actor: actorsInMem)&#123;</div><div class="line">    System.out.println(actor);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><figcaption><span>ActorMapper</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function">List&lt;Actor&gt; <span class="title">selectAll</span><span class="params">(RowBounds rowBounds)</span></span>;</div></pre></td></tr></table></figure>
+<figure class="highlight"><figcaption><span>ActorMapper.xml</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;select id="selectAll" resultMap="BaseResultMap"&gt;</div><div class="line">    select</div><div class="line">    &lt;include refid="Base_Column_List"/&gt;</div><div class="line">    from actor</div><div class="line">&lt;/select&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><figcaption><span>输出结果(第3页数据)</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Actor&#123;actorId=<span class="number">11</span>, firstName=<span class="string">'ZERO'</span>, lastName=<span class="string">'CAGE'</span>, lastUpdate=Wed Feb <span class="number">15</span> <span class="number">04</span>:<span class="number">34</span>:<span class="number">33</span> CST <span class="number">2006</span>&#125;</div><div class="line">Actor&#123;actorId=<span class="number">12</span>, firstName=<span class="string">'KARL'</span>, lastName=<span class="string">'BERRY'</span>, lastUpdate=Wed Feb <span class="number">15</span> <span class="number">04</span>:<span class="number">34</span>:<span class="number">33</span> CST <span class="number">2006</span>&#125;</div><div class="line">Actor&#123;actorId=<span class="number">13</span>, firstName=<span class="string">'UMA'</span>, lastName=<span class="string">'WOOD'</span>, lastUpdate=Wed Feb <span class="number">15</span> <span class="number">04</span>:<span class="number">34</span>:<span class="number">33</span> CST <span class="number">2006</span>&#125;</div><div class="line">Actor&#123;actorId=<span class="number">14</span>, firstName=<span class="string">'VIVIEN'</span>, lastName=<span class="string">'BERGEN'</span>, lastUpdate=Wed Feb <span class="number">15</span> <span class="number">04</span>:<span class="number">34</span>:<span class="number">33</span> CST <span class="number">2006</span>&#125;</div><div class="line">Actor&#123;actorId=<span class="number">15</span>, firstName=<span class="string">'CUBA'</span>, lastName=<span class="string">'OLIVIER'</span>, lastUpdate=Wed Feb <span class="number">15</span> <span class="number">04</span>:<span class="number">34</span>:<span class="number">33</span> CST <span class="number">2006</span>&#125;</div></pre></td></tr></table></figure>
+<h2 id="物理分页"><a href="#物理分页" class="headerlink" title="物理分页"></a>物理分页</h2><p>物理分页就是在SQL查询过程中实现分页，不同的数据库厂商，实现也会不同。MySql通过在sql语句中添加offset和limit实现。</p>
+<p>分页插件实现，通过添加拦截器，对<code>Executor</code>进行拦截，然后重写sql：</p>
 <ul>
 <li><a href="https://github.com/miemiedev/mybatis-paginator" target="_blank" rel="external">mybatis-paginator</a></li>
 <li><a href="https://github.com/pagehelper/Mybatis-PageHelper" target="_blank" rel="external">Mybatis-PageHelper</a></li>
