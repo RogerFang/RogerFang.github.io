@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="IoC," />
 
 
 
@@ -84,44 +84,38 @@
 
 
 
-<meta name="description" content="title: ‘Spring: IoC实现’date: 2017-02-20 15:18:38categories:
-
-Springtags:
-IoC
-
-
-IoC容器Spring中有两个主要的容器系列：BeanFactory和ApplicationContext。
+<meta name="description" content="IoC容器Spring中有两个主要的容器系列：BeanFactory和ApplicationContext。
 
 BeanFactory: 定义了IoC容器的基本功能。
-ApplicationContext: 在简单容器的基础上，通过继承Mes">
+
+ApplicationContext: 在简单容器的基础上，通过继承MessageSource、ResourceLoader、ApplicationEventPublisher等接口增加了许多面向框架的特性。
+
+
+Spring通过">
 <meta property="og:type" content="article">
-<meta property="og:title" content="方龙的博客">
+<meta property="og:title" content="Spring: IoC实现">
 <meta property="og:url" content="https://rogerfang.github.io/2017/02/20/Spring-IoC实现/index.html">
 <meta property="og:site_name" content="方龙的博客">
-<meta property="og:description" content="title: ‘Spring: IoC实现’date: 2017-02-20 15:18:38categories:
-
-Springtags:
-IoC
-
-
-IoC容器Spring中有两个主要的容器系列：BeanFactory和ApplicationContext。
+<meta property="og:description" content="IoC容器Spring中有两个主要的容器系列：BeanFactory和ApplicationContext。
 
 BeanFactory: 定义了IoC容器的基本功能。
-ApplicationContext: 在简单容器的基础上，通过继承Mes">
+
+ApplicationContext: 在简单容器的基础上，通过继承MessageSource、ResourceLoader、ApplicationEventPublisher等接口增加了许多面向框架的特性。
+
+
+Spring通过">
 <meta property="og:image" content="https://rogerfang.github.io/images/spring/spring-ioc-beanfactory.png">
-<meta property="og:updated_time" content="2017-02-20T11:55:11.235Z">
+<meta property="og:updated_time" content="2017-02-20T12:36:16.742Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="方龙的博客">
-<meta name="twitter:description" content="title: ‘Spring: IoC实现’date: 2017-02-20 15:18:38categories:
-
-Springtags:
-IoC
-
-
-IoC容器Spring中有两个主要的容器系列：BeanFactory和ApplicationContext。
+<meta name="twitter:title" content="Spring: IoC实现">
+<meta name="twitter:description" content="IoC容器Spring中有两个主要的容器系列：BeanFactory和ApplicationContext。
 
 BeanFactory: 定义了IoC容器的基本功能。
-ApplicationContext: 在简单容器的基础上，通过继承Mes">
+
+ApplicationContext: 在简单容器的基础上，通过继承MessageSource、ResourceLoader、ApplicationEventPublisher等接口增加了许多面向框架的特性。
+
+
+Spring通过">
 <meta name="twitter:image" content="https://rogerfang.github.io/images/spring/spring-ioc-beanfactory.png">
 
 
@@ -146,7 +140,7 @@ ApplicationContext: 在简单容器的基础上，通过继承Mes">
   <link rel="canonical" href="https://rogerfang.github.io/2017/02/20/Spring-IoC实现/"/>
 
 
-  <title>  | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title> Spring: IoC实现 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -309,7 +303,7 @@ ApplicationContext: 在简单容器的基础上，通过继承Mes">
             
             
               
-                
+                Spring: IoC实现
               
             
           </h1>
@@ -321,11 +315,30 @@ ApplicationContext: 在简单容器的基础上，通过继承Mes">
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-20T00:00:00+08:00" content="2017-02-20">
+            <time itemprop="dateCreated" datetime="2017-02-20T15:18:38+08:00" content="2017-02-20">
               2017-02-20
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
@@ -349,33 +362,29 @@ ApplicationContext: 在简单容器的基础上，通过继承Mes">
       
 
       
-        <hr>
-<p>title: ‘Spring: IoC实现’<br>date: 2017-02-20 15:18:38<br>categories:</p>
+        <h1 id="IoC容器"><a href="#IoC容器" class="headerlink" title="IoC容器"></a>IoC容器</h1><p>Spring中有两个主要的容器系列：<code>BeanFactory</code>和<code>ApplicationContext</code>。</p>
 <ul>
-<li>Spring<br>tags:</li>
-<li>IoC</li>
-</ul>
-<hr>
-<h1 id="IoC容器"><a href="#IoC容器" class="headerlink" title="IoC容器"></a>IoC容器</h1><p>Spring中有两个主要的容器系列：<code>BeanFactory</code>和<code>ApplicationContext</code>。</p>
-<ul>
-<li><code>BeanFactory</code>: 定义了IoC容器的基本功能。</li>
-<li><code>ApplicationContext</code>: 在简单容器的基础上，通过继承<code>MessageSource</code>、<code>ResourceLoader</code>、<code>ApplicationEventPublisher</code>等接口增加了许多面向框架的特性。</li>
+<li><p><code>BeanFactory</code>: 定义了IoC容器的基本功能。</p>
+</li>
+<li><p><code>ApplicationContext</code>: 在简单容器的基础上，通过继承<code>MessageSource</code>、<code>ResourceLoader</code>、<code>ApplicationEventPublisher</code>等接口增加了许多面向框架的特性。</p>
+</li>
 </ul>
 <p>Spring通过定义<code>BeanDefinition</code>来管理各种Bean以及它们之间的依赖关系，是对它们的抽象，是IoC容器的核心数据结构。</p>
-<h2 id="BeanFactory容器原理"><a href="#BeanFactory容器原理" class="headerlink" title="BeanFactory容器原理"></a>BeanFactory容器原理</h2><p>在Spring中默认把<code>DefaultListableBeanFactory</code>作为一个功能完整的IoC容器。<br><img src="/images/spring/spring-ioc-beanfactory.png" alt=""></p>
-<p><code>java 编程式使用IoC容器
-ClassPathResource res = new ClassPathResource(&quot;spring-beans.xml&quot;);
-DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
-XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
-readr.loadBeanDefinitions(res);</code><br>Spring中使用<code>Resource</code>来封装<code>BeanDefinition</code>的信息源（XML文件），IoC容器通过<code>Resource</code>来定位<code>BeanDefinition</code>的信息，从而完成容器的初始化和依赖注入过程。</p>
+<h2 id="BeanFactory容器原理"><a href="#BeanFactory容器原理" class="headerlink" title="BeanFactory容器原理"></a>BeanFactory容器原理</h2><p>在Spring中默认把<code>DefaultListableBeanFactory</code>作为一个功能完整的IoC容器。</p>
+<p><img src="/images/spring/spring-ioc-beanfactory.png" alt=""></p>
+<figure class="highlight java"><figcaption><span>编程式使用IoC容器</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">ClassPathResource res = <span class="keyword">new</span> ClassPathResource(<span class="string">"spring-beans.xml"</span>);</div><div class="line"></div><div class="line">DefaultListableBeanFactory factory = <span class="keyword">new</span> DefaultListableBeanFactory();</div><div class="line"></div><div class="line">XmlBeanDefinitionReader reader = <span class="keyword">new</span> XmlBeanDefinitionReader(factory);</div><div class="line"></div><div class="line">readr.loadBeanDefinitions(res);</div></pre></td></tr></table></figure>
+<p>Spring中使用<code>Resource</code>来封装<code>BeanDefinition</code>的信息源（XML文件），IoC容器通过<code>Resource</code>来定位<code>BeanDefinition</code>的信息，从而完成容器的初始化和依赖注入过程。</p>
 <p>通过调用<code>XmlBeanDefinitionReader</code>的<code>loadDefinitions()</code>方法从<code>Resource</code>中开始载入<code>BeanDefinition</code>。</p>
 <h2 id="ApplicationContext容器原理"><a href="#ApplicationContext容器原理" class="headerlink" title="ApplicationContext容器原理"></a>ApplicationContext容器原理</h2><p><code>ApplicationContext</code>容器扩展了<code>MessageSource</code>接口，可以支持国际化的实现，开发多语言版本；具体的<code>ApplicationContext</code>实现都是继承了<code>DefaultResourceLoader</code>的子类，可以从不同的地方得到<code>BeanDefinition</code>的资源；同时还继承了<code>ApplicationEventPublisher</code>接口，从而在应用上下文中引入了事件机制，这些事件机制和Bean的生命周期的结合为Bean的管理提供了便利。</p>
 <p><code>ApplicationContext</code>是通过<code>refresh()</code>方法来启动IoC容器的，同时还会对<code>BeanDefinition</code>的信息源进行封装成<code>Resource</code>（例如 ClassPathResource、FileSystemResource等）。</p>
 <h1 id="IoC容器的初始化"><a href="#IoC容器的初始化" class="headerlink" title="IoC容器的初始化"></a>IoC容器的初始化</h1><p>IoC容器的初始化分为3个过程：</p>
 <ol>
-<li><code>Resource</code> 的定位过程，即<code>BeanDefinition</code>的资源定位。</li>
-<li><code>BeanDefinition</code> 的载入和解析。</li>
-<li><code>BeanDefinition</code> 在IoC容器中的注册。</li>
+<li><p><code>Resource</code> 的定位过程，即<code>BeanDefinition</code>的资源定位。</p>
+</li>
+<li><p><code>BeanDefinition</code> 的载入和解析。</p>
+</li>
+<li><p><code>BeanDefinition</code> 在IoC容器中的注册。</p>
+</li>
 </ol>
 <p>XML -&gt; Resource -&gt; Document -&gt; BeanDefinition</p>
 <h2 id="Resource定位"><a href="#Resource定位" class="headerlink" title="Resource定位"></a>Resource定位</h2><p>使用<code>DefaultListableBeanFactory</code>时，需要自己去定位<code>Resource</code>，并提供相应的<code>BeanDefinitionReader</code>来对这些信息进行处理。<code>DefaultListableFactory</code>是一个纯粹的IoC容器。</p>
@@ -383,7 +392,8 @@ readr.loadBeanDefinitions(res);</code><br>Spring中使用<code>Resource</code>�
 <h2 id="BeanDefinition的载入和解析"><a href="#BeanDefinition的载入和解析" class="headerlink" title="BeanDefinition的载入和解析"></a>BeanDefinition的载入和解析</h2><p>IoC容器的载入过程，是把定义的Bean转化成Spring内部表示的数据结构（BeanDefinition）的过程。</p>
 <p><code>BeanDefinition</code>载入分为两部分，首先通过调用XML的解析器得到<code>Document</code>对象，然后通过<code>DocumentReader</code>完成对<code>Document</code>对象的解析（按照Spring的Bean规则，默认是使用<code>DefaultBeanDefinitionDocumentReader</code>）。</p>
 <p>在<code>DefaultBeanDefinitionDocumentReader</code>中通过调用<code>BeanDefinitonParserDelegate</code>的<code>processBeanDefinition()</code>方法来实现，处理的结果是生成<code>BeanDefinitionHolder</code>对象持有。<code>BeanDefinitionHolder</code>对象除了持有<code>BeanDefinition</code>对象外，还有其他与<code>BeanDefinition</code>的使用相关的信息，比如 Bean 的名字、别名集合等。</p>
-<h2 id="BeanDefinition在IoC容器中的注册"><a href="#BeanDefinition在IoC容器中的注册" class="headerlink" title="BeanDefinition在IoC容器中的注册"></a>BeanDefinition在IoC容器中的注册</h2><p>通过对<code>BeanDefinition</code>的载入和解析过程，在IoC容器内已经建立相应的数据结构和数据表示，但是这些数据还不能供IoC容器直接使用，需要对这些<code>BeanDefinition</code>对象进行注册。<br>IoC容器中通过一个<code>ConcurrentHashMap</code>来保持和维护这些加载的<code>BeanDefinition</code>。</p>
+<h2 id="BeanDefinition在IoC容器中的注册"><a href="#BeanDefinition在IoC容器中的注册" class="headerlink" title="BeanDefinition在IoC容器中的注册"></a>BeanDefinition在IoC容器中的注册</h2><p>通过对<code>BeanDefinition</code>的载入和解析过程，在IoC容器内已经建立相应的数据结构和数据表示，但是这些数据还不能供IoC容器直接使用，需要对这些<code>BeanDefinition</code>对象进行注册。</p>
+<p>IoC容器中通过一个<code>ConcurrentHashMap</code>来保持和维护这些加载的<code>BeanDefinition</code>。</p>
 <p>注册完，整个IoC容器的初始化就完成了。</p>
 <h1 id="IoC容器的依赖注入"><a href="#IoC容器的依赖注入" class="headerlink" title="IoC容器的依赖注入"></a>IoC容器的依赖注入</h1><blockquote>
 <p>依赖注入的过程是在用户第一次向IoC容器索要 Bean 时触发的，也可以通过设置<code>lazy-init=false</code>属性让容器完成对 Bean 的预实例化（其实也是一个完成依赖注入的过程）。</p>
@@ -391,11 +401,16 @@ readr.loadBeanDefinitions(res);</code><br>Spring中使用<code>Resource</code>�
 <p>触发依赖注入的入口在<code>BeanFactory</code>提供的<code>getBean()</code>方法中。具体的依赖注入发生时在<code>BeanWrapper</code>的实现类<code>BeanWrapperImpl</code>中<code>setPropertyValue()</code>方法中实现。</p>
 <p>在Bean的创建和对象依赖注入的过程中，需要根据<code>BeanDefinition</code>中的信息递归的完成。一个递归是在上下文中查找需要的Bean和创建Bean的递归调用。另一个递归是在依赖注入时，通过递归调用容器的<code>getBean()</code>方法，得到当前Bean依赖的Bean，同时也触发对依赖Bean的创建和注入。</p>
 <h1 id="Bean的生命周期"><a href="#Bean的生命周期" class="headerlink" title="Bean的生命周期"></a>Bean的生命周期</h1><ol>
-<li>Bean实例的创建</li>
-<li>为Bean实例设置属性</li>
-<li>调用Bean的初始化方法</li>
-<li>应用Bean</li>
-<li>容器关闭时调用Bean的销毁方法。</li>
+<li><p>Bean实例的创建</p>
+</li>
+<li><p>为Bean实例设置属性</p>
+</li>
+<li><p>调用Bean的初始化方法</p>
+</li>
+<li><p>应用Bean</p>
+</li>
+<li><p>容器关闭时调用Bean的销毁方法。</p>
+</li>
 </ol>
 
       
@@ -416,6 +431,12 @@ readr.loadBeanDefinitions(res);</code><br>Spring中使用<code>Resource</code>�
     </div>
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/IoC/" rel="tag">#IoC</a>
+          
+        </div>
       
 
       
@@ -500,7 +521,7 @@ readr.loadBeanDefinitions(res);</code><br>Spring中使用<code>Resource</code>�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">203</span>
+              <span class="site-state-item-count">204</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
