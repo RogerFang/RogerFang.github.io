@@ -124,7 +124,7 @@ AOT编译器
 直接把*.java文件编译成本地机器码的过程。">
 <meta property="og:image" content="https://rogerfang.github.io/images/jvm/java-compile-process.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/jvm/javac-compiler-process.png">
-<meta property="og:updated_time" content="2017-01-23T07:54:40.894Z">
+<meta property="og:updated_time" content="2017-02-27T02:07:03.406Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="前端编译(Javac编译器)">
 <meta name="twitter:description" content="Java语言中的“编译期”是一段“不确定”的操作过程。可能指的是以下三种：
@@ -470,7 +470,7 @@ AOT编译器
 <p>例如：final语义校验<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method1</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">final</span> <span class="keyword">int</span> var = <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> var = <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>方法一与方法二在经过编译后得到的Class文件没有任何区别，局部变量与字段（实例变量、类变量）是有区别的，它在常量池中没有符号引用，自然就没有访问标志（Access_Flags）的信息，在Class文件中不可能知道一个局部变量是不是声明为final了。</p>
 <blockquote>
-<p>因此，将局部变量声明为final，对运行期是没有影响的，变量的不变形仅仅由编译器在编译期间保障。</p>
+<p>因此，将局部变量声明为final，对运行期是没有影响的，变量的不变性仅仅由编译器在编译期间保障。</p>
 </blockquote>
 <h3 id="解语法糖"><a href="#解语法糖" class="headerlink" title="解语法糖"></a>解语法糖</h3><blockquote>
 <p>语法糖（Syntactic Sugar）：是计算机语言中的某种语法，这种语法对语言功能没有任何影响，但是可以增加程序的可读性，方便程序员的使用。例如：泛型、变长参数、自动拆箱/装箱等。</p>
@@ -486,9 +486,8 @@ AOT编译器
 <p>并且会保证执行顺序：先执行父类的实例构造器<code>init&lt;&gt;</code>，然后初始化变量和执行语句块。</p>
 </blockquote>
 <p>对于<code>&lt;init&gt;()</code>而言是非静态语句块<code>{}</code>块和实例变量，对于<code>&lt;clinit&gt;()</code>而言是静态语句块<code>static{}</code>块和类变量。<br><code>&lt;clinit&gt;()</code>无需调用父类的<code>clinit()</code>方法，虚拟机会保证父类构造器的执行（类加载）。</p>
-<blockquote>
-<p>相关博客：<br><a href="https://rogerfang.github.io/2016/12/30/Java-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/">https://rogerfang.github.io/2016/12/30/Java-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/</a></p>
-</blockquote>
+<hr>
+<p>感谢：<br><a href="https://rogerfang.github.io/2016/12/30/Java-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/">https://rogerfang.github.io/2016/12/30/Java-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/</a></p>
 
       
     </div>
@@ -619,7 +618,7 @@ AOT编译器
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">140</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -106,7 +106,7 @@
 如今，基于物理机、虚拟">
 <meta property="og:image" content="https://rogerfang.github.io/images/jvm/compile-process.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/jvm/java-compile-execution-process.png">
-<meta property="og:updated_time" content="2017-01-03T10:43:11.076Z">
+<meta property="og:updated_time" content="2017-02-27T01:41:19.111Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C和Java编译执行的过程比较">
 <meta name="twitter:description" content="编译不论是物理机还是虚拟机，大部分的程序代码从开始编译到最终转化成物理机的目标代码或虚拟机能执行的指令集之前，都会按照如下图所示的各个步骤进行：
@@ -377,7 +377,7 @@
 <h1 id="Java和C-C-比较"><a href="#Java和C-C-比较" class="headerlink" title="Java和C/C++比较"></a>Java和C/C++比较</h1><p>JVM的即时编译器与C/C++的静态编译器相比，可能会由于以下原因存在导致输出的本地代码有一些劣势：</p>
 <ol>
 <li>即时编译器运行占用的是用户程序的运行时间。</li>
-<li>Java语言是动态的类型安全语言，实现上回进行各种安全检查。</li>
+<li>Java语言是动态的类型安全语言，实现上会进行各种安全检查。</li>
 <li>Java语言没有<code>virtual</code>关键字，但是使用<strong>虚方法</strong>的频率却远远大于C/C++，这意味着运行时对方法接收者进行多态选择的频率要远远大于C/C++。</li>
 <li>Java语言是可以动态扩展的语言，运行时加载新的类可能改变程序类型的继承关系，使得很多全局优化难以进行，JIT编译器不得不时刻关注类型的变化并在运行时撤销或重新进行一些优化。</li>
 <li>Java语言中对象的内存分配都是在堆上进行的，只有方法中的局部变量才能在栈上分配。而C/C++的对象有多种内存分配方式（栈上分配线程私有的对象，将减轻内存回收的压力）。</li>
@@ -539,7 +539,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">140</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

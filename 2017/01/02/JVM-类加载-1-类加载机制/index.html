@@ -99,7 +99,7 @@ Java可以动态扩展的特性就是依赖运行期动态加载和动态连接�
 
 类加载的时机类的生命周期类从被加载到虚拟机内存中开始，到卸载出内存为止，整个生命周期包括：加载（Loading）、验证（Verification）、准备（Preparation）">
 <meta property="og:image" content="https://rogerfang.github.io/images/jvm/classloader-lifecycle.png">
-<meta property="og:updated_time" content="2017-02-12T05:05:55.731Z">
+<meta property="og:updated_time" content="2017-02-27T14:01:16.308Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM: 类加载(1)-类加载机制">
 <meta name="twitter:description" content="类加载机制：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型。
@@ -371,7 +371,7 @@ Java可以动态扩展的特性就是依赖运行期动态加载和动态连接�
 <li>使用JDK 1.7的动态语言支持时，如果一个<code>java.lang.invoke.MethodHandle</code>实例最后的解析结果是<code>REF_getStatic</code>、<code>REF_putStatic</code>、<code>REF_invokeStatic</code>的方法句柄，方法句柄对应的类没有初始化，则需要先触发其初始化。</li>
 </ol>
 <blockquote>
-<p>Reflection和MethodHandle机制本质上都是在<strong>模拟方法调用</strong>，但是Reflection是在模拟Java代码层次的方法调用，而MethodHandle是在模拟字节码层次的方法调用。<br>相关知识点可以参见：<a href="http://www.infoq.com/cn/articles/jdk-dynamically-typed-language" target="_blank" rel="external">http://www.infoq.com/cn/articles/jdk-dynamically-typed-language</a></p>
+<p>Reflection和MethodHandle机制本质上都是在<strong>模拟方法调用</strong>，但是Reflection是在模拟Java代码层次的方法调用，而MethodHandle是在模拟字节码层次的方法调用。<br>相关知识点可以参见：<br><a href="https://rogerfang.github.io/2017/01/04/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E-2-%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8/">JVM: 字节码执行引擎(2)-方法调用</a><br><a href="http://www.infoq.com/cn/articles/jdk-dynamically-typed-language" target="_blank" rel="external">http://www.infoq.com/cn/articles/jdk-dynamically-typed-language</a></p>
 </blockquote>
 <p>几个不会触发类初始化（也被称为<strong>被动引用</strong>）的例子：</p>
 <ol>
@@ -402,14 +402,14 @@ Java可以动态扩展的特性就是依赖运行期动态加载和动态连接�
 </blockquote>
 <p>通过了这个验证字节流才会进入内存的方法区中进行存储，后面3个验证部分都市基于方法区的存储结构进行的，不会再直接操作字节流。</p>
 <h3 id="元数据验证"><a href="#元数据验证" class="headerlink" title="元数据验证"></a>元数据验证</h3><blockquote>
-<p>阶段二：元数据验证就是对字节码所描述的信息进行语义分析，以保证其秒速的信息符合Java语言规范的要求。</p>
+<p>阶段二：元数据验证就是对字节码所描述的信息进行语义分析，以保证其描述的信息符合Java语言规范的要求。</p>
 </blockquote>
 <h3 id="字节码验证"><a href="#字节码验证" class="headerlink" title="字节码验证"></a>字节码验证</h3><blockquote>
 <p>阶段三：字节码验证主要目的是通过数据流和控制流分析，确定程序语义是合法的、符合逻辑的。</p>
 </blockquote>
 <p>阶段二对元数据信息中的数据类型做完校验后，这个阶段将对类的方法体进行校验分析，保证被校验类的方法在运行时不会做出危害虚拟机安全的事件。</p>
 <h3 id="符号引用验证"><a href="#符号引用验证" class="headerlink" title="符号引用验证"></a>符号引用验证</h3><p>最后一个阶段的校验发生在虚拟机将<strong>符号引用</strong>转换为<strong>直接引用</strong>的时候，这个转换动作发生在解析阶段（连接的第三阶段）。目的是确保解析能正常执行。</p>
-<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>准备阶段正式为<strong>类变量</strong>（static修饰的变量）分配内存并设置类变量初始值（一般是数据类型的零值），这些变量所用内存都在方法区中进行分配。<br>如果类变量是常量，那么在准备阶段变量值就会被初始化为其制定的值。</p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>准备阶段正式为<strong>类变量</strong>（static修饰的变量）分配内存并设置类变量初始值（一般是数据类型的零值），这些变量所用内存都在方法区中进行分配。<br>如果类变量是常量，那么在准备阶段变量值就会被初始化为其指定的值。</p>
 <blockquote>
 <p>实例变量会随着对象一起分配在Java堆中。</p>
 </blockquote>
@@ -569,7 +569,7 @@ Java可以动态扩展的特性就是依赖运行期动态加载和动态连接�
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">140</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

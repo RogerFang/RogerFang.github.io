@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="JVM,字节码执行引擎," />
+  <meta name="keywords" content="JVM,字节码执行引擎,栈帧," />
 
 
 
@@ -101,7 +101,7 @@
 
 运行时栈帧结构栈帧（Stack Frame）是用于支持虚拟机进行方">
 <meta property="og:image" content="https://rogerfang.github.io/images/jvm/vm-stack-memory-model.png">
-<meta property="og:updated_time" content="2017-02-12T05:07:24.530Z">
+<meta property="og:updated_time" content="2017-02-28T03:01:59.506Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM: 字节码执行引擎(1)-概述">
 <meta name="twitter:description" content="执行引擎是JVM最核心的组成部分之一。
@@ -381,12 +381,20 @@
 <p>问题：在虚拟机使用解释执行时，使用null值得操作来优化内存回收是有用的；但是经过JIT编译优化后就会把赋null值优化掉，这是将变量设置为null值就是没有意义的。</p>
 </blockquote>
 <h2 id="操作数栈"><a href="#操作数栈" class="headerlink" title="操作数栈"></a>操作数栈</h2><p>操作数栈（Operand Stack）也称为操作栈，是一个先入后出（LIFO）的栈。操作栈的最大深度也是在编译的时候写入到Code属性的max_stacks数据项中。</p>
-<h2 id="动态连接"><a href="#动态连接" class="headerlink" title="动态连接"></a>动态连接</h2><p>每个栈帧都包含一个指向运行时常量池中该栈帧所属方法的引用。持有这个引用是为了支持方法调用过程中的动态连接（Dynamic Linking）。</p>
+<h2 id="动态连接"><a href="#动态连接" class="headerlink" title="动态连接"></a>动态连接</h2><p>每个栈帧都包含一个指向运行时常量池中该栈帧所属方法的引用，持有这个引用是为了支持方法调用过程中的动态连接（Dynamic Linking）。</p>
+<p>字节码中的方法调用指令是以常量池中指向方法的符号引用作为参数。</p>
+<ul>
+<li>这些符号引用一部分在类加载阶段或初始化时就转化为直接引用，这种转化称为<strong>静态解析</strong>。</li>
+<li>另一部分在每次运行期间转化为直接引用，称为<strong>动态连接</strong>。</li>
+</ul>
 <h2 id="方法返回地址"><a href="#方法返回地址" class="headerlink" title="方法返回地址"></a>方法返回地址</h2><p>当一个方法开始执行时，只有两种方式退出这个方法。第一种方式是执行引擎遇到任意一个方法返回的字节码指令。另一种方式是方法执行时遇到了异常，并且这个异常没有在方法体内得到处理。</p>
 <p>无论方法采用何种退出方式，在方法退出之后，都需要返回到方法被调用的位置，程序才能继续执行。</p>
+<p>方法退出的过程实际上等同于把当前栈帧出栈，因此退出时可能执行的操作有：恢复上层方法的局部变量表和操作数栈，把返回值(如果有的话)压入调用都栈帧的操作数栈中，调用PC计数器的值以指向方法调用指令后面的一条指令等。</p>
 <blockquote>
 <p>方法正常退出时，调用者的PC计数器的值作为返回地址；方法异常退出时，返回地址是通过异常处理器来确定的。栈帧中一般不会保存这个信息。</p>
 </blockquote>
+<h1 id="基于栈和基于寄存器解释执行比较"><a href="#基于栈和基于寄存器解释执行比较" class="headerlink" title="基于栈和基于寄存器解释执行比较"></a>基于栈和基于寄存器解释执行比较</h1><p>基于栈的解释执行主要<strong>优点</strong>是：可移植，平台无关性。寄存器由硬件直接提供，程序直接依赖这些硬件寄存器则不可避免地受到硬件的约束。</p>
+<p>基于栈的解释执行主要<strong>缺点</strong>是：执行速度相对来说会慢一点，主要是指令数量和内存访问的所导致的。</p>
 
       
     </div>
@@ -412,6 +420,8 @@
             <a href="/tags/JVM/" rel="tag">#JVM</a>
           
             <a href="/tags/字节码执行引擎/" rel="tag">#字节码执行引擎</a>
+          
+            <a href="/tags/栈帧/" rel="tag">#栈帧</a>
           
         </div>
       
@@ -515,7 +525,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">140</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -555,7 +565,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#运行时栈帧结构"><span class="nav-number">1.</span> <span class="nav-text">运行时栈帧结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#局部变量表"><span class="nav-number">1.1.</span> <span class="nav-text">局部变量表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#操作数栈"><span class="nav-number">1.2.</span> <span class="nav-text">操作数栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态连接"><span class="nav-number">1.3.</span> <span class="nav-text">动态连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法返回地址"><span class="nav-number">1.4.</span> <span class="nav-text">方法返回地址</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#运行时栈帧结构"><span class="nav-number">1.</span> <span class="nav-text">运行时栈帧结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#局部变量表"><span class="nav-number">1.1.</span> <span class="nav-text">局部变量表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#操作数栈"><span class="nav-number">1.2.</span> <span class="nav-text">操作数栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态连接"><span class="nav-number">1.3.</span> <span class="nav-text">动态连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法返回地址"><span class="nav-number">1.4.</span> <span class="nav-text">方法返回地址</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于栈和基于寄存器解释执行比较"><span class="nav-number">2.</span> <span class="nav-text">基于栈和基于寄存器解释执行比较</span></a></li></ol></div>
             
           </div>
         </section>

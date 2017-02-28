@@ -88,7 +88,7 @@
 HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用于新生代和老年代的收集器，如果两个收集器之间存在连线，就说明可以搭配使用。
 并发和并行
 并行（Parallel）：并行就是同时执行。  多条垃圾收集线程并行工作，但用户线程仍处于等待状态。
-并发（Concurrent）：多个操作可以在重叠的时间段内就那些。  用户线程与">
+并发（Concurrent）：多个操作可以在重叠的时间段内运行。  用户线程与垃">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM: 垃圾收集器">
 <meta property="og:url" content="https://rogerfang.github.io/2017/01/05/JVM-垃圾收集器/index.html">
@@ -97,16 +97,16 @@ HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用
 HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用于新生代和老年代的收集器，如果两个收集器之间存在连线，就说明可以搭配使用。
 并发和并行
 并行（Parallel）：并行就是同时执行。  多条垃圾收集线程并行工作，但用户线程仍处于等待状态。
-并发（Concurrent）：多个操作可以在重叠的时间段内就那些。  用户线程与">
+并发（Concurrent）：多个操作可以在重叠的时间段内运行。  用户线程与垃">
 <meta property="og:image" content="https://rogerfang.github.io/images/jvm/jvm-gc.png">
-<meta property="og:updated_time" content="2017-02-12T05:04:17.395Z">
+<meta property="og:updated_time" content="2017-02-27T07:19:04.379Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM: 垃圾收集器">
 <meta name="twitter:description" content="垃圾收集算法是内存回收的方法论，垃圾收集器是内存回收的具体实现。
 HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用于新生代和老年代的收集器，如果两个收集器之间存在连线，就说明可以搭配使用。
 并发和并行
 并行（Parallel）：并行就是同时执行。  多条垃圾收集线程并行工作，但用户线程仍处于等待状态。
-并发（Concurrent）：多个操作可以在重叠的时间段内就那些。  用户线程与">
+并发（Concurrent）：多个操作可以在重叠的时间段内运行。  用户线程与垃">
 <meta name="twitter:image" content="https://rogerfang.github.io/images/jvm/jvm-gc.png">
 
 
@@ -357,7 +357,7 @@ HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用
 <p>HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用于新生代和老年代的收集器，如果两个收集器之间存在连线，就说明可以搭配使用。<br><img src="/images/jvm/jvm-gc.png" alt=""></p>
 <h1 id="并发和并行"><a href="#并发和并行" class="headerlink" title="并发和并行"></a>并发和并行</h1><ul>
 <li>并行（Parallel）：并行就是同时执行。<br>  多条垃圾收集线程并行工作，但用户线程仍处于等待状态。</li>
-<li>并发（Concurrent）：多个操作可以在重叠的时间段内就那些。<br>  用户线程与垃圾收集线程同时执行，但不一定是并行执行，可能会交替执行。</li>
+<li>并发（Concurrent）：多个操作可以在重叠的时间段内运行。<br>  用户线程与垃圾收集线程同时执行，但不一定是并行执行，可能会交替执行。</li>
 </ul>
 <blockquote>
 <p>并行是指物理上同时执行，并发是指能够让多个任务在逻辑上交织执行的程序设计。</p>
@@ -402,26 +402,27 @@ HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用
 </li>
 </ol>
 <p>由于整个过程中耗时最长的并发标记和并发清除过程收集器线程都是和用户线程一起执行工作的，所以，从总体上说，CMS收集器的内存回收过程是与用户线程一起<strong>并发执行</strong>的。</p>
-<h1 id="G1收集器"><a href="#G1收集器" class="headerlink" title="G1收集器"></a>G1收集器</h1><p>G1（Garbage-First）是一款面向服务端应用的垃圾收集器，采用“<strong>标记-整理</strong>”算法。HotSpot开发团队赋予它的使命是未来可以替换掉JDK 1.5中发布的CMS收集器。与其他GC收集器相比，G1具备如下特点。</p>
+<h1 id="G1收集器"><a href="#G1收集器" class="headerlink" title="G1收集器"></a>G1收集器</h1><p>G1（Garbage-First）是一款面向服务端应用的垃圾收集器，在 JDK 1.7 中正式使用，采用“<strong>分区</strong>”算法。它是为了替换掉JDK 1.5中发布的CMS收集器。</p>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><p>与其他GC收集器相比，G1具备如下特点。</p>
 <ul>
-<li><p>并行与并发<br>  G1能充分利用多CPU、多核环境下的硬件优势，使用多个CPU来缩短Stop-The-World停顿的时间，部分其他收集器原本需要停顿Java线程执行的GC动作，G1收集器仍然可以通过并发的方式让Java程序继续执行。</p>
+<li><p><strong>并行与并发</strong><br>  G1能充分利用多CPU、多核环境下的硬件优势，使用多个CPU来缩短Stop-The-World停顿的时间，部分其他收集器原本需要停顿Java线程执行的GC动作，G1收集器仍然可以通过并发的方式让Java程序继续执行。</p>
 </li>
-<li><p>分代收集<br>  与其他收集器一样，分代概念在G1中依然得以保留。虽然G1可以不需要其他收集器配合就<strong>能独立管理整个GC堆</strong>，但它能够采用不同的方式去处理新创建的对象和已经存活了一段时间、熬过多次GC的旧对象以获取更好的收集效果。</p>
+<li><p><strong>分代收集</strong><br>  与其他收集器一样，分代概念在G1中依然得以保留。虽然G1可以不需要其他收集器配合就<strong>能独立管理整个GC堆</strong>，但它能够采用不同的方式去处理新创建的对象和已经存活了一段时间、熬过多次GC的旧对象以获取更好的收集效果。</p>
 </li>
-<li><p>空间整合<br>  与CMS的“标记—清理”算法不同，G1从整体来看是基于“<strong>标记—整理</strong>”算法实现的收集器，从局部（两个Region之间）上来看是基于“<strong>复制</strong>”算法实现的，但无论如何，这两种算法都意味着G1<strong>运作期间不会产生内存空间碎片</strong>，收集后能提供规整的可用内存。这种特性有利于程序长时间运行，分配大对象时不会因为无法找到连续内存空间而提前触发下一次GC。</p>
+<li><p><strong>空间整合</strong><br>  与CMS的“标记—清理”算法不同，G1从整体来看是基于“<strong>标记—整理</strong>”算法实现的收集器，从局部（两个Region之间）上来看是基于“<strong>复制</strong>”算法实现的，但无论如何，这两种算法都意味着G1<strong>运作期间不会产生内存空间碎片</strong>，收集后能提供规整的可用内存。这种特性有利于程序长时间运行，分配大对象时不会因为无法找到连续内存空间而提前触发下一次GC。</p>
 </li>
-<li><p>可预测的停顿<br>  这是G1相对于CMS的另一大优势，降低停顿时间是G1和CMS共同的关注点，但G1除了追求低停顿外，还能建立可预测的停顿时间模型，能让使用者明确指定在一个长度为M毫秒的时间片段内，消耗在垃圾收集上的时间不得超过N毫秒。</p>
+<li><p><strong>可预测的停顿</strong><br>  这是G1相对于CMS的另一大优势，降低停顿时间是G1和CMS共同的关注点，但G1除了追求低停顿外，还能<strong>建立可预测的停顿时间模型</strong>，能让使用者明确指定在一个长度为M毫秒的时间片段内，消耗在垃圾收集上的时间不得超过N毫秒。（G1在后台维护一个优先列表，优先回收价值最大的<strong>Region</strong>）</p>
 </li>
 </ul>
-<p>G1收集器的运作大致可划分为以下几个步骤：</p>
+<h2 id="收集过程"><a href="#收集过程" class="headerlink" title="收集过程"></a>收集过程</h2><p>G1收集器的运作大致可划分为以下几个步骤：</p>
 <ol>
-<li><p>初始标记（Initial Marking）<br> 初始标记阶段仅仅只是标记一下GC Roots能直接关联到的对象，并且修改TAMS（Next Top at Mark Start）的值，让下一阶段用户程序并发运行时，能在正确可用的Region中创建新对象，这阶段需要停顿线程，但耗时很短。</p>
+<li><p><strong>初始标记</strong>（Initial Marking）<br> 初始标记阶段仅仅只是标记一下GC Roots能直接关联到的对象，并且修改TAMS（Next Top at Mark Start）的值，让下一阶段用户程序并发运行时，能在正确可用的Region中创建新对象，这阶段需要停顿线程，但耗时很短。</p>
 </li>
-<li><p>并发标记（Concurrent Marking）<br> 并发标记阶段是从GC Root开始对堆中对象进行可达性分析，找出存活的对象，这阶段耗时较长，但可与用户程序并发执行。</p>
+<li><p><strong>并发标记</strong>（Concurrent Marking）<br> 并发标记阶段是从GC Root开始对堆中对象进行可达性分析，找出存活的对象，这阶段耗时较长，但可与用户程序并发执行。</p>
 </li>
-<li><p>最终标记（Final Marking）<br> 最终标记阶段是为了修正在并发标记期间因用户程序继续运作而导致标记产生变动的那一部分标记记录，虚拟机将这段时间对象变化记录在线程Remembered Set Logs里面，最终标记阶段需要把Remembered Set Logs的数据合并到Remembered Set中，这阶段需要停顿线程，但是可并行执行。</p>
+<li><p><strong>最终标记</strong>（Final Marking）<br> 最终标记阶段是为了修正在并发标记期间因用户程序继续运作而导致标记产生变动的那一部分标记记录，虚拟机将这段时间对象变化记录在线程Remembered Set Logs里面，最终标记阶段需要把Remembered Set Logs的数据合并到Remembered Set中，这阶段需要停顿线程，但是可并行执行。</p>
 </li>
-<li><p>筛选回收（Live Data Counting and Evacuation）<br> 筛选回收阶段首先对各个Region的回收价值和成本进行排序，根据用户所期望的GC停顿时间来制定回收计划，这个阶段其实也可以做到与用户程序一起并发执行，但是因为只回收一部分Region，时间是用户可控制的，而且停顿用户线程将大幅提高收集效率。</p>
+<li><p><strong>筛选回收</strong>（Live Data Counting and Evacuation）<br> 筛选回收阶段首先对各个Region的回收价值和成本进行<strong>排序</strong>，根据用户所期望的GC停顿时间来制定回收计划，这个阶段其实也可以做到与用户程序一起并发执行，但是因为只回收一部分Region，时间是用户可控制的，而且停顿用户线程将大幅提高收集效率。</p>
 </li>
 </ol>
 
@@ -554,7 +555,7 @@ HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">140</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -594,7 +595,7 @@ HotSpot虚拟机的垃圾收集器如图所示，图中展示了7种分别作用
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#并发和并行"><span class="nav-number">1.</span> <span class="nav-text">并发和并行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Minor-GC和Full-GC"><span class="nav-number">2.</span> <span class="nav-text">Minor GC和Full GC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#吞吐量"><span class="nav-number">3.</span> <span class="nav-text">吞吐量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Serial收集器-新生代"><span class="nav-number">4.</span> <span class="nav-text">Serial收集器(新生代)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ParNew收集器（新生代）"><span class="nav-number">5.</span> <span class="nav-text">ParNew收集器（新生代）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Parallel-Scavenge收集器（新生代）"><span class="nav-number">6.</span> <span class="nav-text">Parallel Scavenge收集器（新生代）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Serial-Old收集器（老年代）"><span class="nav-number">7.</span> <span class="nav-text">Serial Old收集器（老年代）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Parallel-Old收集器（老年代）"><span class="nav-number">8.</span> <span class="nav-text">Parallel Old收集器（老年代）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CMS收集器（老年代）"><span class="nav-number">9.</span> <span class="nav-text">CMS收集器（老年代）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#G1收集器"><span class="nav-number">10.</span> <span class="nav-text">G1收集器</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#并发和并行"><span class="nav-number">1.</span> <span class="nav-text">并发和并行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Minor-GC和Full-GC"><span class="nav-number">2.</span> <span class="nav-text">Minor GC和Full GC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#吞吐量"><span class="nav-number">3.</span> <span class="nav-text">吞吐量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Serial收集器-新生代"><span class="nav-number">4.</span> <span class="nav-text">Serial收集器(新生代)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ParNew收集器（新生代）"><span class="nav-number">5.</span> <span class="nav-text">ParNew收集器（新生代）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Parallel-Scavenge收集器（新生代）"><span class="nav-number">6.</span> <span class="nav-text">Parallel Scavenge收集器（新生代）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Serial-Old收集器（老年代）"><span class="nav-number">7.</span> <span class="nav-text">Serial Old收集器（老年代）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Parallel-Old收集器（老年代）"><span class="nav-number">8.</span> <span class="nav-text">Parallel Old收集器（老年代）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CMS收集器（老年代）"><span class="nav-number">9.</span> <span class="nav-text">CMS收集器（老年代）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#G1收集器"><span class="nav-number">10.</span> <span class="nav-text">G1收集器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#特点"><span class="nav-number">10.1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#收集过程"><span class="nav-number">10.2.</span> <span class="nav-text">收集过程</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

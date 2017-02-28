@@ -96,7 +96,7 @@
 垃圾收集机制要考虑的两件事情：（1）发现无用对象（如何判断对象是否还“存活”）；（2）回收被无用对象占用的内存空间，使该空间可被程序再次使用（垃圾收集算法）。
 对象“存活”？垃圾回收的第一件事情就是要确定堆内存中有哪些对象还“存活”，哪些已“死去”。
 引用计数法">
-<meta property="og:updated_time" content="2017-02-12T05:04:26.284Z">
+<meta property="og:updated_time" content="2017-02-27T07:09:54.110Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM: 垃圾回收机制">
 <meta name="twitter:description" content="垃圾回收可以有效的防止内存泄露，有效的使用空闲的内存。Java堆和方法区的内存分配和回收是动态的，因而垃圾收集器所关注的也是这部分内存。
@@ -394,6 +394,8 @@
 <p>HotSpot虚拟机按照8:1的比例将新生代分为1个大内存的Eden区和2个小内存的Survivor区。每次使用Eden和一个Survivor区，当回收时，把存活的对象复制到剩下的一个Survivor区中。如果这个Survivor空间不够时，依赖老年代进行<strong>分配担保</strong>（Handle Promotion）。</p>
 <h2 id="Mark-Compact（标记整理）"><a href="#Mark-Compact（标记整理）" class="headerlink" title="Mark-Compact（标记整理）"></a>Mark-Compact（标记整理）</h2><p>标记整理算法结合了“标记-清除”和“复制”两个算法的优点。也是分两阶段，第一阶段从根节点开始标记所有被引用对象，第二阶段遍历整个堆，把清除未标记对象并且把存活对象“压缩”到堆的其中一块，按顺序排放。此算法避免了“标记-清除”的碎片问题，同时也避免了“复制”算法的空间问题。</p>
 <h2 id="Generational-Collection（分代收集）"><a href="#Generational-Collection（分代收集）" class="headerlink" title="Generational Collection（分代收集）"></a>Generational Collection（分代收集）</h2><p>一般把Java堆分为<strong>新生代</strong>和<strong>老年代</strong>。根据各个年代的特点选择合适的收集算法，新生代每次垃圾收集时只有少量存活可以选用复制算法，而老年代对象存活率高、没有额外空间进行分配担保，必须使用“标记-清除”或“标记-整理”算法。</p>
+<h2 id="Region（分区算法）"><a href="#Region（分区算法）" class="headerlink" title="Region（分区算法）"></a>Region（分区算法）</h2><p>分代算法是按照对象的生命周期长短划分成两个部分。</p>
+<p><strong>分区算法</strong>是将整个堆空间划分成连续的不同小区间，每个小区间都独立使用，独立回收。这种算法的好处是可以控制一次回收多少个小区间。。</p>
 
       
     </div>
@@ -522,7 +524,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">140</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -562,7 +564,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#对象“存活”？"><span class="nav-number">1.</span> <span class="nav-text">对象“存活”？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#引用计数法"><span class="nav-number">1.1.</span> <span class="nav-text">引用计数法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可达性分析算法"><span class="nav-number">1.2.</span> <span class="nav-text">可达性分析算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用"><span class="nav-number">1.3.</span> <span class="nav-text">引用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#回收方法区"><span class="nav-number">2.</span> <span class="nav-text">回收方法区</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#垃圾收集算法"><span class="nav-number">3.</span> <span class="nav-text">垃圾收集算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Mark-Sweep（标记清除）"><span class="nav-number">3.1.</span> <span class="nav-text">Mark-Sweep（标记清除）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Copying（复制）"><span class="nav-number">3.2.</span> <span class="nav-text">Copying（复制）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mark-Compact（标记整理）"><span class="nav-number">3.3.</span> <span class="nav-text">Mark-Compact（标记整理）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Generational-Collection（分代收集）"><span class="nav-number">3.4.</span> <span class="nav-text">Generational Collection（分代收集）</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#对象“存活”？"><span class="nav-number">1.</span> <span class="nav-text">对象“存活”？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#引用计数法"><span class="nav-number">1.1.</span> <span class="nav-text">引用计数法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可达性分析算法"><span class="nav-number">1.2.</span> <span class="nav-text">可达性分析算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用"><span class="nav-number">1.3.</span> <span class="nav-text">引用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#回收方法区"><span class="nav-number">2.</span> <span class="nav-text">回收方法区</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#垃圾收集算法"><span class="nav-number">3.</span> <span class="nav-text">垃圾收集算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Mark-Sweep（标记清除）"><span class="nav-number">3.1.</span> <span class="nav-text">Mark-Sweep（标记清除）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Copying（复制）"><span class="nav-number">3.2.</span> <span class="nav-text">Copying（复制）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mark-Compact（标记整理）"><span class="nav-number">3.3.</span> <span class="nav-text">Mark-Compact（标记整理）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Generational-Collection（分代收集）"><span class="nav-number">3.4.</span> <span class="nav-text">Generational Collection（分代收集）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Region（分区算法）"><span class="nav-number">3.5.</span> <span class="nav-text">Region（分区算法）</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

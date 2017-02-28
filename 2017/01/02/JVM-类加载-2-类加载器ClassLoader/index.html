@@ -101,7 +101,8 @@
 类在虚拟机中的唯一性由加载它的类加载器和这个类本身一同确立。因为每个类加载器都有独立的类名称空间。
 双亲委派模型分别">
 <meta property="og:image" content="https://rogerfang.github.io/images/jvm/classloader-parents-delegate.png">
-<meta property="og:updated_time" content="2017-02-12T05:06:14.086Z">
+<meta property="og:image" content="https://rogerfang.github.io/../images/jvm/context-classloader.png">
+<meta property="og:updated_time" content="2017-02-28T02:27:52.921Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM: 类加载(2)-类加载器ClassLoader">
 <meta name="twitter:description" content="类加载器只用于完成整个类加载过程的加载（Loading）动作：类的加载阶段中“通过一个类的全限定名去获取描述此类的二进制字节流”这个动作放到Java虚拟机外部去实现，以便让程序代码自己决定如何去获取所需要的类。
@@ -379,6 +380,16 @@
 <blockquote>
 <p>使用双亲委派模型来组织类加载器之间的关系，一个明显的好处就是：Java类随着它的类加载器一起具备了一种带有优先级的层次关系。</p>
 </blockquote>
+<h2 id="双亲委派模型的弊端"><a href="#双亲委派模型的弊端" class="headerlink" title="双亲委派模型的弊端"></a>双亲委派模型的弊端</h2><p>双亲委派模型使得检查类是否加载的委托过程是单向的，每个ClassLoader的职责非常明确，但是同时会带来一个问题，即<strong>顶层的ClassLoader无法访问底层的ClassLoader所加载的类</strong>。</p>
+<p>Java 提供了很多服务提供者接口（Service Provider Interface，<strong>SPI</strong>），允许第三方为这些接口提供实现。常见的 SPI 有 JDBC、JCE、JNDI、JAXP 和 JBI 等，这些 SPI 的接口由 Java 核心库来提供，第三方的实现则由<strong>应用类加载器</strong>完成加载，所以会导致系统类无法访问应用类的问题。</p>
+<p>比如，在系统类中，提供了一个接口，该接口需要在应用中得以实现，该接口还绑定了一个工厂方法，用于创建该接口的实例，而接口和工厂方法都在启动类加载器中。这时，就会出现该<strong>工厂方法无法创建由应用类加载器加载的应用实例的问题</strong>。</p>
+<blockquote>
+<p><strong>解决办法</strong>：双亲委派模型的补充，通过<strong>上下文加载器</strong>（ContextClassLoader）完成。</p>
+</blockquote>
+<h1 id="上下文加载器"><a href="#上下文加载器" class="headerlink" title="上下文加载器"></a>上下文加载器</h1><p>上下文加载器是在<code>Thread.getContextClassLoader()</code>中得到的，默认情况下，上下文加载器就是<strong>应用类加载器</strong>。这样就使得在创建类实例的时候可以交由<strong>上下文加载器</strong>去完成。</p>
+<p><img src="../images/jvm/context-classloader.png" alt=""></p>
+<h1 id="突破双亲委派模型"><a href="#突破双亲委派模型" class="headerlink" title="突破双亲委派模型"></a>突破双亲委派模型</h1><p>双亲模式的类加载方式是虚拟机默认的方式，但并非必须这么做，通过重载ClassLoader可以修改行为。比如<strong>Tomcat</strong>和<strong>OSGI</strong>框架，都有各自独特的类加载器顺序。</p>
+<p>可以通过重载<code>loadClass()</code>、<code>findClass()</code>等方法来改变类加载次序。</p>
 
       
     </div>
@@ -511,7 +522,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">140</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -551,7 +562,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#双亲委派模型"><span class="nav-number">1.</span> <span class="nav-text">双亲委派模型</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#双亲委派模型"><span class="nav-number">1.</span> <span class="nav-text">双亲委派模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#双亲委派模型的弊端"><span class="nav-number">1.1.</span> <span class="nav-text">双亲委派模型的弊端</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#上下文加载器"><span class="nav-number">2.</span> <span class="nav-text">上下文加载器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#突破双亲委派模型"><span class="nav-number">3.</span> <span class="nav-text">突破双亲委派模型</span></a></li></ol></div>
             
           </div>
         </section>
