@@ -4,6 +4,44 @@
   
     
     <entry>
+      <title><![CDATA[Java 锁优化]]></title>
+      <url>https://rogerfang.github.io/2017/02/28/Java-%E9%94%81%E4%BC%98%E5%8C%96/</url>
+      <content type="html"><![CDATA[<h1 id="对象头和锁"><a href="#对象头和锁" class="headerlink" title="对象头和锁"></a>对象头和锁</h1><p>对象头在 <a href="https://rogerfang.github.io/2017/01/05/JVM-HotSpot%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%B8%AD%E7%9A%84%E5%AF%B9%E8%B1%A1/">JVM: HotSpot虚拟机中的对象 对象的内存布局</a> 中有提到过，用于保存对象的系统信息。</p>
+<p>对象头中有一个称为 <strong>Mark Word</strong> 的部分，它是实现锁的关键。它是一个<strong>多功能</strong>的数据区，可以存放对象的 <strong>哈希值、对象年龄、锁的指针</strong>等信息。对象是否占用锁，以及占用哪个锁就记录在 Mark Word 中。</p>
+<blockquote>
+<p>Mark Word 在32位系统中占用32位，在64位系统中占用64位。</p>
+</blockquote>
+<p><strong>普通对象的对象头</strong>（32位系统）：<br><code>hash:25 ------&gt;| age:4 biased_lock:1 lock:2</code><br>Mark Word中有 25位比特表示对象的哈希值，4位比特表示对象的年龄，1位比特表示是否为<strong>偏向锁</strong>，2位比特表示锁的信息。</p>
+<h1 id="JVM中锁的实现和优化"><a href="#JVM中锁的实现和优化" class="headerlink" title="JVM中锁的实现和优化"></a>JVM中锁的实现和优化</h1><p>如果将所有的<strong>线程竞争</strong>都交由<strong>操作系统</strong>处理，那么并发性能是非常低下的。<strong>JVM</strong> 在操作系统层面挂起线程之前，会尽一切可能在虚拟机层面上解决竞争关系，避免真实的竞争发生。同时，在竞争不激烈的时候也会试图消除不必要的竞争。</p>
+<p>JVM 的锁优化手段包括：偏向锁、轻量级锁、自旋锁、锁消除、锁膨胀等。</p>
+<h2 id="偏向锁"><a href="#偏向锁" class="headerlink" title="偏向锁"></a>偏向锁</h2><p><strong>偏向锁</strong>是 JDK 1.6 提出的一种锁优化方式。</p>
+<p>如果程序没有竞争，则取消之前已经取得锁的线程同步操作。也就是，若某一线程被线程获取后，便进入偏向模式，当线程再次请求这个锁时，无须再进行相关的同步操作，从而节省了操作时间。如果在此之前有其他线程进行了锁请求，则锁退出偏向模式。</p>
+<p>当锁对象处于偏向模式时，对象头会记录获得锁的线程，这样当该线程再次或得锁时，通过 Mark Word 的线程信息就可以判断当前线程是否持有偏向锁：<br><code>JavaThread* | epoch | age | 1 | 01</code></p>
+<p><strong>缺点</strong>：偏向锁在<strong>锁竞争激烈</strong>的情况下优化效果不大，因为大量的竞争会导致持有锁的线程不停地切换，锁很难一致保持偏向模式。</p>
+<h2 id="轻量级锁"><a href="#轻量级锁" class="headerlink" title="轻量级锁"></a>轻量级锁</h2><p>如果<strong>偏向锁</strong>失败，JVM 会让线程申请<strong>轻量级锁</strong>，轻量级锁在 JVM 中使用一个称为<code>BasicObjectLock</code>对象实现，这个对象内部由一个<code>BasicLock</code>对象和一个<strong>持有该锁的 Java对象指针</strong> 组成。</p>
+<p><code>BasicObjectLock</code>对象放置在Java栈的<strong>栈帧</strong>中。<br><code>BasicObjectLock</code>锁对象的对象头部 Mark Word：<br><code>[ptr  | 00 ] locked</code><br>整个 Mark Word 为指向<code>BasicLock</code>的指针。</p>
+<h2 id="锁膨胀"><a href="#锁膨胀" class="headerlink" title="锁膨胀"></a>锁膨胀</h2><p>当<strong>轻量级锁</strong>失败，JVM 就会使用<strong>重量级锁</strong>。重量级锁对象的对象头部 Mark Word：<br><code>[ptr  | 10] monitor</code><br>整个 Mark Word 表示指向<code>monitor</code>对象的指针，线程很可能在操作系统层面挂起。</p>
+<h2 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h2><p><strong>自旋锁</strong>可以使得线程尽快进入临界区而避免被操作系统挂起。</p>
+<p><strong>自旋锁</strong>可以使线程在没有获得锁时，不被挂起，转而去执行一个<strong>空循环</strong>（自旋），在若干个循环后，线程如果可以获得锁，则继续执行。如果依然不能获得锁，才会被挂起。</p>
+<p><strong>缺点</strong>：对于锁竞争激烈，单线程锁占用时间长的并发程序，自旋锁在自旋等待后，旺旺依然无法获得锁，浪费了 CPU 时间。</p>
+<h2 id="锁消除"><a href="#锁消除" class="headerlink" title="锁消除"></a>锁消除</h2><p><strong>锁消除</strong>是 JVM 在 JIT编译时，通过对运行上下文的扫描，去除不可能存在共享资源竞争的锁。</p>
+<h1 id="应用层的锁优化"><a href="#应用层的锁优化" class="headerlink" title="应用层的锁优化"></a>应用层的锁优化</h1><p>在应用层合理地进行锁的优化，对系统性能也是有积极作用的。</p>
+<h2 id="减少锁持有时间"><a href="#减少锁持有时间" class="headerlink" title="减少锁持有时间"></a>减少锁持有时间</h2><p>在锁竞争过程中，单个线程持有锁的时间越长，锁的竞争程度也就越激烈。</p>
+<p>例如：尽量使用<code>synchronized</code>同步块，而不是<code>synchronized</code>同步方法。</p>
+<h2 id="减小锁粒度"><a href="#减小锁粒度" class="headerlink" title="减小锁粒度"></a>减小锁粒度</h2><p>减小锁粒度，是指缩小锁定对象的范围，从而减少锁冲突的可能性。</p>
+<p>例如：<code>ConcurrentHashMap</code>，在 JDK 1.8 之前使用的是 <strong>分段锁</strong> 机制，对每段进行加锁而不是对整个HashMap加锁。在 JDK 1.8 抛弃了分段锁机制，而改用对表中每个桶的链表头进行加锁。</p>
+<h2 id="锁分离"><a href="#锁分离" class="headerlink" title="锁分离"></a>锁分离</h2><p>锁分离，是减小锁粒度的一个特例，将一个独占锁分成多个锁。</p>
+<p>例如：<code>java.util.concurrent.LinkedBlockingQueue</code>的实现中，采用了两把锁分离了<code>take</code>和<code>put</code>操作。</p>
+<h2 id="锁粗化"><a href="#锁粗化" class="headerlink" title="锁粗化"></a>锁粗化</h2><p>如果对同一个锁不停地进行 请求、同步和释放，会消耗系统资源。</p>
+<p>JVM 在遇到一连串连续地对同一锁不断进行请求和释放的操作时，会把所有的锁操作整合对锁的一次请求，从而减少锁的请求同步次数。</p>
+<h1 id="无锁"><a href="#无锁" class="headerlink" title="无锁"></a>无锁</h1><p><strong>锁</strong>是确保程序和数据线程安全的最直观的一种方式，但是在高并发时，锁的竞争可能会成为系统瓶颈。</p>
+<p><strong>无锁</strong>：指的是非阻塞同步的方法，不使用锁，依然能确保数据和程序在高并发时保持多线程间的一致性。</p>
+<p><strong>CAS</strong>（Compare And Swap）基于比较并交换的算法，在硬件层面上，大部分的现代处理器都已经支持原子化的 CAS 指令。Java中的<code>java.util.concurrent.atomic</code>包封装了许多 CAS 操作。</p>
+<p>JDK 1.8 中新增的<code>java.util.concurrent.atomic.LongAddr</code>类，对数字进行计数采取了优化措施，将热点数据 value 分离成多个单元 cell，每个 cell 独自维护内部的值，当前对象的实际值由所有 cell 累计合成。</p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[Java 网络通信模型]]></title>
       <url>https://rogerfang.github.io/2017/02/25/Java-%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E6%A8%A1%E5%9E%8B/</url>
       <content type="html"><![CDATA[<p>网络通信的基本模型是 Client/Server 模型，也就是两个进程间相互通信，通过三次握手建立连接，连接成功就可以通过 Socket 进行通信。</p>
@@ -2808,6 +2846,7 @@
 <li>能被中断地获取锁<br> 与synchronized不同，获取到锁的线程能够响应中断，当获取到锁的线程被中断时，中断异常将会抛出，同时锁会被释放。</li>
 <li>超时获取锁<br> 在指定的截止时间之前获取锁，如果截止时间到了仍旧无法获取锁，则返回。</li>
 </ol>
+<p>synchronized关键字的同步实现参见：<a href="https://rogerfang.github.io/2017/01/03/Class%E6%96%87%E4%BB%B6-2-%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/">Class文件(2): 字节码指令-同步指令</a></p>
 <h1 id="Java中的原子操作"><a href="#Java中的原子操作" class="headerlink" title="Java中的原子操作"></a>Java中的原子操作</h1><p>在Java中通过锁和循环CAS来实现原子操作。</p>
 <p>JVM中的CAS操作利用了处理器提供的CMPXCHG指令实现的。<strong>自旋CAS实现的基本思路就是循环进行CAS操作直到成功为止</strong>。</p>
 <p>锁机制保证了只有获得锁的线程才能够操作锁定的内存区域。<strong>JVM中实现锁的方式基本上（除了偏向锁）都用了循环CAS，即当一个线程想进入同步块的时候使用循环CAS的方式来获取锁，当它退出同步块的时候使用循环CAS释放锁</strong>。</p>
@@ -2925,8 +2964,8 @@
 <li>当第一个操作时volatile写时，第二个操作是volatile读时，不能重排序。</li>
 </ol>
 <h2 id="处理器内存屏障"><a href="#处理器内存屏障" class="headerlink" title="处理器内存屏障"></a>处理器内存屏障</h2><p>为了实现volatile内存语义，编译器在生成字节码时，会在指令序列中插入<strong>内存屏障</strong>来禁止特定类型的<strong>处理器</strong>重排序。</p>
-<h1 id="增强的volatile内存语义"><a href="#增强的volatile内存语义" class="headerlink" title="增强的volatile内存语义"></a>增强的volatile内存语义</h1><p>JSR-133之前的JMM虽然不允许volatile变量之间的重排序，但是<strong>允许volatile变量和普通变量重排序</strong>。<br><img src="../images/jmm/advanced-volatile-memory-semantic.png" alt=""><br>在旧的JMM中，当1和2之间没有数据依赖关系时，1和2之间就可能被重排序（3和4类似），这样就会导致：读线程B执行4时，不一定能看到写线程A在执行1时对共享变量的修改。</p>
-<p>也就是说，在旧的Java内存模型中，volatile的写-读没有<strong>锁</strong>的释放-获取所具有的的内存语义，为了提供一种比锁更轻量级的线程通信机制，JSR-133决定增强volatile的内存语义：</p>
+<h1 id="增强的volatile内存语义"><a href="#增强的volatile内存语义" class="headerlink" title="增强的volatile内存语义"></a>增强的volatile内存语义</h1><p>JSR-133之前的JMM虽然不允许volatile变量之间的重排序，但是<strong>允许volatile变量和普通变量重排序</strong>。<br><img src="/images/jmm/advanced-volatile-memory-semantic.png" alt=""><br>在旧的JMM中，当1和2之间没有数据依赖关系时，1和2之间就可能被重排序（3和4类似），这样就会导致：读线程B执行4时，不一定能看到写线程A在执行1时对共享变量的修改。</p>
+<p>也就是说，在旧的Java内存模型中，volatile的写-读没有<strong>锁</strong>的释放-获取所具有的的内存语义，<strong>为了提供一种比锁更轻量级的线程通信机制</strong>，JSR-133决定增强volatile的内存语义：</p>
 <blockquote>
 <p>严格限制编译器和处理器对<strong>volatile变量</strong>与<strong>普通变量</strong>的重排序，<em>确保volatile的写-读和锁的释放-获取具有相同的内存语义</em>。</p>
 </blockquote>
@@ -3011,9 +3050,18 @@
     </entry>
     
     <entry>
-      <title><![CDATA[JMM: Java内存模型]]></title>
+      <title></title>
       <url>https://rogerfang.github.io/2017/01/06/JMM-Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</url>
-      <content type="html"><![CDATA[<h1 id="硬件效率与一致性"><a href="#硬件效率与一致性" class="headerlink" title="硬件效率与一致性"></a>硬件效率与一致性</h1><p>一般来说，“<strong>让计算机并发执行若干个运算任务</strong>”（多任务处理）可以“<strong>更充分地利用计算机处理器的效能</strong>”。但是其中一个重要的<strong>复杂性</strong>（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，<em>处理器还需要和内存交互</em>，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。</p>
+      <content type="html"><![CDATA[<hr>
+<p>title: ‘JMM: Java内存模型’<br>date: 2017-01-06 18:27:02<br>categories:</p>
+<ul>
+<li>JMM<br>tags:</li>
+<li>JMM</li>
+<li>重排序</li>
+<li>happens-before</li>
+</ul>
+<hr>
+<h1 id="硬件效率与一致性"><a href="#硬件效率与一致性" class="headerlink" title="硬件效率与一致性"></a>硬件效率与一致性</h1><p>一般来说，“<strong>让计算机并发执行若干个运算任务</strong>”（多任务处理）可以“<strong>更充分地利用计算机处理器的效能</strong>”。但是其中一个重要的<strong>复杂性</strong>（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，<em>处理器还需要和内存交互</em>，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。</p>
 <p>由于计算机的存储设备与处理器的运算速度有几个数量级的差距，所以每个处理器增加自己的高速缓存（Cache）来作为内存与处理器之间的缓冲。将运算需要的数据复制到缓存中，让运算能快速进行，运算结束后再从缓存同步到内存中，这样处理器就无须等待缓慢的内存读写了。</p>
 <p>基于告诉缓存的存储交互很好地解决了处理器与内存的速度矛盾，但是也引入了一个新问题：<strong>缓存一致性</strong>（Cache Coherence）。当多个处理器的运算任务都涉及同一块主内存区域时，将可能导致缓存数据不一致。</p>
 <p>“<strong>内存模型</strong>”：可以理解为对特定的内存或高速缓存进行读写访问的过程抽象。</p>
@@ -3026,7 +3074,7 @@
 <blockquote>
 <p>此处的变量指的是线程共享的变量，包括了实例字段、静态字段和构成数组对象的元素。</p>
 </blockquote>
-<p>JMM是一个语言及的内存模型，处理器内存模型是硬件级的内存模型。</p>
+<p><strong>JMM是一个语言级的内存模型，处理器内存模型是硬件级的内存模型。</strong></p>
 <h2 id="主内存与工作内存"><a href="#主内存与工作内存" class="headerlink" title="主内存与工作内存"></a>主内存与工作内存</h2><p>Java内存模型规定所有的变量都存储在主内存（虚拟机内存的一部分，可以和硬件中的主内存类比）中。<br>每条线程都有自己的工作内存（Working Memory，或者叫<strong>本地内存</strong>，可以和硬件中的高速缓存类比，本地内存只是JMM的一个抽象概念，并不真实存在）。</p>
 <p>线程A与线程B之间如要通信的话，必须要经历下面2个步骤：</p>
 <ol>
@@ -3034,7 +3082,7 @@
 <li>然后，线程B到主内存中去读取线程A之前已更新过的共享变量。</li>
 </ol>
 <p>线程、工作内存、主内存间的交互关系<br><img src="/images/jmm/jmm-thread-memory-process.png" alt=""></p>
-<h2 id="内存间的交互操作"><a href="#内存间的交互操作" class="headerlink" title="内存间的交互操作"></a>内存间的交互操作</h2><p>关于主内存与工作内存之间的具体交互协议，即一个变量如何从主内存拷贝到工作内存、如何从工作内存同步回主内存之类的实现细节，JMM中定义了以下8种操作完成，虚拟机实现时必须保证下面提及的每一种操作都是原子的、不可再分的（对于long、double类型的变量来说，在某些平台上有例外）。</p>
+<h2 id="内存间的交互操作"><a href="#内存间的交互操作" class="headerlink" title="内存间的交互操作"></a>内存间的交互操作</h2><p>关于主内存与工作内存之间的具体交互协议，即一个变量如何从主内存拷贝到工作内存、如何从工作内存同步回主内存之类的实现细节，<strong>JMM中定义了以下8种操作完成，虚拟机实现时必须保证下面提及的每一种操作都是原子的、不可再分的</strong>（对于long、double类型的变量来说，在某些平台上有例外）。</p>
 <ol>
 <li><p>lock(锁定)<br> 作用于主内存的变量，把一个变量标识为线程独占状态。</p>
 </li>
@@ -3064,20 +3112,23 @@
 <li>对一个变量执行unlock操作之前，必须先把变量同步回主内存中。</li>
 </ul>
 <h2 id="JMM的特征"><a href="#JMM的特征" class="headerlink" title="JMM的特征"></a>JMM的特征</h2><p>Java内存模型是围绕着在并发过程中如何处理<strong>原子性</strong>、<strong>可见性</strong>和<strong>有序性</strong>这3个特征来建立的。</p>
-<h3 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h3><p>原子性是指一个操作不能被打断，要么全部执行完毕，要么不执行。</p>
+<h3 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h3><p><strong>原子性</strong>：<strong>是指一个操作不能被打断，要么全部执行完毕，要么不执行。</strong></p>
 <p>JMM直接保证的原子性变量操作包括read、load、assign、use、store和write。大致可以认为基本数据类型的访问读写是具备原子性的（例外就是long和double的非原子协定）。</p>
 <p>如果需要一个更大范围的原子性保证，JMM还提供了lock和unlock操作来满足这种需求，尽管虚拟机未把lock和unlock操作直接开放给用户使用，但是却提供了更高层次的字节码指令<code>monitorenter</code>和<code>monitorexit</code>来隐式地使用这两个操作，这两个字节码指令反映到Java代码中就是同步快——<code>synchronized</code>关键字，因此同步块之间的操作也具备原子性。</p>
-<h3 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h3><p>可见性是指一个线程对共享变量做了修改之后，其他的线程立即能够看到（感知到）该变量这种修改（变化）。</p>
+<blockquote>
+<p><code>volatile</code>关键字的增强语义确保volatile的写-读和锁的释放-获取具有相同的内存语义，因而也就具有了原子性。</p>
+</blockquote>
+<h3 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h3><p><strong>可见性</strong>：<strong>是指一个线程对共享变量做了修改之后，其他的线程立即能够看到（感知到）该变量这种修改（变化）</strong>。</p>
 <p>Java内存模型是通过将在工作内存中的变量修改后的值同步到主内存，在读取变量前从主内存刷新最新值到工作内存中，这种依赖主内存的方式来实现可见性的。</p>
-<p>可见性的实现：volatile、synchronized、final关键字还有Lock。</p>
+<p>可见性的实现：<code>volatile</code>、<code>synchronized</code>、<code>final</code>关键字还有<code>Lock</code>。</p>
 <ul>
 <li>普通变量和volatile变量都是如此，区别是volatile的特殊规则保证了新值能立即同步到主内存，以及使用前立即从主内存刷新。</li>
 <li>synchronized同步块的可见性是由<code>unlock</code>操作的规则获得的。</li>
 <li><code>final</code>关键字的可见性是指被final修饰的字段在构造器中一旦初始化完成，并且构造器没有把“this”引用传递出去，那么其他线程就能看见final字段的值。</li>
 <li>使用Lock接口的实现锁，和synchronized由相同的语义。</li>
 </ul>
-<h3 id="有序性"><a href="#有序性" class="headerlink" title="有序性"></a>有序性</h3><p>在本线程内观察，操作都是有序的；如果在一个线程中观察另外一个线程，所有的操作都是无序的。前半句是指“线程内表现为串行语义（WithIn Thread As-if-Serial Semantics）”,后半句是指“指令重排”现象和“工作内存和主内存同步延迟”现象。</p>
-<p>Java提供了两个关键字volatile和synchronized来保证多线程之间操作的有序性,volatile关键字本身通过加入内存屏障来禁止指令的重排序，而synchronized关键字通过一个变量在同一时间只允许有一个线程对其进行加锁的规则来实现，在单线程程序中，不会发生“指令重排”和“工作内存和主内存同步延迟”现象，只在多线程程序中出现。</p>
+<h3 id="有序性"><a href="#有序性" class="headerlink" title="有序性"></a>有序性</h3><p>在本线程内观察，操作都是有序的；如果在一个线程中观察另外一个线程，所有的操作都是无序的。前半句是指“<strong>线程内表现为串行语义</strong>（WithIn Thread As-if-Serial Semantics）”,后半句是指“<strong>指令重排</strong>”现象和“<strong>工作内存和主内存同步延迟</strong>”现象。</p>
+<p>Java提供了两个关键字<code>volatile</code>和<code>synchronized</code>来保证多线程之间操作的有序性，<code>volatile</code>关键字本身通过加入<strong>内存屏障</strong>来禁止指令的重排序，而<code>synchronized</code>关键字通过一个变量在同一时间只允许有一个线程对其进行加锁的规则来实现，在单线程程序中，不会发生“指令重排”和“工作内存和主内存同步延迟”现象，只在多线程程序中出现。</p>
 <h1 id="重排序"><a href="#重排序" class="headerlink" title="重排序"></a>重排序</h1><p>在执行程序时，为了提高性能（例如，在不改变程序语义的前提下，减少寄存器、缓存的读写次数），编译器和处理器通常会对指令进行重排序。</p>
 <p>重排序分为3种类型：</p>
 <ol>
@@ -3096,13 +3147,13 @@
 <blockquote>
 <p>JMM确保在不同的编译器和不同的处理器平台之上，通过禁止特定类型的编译器重排序和处理器重排序，为程序员提供一致的内存可见性保证。</p>
 </blockquote>
-<h2 id="数据依赖性"><a href="#数据依赖性" class="headerlink" title="数据依赖性"></a>数据依赖性</h2><p>如果两个操作访问同一个变量，且这两个操作中有一个为写操作，此时这两个操作之间就存在<strong>数据依赖性</strong>。</p>
+<h2 id="数据依赖性"><a href="#数据依赖性" class="headerlink" title="数据依赖性"></a>数据依赖性</h2><p>如果两个操作访问同一个变量，且这两个操作中有一个为<strong>写操作</strong>，此时这两个操作之间就存在<strong>数据依赖性</strong>。</p>
 <p>数据依赖性包括3种情况：写后读、写后写、读后写。只要重排序这两个操作，程序执行的结果就会改变。</p>
 <blockquote>
 <p>编译器和处理器在重排序时，会遵守数据依赖性，仅针对<strong>单个处理器</strong>中执行的指令序列和<strong>单个线程</strong>中执行的操作。</p>
 </blockquote>
 <h2 id="as-if-serial语义"><a href="#as-if-serial语义" class="headerlink" title="as-if-serial语义"></a>as-if-serial语义</h2><p>as-if-serial语义：不管怎么重排序（编译器和处理器），<strong>单线程</strong>程序的执行结果不能被改变。</p>
-<h1 id="happens-before"><a href="#happens-before" class="headerlink" title="happens-before"></a>happens-before</h1><p>在JMM中，如果一个操作执行的结果需要对另一个操作可见，那么这两个操作之间必须要存在happens-before关系，这里的两个操作既可以是一个线程内的，也可以是在不同线程之间的。</p>
+<h1 id="happens-before"><a href="#happens-before" class="headerlink" title="happens-before"></a>happens-before</h1><p>在JMM中，<strong>如果一个操作执行的结果需要对另一个操作可见</strong>，那么这两个操作之间必须要存在happens-before关系，这里的两个操作既可以是一个线程内的，也可以是在不同线程之间的。</p>
 <p>与程序员密切相关的happens-before规则：</p>
 <ul>
 <li>程序顺序规则：一个线程中的每个操作，happens-before于该线程中的任意后续操作。</li>
@@ -3393,7 +3444,8 @@
 <blockquote>
 <p>Reflection API的设计目标是只针对Java语言服务的，而MethodHandle则设计成可服务于所有Java虚拟机之上的语言。</p>
 </blockquote>
-<h3 id="invokedynamic指令"><a href="#invokedynamic指令" class="headerlink" title="invokedynamic指令"></a>invokedynamic指令</h3><p>JDK 1.7为了更好地支持动态类型语言，引入了第5条方法调用的字节码指令<code>invokedynamic</code>。<br><strong>Javac编译器暂时没有办法生成带有</strong><code>invokedynamic</code><strong>指令的字节码</strong>。</p>
+<h3 id="invokedynamic指令"><a href="#invokedynamic指令" class="headerlink" title="invokedynamic指令"></a>invokedynamic指令</h3><p>JDK 1.7为了更好地支持动态类型语言，引入了第5条方法调用的字节码指令<code>invokedynamic</code>。</p>
+<p>在JDK 1.7 以及之前的版本<strong>Javac编译器暂时没有办法生成带有</strong><code>invokedynamic</code><strong>指令的字节码</strong>。<br>但是在 JDK1.8，由于<strong>函数式编程</strong>的引入，Java的动态性大大增强，在Java函数式API调用中，编译器就能产生<code>invokedynamic</code>指令。</p>
 <blockquote>
 <p>invokedynamic指令所面向的并非Java语言，而是其他Java虚拟机之上的动态类型语言。</p>
 </blockquote>
@@ -4277,7 +4329,7 @@
 </blockquote>
 <p>对于<code>&lt;init&gt;()</code>而言是非静态语句块<code>{}</code>块和实例变量，对于<code>&lt;clinit&gt;()</code>而言是静态语句块<code>static{}</code>块和类变量。<br><code>&lt;clinit&gt;()</code>无需调用父类的<code>clinit()</code>方法，虚拟机会保证父类构造器的执行（类加载）。</p>
 <hr>
-<p>感谢：<br><a href="https://rogerfang.github.io/2016/12/30/Java-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/">https://rogerfang.github.io/2016/12/30/Java-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/</a></p>
+<p>相关：<a href="https://rogerfang.github.io/2016/12/30/Java-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/">Java 初始化顺序</a></p>
 ]]></content>
     </entry>
     

@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="JMM,重排序,happens-before," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -84,23 +84,44 @@
 
 
 
-<meta name="description" content="硬件效率与一致性一般来说，“让计算机并发执行若干个运算任务”（多任务处理）可以“更充分地利用计算机处理器的效能”。但是其中一个重要的复杂性（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，处理器还需要和内存交互，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。
-由于计算机的存储设备与处理器的运算速度有几个数量级的差距，所以每个处理器增加自己的高速缓存（Cache）来作为内存">
+<meta name="description" content="title: ‘JMM: Java内存模型’date: 2017-01-06 18:27:02categories:
+
+JMMtags:
+JMM
+重排序
+happens-before
+
+
+硬件效率与一致性一般来说，“让计算机并发执行若干个运算任务”（多任务处理）可以“更充分地利用计算机处理器的效能”。但是其中一个重要的复杂性（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，处理器">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JMM: Java内存模型">
+<meta property="og:title" content="方龙的博客">
 <meta property="og:url" content="https://rogerfang.github.io/2017/01/06/JMM-Java内存模型/index.html">
 <meta property="og:site_name" content="方龙的博客">
-<meta property="og:description" content="硬件效率与一致性一般来说，“让计算机并发执行若干个运算任务”（多任务处理）可以“更充分地利用计算机处理器的效能”。但是其中一个重要的复杂性（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，处理器还需要和内存交互，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。
-由于计算机的存储设备与处理器的运算速度有几个数量级的差距，所以每个处理器增加自己的高速缓存（Cache）来作为内存">
+<meta property="og:description" content="title: ‘JMM: Java内存模型’date: 2017-01-06 18:27:02categories:
+
+JMMtags:
+JMM
+重排序
+happens-before
+
+
+硬件效率与一致性一般来说，“让计算机并发执行若干个运算任务”（多任务处理）可以“更充分地利用计算机处理器的效能”。但是其中一个重要的复杂性（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，处理器">
 <meta property="og:image" content="https://rogerfang.github.io/images/jmm/cpu-cache-memory-process.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/jmm/jmm-thread-memory-process.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/jmm/instruction-reordering.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/jmm/jmm-happens-before.png">
-<meta property="og:updated_time" content="2017-02-12T05:10:22.740Z">
+<meta property="og:updated_time" content="2017-02-28T07:26:00.666Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JMM: Java内存模型">
-<meta name="twitter:description" content="硬件效率与一致性一般来说，“让计算机并发执行若干个运算任务”（多任务处理）可以“更充分地利用计算机处理器的效能”。但是其中一个重要的复杂性（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，处理器还需要和内存交互，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。
-由于计算机的存储设备与处理器的运算速度有几个数量级的差距，所以每个处理器增加自己的高速缓存（Cache）来作为内存">
+<meta name="twitter:title" content="方龙的博客">
+<meta name="twitter:description" content="title: ‘JMM: Java内存模型’date: 2017-01-06 18:27:02categories:
+
+JMMtags:
+JMM
+重排序
+happens-before
+
+
+硬件效率与一致性一般来说，“让计算机并发执行若干个运算任务”（多任务处理）可以“更充分地利用计算机处理器的效能”。但是其中一个重要的复杂性（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，处理器">
 <meta name="twitter:image" content="https://rogerfang.github.io/images/jmm/cpu-cache-memory-process.png">
 
 
@@ -125,7 +146,7 @@
   <link rel="canonical" href="https://rogerfang.github.io/2017/01/06/JMM-Java内存模型/"/>
 
 
-  <title> JMM: Java内存模型 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>  | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -288,7 +309,7 @@
             
             
               
-                JMM: Java内存模型
+                
               
             
           </h1>
@@ -300,30 +321,11 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-06T18:27:02+08:00" content="2017-01-06">
+            <time itemprop="dateCreated" datetime="2017-01-06T00:00:00+08:00" content="2017-01-06">
               2017-01-06
             </time>
           </span>
 
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/JMM/" itemprop="url" rel="index">
-                    <span itemprop="name">JMM</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
           
 
           
@@ -347,7 +349,16 @@
       
 
       
-        <h1 id="硬件效率与一致性"><a href="#硬件效率与一致性" class="headerlink" title="硬件效率与一致性"></a>硬件效率与一致性</h1><p>一般来说，“<strong>让计算机并发执行若干个运算任务</strong>”（多任务处理）可以“<strong>更充分地利用计算机处理器的效能</strong>”。但是其中一个重要的<strong>复杂性</strong>（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，<em>处理器还需要和内存交互</em>，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。</p>
+        <hr>
+<p>title: ‘JMM: Java内存模型’<br>date: 2017-01-06 18:27:02<br>categories:</p>
+<ul>
+<li>JMM<br>tags:</li>
+<li>JMM</li>
+<li>重排序</li>
+<li>happens-before</li>
+</ul>
+<hr>
+<h1 id="硬件效率与一致性"><a href="#硬件效率与一致性" class="headerlink" title="硬件效率与一致性"></a>硬件效率与一致性</h1><p>一般来说，“<strong>让计算机并发执行若干个运算任务</strong>”（多任务处理）可以“<strong>更充分地利用计算机处理器的效能</strong>”。但是其中一个重要的<strong>复杂性</strong>（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，<em>处理器还需要和内存交互</em>，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。</p>
 <p>由于计算机的存储设备与处理器的运算速度有几个数量级的差距，所以每个处理器增加自己的高速缓存（Cache）来作为内存与处理器之间的缓冲。将运算需要的数据复制到缓存中，让运算能快速进行，运算结束后再从缓存同步到内存中，这样处理器就无须等待缓慢的内存读写了。</p>
 <p>基于告诉缓存的存储交互很好地解决了处理器与内存的速度矛盾，但是也引入了一个新问题：<strong>缓存一致性</strong>（Cache Coherence）。当多个处理器的运算任务都涉及同一块主内存区域时，将可能导致缓存数据不一致。</p>
 <p>“<strong>内存模型</strong>”：可以理解为对特定的内存或高速缓存进行读写访问的过程抽象。</p>
@@ -360,7 +371,7 @@
 <blockquote>
 <p>此处的变量指的是线程共享的变量，包括了实例字段、静态字段和构成数组对象的元素。</p>
 </blockquote>
-<p>JMM是一个语言及的内存模型，处理器内存模型是硬件级的内存模型。</p>
+<p><strong>JMM是一个语言级的内存模型，处理器内存模型是硬件级的内存模型。</strong></p>
 <h2 id="主内存与工作内存"><a href="#主内存与工作内存" class="headerlink" title="主内存与工作内存"></a>主内存与工作内存</h2><p>Java内存模型规定所有的变量都存储在主内存（虚拟机内存的一部分，可以和硬件中的主内存类比）中。<br>每条线程都有自己的工作内存（Working Memory，或者叫<strong>本地内存</strong>，可以和硬件中的高速缓存类比，本地内存只是JMM的一个抽象概念，并不真实存在）。</p>
 <p>线程A与线程B之间如要通信的话，必须要经历下面2个步骤：</p>
 <ol>
@@ -368,7 +379,7 @@
 <li>然后，线程B到主内存中去读取线程A之前已更新过的共享变量。</li>
 </ol>
 <p>线程、工作内存、主内存间的交互关系<br><img src="/images/jmm/jmm-thread-memory-process.png" alt=""></p>
-<h2 id="内存间的交互操作"><a href="#内存间的交互操作" class="headerlink" title="内存间的交互操作"></a>内存间的交互操作</h2><p>关于主内存与工作内存之间的具体交互协议，即一个变量如何从主内存拷贝到工作内存、如何从工作内存同步回主内存之类的实现细节，JMM中定义了以下8种操作完成，虚拟机实现时必须保证下面提及的每一种操作都是原子的、不可再分的（对于long、double类型的变量来说，在某些平台上有例外）。</p>
+<h2 id="内存间的交互操作"><a href="#内存间的交互操作" class="headerlink" title="内存间的交互操作"></a>内存间的交互操作</h2><p>关于主内存与工作内存之间的具体交互协议，即一个变量如何从主内存拷贝到工作内存、如何从工作内存同步回主内存之类的实现细节，<strong>JMM中定义了以下8种操作完成，虚拟机实现时必须保证下面提及的每一种操作都是原子的、不可再分的</strong>（对于long、double类型的变量来说，在某些平台上有例外）。</p>
 <ol>
 <li><p>lock(锁定)<br> 作用于主内存的变量，把一个变量标识为线程独占状态。</p>
 </li>
@@ -398,20 +409,23 @@
 <li>对一个变量执行unlock操作之前，必须先把变量同步回主内存中。</li>
 </ul>
 <h2 id="JMM的特征"><a href="#JMM的特征" class="headerlink" title="JMM的特征"></a>JMM的特征</h2><p>Java内存模型是围绕着在并发过程中如何处理<strong>原子性</strong>、<strong>可见性</strong>和<strong>有序性</strong>这3个特征来建立的。</p>
-<h3 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h3><p>原子性是指一个操作不能被打断，要么全部执行完毕，要么不执行。</p>
+<h3 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h3><p><strong>原子性</strong>：<strong>是指一个操作不能被打断，要么全部执行完毕，要么不执行。</strong></p>
 <p>JMM直接保证的原子性变量操作包括read、load、assign、use、store和write。大致可以认为基本数据类型的访问读写是具备原子性的（例外就是long和double的非原子协定）。</p>
 <p>如果需要一个更大范围的原子性保证，JMM还提供了lock和unlock操作来满足这种需求，尽管虚拟机未把lock和unlock操作直接开放给用户使用，但是却提供了更高层次的字节码指令<code>monitorenter</code>和<code>monitorexit</code>来隐式地使用这两个操作，这两个字节码指令反映到Java代码中就是同步快——<code>synchronized</code>关键字，因此同步块之间的操作也具备原子性。</p>
-<h3 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h3><p>可见性是指一个线程对共享变量做了修改之后，其他的线程立即能够看到（感知到）该变量这种修改（变化）。</p>
+<blockquote>
+<p><code>volatile</code>关键字的增强语义确保volatile的写-读和锁的释放-获取具有相同的内存语义，因而也就具有了原子性。</p>
+</blockquote>
+<h3 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h3><p><strong>可见性</strong>：<strong>是指一个线程对共享变量做了修改之后，其他的线程立即能够看到（感知到）该变量这种修改（变化）</strong>。</p>
 <p>Java内存模型是通过将在工作内存中的变量修改后的值同步到主内存，在读取变量前从主内存刷新最新值到工作内存中，这种依赖主内存的方式来实现可见性的。</p>
-<p>可见性的实现：volatile、synchronized、final关键字还有Lock。</p>
+<p>可见性的实现：<code>volatile</code>、<code>synchronized</code>、<code>final</code>关键字还有<code>Lock</code>。</p>
 <ul>
 <li>普通变量和volatile变量都是如此，区别是volatile的特殊规则保证了新值能立即同步到主内存，以及使用前立即从主内存刷新。</li>
 <li>synchronized同步块的可见性是由<code>unlock</code>操作的规则获得的。</li>
 <li><code>final</code>关键字的可见性是指被final修饰的字段在构造器中一旦初始化完成，并且构造器没有把“this”引用传递出去，那么其他线程就能看见final字段的值。</li>
 <li>使用Lock接口的实现锁，和synchronized由相同的语义。</li>
 </ul>
-<h3 id="有序性"><a href="#有序性" class="headerlink" title="有序性"></a>有序性</h3><p>在本线程内观察，操作都是有序的；如果在一个线程中观察另外一个线程，所有的操作都是无序的。前半句是指“线程内表现为串行语义（WithIn Thread As-if-Serial Semantics）”,后半句是指“指令重排”现象和“工作内存和主内存同步延迟”现象。</p>
-<p>Java提供了两个关键字volatile和synchronized来保证多线程之间操作的有序性,volatile关键字本身通过加入内存屏障来禁止指令的重排序，而synchronized关键字通过一个变量在同一时间只允许有一个线程对其进行加锁的规则来实现，在单线程程序中，不会发生“指令重排”和“工作内存和主内存同步延迟”现象，只在多线程程序中出现。</p>
+<h3 id="有序性"><a href="#有序性" class="headerlink" title="有序性"></a>有序性</h3><p>在本线程内观察，操作都是有序的；如果在一个线程中观察另外一个线程，所有的操作都是无序的。前半句是指“<strong>线程内表现为串行语义</strong>（WithIn Thread As-if-Serial Semantics）”,后半句是指“<strong>指令重排</strong>”现象和“<strong>工作内存和主内存同步延迟</strong>”现象。</p>
+<p>Java提供了两个关键字<code>volatile</code>和<code>synchronized</code>来保证多线程之间操作的有序性，<code>volatile</code>关键字本身通过加入<strong>内存屏障</strong>来禁止指令的重排序，而<code>synchronized</code>关键字通过一个变量在同一时间只允许有一个线程对其进行加锁的规则来实现，在单线程程序中，不会发生“指令重排”和“工作内存和主内存同步延迟”现象，只在多线程程序中出现。</p>
 <h1 id="重排序"><a href="#重排序" class="headerlink" title="重排序"></a>重排序</h1><p>在执行程序时，为了提高性能（例如，在不改变程序语义的前提下，减少寄存器、缓存的读写次数），编译器和处理器通常会对指令进行重排序。</p>
 <p>重排序分为3种类型：</p>
 <ol>
@@ -430,13 +444,13 @@
 <blockquote>
 <p>JMM确保在不同的编译器和不同的处理器平台之上，通过禁止特定类型的编译器重排序和处理器重排序，为程序员提供一致的内存可见性保证。</p>
 </blockquote>
-<h2 id="数据依赖性"><a href="#数据依赖性" class="headerlink" title="数据依赖性"></a>数据依赖性</h2><p>如果两个操作访问同一个变量，且这两个操作中有一个为写操作，此时这两个操作之间就存在<strong>数据依赖性</strong>。</p>
+<h2 id="数据依赖性"><a href="#数据依赖性" class="headerlink" title="数据依赖性"></a>数据依赖性</h2><p>如果两个操作访问同一个变量，且这两个操作中有一个为<strong>写操作</strong>，此时这两个操作之间就存在<strong>数据依赖性</strong>。</p>
 <p>数据依赖性包括3种情况：写后读、写后写、读后写。只要重排序这两个操作，程序执行的结果就会改变。</p>
 <blockquote>
 <p>编译器和处理器在重排序时，会遵守数据依赖性，仅针对<strong>单个处理器</strong>中执行的指令序列和<strong>单个线程</strong>中执行的操作。</p>
 </blockquote>
 <h2 id="as-if-serial语义"><a href="#as-if-serial语义" class="headerlink" title="as-if-serial语义"></a>as-if-serial语义</h2><p>as-if-serial语义：不管怎么重排序（编译器和处理器），<strong>单线程</strong>程序的执行结果不能被改变。</p>
-<h1 id="happens-before"><a href="#happens-before" class="headerlink" title="happens-before"></a>happens-before</h1><p>在JMM中，如果一个操作执行的结果需要对另一个操作可见，那么这两个操作之间必须要存在happens-before关系，这里的两个操作既可以是一个线程内的，也可以是在不同线程之间的。</p>
+<h1 id="happens-before"><a href="#happens-before" class="headerlink" title="happens-before"></a>happens-before</h1><p>在JMM中，<strong>如果一个操作执行的结果需要对另一个操作可见</strong>，那么这两个操作之间必须要存在happens-before关系，这里的两个操作既可以是一个线程内的，也可以是在不同线程之间的。</p>
 <p>与程序员密切相关的happens-before规则：</p>
 <ul>
 <li>程序顺序规则：一个线程中的每个操作，happens-before于该线程中的任意后续操作。</li>
@@ -467,16 +481,6 @@
     </div>
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/JMM/" rel="tag">#JMM</a>
-          
-            <a href="/tags/重排序/" rel="tag">#重排序</a>
-          
-            <a href="/tags/happens-before/" rel="tag">#happens-before</a>
-          
-        </div>
       
 
       
@@ -561,7 +565,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">209</span>
+              <span class="site-state-item-count">210</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -569,7 +573,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -578,7 +582,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">139</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -92,7 +92,7 @@ Lock与synchronizedLock接口出现之前，Java程序是靠synchronized关键�
 <meta property="og:site_name" content="方龙的博客">
 <meta property="og:description" content="锁是用来控制多个线程访问共享资源的方式，一般来说，一个锁能够防止多个线程同时访问 共享资源（但是有些锁可以允许多个线程并发的访问共享资源，如读写锁）。
 Lock与synchronizedLock接口出现之前，Java程序是靠synchronized关键字实现锁功能的，而Java SE 5之后，并发包中新增了Lock接口（及其相关实现类），它们提供了与synchronized关键字类似的同步功能。">
-<meta property="og:updated_time" content="2017-01-15T11:31:18.478Z">
+<meta property="og:updated_time" content="2017-02-28T04:59:49.510Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Lock: 概述">
 <meta name="twitter:description" content="锁是用来控制多个线程访问共享资源的方式，一般来说，一个锁能够防止多个线程同时访问 共享资源（但是有些锁可以允许多个线程并发的访问共享资源，如读写锁）。
@@ -309,8 +309,8 @@ Lock与synchronizedLock接口出现之前，Java程序是靠synchronized关键�
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
-                    <span itemprop="name">Java SE</span>
+                  <a href="/categories/Java锁/" itemprop="url" rel="index">
+                    <span itemprop="name">Java锁</span>
                   </a>
                 </span>
 
@@ -351,6 +351,7 @@ Lock与synchronizedLock接口出现之前，Java程序是靠synchronized关键�
 <li>能被中断地获取锁<br> 与synchronized不同，获取到锁的线程能够响应中断，当获取到锁的线程被中断时，中断异常将会抛出，同时锁会被释放。</li>
 <li>超时获取锁<br> 在指定的截止时间之前获取锁，如果截止时间到了仍旧无法获取锁，则返回。</li>
 </ol>
+<p>synchronized关键字的同步实现参见：<a href="https://rogerfang.github.io/2017/01/03/Class%E6%96%87%E4%BB%B6-2-%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/">Class文件(2): 字节码指令-同步指令</a></p>
 <h1 id="Java中的原子操作"><a href="#Java中的原子操作" class="headerlink" title="Java中的原子操作"></a>Java中的原子操作</h1><p>在Java中通过锁和循环CAS来实现原子操作。</p>
 <p>JVM中的CAS操作利用了处理器提供的CMPXCHG指令实现的。<strong>自旋CAS实现的基本思路就是循环进行CAS操作直到成功为止</strong>。</p>
 <p>锁机制保证了只有获得锁的线程才能够操作锁定的内存区域。<strong>JVM中实现锁的方式基本上（除了偏向锁）都用了循环CAS，即当一个线程想进入同步块的时候使用循环CAS的方式来获取锁，当它退出同步块的时候使用循环CAS释放锁</strong>。</p>
@@ -467,7 +468,7 @@ Lock与synchronizedLock接口出现之前，Java程序是靠synchronized关键�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">209</span>
+              <span class="site-state-item-count">210</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -475,7 +476,7 @@ Lock与synchronizedLock接口出现之前，Java程序是靠synchronized关键�
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -484,7 +485,7 @@ Lock与synchronizedLock接口出现之前，Java程序是靠synchronized关键�
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">141</span>
+                <span class="site-state-item-count">139</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
