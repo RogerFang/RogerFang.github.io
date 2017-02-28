@@ -3050,18 +3050,9 @@
     </entry>
     
     <entry>
-      <title></title>
+      <title><![CDATA[JMM: Java内存模型]]></title>
       <url>https://rogerfang.github.io/2017/01/06/JMM-Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</url>
-      <content type="html"><![CDATA[<hr>
-<p>title: ‘JMM: Java内存模型’<br>date: 2017-01-06 18:27:02<br>categories:</p>
-<ul>
-<li>JMM<br>tags:</li>
-<li>JMM</li>
-<li>重排序</li>
-<li>happens-before</li>
-</ul>
-<hr>
-<h1 id="硬件效率与一致性"><a href="#硬件效率与一致性" class="headerlink" title="硬件效率与一致性"></a>硬件效率与一致性</h1><p>一般来说，“<strong>让计算机并发执行若干个运算任务</strong>”（多任务处理）可以“<strong>更充分地利用计算机处理器的效能</strong>”。但是其中一个重要的<strong>复杂性</strong>（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，<em>处理器还需要和内存交互</em>，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。</p>
+      <content type="html"><![CDATA[<h1 id="硬件效率与一致性"><a href="#硬件效率与一致性" class="headerlink" title="硬件效率与一致性"></a>硬件效率与一致性</h1><p>一般来说，“<strong>让计算机并发执行若干个运算任务</strong>”（多任务处理）可以“<strong>更充分地利用计算机处理器的效能</strong>”。但是其中一个重要的<strong>复杂性</strong>（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，<em>处理器还需要和内存交互</em>，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。</p>
 <p>由于计算机的存储设备与处理器的运算速度有几个数量级的差距，所以每个处理器增加自己的高速缓存（Cache）来作为内存与处理器之间的缓冲。将运算需要的数据复制到缓存中，让运算能快速进行，运算结束后再从缓存同步到内存中，这样处理器就无须等待缓慢的内存读写了。</p>
 <p>基于告诉缓存的存储交互很好地解决了处理器与内存的速度矛盾，但是也引入了一个新问题：<strong>缓存一致性</strong>（Cache Coherence）。当多个处理器的运算任务都涉及同一块主内存区域时，将可能导致缓存数据不一致。</p>
 <p>“<strong>内存模型</strong>”：可以理解为对特定的内存或高速缓存进行读写访问的过程抽象。</p>
@@ -3070,7 +3061,7 @@
 <blockquote>
 <p>Java<strong>线程通信</strong>由Java内存模型控制，JMM决定一个线程对共享变量的写入何时对另一个线程可见，也就是提供<strong>内存可见性</strong>保证。</p>
 </blockquote>
-<p>JMM的主要目标是定义程序中各个变量的访问规则，即在虚拟机中将变量存储到内存和从内存中取出变量的这些底层细节。</p>
+<p><strong>JMM的主要目标是定义程序中各个变量的访问规则，即在虚拟机中将变量存储到内存和从内存中取出变量的这些底层细节。</strong></p>
 <blockquote>
 <p>此处的变量指的是线程共享的变量，包括了实例字段、静态字段和构成数组对象的元素。</p>
 </blockquote>

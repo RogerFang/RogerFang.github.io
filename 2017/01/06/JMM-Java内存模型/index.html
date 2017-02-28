@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="JMM,重排序,happens-before," />
 
 
 
@@ -84,44 +84,23 @@
 
 
 
-<meta name="description" content="title: ‘JMM: Java内存模型’date: 2017-01-06 18:27:02categories:
-
-JMMtags:
-JMM
-重排序
-happens-before
-
-
-硬件效率与一致性一般来说，“让计算机并发执行若干个运算任务”（多任务处理）可以“更充分地利用计算机处理器的效能”。但是其中一个重要的复杂性（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，处理器">
+<meta name="description" content="硬件效率与一致性一般来说，“让计算机并发执行若干个运算任务”（多任务处理）可以“更充分地利用计算机处理器的效能”。但是其中一个重要的复杂性（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，处理器还需要和内存交互，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。
+由于计算机的存储设备与处理器的运算速度有几个数量级的差距，所以每个处理器增加自己的高速缓存（Cache）来作为内存">
 <meta property="og:type" content="article">
-<meta property="og:title" content="方龙的博客">
+<meta property="og:title" content="JMM: Java内存模型">
 <meta property="og:url" content="https://rogerfang.github.io/2017/01/06/JMM-Java内存模型/index.html">
 <meta property="og:site_name" content="方龙的博客">
-<meta property="og:description" content="title: ‘JMM: Java内存模型’date: 2017-01-06 18:27:02categories:
-
-JMMtags:
-JMM
-重排序
-happens-before
-
-
-硬件效率与一致性一般来说，“让计算机并发执行若干个运算任务”（多任务处理）可以“更充分地利用计算机处理器的效能”。但是其中一个重要的复杂性（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，处理器">
+<meta property="og:description" content="硬件效率与一致性一般来说，“让计算机并发执行若干个运算任务”（多任务处理）可以“更充分地利用计算机处理器的效能”。但是其中一个重要的复杂性（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，处理器还需要和内存交互，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。
+由于计算机的存储设备与处理器的运算速度有几个数量级的差距，所以每个处理器增加自己的高速缓存（Cache）来作为内存">
 <meta property="og:image" content="https://rogerfang.github.io/images/jmm/cpu-cache-memory-process.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/jmm/jmm-thread-memory-process.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/jmm/instruction-reordering.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/jmm/jmm-happens-before.png">
-<meta property="og:updated_time" content="2017-02-28T07:26:00.666Z">
+<meta property="og:updated_time" content="2017-02-28T07:49:55.256Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="方龙的博客">
-<meta name="twitter:description" content="title: ‘JMM: Java内存模型’date: 2017-01-06 18:27:02categories:
-
-JMMtags:
-JMM
-重排序
-happens-before
-
-
-硬件效率与一致性一般来说，“让计算机并发执行若干个运算任务”（多任务处理）可以“更充分地利用计算机处理器的效能”。但是其中一个重要的复杂性（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，处理器">
+<meta name="twitter:title" content="JMM: Java内存模型">
+<meta name="twitter:description" content="硬件效率与一致性一般来说，“让计算机并发执行若干个运算任务”（多任务处理）可以“更充分地利用计算机处理器的效能”。但是其中一个重要的复杂性（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，处理器还需要和内存交互，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。
+由于计算机的存储设备与处理器的运算速度有几个数量级的差距，所以每个处理器增加自己的高速缓存（Cache）来作为内存">
 <meta name="twitter:image" content="https://rogerfang.github.io/images/jmm/cpu-cache-memory-process.png">
 
 
@@ -146,7 +125,7 @@ happens-before
   <link rel="canonical" href="https://rogerfang.github.io/2017/01/06/JMM-Java内存模型/"/>
 
 
-  <title>  | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title> JMM: Java内存模型 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -309,7 +288,7 @@ happens-before
             
             
               
-                
+                JMM: Java内存模型
               
             
           </h1>
@@ -321,11 +300,30 @@ happens-before
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-06T00:00:00+08:00" content="2017-01-06">
+            <time itemprop="dateCreated" datetime="2017-01-06T18:27:02+08:00" content="2017-01-06">
               2017-01-06
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/JMM/" itemprop="url" rel="index">
+                    <span itemprop="name">JMM</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
@@ -349,16 +347,7 @@ happens-before
       
 
       
-        <hr>
-<p>title: ‘JMM: Java内存模型’<br>date: 2017-01-06 18:27:02<br>categories:</p>
-<ul>
-<li>JMM<br>tags:</li>
-<li>JMM</li>
-<li>重排序</li>
-<li>happens-before</li>
-</ul>
-<hr>
-<h1 id="硬件效率与一致性"><a href="#硬件效率与一致性" class="headerlink" title="硬件效率与一致性"></a>硬件效率与一致性</h1><p>一般来说，“<strong>让计算机并发执行若干个运算任务</strong>”（多任务处理）可以“<strong>更充分地利用计算机处理器的效能</strong>”。但是其中一个重要的<strong>复杂性</strong>（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，<em>处理器还需要和内存交互</em>，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。</p>
+        <h1 id="硬件效率与一致性"><a href="#硬件效率与一致性" class="headerlink" title="硬件效率与一致性"></a>硬件效率与一致性</h1><p>一般来说，“<strong>让计算机并发执行若干个运算任务</strong>”（多任务处理）可以“<strong>更充分地利用计算机处理器的效能</strong>”。但是其中一个重要的<strong>复杂性</strong>（问题）来源是：绝大多数的运算任务不可能只靠处理器的计算就能完成，<em>处理器还需要和内存交互</em>，如读取运算数据、存储原酸结果等，这些I/O操作很难消除。</p>
 <p>由于计算机的存储设备与处理器的运算速度有几个数量级的差距，所以每个处理器增加自己的高速缓存（Cache）来作为内存与处理器之间的缓冲。将运算需要的数据复制到缓存中，让运算能快速进行，运算结束后再从缓存同步到内存中，这样处理器就无须等待缓慢的内存读写了。</p>
 <p>基于告诉缓存的存储交互很好地解决了处理器与内存的速度矛盾，但是也引入了一个新问题：<strong>缓存一致性</strong>（Cache Coherence）。当多个处理器的运算任务都涉及同一块主内存区域时，将可能导致缓存数据不一致。</p>
 <p>“<strong>内存模型</strong>”：可以理解为对特定的内存或高速缓存进行读写访问的过程抽象。</p>
@@ -367,7 +356,7 @@ happens-before
 <blockquote>
 <p>Java<strong>线程通信</strong>由Java内存模型控制，JMM决定一个线程对共享变量的写入何时对另一个线程可见，也就是提供<strong>内存可见性</strong>保证。</p>
 </blockquote>
-<p>JMM的主要目标是定义程序中各个变量的访问规则，即在虚拟机中将变量存储到内存和从内存中取出变量的这些底层细节。</p>
+<p><strong>JMM的主要目标是定义程序中各个变量的访问规则，即在虚拟机中将变量存储到内存和从内存中取出变量的这些底层细节。</strong></p>
 <blockquote>
 <p>此处的变量指的是线程共享的变量，包括了实例字段、静态字段和构成数组对象的元素。</p>
 </blockquote>
@@ -482,6 +471,16 @@ happens-before
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/JMM/" rel="tag">#JMM</a>
+          
+            <a href="/tags/重排序/" rel="tag">#重排序</a>
+          
+            <a href="/tags/happens-before/" rel="tag">#happens-before</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
@@ -582,7 +581,7 @@ happens-before
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">141</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
