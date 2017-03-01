@@ -98,7 +98,7 @@
 读写锁维护了一对锁，一个读锁和一个写锁，通过分离读锁和写锁，使得并发性相比一般的排他锁有了很大的提升。
 
 读写锁保证写操作对读操作的可见性以及并发性的提升，还简化了读写交互场景的编程方式。在没有读写锁支持的时候（J">
-<meta property="og:updated_time" content="2017-02-28T04:54:22.446Z">
+<meta property="og:updated_time" content="2017-03-01T11:47:35.354Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Lock: 读写锁ReentrantReadWriteLock">
 <meta name="twitter:description" content="之前提到的ReentrantLock是排他锁，也就是同一时刻只允许一个线程进行访问。而读写锁在同一时刻可以允许多个读线程进行访问，但是在写线程访问时，所有的读线程和写线程均会被阻塞。
@@ -355,7 +355,7 @@
 <blockquote>
 <p>读写锁维护了一对锁，一个读锁和一个写锁，通过<strong>分离读锁和写锁</strong>，使得并发性相比一般的排他锁有了很大的提升。</p>
 </blockquote>
-<p>读写锁保证<strong>写操作对读操作的可见性</strong>以及并发性的提升，还简化了读写交互场景的编程方式。<br>在没有读写锁支持的时候（JDK 1.5之前），如果需要完成写操作对读操作的可见性，就要使用Java的<strong>等待/通知机制</strong>，当开始写操作时，后续的所有读操作进入等待状态，当写操作完成后并进行通知，所有等待的读操作才能继续执行（写操作之间依靠synchronized关键字进行同步），这样才能保证读操作读取到正确的数据，不会出现脏读。</p>
+<p>读写锁保证<strong>写操作对读操作的可见性</strong>以及并发性的提升，还简化了读写交互场景的编程方式。<br>在没有读写锁支持的时候（JDK 1.5之前），如果需要完成写操作对读操作的可见性，就要使用Java的<strong>等待/通知机制</strong>，当开始写操作时，后续的所有读操作进入等待状态，当写操作完成后并进行通知，所有等待的读操作才能继续执行（<strong>写操作之间依靠synchronized关键字进行同步</strong>），这样才能保证读操作读取到正确的数据，不会出现脏读。</p>
 <h1 id="读写锁ReentrantReadWriteLock的特性"><a href="#读写锁ReentrantReadWriteLock的特性" class="headerlink" title="读写锁ReentrantReadWriteLock的特性"></a>读写锁ReentrantReadWriteLock的特性</h1><p>Java并发包提供读写锁的实现是ReentrantReadWriteLock，它的特性如下：</p>
 <ul>
 <li>公平性选择<br>  支持非公平（默认的）和公平的锁获取方式。</li>
@@ -374,7 +374,7 @@
 <blockquote>
 <p>整个过程是：1)把持住当前拥有的写锁，2)再获取读锁，3)然后释放先前拥有的写锁。</p>
 </blockquote>
-<p><strong>锁降级中读锁获取的必要性</strong>：主要是为了保证数据的可见性。如果当前线程不获取读锁而是直接释放写锁，假设刺客另一个线程T获取了写锁并进行了修改数据，那么当前线程无法感知线程T对数据的更新。如果当前线程遵循锁降级的步骤，则线程T会被阻塞，直到当前线程使用数据并释放读锁之后，线程T才能获取写锁进行数据更新。</p>
+<p><strong>锁降级中读锁获取的必要性</strong>：<strong>主要是为了保证数据的可见性</strong>。如果当前线程不获取读锁而是直接释放写锁，假设此刻另一个线程T获取了写锁并进行了修改数据，那么当前线程无法感知线程T对数据的更新（当前线程没有被阻塞住，导致此刻的数据更新无法感知）。如果当前线程遵循锁降级的步骤，则线程T会被阻塞，直到当前线程使用数据并释放读锁之后，线程T才能获取写锁进行数据更新。</p>
 
       
     </div>

@@ -92,7 +92,7 @@ Condition的作用是对锁进行更精确的控制，也提供了类似Object�
 <meta property="og:site_name" content="方龙的博客">
 <meta property="og:description" content="任意一个Java对象，都拥有一组监视器方法（定义在java.lang.Object上），主要包括wait()、wait(long timeout)、notify()、notifyAll()，这些方法与synchronized关键字配合，可以实现等待/通知机制。
 Condition的作用是对锁进行更精确的控制，也提供了类似Object的监视器方法。Condition中的await()方法相当于Obj">
-<meta property="og:updated_time" content="2017-02-28T04:54:48.345Z">
+<meta property="og:updated_time" content="2017-03-01T13:02:36.722Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Lock: Condition">
 <meta name="twitter:description" content="任意一个Java对象，都拥有一组监视器方法（定义在java.lang.Object上），主要包括wait()、wait(long timeout)、notify()、notifyAll()，这些方法与synchronized关键字配合，可以实现等待/通知机制。
@@ -345,7 +345,7 @@ Condition的作用是对锁进行更精确的控制，也提供了类似Object�
         <p>任意一个Java对象，都拥有一组监视器方法（定义在java.lang.Object上），主要包括<code>wait()</code>、<code>wait(long timeout)</code>、<code>notify()</code>、<code>notifyAll()</code>，这些方法与<code>synchronized</code>关键字配合，可以实现<strong>等待/通知机制</strong>。</p>
 <p>Condition的作用是对锁进行更精确的控制，也提供了类似Object的监视器方法。<br>Condition中的<code>await()</code>方法相当于Object的<code>wait()</code>方法，Condition中的<code>signal()</code>方法相当于Object的<code>notify()</code>方法，Condition中的<code>signalAll()</code>相当于Object的<code>notifyAll()</code>方法。</p>
 <blockquote>
-<p>不同的是，Object中的监视器方法是和”同步锁”(synchronized关键字)配合使用的；而Condition是需要与”排他锁”/“共享锁”配合使用的。</p>
+<p>不同的是，<strong>Object中的监视器方法是和”同步锁”(synchronized关键字)配合使用的</strong>；而<code>Condition</code><strong>是需要与”排他锁”/“共享锁” Lock 配合使用的</strong>。</p>
 </blockquote>
 <h1 id="Condition实现分析"><a href="#Condition实现分析" class="headerlink" title="Condition实现分析"></a>Condition实现分析</h1><p>ConditionObject是队列同步器AbstractQueuedSynchronizer的内部类，实现了Condition接口。因为Condition的操作需要获取相关联的锁，所以作为同步器的内部类也较为合理。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConditionObject</span> <span class="keyword">implements</span> <span class="title">Condition</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></span></div></pre></td></tr></table></figure></p>
 <p>Condition的实现主要包括：等待队列、等待、通知。</p>

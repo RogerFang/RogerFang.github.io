@@ -96,7 +96,7 @@ CountDownLatch的作用是允许1或N个线程等待">
 CountDownLatch允许一个或多个线程等待其他线程完成操作。
 CountDownLatch和CyclicBarrier的区别
 CountDownLatch的作用是允许1或N个线程等待">
-<meta property="og:updated_time" content="2017-02-28T04:56:11.772Z">
+<meta property="og:updated_time" content="2017-03-01T13:14:21.286Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Lock: 并发工具类-CountDownLatch">
 <meta name="twitter:description" content="在JDK并发包提供了几个常用的并发工具类：CountDownLatch、CyclicBarrier、Semaphore提供了一种并发流程控制的手段，而Exchanger工具类提供了在线程间交换数据的一种手段。
@@ -363,6 +363,8 @@ CountDownLatch的作用是允许1或N个线程等待">
 <p><code>acquireSharedInterruptibly()</code>的作用是获取共享锁。<br>如果当前线程是中断状态，则抛出异常<code>InterruptedException</code>。否则，调用<code>tryAcquireShared(arg)</code>尝试获取共享锁；尝试成功则返回，否则就调用<code>doAcquireSharedInterruptibly()</code>。<code>doAcquireSharedInterruptibly()</code>会使当前线程一直等待，直到当前线程获取到共享锁(或被中断)才返回。</p>
 <h2 id="countDown"><a href="#countDown" class="headerlink" title="countDown()"></a>countDown()</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">countDown</span><span class="params">()</span> </span>&#123;</div><div class="line">    sync.releaseShared(<span class="number">1</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p><code>releaseShared()</code>目的是让当前线程释放锁，首先会通过<code>tryReleaseShared()</code>去尝试释放共享锁。尝试成功，则直接返回；尝试失败，则通过<code>doReleaseShared()</code>去释放共享锁。</p>
+<h1 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h1><p>老板等几个工人做完事后再来检验工作情况，每个工作进行一次<code>countDown()</code>，老板则执行<code>await()</code>进行等待。</p>
+<p>可以有多个老板同时<code>await()</code>一起完成检验工作，这个时候需要用到<strong>共享锁</strong>。</p>
 
       
     </div>
@@ -535,7 +537,7 @@ CountDownLatch的作用是允许1或N个线程等待">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CountDownLatch和CyclicBarrier的区别"><span class="nav-number">1.</span> <span class="nav-text">CountDownLatch和CyclicBarrier的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#源码分析"><span class="nav-number">2.</span> <span class="nav-text">源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖"><span class="nav-number">2.1.</span> <span class="nav-text">依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造方法"><span class="nav-number">2.2.</span> <span class="nav-text">构造方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#await"><span class="nav-number">2.3.</span> <span class="nav-text">await()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#countDown"><span class="nav-number">2.4.</span> <span class="nav-text">countDown()</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CountDownLatch和CyclicBarrier的区别"><span class="nav-number">1.</span> <span class="nav-text">CountDownLatch和CyclicBarrier的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#源码分析"><span class="nav-number">2.</span> <span class="nav-text">源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖"><span class="nav-number">2.1.</span> <span class="nav-text">依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造方法"><span class="nav-number">2.2.</span> <span class="nav-text">构造方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#await"><span class="nav-number">2.3.</span> <span class="nav-text">await()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#countDown"><span class="nav-number">2.4.</span> <span class="nav-text">countDown()</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实例"><span class="nav-number">3.</span> <span class="nav-text">实例</span></a></li></ol></div>
             
           </div>
         </section>
