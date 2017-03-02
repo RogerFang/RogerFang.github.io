@@ -85,18 +85,18 @@
 
 
 <meta name="description" content="123public class LinkedHashSet&amp;lt;E&amp;gt;    extends HashSet&amp;lt;E&amp;gt;    implements Set&amp;lt;E&amp;gt;, Cloneable, java.io.Serializable
-简介LinkedHashSet继承自HashSet，LinkedHashSet调用父类HashSet的构造函数(default修饰)，让其底层实现">
+简介LinkedHashSet继承自HashSet，LinkedHashSet调用父类HashSet的构造函数(default修饰)，其底层实现使">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java集合框架(11): LinkedHashSet源码分析">
 <meta property="og:url" content="https://rogerfang.github.io/2016/12/30/Java集合框架-11-LinkedHashSet源码分析/index.html">
 <meta property="og:site_name" content="方龙的博客">
 <meta property="og:description" content="123public class LinkedHashSet&amp;lt;E&amp;gt;    extends HashSet&amp;lt;E&amp;gt;    implements Set&amp;lt;E&amp;gt;, Cloneable, java.io.Serializable
-简介LinkedHashSet继承自HashSet，LinkedHashSet调用父类HashSet的构造函数(default修饰)，让其底层实现">
-<meta property="og:updated_time" content="2016-12-30T04:54:14.149Z">
+简介LinkedHashSet继承自HashSet，LinkedHashSet调用父类HashSet的构造函数(default修饰)，其底层实现使">
+<meta property="og:updated_time" content="2017-03-02T05:58:37.786Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java集合框架(11): LinkedHashSet源码分析">
 <meta name="twitter:description" content="123public class LinkedHashSet&amp;lt;E&amp;gt;    extends HashSet&amp;lt;E&amp;gt;    implements Set&amp;lt;E&amp;gt;, Cloneable, java.io.Serializable
-简介LinkedHashSet继承自HashSet，LinkedHashSet调用父类HashSet的构造函数(default修饰)，让其底层实现">
+简介LinkedHashSet继承自HashSet，LinkedHashSet调用父类HashSet的构造函数(default修饰)，其底层实现使">
 
 
 
@@ -343,9 +343,9 @@
 
       
         <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkedHashSet</span>&lt;<span class="title">E</span>&gt;</span></div><div class="line">    <span class="keyword">extends</span> <span class="title">HashSet</span>&lt;<span class="title">E</span>&gt;</div><div class="line">    <span class="keyword">implements</span> <span class="title">Set</span>&lt;<span class="title">E</span>&gt;, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></div></pre></td></tr></table></figure>
-<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><code>LinkedHashSet</code>继承自<code>HashSet</code>，<code>LinkedHashSet</code>调用父类<code>HashSet</code>的构造函数(default修饰)，让其底层实现为<code>LinkedHashMap</code>。</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><code>LinkedHashSet</code>继承自<code>HashSet</code>，<code>LinkedHashSet</code>调用父类<code>HashSet</code>的构造函数(default修饰)，其底层实现使用的map是<code>LinkedHashMap</code>。</p>
 <p><code>LinkedHashSet</code>的元素可以按照<strong>插入顺序</strong>来访问。</p>
-
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Constructs a new, empty linked hash set.  (This package private</div><div class="line"> * constructor is only used by LinkedHashSet.) The backing</div><div class="line"> * HashMap instance is a LinkedHashMap with the specified initial</div><div class="line"> * capacity and the specified load factor.</div><div class="line"> *</div><div class="line"> * <span class="doctag">@param</span>      initialCapacity   the initial capacity of the hash map</div><div class="line"> * <span class="doctag">@param</span>      loadFactor        the load factor of the hash map</div><div class="line"> * <span class="doctag">@param</span>      dummy             ignored (distinguishes this</div><div class="line"> *             constructor from other int, float constructor.)</div><div class="line"> * <span class="doctag">@throws</span>     IllegalArgumentException if the initial capacity is less</div><div class="line"> *             than zero, or if the load factor is nonpositive</div><div class="line"> */</div><div class="line">HashSet(<span class="keyword">int</span> initialCapacity, <span class="keyword">float</span> loadFactor, <span class="keyword">boolean</span> dummy) &#123;</div><div class="line">    map = <span class="keyword">new</span> LinkedHashMap&lt;&gt;(initialCapacity, loadFactor);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
       
     </div>
 

@@ -85,20 +85,23 @@
 
 
 <meta name="description" content="12public class ConcurrentHashMap&amp;lt;K,V&amp;gt; extends AbstractMap&amp;lt;K,V&amp;gt;    implements ConcurrentMap&amp;lt;K,V&amp;gt;, Serializable
-ConcurrentSkipHashMap相当于线程安全的HashMap，它继承于AbstractMap类，并实现了ConcurrentMap接">
+ConcurrentHashMap相当于线程安全的HashMap，它继承于AbstractMap类，并实现了ConcurrentMap接口。
+C">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JUC集合框架(2): ConcurrentHashMap">
 <meta property="og:url" content="https://rogerfang.github.io/2017/01/16/JUC集合框架-2-ConcurrentHashMap/index.html">
 <meta property="og:site_name" content="方龙的博客">
 <meta property="og:description" content="12public class ConcurrentHashMap&amp;lt;K,V&amp;gt; extends AbstractMap&amp;lt;K,V&amp;gt;    implements ConcurrentMap&amp;lt;K,V&amp;gt;, Serializable
-ConcurrentSkipHashMap相当于线程安全的HashMap，它继承于AbstractMap类，并实现了ConcurrentMap接">
+ConcurrentHashMap相当于线程安全的HashMap，它继承于AbstractMap类，并实现了ConcurrentMap接口。
+C">
 <meta property="og:image" content="https://rogerfang.github.io/images/juc/juc-concurrenthashmap-java7.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/juc/juc-concurrenthashmap-java8.png">
-<meta property="og:updated_time" content="2017-01-17T05:32:44.454Z">
+<meta property="og:updated_time" content="2017-03-02T11:43:25.618Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JUC集合框架(2): ConcurrentHashMap">
 <meta name="twitter:description" content="12public class ConcurrentHashMap&amp;lt;K,V&amp;gt; extends AbstractMap&amp;lt;K,V&amp;gt;    implements ConcurrentMap&amp;lt;K,V&amp;gt;, Serializable
-ConcurrentSkipHashMap相当于线程安全的HashMap，它继承于AbstractMap类，并实现了ConcurrentMap接">
+ConcurrentHashMap相当于线程安全的HashMap，它继承于AbstractMap类，并实现了ConcurrentMap接口。
+C">
 <meta name="twitter:image" content="https://rogerfang.github.io/images/juc/juc-concurrenthashmap-java7.png">
 
 
@@ -346,7 +349,7 @@ ConcurrentSkipHashMap相当于线程安全的HashMap，它继承于AbstractMap�
 
       
         <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcurrentHashMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</span></div><div class="line">    <span class="keyword">implements</span> <span class="title">ConcurrentMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;, <span class="title">Serializable</span></div></pre></td></tr></table></figure>
-<p><code>ConcurrentSkipHashMap</code>相当于线程安全的<code>HashMap</code>，它继承于<code>AbstractMap</code>类，并实现了<code>ConcurrentMap</code>接口。</p>
+<p><code>ConcurrentHashMap</code>相当于线程安全的<code>HashMap</code>，它继承于<code>AbstractMap</code>类，并实现了<code>ConcurrentMap</code>接口。</p>
 <p><strong>ConcurrentHashMap不允许key或value为null值</strong>。</p>
 <h1 id="ConcurrentHashMap、HashMap和HashTable"><a href="#ConcurrentHashMap、HashMap和HashTable" class="headerlink" title="ConcurrentHashMap、HashMap和HashTable"></a>ConcurrentHashMap、HashMap和HashTable</h1><p>为什么要使用ConcurrentHashMap，而不是HashMap或者HashTable？</p>
 <ol>
@@ -355,8 +358,9 @@ ConcurrentSkipHashMap相当于线程安全的HashMap，它继承于AbstractMap�
 <li><p>效率低下的HashTable<br> HashTable使用synchronized来保证线程安全，但是在线程竞争激烈的情况下效率低下。因为HashTable会对整个表进行加锁来实现同步，而JDK 1.8中的ConcurrentHashMap则使用更细粒度的锁来实现同步（对表中的某一列进行加锁）。</p>
 </li>
 </ol>
+<p>HashTable 虽然性能上不如 ConcurrentHashMap，但<strong>并不能完全被取代</strong>，两者的迭代器的一致性不同的，HashTable的迭代器是强一致性的，而<strong>ConcurrentHashMap是弱一致的</strong>。 ConcurrentHashMap的get，clear，iterator 都是弱一致性的。</p>
 <h1 id="原理和结构"><a href="#原理和结构" class="headerlink" title="原理和结构"></a>原理和结构</h1><h2 id="JDK-1-8之前"><a href="#JDK-1-8之前" class="headerlink" title="JDK 1.8之前"></a>JDK 1.8之前</h2><p>JDK 1.8 之前的<code>ConcurrentHashMap</code>是通过<strong>锁分段</strong>来实现的，只有在同一个分段内才存在竞态关系。由<strong>Segment</strong>数组结构和<strong>HashEntry</strong>数组结构组成的。<br>一个ConcurrentHashMap里包含一个Segment数组，一个Segment里包含一个HashEntry数组。<br><img src="/images/juc/juc-concurrenthashmap-java7.png" alt=""></p>
-<p><code>Segment</code>是一个可重入锁（ReentrantLock），在ConcurrentHashMap里扮演锁的角色。<code>HashEntry</code>用于存储键值，每个HashEntry是一个链表结构的元素。</p>
+<p><code>Segment</code>是一个<strong>可重入锁</strong>（ReentrantLock），在ConcurrentHashMap里扮演锁的角色。<code>HashEntry</code>用于存储键值，每个HashEntry是一个链表结构的元素。</p>
 <p>每个Segment守护者一个HashEntry数组里面的元素，当对HashEntry数组里的数据进行修改时，必须首先获得与它对应的Segment锁。<br>Segment的结构和<code>HashMap</code>的结构类似，是一种数组和链表的结构。</p>
 <h2 id="JDK-1-8"><a href="#JDK-1-8" class="headerlink" title="JDK 1.8"></a>JDK 1.8</h2><p>JDK 1.8中，<code>ConcurrentHashMap</code>的实现已经抛弃了Segment分段锁机制，大量的利用了volatile，final，CAS等lock-free技术来减少锁竞争对于性能的影响。<br><strong>CAS</strong>+<strong>Synchronized</strong>来保证并发更新的安全，底层依然采用<strong>数组+链表+红黑树</strong>的存储结构。但是为了做到并发，又增加了很多辅助的类，例如TreeBin，Traverser等对象内部类。</p>
 <p>synchronized关键字锁住 table 中本次所操作对象的<strong>链表头</strong>。</p>

@@ -97,7 +97,7 @@ List列表List接口通常表示一个列表（数组、队列、链表、">
 CollectionCollection是List、Set等集合高度抽象出来的接口，它包含了这些集合的基本操作，它主要又分为两大部分：List和Set。
 List列表List接口通常表示一个列表（数组、队列、链表、">
 <meta property="og:image" content="https://rogerfang.github.io/images/collections/java-collection-framework.png">
-<meta property="og:updated_time" content="2016-12-27T13:02:26.400Z">
+<meta property="og:updated_time" content="2017-03-02T01:27:24.416Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java集合框架(1): 概述">
 <meta name="twitter:description" content="Java集合框架下大致可以分为如下五个部分：List列表、Set集合、Map映射、迭代器（Iterator、Enumeration）、工具类（Arrays、Collections）。
@@ -357,7 +357,7 @@ List列表List接口通常表示一个列表（数组、队列、链表、">
 <h2 id="Set集合"><a href="#Set集合" class="headerlink" title="Set集合"></a>Set集合</h2><p>Set接口通常表示一个集合，其中的元素不允许重复（通过hashcode和equals函数保证），常用实现类有HashSet和TreeSet，HashSet是通过Map中的HashMap实现的，而TreeSet是通过Map中的TreeMap实现的。另外，TreeSet还实现了SortedSet接口，因此是有序的集合（集合中的元素要实现Comparable接口，并覆写Compartor函数才行）。</p>
 <h1 id="Map映射"><a href="#Map映射" class="headerlink" title="Map映射"></a>Map映射</h1><p>Map是一个映射接口，其中的每个元素都是一个key-value键值对，同样抽象类AbstractMap通过适配器模式实现了Map接口中的大部分函数，TreeMap、HashMap、WeakHashMap等实现类都通过继承AbstractMap来实现，另外，不常用的HashTable直接实现了Map接口，它和Vector都是JDK1.0就引入的集合类。</p>
 <h1 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h1><h2 id="Iterator"><a href="#Iterator" class="headerlink" title="Iterator"></a>Iterator</h2><p>Iterator是遍历集合的迭代器（不能遍历Map，只用来遍历Collection），Collection的实现类都实现了iterator()函数，它返回一个Iterator对象，用来遍历集合，ListIterator则专门用来遍历List。</p>
-<h2 id="Enumeration"><a href="#Enumeration" class="headerlink" title="Enumeration"></a>Enumeration</h2><p>Enumeration则是JDK1.0时引入的，作用与Iterator相同，但它的功能比Iterator要少，它只能再Hashtable、Vector和Stack中使用。</p>
+<h2 id="Enumeration"><a href="#Enumeration" class="headerlink" title="Enumeration"></a>Enumeration</h2><p>Enumeration则是JDK1.0时引入的，作用与Iterator相同，但它的功能比Iterator要少，它只能在Hashtable、Vector和Stack中使用。</p>
 <h1 id="工具类"><a href="#工具类" class="headerlink" title="工具类"></a>工具类</h1><p>Arrays和Collections是用来操作数组、集合的两个工具类，例如在ArrayList和Vector中大量调用了Arrays.Copyof()方法。</p>
 <p>而Collections中有很多静态方法可以返回各集合类的synchronized版本，即线程安全的版本，当然了，如果要用线程安全的结合类，首选Concurrent并发包下的对应的集合类。</p>
 <hr>
