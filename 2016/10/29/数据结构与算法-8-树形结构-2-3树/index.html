@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="数据结构,树形结构,二叉树,2-3树,平衡查找树," />
+  <meta name="keywords" content="数据结构,树形结构,二叉树,平衡查找树,2-3树," />
 
 
 
@@ -85,28 +85,28 @@
 
 
 <meta name="description" content="介绍
-红黑树是一种平衡二叉树，其目标是为了优化二叉搜索树，防止极端情况下时间复杂度的退化。
+2-3树是一种平衡二叉树，其目标是为了优化二叉搜索树，防止极端情况下时间复杂度的退化。
 
-&amp;emsp;&amp;emsp;2-节点：含有一个键(及其对应的值)和两条链接，左链接指向的2-3树中的键都小于该结点，右链接指向的2-3树中的键都大于该结点。&amp;emsp;&amp;emsp;3-节点：含有两个键(及其对应的值)和三条链接，左链接指向的2-3树中的键都小于该结点，左链接指向的2-3树中的键都小于该结点，中">
+&amp;emsp;&amp;emsp;2-节点：含有一个键(及其对应的值)和两条链接，左链接指向的2-3树中的键都小于该结点，右链接指向的2-3树中的键都大于该结点。&amp;emsp;&amp;emsp;3-节点：含有两个键(及其对应的值)和三条链接，左链接指向的2-3树中的键都小于该结点，左链接指向的2-3树中的键都小于该结点，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据结构与算法(8): 树形结构- 2-3树">
 <meta property="og:url" content="https://rogerfang.github.io/2016/10/29/数据结构与算法-8-树形结构-2-3树/index.html">
 <meta property="og:site_name" content="方龙的博客">
 <meta property="og:description" content="介绍
-红黑树是一种平衡二叉树，其目标是为了优化二叉搜索树，防止极端情况下时间复杂度的退化。
+2-3树是一种平衡二叉树，其目标是为了优化二叉搜索树，防止极端情况下时间复杂度的退化。
 
-&amp;emsp;&amp;emsp;2-节点：含有一个键(及其对应的值)和两条链接，左链接指向的2-3树中的键都小于该结点，右链接指向的2-3树中的键都大于该结点。&amp;emsp;&amp;emsp;3-节点：含有两个键(及其对应的值)和三条链接，左链接指向的2-3树中的键都小于该结点，左链接指向的2-3树中的键都小于该结点，中">
+&amp;emsp;&amp;emsp;2-节点：含有一个键(及其对应的值)和两条链接，左链接指向的2-3树中的键都小于该结点，右链接指向的2-3树中的键都大于该结点。&amp;emsp;&amp;emsp;3-节点：含有两个键(及其对应的值)和三条链接，左链接指向的2-3树中的键都小于该结点，左链接指向的2-3树中的键都小于该结点，">
 <meta property="og:image" content="https://rogerfang.github.io/images/tree/2-3-tree-definition.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/tree/2-3-tree-construct-trace.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/tree/2-3-tree-node-merge.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/tree/2-3-tree-node-split.png">
-<meta property="og:updated_time" content="2016-12-27T11:38:38.250Z">
+<meta property="og:updated_time" content="2017-03-03T02:46:23.205Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据结构与算法(8): 树形结构- 2-3树">
 <meta name="twitter:description" content="介绍
-红黑树是一种平衡二叉树，其目标是为了优化二叉搜索树，防止极端情况下时间复杂度的退化。
+2-3树是一种平衡二叉树，其目标是为了优化二叉搜索树，防止极端情况下时间复杂度的退化。
 
-&amp;emsp;&amp;emsp;2-节点：含有一个键(及其对应的值)和两条链接，左链接指向的2-3树中的键都小于该结点，右链接指向的2-3树中的键都大于该结点。&amp;emsp;&amp;emsp;3-节点：含有两个键(及其对应的值)和三条链接，左链接指向的2-3树中的键都小于该结点，左链接指向的2-3树中的键都小于该结点，中">
+&amp;emsp;&amp;emsp;2-节点：含有一个键(及其对应的值)和两条链接，左链接指向的2-3树中的键都小于该结点，右链接指向的2-3树中的键都大于该结点。&amp;emsp;&amp;emsp;3-节点：含有两个键(及其对应的值)和三条链接，左链接指向的2-3树中的键都小于该结点，左链接指向的2-3树中的键都小于该结点，">
 <meta name="twitter:image" content="https://rogerfang.github.io/images/tree/2-3-tree-definition.png">
 
 
@@ -354,7 +354,7 @@
 
       
         <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><blockquote>
-<p>红黑树是一种平衡二叉树，其目标是为了优化二叉搜索树，防止极端情况下时间复杂度的退化。</p>
+<p>2-3树是一种平衡二叉树，其目标是为了优化二叉搜索树，防止极端情况下时间复杂度的退化。</p>
 </blockquote>
 <p>&emsp;&emsp;2-节点：含有一个键(及其对应的值)和两条链接，左链接指向的2-3树中的键都小于该结点，右链接指向的2-3树中的键都大于该结点。<br>&emsp;&emsp;3-节点：含有两个键(及其对应的值)和三条链接，左链接指向的2-3树中的键都小于该结点，左链接指向的2-3树中的键都小于该结点，中链接指向的2-3树中的键都位于该结点的两个键之间，右链接指向的2-3树中的键都待遇该结点。<br>&emsp;&emsp;为了保持树的平衡性，我们将会利用4-节点来在插入和删除过程中保持树的完美平衡。<br>&emsp;&emsp;将指向一棵空树的链接成为<strong>空链接</strong>。</p>
 <blockquote>
@@ -362,7 +362,7 @@
 </blockquote>
 <p><img src="/images/tree/2-3-tree-definition.png" alt=""></p>
 <p><strong>性质</strong>:<br>&emsp;&emsp;1. 一个节点包含一个或两个键值；<br>&emsp;&emsp;2. 每个内部节点有两个或三个子节点；<br>&emsp;&emsp;3. 所有子节点都在树结构的同一层，因此树的高度总是平衡的。</p>
-<p><strong>优势</strong>：<br>&emsp;&emsp;和标准二叉树有上向下生长不同，2-3树是由下向上生长的。在一棵大小为N的2-3树中，查找和插入操作访问的节点必然不超过$\log{N}$。<br><img src="/images/tree/2-3-tree-construct-trace.png" alt=""></p>
+<p><strong>优势</strong>：<br>&emsp;&emsp;和标准二叉树由上向下生长不同，2-3树是由下向上生长的。在一棵大小为N的2-3树中，查找和插入操作访问的节点必然不超过$\log{N}$。<br><img src="/images/tree/2-3-tree-construct-trace.png" alt=""></p>
 <h1 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h1><p>&emsp;&emsp;2-3树之所以完美平衡，关键在于插入时的维护。涉及到2-节点、3-节点以及4-节点之间如何转换。</p>
 <h2 id="节点合并"><a href="#节点合并" class="headerlink" title="节点合并"></a>节点合并</h2><p>&emsp;&emsp;与二叉查找树一样，我们将会在2-3树中找到一个合适位置来插入它，这个位置一定在<strong>树的底部</strong>。在插入前，我们可以保证这棵2-3树是完美平衡的（空树也是如此）。在底部插入一个节点后，就会导致底部“多出”一个节点，导致2-3树不完美平衡。<br>&emsp;&emsp;解决方案就是节点结合：包括将2节点转换为3节点，3节点转换为4节点<br><img src="/images/tree/2-3-tree-node-merge.png" alt=""></p>
 <h2 id="节点分裂"><a href="#节点分裂" class="headerlink" title="节点分裂"></a>节点分裂</h2><p>&emsp;&emsp;在上面的节点合并的操作中，出现了4-节点。然而4-节点是不能出现在最后的2-3树中的。因此我们需要将4-节点“肢解”，以确保这是一棵2-3树。<br>&emsp;&emsp;通常情况下，一个4-节点可以分裂成3个2-节点：<br><img src="/images/tree/2-3-tree-node-split.png" alt=""><br>&emsp;&emsp;分裂的过程十分简单，只需要将4-叉节点从中间分开，并将中间的两个儿子分别重新接在a的右儿子和c的左儿子即可。</p>
@@ -401,9 +401,9 @@
           
             <a href="/tags/二叉树/" rel="tag">#二叉树</a>
           
-            <a href="/tags/2-3树/" rel="tag">#2-3树</a>
-          
             <a href="/tags/平衡查找树/" rel="tag">#平衡查找树</a>
+          
+            <a href="/tags/2-3树/" rel="tag">#2-3树</a>
           
         </div>
       
