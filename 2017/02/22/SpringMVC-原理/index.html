@@ -94,14 +94,14 @@ web级别的上下文（子上下文）：dispatcher-servlet.xml，专注于mvc�
 <meta property="og:description" content="ApplicationContext在Web容器中的启动
 应用程序级别的上下文（根上下文）：applicationContext.xml，一般加载非web的配置（Service、DataSource、DAO等）。
 web级别的上下文（子上下文）：dispatcher-servlet.xml，专注于mvc的配置（Controller、HandlerMapping、HandlerAdapter、Vie">
-<meta property="og:image" content="https://rogerfang.github.io/../images/springmvc/springmvc-framework.png">
-<meta property="og:updated_time" content="2017-02-22T06:27:35.682Z">
+<meta property="og:image" content="https://rogerfang.github.io/images/springmvc/springmvc-framework.png">
+<meta property="og:updated_time" content="2017-03-04T08:31:38.793Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SpringMVC: 原理">
 <meta name="twitter:description" content="ApplicationContext在Web容器中的启动
 应用程序级别的上下文（根上下文）：applicationContext.xml，一般加载非web的配置（Service、DataSource、DAO等）。
 web级别的上下文（子上下文）：dispatcher-servlet.xml，专注于mvc的配置（Controller、HandlerMapping、HandlerAdapter、Vie">
-<meta name="twitter:image" content="https://rogerfang.github.io/../images/springmvc/springmvc-framework.png">
+<meta name="twitter:image" content="https://rogerfang.github.io/images/springmvc/springmvc-framework.png">
 
 
 
@@ -352,9 +352,9 @@ web级别的上下文（子上下文）：dispatcher-servlet.xml，专注于mvc�
 <li>web级别的上下文（子上下文）：dispatcher-servlet.xml，专注于mvc的配置（Controller、HandlerMapping、HandlerAdapter、ViewResolver等）。</li>
 </ul>
 <p>web容器启动时首先建立根上下文，由<code>ContextLoaderListener</code>完成，子上下文是在<code>DispatcherServlet</code>初始化时建立。</p>
-<h1 id="请求分发和处理"><a href="#请求分发和处理" class="headerlink" title="请求分发和处理"></a>请求分发和处理</h1><p><code>DispatcherServlet</code>是Spring MVC的核心组件，它负责接收HTTP请求并协调Spring MVC的各个组件完成请求处理的工作。<br><img src="../images/springmvc/springmvc-framework.png" alt=""></p>
+<h1 id="请求分发和处理"><a href="#请求分发和处理" class="headerlink" title="请求分发和处理"></a>请求分发和处理</h1><p><code>DispatcherServlet</code>是Spring MVC的核心组件，它负责接收HTTP请求并协调Spring MVC的各个组件完成请求处理的工作。<br><img src="/images/springmvc/springmvc-framework.png" alt=""></p>
 <ol>
-<li>查找处理器，<code>DispatcherServlet</code>根据<code>HanlderMapping</code>查找<code>Handler</code>可以根据xml配置、注解进行查找。处理器映射器向前端控制器返回<code>HandlerExecutionChain</code>，处理器执行链封装了具体的<code>Handler</code>和拦截器链<code>HandlerInterceptor</code>。</li>
+<li>查找处理器，<code>DispatcherServlet</code>根据<code>HanlderMapping</code>查找<code>Handler</code>（xml配置、注解）进行查找。处理器映射器向前端控制器返回<code>HandlerExecutionChain</code>，处理器执行链封装了具体的<code>Handler</code>和拦截器链<code>HandlerInterceptor</code>。</li>
 <li>调用处理器适配器去执行<code>Handler</code>。</li>
 <li>执行<code>Handler</code>并返回<code>ModelAndView</code>。</li>
 <li>前端控制器请求视图解析器去进行视图解析，根据逻辑视图名解析成真正的视图。</li>

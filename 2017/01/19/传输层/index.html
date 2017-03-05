@@ -100,7 +100,7 @@
 传输层最重要的两种协议：面向连接的TCP（传输控制协议，Transmission Control Protocol）和无连接的UDP（用户数据报协议，User Datagram Protocol）。所传输的数据单元分">
 <meta property="og:image" content="https://rogerfang.github.io/images/network/tcp-3-handshake.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/network/tcp-4-handshake.png">
-<meta property="og:updated_time" content="2017-02-15T08:25:07.234Z">
+<meta property="og:updated_time" content="2017-03-04T14:16:43.172Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="传输层">
 <meta name="twitter:description" content="传输层主要功能为两台主机上的应用程序提供端到端的通信，通过端口号识别两台主机上相对应程序之间进行通信。
@@ -359,7 +359,7 @@
 <p>网络层为主机之间提供逻辑通信，而传输层为应用程序之间提供端到端的逻辑通信。</p>
 </blockquote>
 <p>传输层最重要的两种协议：面向连接的TCP（传输控制协议，Transmission Control Protocol）和无连接的UDP（用户数据报协议，User Datagram Protocol）。所传输的数据单元分别称为TCP报文段（segment）和UDP用户数据报。</p>
-<h1 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h1><p>用户数据报协议只在IP的数据报服务商增加了很少的功能，就是<strong>复用和分用</strong>以及<strong>差错检测</strong>的功能。<br>UDP的主要特点：</p>
+<h1 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h1><p>用户数据报协议只在IP的数据报服务上增加了很少的功能，就是<strong>复用和分用</strong>以及<strong>差错检测</strong>的功能。<br>UDP的主要特点：</p>
 <ol>
 <li><strong>UDP是无连接的</strong>，即发送数据之前不需要建立连接，因此减少了开销和发送数据之前的时延。</li>
 <li><strong>UDP使用尽最大努力交付</strong>，即不保证可靠交付，因此主机不需要维持复杂的连接状态表。</li>
@@ -376,7 +376,7 @@
 <li><strong>TCP提供全双工通信</strong>。TCP允许通信双方的应用进程在任何时候都能发送数据。</li>
 <li><strong>面向字节流</strong>。采用TCP协议进行数据传输是不会造成网络层分片的，因为TCP会对报文进行分段处理，接收方的TCP协议会对其进行还原。</li>
 </ol>
-<h2 id="TCP连接"><a href="#TCP连接" class="headerlink" title="TCP连接"></a>TCP连接</h2><p>TCP连接的断点叫做<strong>套接字</strong>（Socket）或插口，端口号拼接到IP地址即构成了套接字。</p>
+<h2 id="TCP连接"><a href="#TCP连接" class="headerlink" title="TCP连接"></a>TCP连接</h2><p>TCP连接的端点叫做<strong>套接字</strong>（Socket）或插口，端口号拼接到IP地址即构成了套接字。</p>
 <blockquote>
 <p>每一条TCP连接被通信的两端的两个断点所确定。</p>
 </blockquote>
@@ -457,6 +457,12 @@
 </blockquote>
 <p> 假设客户端发送连接请求在某些网络节点滞留了，客户端重新发起一次连接请求正确建立连接，但是如果这个滞留的连接请求（已失效的连接请求）在成功建立的连接释放后的某个时间才到达服务端，假设没有第三次握手，那么这次失效的连接请求又会建立一个新连接。</p>
 </li>
+</ol>
+<h2 id="TCP滑动窗口和流量控制"><a href="#TCP滑动窗口和流量控制" class="headerlink" title="TCP滑动窗口和流量控制"></a>TCP滑动窗口和流量控制</h2><h3 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h3><p>client 和 server 各自协议栈都有自己的 buffer，应用层读写数据的源都是协议栈 buffer 里。<br>以接收端为例，应用程序调用read()时，会从buffer里移走数据到用户空间，应用程序读的速度越快(read(1024)必然比read(1)要快)，那么buffer里的内容消费的越快，buffer也会越空。那么TCP就可以告诉client，我现在很闲，你可以发送更多的数据来。”更多”是多少？这就说窗口，<strong>窗口</strong>就是<strong>量化接收端当前能处理数据的能力</strong>。</p>
+<p>client 和 server 端建立连接后，client会告诉server，自己的”<strong>接收窗口</strong>“大小(自己能接收多少的数据，受上面所说的buffer影响)，server 端接收到 client 的”接收窗口”大小，就会变成server端自己的”<strong>发送窗口</strong>“大小。同样的，server端告诉client自己的”接收窗口”大小，就会变成客户端的”发送窗口”大小。</p>
+<h3 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h3><ol>
+<li><strong>接收端</strong>的窗口<strong>越来越小</strong>，那么就是接收端处理不过来(1.发的程序太快，太多;2.收的程序太慢，太少;3.发端带宽比收端带宽更大)，会导致接收端发送给发送端的窗口变小，从而发送端调整发送窗口大小，降低发送速度，网络流量就会下降。</li>
+<li><strong>接收端</strong>的窗口<strong>越来越大</strong>，那么就是发送端处理不过来(1.收的程序太快，太多;2.发的程序太慢，太少;3.发端带宽比收端带宽更小)，会导致接收端发送给发送端的窗口变大，从而发送端调整发送窗口大小，增加发送速度，网络流量就会升高。</li>
 </ol>
 
       
@@ -632,7 +638,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#UDP"><span class="nav-number">1.</span> <span class="nav-text">UDP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP"><span class="nav-number">2.</span> <span class="nav-text">TCP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP连接"><span class="nav-number">2.1.</span> <span class="nav-text">TCP连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP运输连接管理"><span class="nav-number">2.2.</span> <span class="nav-text">TCP运输连接管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP三次握手（连接建立）"><span class="nav-number">2.2.1.</span> <span class="nav-text">TCP三次握手（连接建立）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP四次挥手（连接释放）"><span class="nav-number">2.2.2.</span> <span class="nav-text">TCP四次挥手（连接释放）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.2.3.</span> <span class="nav-text">问题</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#UDP"><span class="nav-number">1.</span> <span class="nav-text">UDP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP"><span class="nav-number">2.</span> <span class="nav-text">TCP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP连接"><span class="nav-number">2.1.</span> <span class="nav-text">TCP连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP运输连接管理"><span class="nav-number">2.2.</span> <span class="nav-text">TCP运输连接管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP三次握手（连接建立）"><span class="nav-number">2.2.1.</span> <span class="nav-text">TCP三次握手（连接建立）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP四次挥手（连接释放）"><span class="nav-number">2.2.2.</span> <span class="nav-text">TCP四次挥手（连接释放）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.2.3.</span> <span class="nav-text">问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP滑动窗口和流量控制"><span class="nav-number">2.3.</span> <span class="nav-text">TCP滑动窗口和流量控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#滑动窗口"><span class="nav-number">2.3.1.</span> <span class="nav-text">滑动窗口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流量控制"><span class="nav-number">2.3.2.</span> <span class="nav-text">流量控制</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
         </section>

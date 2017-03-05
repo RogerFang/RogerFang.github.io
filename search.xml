@@ -55,9 +55,9 @@
 <li>web级别的上下文（子上下文）：dispatcher-servlet.xml，专注于mvc的配置（Controller、HandlerMapping、HandlerAdapter、ViewResolver等）。</li>
 </ul>
 <p>web容器启动时首先建立根上下文，由<code>ContextLoaderListener</code>完成，子上下文是在<code>DispatcherServlet</code>初始化时建立。</p>
-<h1 id="请求分发和处理"><a href="#请求分发和处理" class="headerlink" title="请求分发和处理"></a>请求分发和处理</h1><p><code>DispatcherServlet</code>是Spring MVC的核心组件，它负责接收HTTP请求并协调Spring MVC的各个组件完成请求处理的工作。<br><img src="../images/springmvc/springmvc-framework.png" alt=""></p>
+<h1 id="请求分发和处理"><a href="#请求分发和处理" class="headerlink" title="请求分发和处理"></a>请求分发和处理</h1><p><code>DispatcherServlet</code>是Spring MVC的核心组件，它负责接收HTTP请求并协调Spring MVC的各个组件完成请求处理的工作。<br><img src="/images/springmvc/springmvc-framework.png" alt=""></p>
 <ol>
-<li>查找处理器，<code>DispatcherServlet</code>根据<code>HanlderMapping</code>查找<code>Handler</code>可以根据xml配置、注解进行查找。处理器映射器向前端控制器返回<code>HandlerExecutionChain</code>，处理器执行链封装了具体的<code>Handler</code>和拦截器链<code>HandlerInterceptor</code>。</li>
+<li>查找处理器，<code>DispatcherServlet</code>根据<code>HanlderMapping</code>查找<code>Handler</code>（xml配置、注解）进行查找。处理器映射器向前端控制器返回<code>HandlerExecutionChain</code>，处理器执行链封装了具体的<code>Handler</code>和拦截器链<code>HandlerInterceptor</code>。</li>
 <li>调用处理器适配器去执行<code>Handler</code>。</li>
 <li>执行<code>Handler</code>并返回<code>ModelAndView</code>。</li>
 <li>前端控制器请求视图解析器去进行视图解析，根据逻辑视图名解析成真正的视图。</li>
@@ -2064,7 +2064,7 @@
 <p>网络层为主机之间提供逻辑通信，而传输层为应用程序之间提供端到端的逻辑通信。</p>
 </blockquote>
 <p>传输层最重要的两种协议：面向连接的TCP（传输控制协议，Transmission Control Protocol）和无连接的UDP（用户数据报协议，User Datagram Protocol）。所传输的数据单元分别称为TCP报文段（segment）和UDP用户数据报。</p>
-<h1 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h1><p>用户数据报协议只在IP的数据报服务商增加了很少的功能，就是<strong>复用和分用</strong>以及<strong>差错检测</strong>的功能。<br>UDP的主要特点：</p>
+<h1 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h1><p>用户数据报协议只在IP的数据报服务上增加了很少的功能，就是<strong>复用和分用</strong>以及<strong>差错检测</strong>的功能。<br>UDP的主要特点：</p>
 <ol>
 <li><strong>UDP是无连接的</strong>，即发送数据之前不需要建立连接，因此减少了开销和发送数据之前的时延。</li>
 <li><strong>UDP使用尽最大努力交付</strong>，即不保证可靠交付，因此主机不需要维持复杂的连接状态表。</li>
@@ -2081,7 +2081,7 @@
 <li><strong>TCP提供全双工通信</strong>。TCP允许通信双方的应用进程在任何时候都能发送数据。</li>
 <li><strong>面向字节流</strong>。采用TCP协议进行数据传输是不会造成网络层分片的，因为TCP会对报文进行分段处理，接收方的TCP协议会对其进行还原。</li>
 </ol>
-<h2 id="TCP连接"><a href="#TCP连接" class="headerlink" title="TCP连接"></a>TCP连接</h2><p>TCP连接的断点叫做<strong>套接字</strong>（Socket）或插口，端口号拼接到IP地址即构成了套接字。</p>
+<h2 id="TCP连接"><a href="#TCP连接" class="headerlink" title="TCP连接"></a>TCP连接</h2><p>TCP连接的端点叫做<strong>套接字</strong>（Socket）或插口，端口号拼接到IP地址即构成了套接字。</p>
 <blockquote>
 <p>每一条TCP连接被通信的两端的两个断点所确定。</p>
 </blockquote>
@@ -2162,6 +2162,12 @@
 </blockquote>
 <p> 假设客户端发送连接请求在某些网络节点滞留了，客户端重新发起一次连接请求正确建立连接，但是如果这个滞留的连接请求（已失效的连接请求）在成功建立的连接释放后的某个时间才到达服务端，假设没有第三次握手，那么这次失效的连接请求又会建立一个新连接。</p>
 </li>
+</ol>
+<h2 id="TCP滑动窗口和流量控制"><a href="#TCP滑动窗口和流量控制" class="headerlink" title="TCP滑动窗口和流量控制"></a>TCP滑动窗口和流量控制</h2><h3 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h3><p>client 和 server 各自协议栈都有自己的 buffer，应用层读写数据的源都是协议栈 buffer 里。<br>以接收端为例，应用程序调用read()时，会从buffer里移走数据到用户空间，应用程序读的速度越快(read(1024)必然比read(1)要快)，那么buffer里的内容消费的越快，buffer也会越空。那么TCP就可以告诉client，我现在很闲，你可以发送更多的数据来。”更多”是多少？这就说窗口，<strong>窗口</strong>就是<strong>量化接收端当前能处理数据的能力</strong>。</p>
+<p>client 和 server 端建立连接后，client会告诉server，自己的”<strong>接收窗口</strong>“大小(自己能接收多少的数据，受上面所说的buffer影响)，server 端接收到 client 的”接收窗口”大小，就会变成server端自己的”<strong>发送窗口</strong>“大小。同样的，server端告诉client自己的”接收窗口”大小，就会变成客户端的”发送窗口”大小。</p>
+<h3 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h3><ol>
+<li><strong>接收端</strong>的窗口<strong>越来越小</strong>，那么就是接收端处理不过来(1.发的程序太快，太多;2.收的程序太慢，太少;3.发端带宽比收端带宽更大)，会导致接收端发送给发送端的窗口变小，从而发送端调整发送窗口大小，降低发送速度，网络流量就会下降。</li>
+<li><strong>接收端</strong>的窗口<strong>越来越大</strong>，那么就是发送端处理不过来(1.收的程序太快，太多;2.发的程序太慢，太少;3.发端带宽比收端带宽更小)，会导致接收端发送给发送端的窗口变大，从而发送端调整发送窗口大小，增加发送速度，网络流量就会升高。</li>
 </ol>
 ]]></content>
     </entry>
