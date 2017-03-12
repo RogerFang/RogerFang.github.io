@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="排序,稳定,归并排序,O($N\log{N}$)," />
+  <meta name="keywords" content="排序,稳定,O($N\log{N}$),归并排序," />
 
 
 
@@ -84,22 +84,22 @@
 
 
 
-<meta name="description" content="&amp;emsp;&amp;emsp;归并排序的基本思想：将两个有序数列合并成一个有序数列，具体实现包括“从上往下”和“从下往上”2种方式。&amp;emsp;&amp;emsp;时间复杂度：O($N\log{N}$)。&amp;emsp;&amp;emsp;归并排序是稳定的。
+<meta name="description" content="&amp;emsp;&amp;emsp;归并排序的基本思想：将两个有序数列合并成一个有序数列，具体实现包括“从上往下”和“从下往上”2种方式。&amp;emsp;&amp;emsp;时间复杂度：O($N\log{N}$)。&amp;emsp;&amp;emsp;空间复杂度：O($N$)。（临时数组）&amp;emsp;&amp;emsp;归并排序是稳定的。
 
-从下往上的归并排序：将待排序的数列分成若干个长度为1的子数列，然后将这些数列两两合并；得到若干个长度为2的有序数列，再将这些数列两两合并；重复下去直到合并成一个数列">
+从下往上的归并排序：将待排序的数列分成若干个长度为1的子数列，然后将这些数列两两合并；得到若干个长度为">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据结构与算法(22): 排序- 归并排序">
 <meta property="og:url" content="https://rogerfang.github.io/2016/11/03/数据结构与算法-22-排序-归并排序/index.html">
 <meta property="og:site_name" content="方龙的博客">
-<meta property="og:description" content="&amp;emsp;&amp;emsp;归并排序的基本思想：将两个有序数列合并成一个有序数列，具体实现包括“从上往下”和“从下往上”2种方式。&amp;emsp;&amp;emsp;时间复杂度：O($N\log{N}$)。&amp;emsp;&amp;emsp;归并排序是稳定的。
+<meta property="og:description" content="&amp;emsp;&amp;emsp;归并排序的基本思想：将两个有序数列合并成一个有序数列，具体实现包括“从上往下”和“从下往上”2种方式。&amp;emsp;&amp;emsp;时间复杂度：O($N\log{N}$)。&amp;emsp;&amp;emsp;空间复杂度：O($N$)。（临时数组）&amp;emsp;&amp;emsp;归并排序是稳定的。
 
-从下往上的归并排序：将待排序的数列分成若干个长度为1的子数列，然后将这些数列两两合并；得到若干个长度为2的有序数列，再将这些数列两两合并；重复下去直到合并成一个数列">
-<meta property="og:updated_time" content="2016-12-27T11:38:38.343Z">
+从下往上的归并排序：将待排序的数列分成若干个长度为1的子数列，然后将这些数列两两合并；得到若干个长度为">
+<meta property="og:updated_time" content="2017-03-12T10:55:55.158Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据结构与算法(22): 排序- 归并排序">
-<meta name="twitter:description" content="&amp;emsp;&amp;emsp;归并排序的基本思想：将两个有序数列合并成一个有序数列，具体实现包括“从上往下”和“从下往上”2种方式。&amp;emsp;&amp;emsp;时间复杂度：O($N\log{N}$)。&amp;emsp;&amp;emsp;归并排序是稳定的。
+<meta name="twitter:description" content="&amp;emsp;&amp;emsp;归并排序的基本思想：将两个有序数列合并成一个有序数列，具体实现包括“从上往下”和“从下往上”2种方式。&amp;emsp;&amp;emsp;时间复杂度：O($N\log{N}$)。&amp;emsp;&amp;emsp;空间复杂度：O($N$)。（临时数组）&amp;emsp;&amp;emsp;归并排序是稳定的。
 
-从下往上的归并排序：将待排序的数列分成若干个长度为1的子数列，然后将这些数列两两合并；得到若干个长度为2的有序数列，再将这些数列两两合并；重复下去直到合并成一个数列">
+从下往上的归并排序：将待排序的数列分成若干个长度为1的子数列，然后将这些数列两两合并；得到若干个长度为">
 
 
 
@@ -345,7 +345,7 @@
       
 
       
-        <p>&emsp;&emsp;归并排序的<strong>基本思想</strong>：将两个有序数列合并成一个有序数列，具体实现包括“从上往下”和“从下往上”2种方式。<br>&emsp;&emsp;时间<strong>复杂度</strong>：O($N\log{N}$)。<br>&emsp;&emsp;归并排序是<strong>稳定</strong>的。</p>
+        <p>&emsp;&emsp;归并排序的<strong>基本思想</strong>：将两个有序数列合并成一个有序数列，具体实现包括“从上往下”和“从下往上”2种方式。<br>&emsp;&emsp;时间<strong>复杂度</strong>：O($N\log{N}$)。<br>&emsp;&emsp;空间<strong>复杂度</strong>：O($N$)。（临时数组）<br>&emsp;&emsp;归并排序是<strong>稳定</strong>的。</p>
 <ol>
 <li><strong>从下往上</strong>的归并排序：将待排序的数列分成若干个长度为1的子数列，然后将这些数列两两合并；得到若干个长度为2的有序数列，再将这些数列两两合并；重复下去直到合并成一个数列为止。</li>
 <li><strong>从下往上</strong>的归并排序：<ul>
@@ -383,9 +383,9 @@
           
             <a href="/tags/稳定/" rel="tag">#稳定</a>
           
-            <a href="/tags/归并排序/" rel="tag">#归并排序</a>
-          
             <a href="/tags/O-N-log-N/" rel="tag">#O($N\log{N}$)</a>
+          
+            <a href="/tags/归并排序/" rel="tag">#归并排序</a>
           
         </div>
       
