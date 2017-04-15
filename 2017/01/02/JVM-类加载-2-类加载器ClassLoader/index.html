@@ -101,8 +101,8 @@
 类在虚拟机中的唯一性由加载它的类加载器和这个类本身一同确立。因为每个类加载器都有独立的类名称空间。
 双亲委派模型分别">
 <meta property="og:image" content="https://rogerfang.github.io/images/jvm/classloader-parents-delegate.png">
-<meta property="og:image" content="https://rogerfang.github.io/../images/jvm/context-classloader.png">
-<meta property="og:updated_time" content="2017-02-28T02:27:52.921Z">
+<meta property="og:image" content="https://rogerfang.github.io/images/jvm/context-classloader.png">
+<meta property="og:updated_time" content="2017-04-13T05:10:58.035Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM: 类加载(2)-类加载器ClassLoader">
 <meta name="twitter:description" content="类加载器只用于完成整个类加载过程的加载（Loading）动作：类的加载阶段中“通过一个类的全限定名去获取描述此类的二进制字节流”这个动作放到Java虚拟机外部去实现，以便让程序代码自己决定如何去获取所需要的类。
@@ -387,7 +387,7 @@
 <p><strong>解决办法</strong>：双亲委派模型的补充，通过<strong>上下文加载器</strong>（ContextClassLoader）完成。</p>
 </blockquote>
 <h1 id="上下文加载器"><a href="#上下文加载器" class="headerlink" title="上下文加载器"></a>上下文加载器</h1><p>上下文加载器是在<code>Thread.getContextClassLoader()</code>中得到的，默认情况下，上下文加载器就是<strong>应用类加载器</strong>。这样就使得在创建类实例的时候可以交由<strong>上下文加载器</strong>去完成。</p>
-<p><img src="../images/jvm/context-classloader.png" alt=""></p>
+<p><img src="/images/jvm/context-classloader.png" alt=""></p>
 <h1 id="突破双亲委派模型"><a href="#突破双亲委派模型" class="headerlink" title="突破双亲委派模型"></a>突破双亲委派模型</h1><p>双亲模式的类加载方式是虚拟机默认的方式，但并非必须这么做，通过重载ClassLoader可以修改行为。比如<strong>Tomcat</strong>和<strong>OSGI</strong>框架，都有各自独特的类加载器顺序。</p>
 <p>可以通过重载<code>loadClass()</code>、<code>findClass()</code>等方法来改变类加载次序。</p>
 

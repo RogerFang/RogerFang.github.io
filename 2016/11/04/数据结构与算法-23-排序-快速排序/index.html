@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="排序,O($N\log{N}$),不稳定,快速排序,partition," />
+  <meta name="keywords" content="排序,不稳定,O($N\log{N}$),快速排序,partition," />
 
 
 
@@ -98,7 +98,7 @@
 快速排序的每一轮处理其实就是将一轮的基准数归位。
 
 &amp;emsp;&amp;emsp;时间复杂度：O($N\log{N}$)。&amp;emsp;&amp;emsp;空间复杂度：">
-<meta property="og:updated_time" content="2017-03-12T10:55:34.954Z">
+<meta property="og:updated_time" content="2017-03-12T11:10:14.189Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据结构与算法(23): 排序- 快速排序">
 <meta name="twitter:description" content="&amp;emsp;&amp;emsp;快速排序的基本思想：选择一个基准数，通过一趟排序将要排序的数据分割成独立的两部分；其中一部分的所有数据都比另外一部分的所有数据都要小。然后，再按此方法对这两部分数据分别进行快速排序，整个排序过程递归进行，以达到有序序列。
@@ -355,7 +355,7 @@
 <blockquote>
 <p>快速排序的每一轮处理其实就是将一轮的基准数归位。</p>
 </blockquote>
-<p>&emsp;&emsp;时间<strong>复杂度</strong>：O($N\log{N}$)。<br>&emsp;&emsp;空间<strong>复杂度</strong>：O($\log{N}$) ~ O($N$)。（递归调用）<br>&emsp;&emsp;快速排序是<strong>不稳定</strong>的。</p>
+<p>&emsp;&emsp;时间<strong>复杂度</strong>：O($N\log{N}$)。<br>&emsp;&emsp;空间<strong>复杂度</strong>：O($\log{N}$) ~ O($N$)。（递归调用，栈空间）<br>&emsp;&emsp;快速排序是<strong>不稳定</strong>的。</p>
 <blockquote>
 <p><strong>partition</strong>函数用来解决这样一个问题：给定一个数组data[]和数组中任意一个元素a，重排数组使得a左边都小于它，右边都不小于它。</p>
 </blockquote>
@@ -385,9 +385,9 @@
           
             <a href="/tags/排序/" rel="tag">#排序</a>
           
-            <a href="/tags/O-N-log-N/" rel="tag">#O($N\log{N}$)</a>
-          
             <a href="/tags/不稳定/" rel="tag">#不稳定</a>
+          
+            <a href="/tags/O-N-log-N/" rel="tag">#O($N\log{N}$)</a>
           
             <a href="/tags/快速排序/" rel="tag">#快速排序</a>
           

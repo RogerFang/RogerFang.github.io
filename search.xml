@@ -144,7 +144,7 @@
 <h2 id="锁膨胀"><a href="#锁膨胀" class="headerlink" title="锁膨胀"></a>锁膨胀</h2><p>当<strong>轻量级锁</strong>失败，JVM 就会使用<strong>重量级锁</strong>。重量级锁对象的对象头部 Mark Word：<br><code>[ptr  | 10] monitor</code><br>整个 Mark Word 表示指向<code>monitor</code>对象的指针，线程很可能在操作系统层面挂起。</p>
 <h2 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h2><p><strong>自旋锁</strong>可以使得线程尽快进入临界区而避免被操作系统挂起。</p>
 <p><strong>自旋锁</strong>可以使线程在没有获得锁时，不被挂起，转而去执行一个<strong>空循环</strong>（自旋），在若干个循环后，线程如果可以获得锁，则继续执行。如果依然不能获得锁，才会被挂起。</p>
-<p><strong>缺点</strong>：对于锁竞争激烈，单线程锁占用时间长的并发程序，自旋锁在自旋等待后，旺旺依然无法获得锁，浪费了 CPU 时间。</p>
+<p><strong>缺点</strong>：对于锁竞争激烈，单线程锁占用时间长的并发程序，自旋锁在自旋等待后，往往依然无法获得锁，浪费了 CPU 时间。</p>
 <h2 id="锁消除"><a href="#锁消除" class="headerlink" title="锁消除"></a>锁消除</h2><p><strong>锁消除</strong>是 JVM 在 JIT编译时，通过对运行上下文的扫描，去除不可能存在共享资源竞争的锁。</p>
 <h1 id="应用层的锁优化"><a href="#应用层的锁优化" class="headerlink" title="应用层的锁优化"></a>应用层的锁优化</h1><p>在应用层合理地进行锁的优化，对系统性能也是有积极作用的。</p>
 <h2 id="减少锁持有时间"><a href="#减少锁持有时间" class="headerlink" title="减少锁持有时间"></a>减少锁持有时间</h2><p>在锁竞争过程中，单个线程持有锁的时间越长，锁的竞争程度也就越激烈。</p>
@@ -4191,7 +4191,7 @@
 <p><strong>解决办法</strong>：双亲委派模型的补充，通过<strong>上下文加载器</strong>（ContextClassLoader）完成。</p>
 </blockquote>
 <h1 id="上下文加载器"><a href="#上下文加载器" class="headerlink" title="上下文加载器"></a>上下文加载器</h1><p>上下文加载器是在<code>Thread.getContextClassLoader()</code>中得到的，默认情况下，上下文加载器就是<strong>应用类加载器</strong>。这样就使得在创建类实例的时候可以交由<strong>上下文加载器</strong>去完成。</p>
-<p><img src="../images/jvm/context-classloader.png" alt=""></p>
+<p><img src="/images/jvm/context-classloader.png" alt=""></p>
 <h1 id="突破双亲委派模型"><a href="#突破双亲委派模型" class="headerlink" title="突破双亲委派模型"></a>突破双亲委派模型</h1><p>双亲模式的类加载方式是虚拟机默认的方式，但并非必须这么做，通过重载ClassLoader可以修改行为。比如<strong>Tomcat</strong>和<strong>OSGI</strong>框架，都有各自独特的类加载器顺序。</p>
 <p>可以通过重载<code>loadClass()</code>、<code>findClass()</code>等方法来改变类加载次序。</p>
 ]]></content>
@@ -5655,7 +5655,7 @@
 <blockquote>
 <p>快速排序的每一轮处理其实就是将一轮的基准数归位。</p>
 </blockquote>
-<p>&emsp;&emsp;时间<strong>复杂度</strong>：O($N\log{N}$)。<br>&emsp;&emsp;空间<strong>复杂度</strong>：O($\log{N}$) ~ O($N$)。（递归调用）<br>&emsp;&emsp;快速排序是<strong>不稳定</strong>的。</p>
+<p>&emsp;&emsp;时间<strong>复杂度</strong>：O($N\log{N}$)。<br>&emsp;&emsp;空间<strong>复杂度</strong>：O($\log{N}$) ~ O($N$)。（递归调用，栈空间）<br>&emsp;&emsp;快速排序是<strong>不稳定</strong>的。</p>
 <blockquote>
 <p><strong>partition</strong>函数用来解决这样一个问题：给定一个数组data[]和数组中任意一个元素a，重排数组使得a左边都小于它，右边都不小于它。</p>
 </blockquote>
