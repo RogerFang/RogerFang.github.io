@@ -4,6 +4,303 @@
   
     
     <entry>
+      <title><![CDATA[词向量的数据信息]]></title>
+      <url>https://rogerfang.github.io/2017/05/28/%E8%AF%8D%E5%90%91%E9%87%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E4%BF%A1%E6%81%AF/</url>
+      <content type="html"><![CDATA[<p>IndexReader.getTermFeqVector() -&gt; DirectoryReader.getTermFreqVector() -&gt; SegmentReader.getTermFreqVector() -&gt; TermVectorsReader.get()</p>
+<p>词向量信息是从索引(index)到文档(document)到域(field)到词(term)的正向信息，有了词向量信息，我们就可以得到一篇文档包含那些词的信息。</p>
+<h1 id="词向量索引文件-tvx"><a href="#词向量索引文件-tvx" class="headerlink" title="词向量索引文件(tvx)"></a>词向量索引文件(tvx)</h1><ul>
+<li>一个段(segment)包含N篇文档，此文件就有N项，每一项代表一篇文档。</li>
+<li>每一项包含两部分信息：第一部分是词向量文档文件(tvd)中此文档的偏移量，第二部分是词向量域文件(tvf)中此文档的第一个域的偏移量。</li>
+</ul>
+<h1 id="词向量文档文件-tvd"><a href="#词向量文档文件-tvd" class="headerlink" title="词向量文档文件(tvd)"></a>词向量文档文件(tvd)</h1><ul>
+<li>一个段(segment)包含N篇文档，此文件就有N项，每一项包含了此文档的所有的域的信息。</li>
+<li>每一项首先是此文档包含的域的个数NumFields，然后是一个NumFields大小的数组，数组的每一项是域号。然后是一个(NumFields - 1)大小的数组，由前面我们知道，每篇文档的第一个域在tvf中的偏移量在tvx文件中保存，而其他(NumFields - 1)个域在tvf中的偏移量就是第一个域的偏移量加上这(NumFields - 1)个数组的每一项的值。</li>
+</ul>
+<h1 id="词向量域文件-tvf"><a href="#词向量域文件-tvf" class="headerlink" title="词向量域文件(tvf)"></a>词向量域文件(tvf)</h1><ul>
+<li>此文件包含了此段中的所有的域，并不对文档做区分，到底第几个域到第几个域是属于那篇文档，是由tvx中的第一个域的偏移量以及tvd中的(NumFields - 1)个域的偏移量来决定的。</li>
+<li>对于每一个域，首先是此域包含的词的个数NumTerms，然后是一个8位的byte，最后一位是指定是否保存位置信息，倒数第二位是指定是否保存偏移量信息。然后是NumTerms个项的数组，每一项代表一个词(Term)，对于每一个词，由词的文本TermText，词频TermFreq(也即此词在此文档中出现的次数)，词的位置信息，词的偏移量信息。</li>
+</ul>
+<figure class="highlight java"><figcaption><span>TermVectorsReader.get()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> docNum, String field, TermVectorMapper mapper)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    <span class="keyword">if</span> (tvx != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">int</span> fieldNumber = fieldInfos.fieldNumber(field);</div><div class="line">        <span class="comment">//We need to account for the FORMAT_SIZE at when seeking in the tvx</span></div><div class="line">        <span class="comment">//We don't need to do this in other seeks because we already have the</span></div><div class="line">        <span class="comment">// file pointer</span></div><div class="line">        <span class="comment">//that was written in another file</span></div><div class="line">        seekTvx(docNum);</div><div class="line">        <span class="comment">//System.out.println("TVX Pointer: " + tvx.getFilePointer());</span></div><div class="line">        <span class="keyword">long</span> tvdPosition = tvx.readLong();</div><div class="line"></div><div class="line">        tvd.seek(tvdPosition);</div><div class="line">        <span class="keyword">int</span> fieldCount = tvd.readVInt();</div><div class="line">        <span class="comment">//System.out.println("Num Fields: " + fieldCount);</span></div><div class="line">        <span class="comment">// There are only a few fields per document. We opt for a full scan</span></div><div class="line">        <span class="comment">// rather then requiring that they be ordered. We need to read through</span></div><div class="line">        <span class="comment">// all of the fields anyway to get to the tvf pointers.</span></div><div class="line">        <span class="keyword">int</span> number = <span class="number">0</span>;</div><div class="line">        <span class="keyword">int</span> found = -<span class="number">1</span>;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; fieldCount; i++) &#123;</div><div class="line">            <span class="keyword">if</span> (format &gt;= FORMAT_VERSION)</div><div class="line">                number = tvd.readVInt();</div><div class="line">            <span class="keyword">else</span></div><div class="line">                number += tvd.readVInt();</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (number == fieldNumber)</div><div class="line">                found = i;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// This field, although valid in the segment, was not found in this</span></div><div class="line">        <span class="comment">// document</span></div><div class="line">        <span class="keyword">if</span> (found != -<span class="number">1</span>) &#123;</div><div class="line">            <span class="comment">// Compute position in the tvf file</span></div><div class="line">            <span class="keyword">long</span> position;</div><div class="line">            <span class="keyword">if</span> (format &gt;= FORMAT_VERSION2)</div><div class="line">                position = tvx.readLong();</div><div class="line">            <span class="keyword">else</span></div><div class="line">                position = tvd.readVLong();</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= found; i++)</div><div class="line">                position += tvd.readVLong();</div><div class="line"></div><div class="line">            mapper.setDocumentNumber(docNum);</div><div class="line">            readTermVector(field, position, mapper);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">//System.out.println("Fieldable not found");</span></div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">//System.out.println("No tvx file");</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<p>感谢：<br><a href="http://www.cnblogs.com/forfuture1978/archive/2009/12/14/1623599.html" target="_blank" rel="external">http://www.cnblogs.com/forfuture1978/archive/2009/12/14/1623599.html</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[域的元数据信息和数据信息]]></title>
+      <url>https://rogerfang.github.io/2017/05/28/%E5%9F%9F%E7%9A%84%E5%85%83%E6%95%B0%E6%8D%AE%E4%BF%A1%E6%81%AF%E5%92%8C%E6%95%B0%E6%8D%AE%E4%BF%A1%E6%81%AF/</url>
+      <content type="html"><![CDATA[<h1 id="元数据-fnm"><a href="#元数据-fnm" class="headerlink" title="元数据 .fnm"></a>元数据 .fnm</h1><p>IndexReader.open() -&gt; DirectoryReader.open() -&gt; FindSegmentsFile.run() FindSegmentsFile.doBody() -&gt; new DirectoryReader() -&gt; SegmentReader.get() -&gt; new CoreReaders() -&gt; CoreReaders.openDocStores()</p>
+<p>一个段包含多个域，每个域都有一些元数据信息，保存在 .fnm 文件中。</p>
+<h2 id="DirectoryReader"><a href="#DirectoryReader" class="headerlink" title="DirectoryReader"></a>DirectoryReader</h2><p>DirectoryReader 的构造函数中，在之前读取段的元数据信息后得到 SegmentInfos 对象，然后对每个段构造一个 SegmentReader 对。<br><figure class="highlight java"><figcaption><span>DirectoryReader()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">SegmentReader[] readers = <span class="keyword">new</span> SegmentReader[sis.size()];</div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = sis.size() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</div><div class="line">    <span class="keyword">boolean</span> success = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        readers[i] = SegmentReader.get(readOnly, sis.info(i), termInfosIndexDivisor);</div><div class="line">        success = <span class="keyword">true</span>;</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        <span class="keyword">if</span> (!success) &#123;</div><div class="line">            <span class="comment">// Close all readers we had opened:</span></div><div class="line">            <span class="keyword">for</span> (i++; i &lt; sis.size(); i++) &#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    readers[i].close();</div><div class="line">                &#125; <span class="keyword">catch</span> (Throwable ignore) &#123;</div><div class="line">                    <span class="comment">// keep going - we want to clean up as much as possible</span></div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">initialize(readers);</div></pre></td></tr></table></figure></p>
+<h2 id="SegmentReader"><a href="#SegmentReader" class="headerlink" title="SegmentReader"></a>SegmentReader</h2><figure class="highlight java"><figcaption><span>SegmentReader.get()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">instance.core = <span class="keyword">new</span> CoreReaders(dir, si, readBufferSize, termInfosIndexDivisor);</div><div class="line"><span class="keyword">if</span> (doOpenStores) &#123;</div><div class="line">    instance.core.openDocStores(si);</div><div class="line">&#125;</div><div class="line">instance.loadDeletedDocs();</div><div class="line">instance.openNorms(instance.core.cfsDir, readBufferSize);</div></pre></td></tr></table></figure>
+<h3 id="CoreReaders构造函数"><a href="#CoreReaders构造函数" class="headerlink" title="CoreReaders构造函数"></a>CoreReaders构造函数</h3><ol>
+<li>确定域信息存在哪个段文件里 cfsDir<br> 得判断下是否是 compound file (.cfs)，否则dir就是索引目录。</li>
+<li>读取 .fnm<br> 读取 <strong>.fnm</strong> 元数据文件是通过构造一个 <code>FieldInfos</code> 实例，其构造函数中调用了 read() 进行文件读取。</li>
+<li>读取反向信息 term 相关文件 <strong>.tis, .tii</strong><br> 通过构造一个 <code>TermInfosReader</code> 实例完成。</li>
+<li>读取反向信息 <strong>.frq</strong> 文件和 <strong>.prx</strong> 文件</li>
+</ol>
+<figure class="highlight java"><figcaption><span>CoreReaders()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">CoreReaders(Directory dir, SegmentInfo si, <span class="keyword">int</span> readBufferSize, <span class="keyword">int</span> termsIndexDivisor) <span class="keyword">throws</span> IOException &#123;</div><div class="line">    segment = si.name;</div><div class="line">    <span class="keyword">this</span>.readBufferSize = readBufferSize;</div><div class="line">    <span class="keyword">this</span>.dir = dir;</div><div class="line"></div><div class="line">    <span class="keyword">boolean</span> success = <span class="keyword">false</span>;</div><div class="line"></div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        Directory dir0 = dir;</div><div class="line">        <span class="keyword">if</span> (si.getUseCompoundFile()) &#123;</div><div class="line">            cfsReader = <span class="keyword">new</span> CompoundFileReader(dir, segment + <span class="string">"."</span> + IndexFileNames.COMPOUND_FILE_EXTENSION, readBufferSize);</div><div class="line">            dir0 = cfsReader;</div><div class="line">        &#125;</div><div class="line">        cfsDir = dir0;</div><div class="line"></div><div class="line">        fieldInfos = <span class="keyword">new</span> FieldInfos(cfsDir, segment + <span class="string">"."</span> + IndexFileNames.FIELD_INFOS_EXTENSION);</div><div class="line"></div><div class="line">        <span class="keyword">this</span>.termsIndexDivisor = termsIndexDivisor;</div><div class="line">        TermInfosReader reader = <span class="keyword">new</span> TermInfosReader(cfsDir, segment, fieldInfos, readBufferSize, termsIndexDivisor);</div><div class="line">        <span class="keyword">if</span> (termsIndexDivisor == -<span class="number">1</span>) &#123;</div><div class="line">            tisNoIndex = reader;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            tis = reader;</div><div class="line">            tisNoIndex = <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// make sure that all index files have been read or are kept open</span></div><div class="line">        <span class="comment">// so that if an index update removes them we'll still have them</span></div><div class="line">        freqStream = cfsDir.openInput(segment + <span class="string">"."</span> + IndexFileNames.FREQ_EXTENSION, readBufferSize);</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (fieldInfos.hasProx()) &#123;</div><div class="line">            proxStream = cfsDir.openInput(segment + <span class="string">"."</span> + IndexFileNames.PROX_EXTENSION, readBufferSize);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            proxStream = <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">        success = <span class="keyword">true</span>;</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        <span class="keyword">if</span> (!success) &#123;</div><div class="line">            decRef();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="FieldInfos"><a href="#FieldInfos" class="headerlink" title="FieldInfos"></a>FieldInfos</h3><p>FieldInfos 的构造函数中调用其 <code>read()</code>方法读取 .fnm 文件。<br>| .fnm属性 | 描述 |<br>|——–|——–|<br>|FNMVersion|只有Lucene 2.9及以后有这个版本号|<br>|size|域的数目|<br>|name|域名|<br>|bits|代表一系列标志位，表明对此域的索引方式|</p>
+<p>bits标志位含义：</p>
+<ul>
+<li>倒数第 1 位 isIndexed<br>  1 表示被索引，0 则不被索引。</li>
+<li>倒数第 2 位 storeTermVector<br>  1 表示保存词向量，0 则不保存。</li>
+<li>倒数第 3 位 storePositionsWithTermVector<br>  1 表示在词向量中保存位置信息， 0 则不保存。</li>
+<li>倒数第 4 位 storeOffsetWithTermVector<br>  1 表示在词向量中保存偏移量信息，0 则不保存。</li>
+<li>倒数第 5 位 omitNorms<br>  1 表示不保存标准化因子，0 则保存。</li>
+<li>倒数第 6 位 storePayloads<br>  1 表示保存 payload，0 则不保存。</li>
+<li>倒数第 7 位 omitTermFreqAndPositions<br>  1 表示不保存 tf 和 position 信息，0 则保存。</li>
+</ul>
+<blockquote>
+<p><strong>位置</strong>是基于 Term 的，<strong>偏移量</strong>是基于 字母或汉字 的。</p>
+</blockquote>
+<p><strong>payload</strong>:</p>
+<ul>
+<li>索引是以倒排表形式存储的，对于每一个 Term，都保存了包含这个 Term 的一个链表，为了加快查询速度，此链表多用跳跃表进行存储。</li>
+<li>payload 信息就是<strong>存储在倒排表中</strong>的，同文档号一起存放，多用于存储<strong>与每篇文档相关的一些信息</strong>。当然这部分信息也可以存储域里(stored Field)，两者从功能上基本是一样的，然而当要存储的信息很多的时候，存放在倒排表里，利用跳跃表，有利于大大提高搜索速度。</li>
+</ul>
+<figure class="highlight java"><figcaption><span>read()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">read</span><span class="params">(IndexInput input, String fileName)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    <span class="keyword">int</span> firstInt = input.readVInt();</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (firstInt &lt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">// This is a real format</span></div><div class="line">        format = firstInt;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        format = FORMAT_PRE;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (format != FORMAT_PRE &amp; format != FORMAT_START) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> CorruptIndexException(<span class="string">"unrecognized format "</span> + format + <span class="string">" in file \""</span> + fileName + <span class="string">"\""</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">int</span> size;</div><div class="line">    <span class="keyword">if</span> (format == FORMAT_PRE) &#123;</div><div class="line">        size = firstInt;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        size = input.readVInt(); <span class="comment">//read in the size</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</div><div class="line">        String name = StringHelper.intern(input.readString());</div><div class="line">        <span class="keyword">byte</span> bits = input.readByte();</div><div class="line">        <span class="keyword">boolean</span> isIndexed = (bits &amp; IS_INDEXED) != <span class="number">0</span>;</div><div class="line">        <span class="keyword">boolean</span> storeTermVector = (bits &amp; STORE_TERMVECTOR) != <span class="number">0</span>;</div><div class="line">        <span class="keyword">boolean</span> storePositionsWithTermVector = (bits &amp; STORE_POSITIONS_WITH_TERMVECTOR) != <span class="number">0</span>;</div><div class="line">        <span class="keyword">boolean</span> storeOffsetWithTermVector = (bits &amp; STORE_OFFSET_WITH_TERMVECTOR) != <span class="number">0</span>;</div><div class="line">        <span class="keyword">boolean</span> omitNorms = (bits &amp; OMIT_NORMS) != <span class="number">0</span>;</div><div class="line">        <span class="keyword">boolean</span> storePayloads = (bits &amp; STORE_PAYLOADS) != <span class="number">0</span>;</div><div class="line">        <span class="keyword">boolean</span> omitTermFreqAndPositions = (bits &amp; OMIT_TERM_FREQ_AND_POSITIONS) != <span class="number">0</span>;</div><div class="line"></div><div class="line">        addInternal(name, isIndexed, storeTermVector, storePositionsWithTermVector, storeOffsetWithTermVector, omitNorms, storePayloads, omitTermFreqAndPositions);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (input.getFilePointer() != input.length()) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> CorruptIndexException(<span class="string">"did not read all bytes from file \""</span> + fileName + <span class="string">"\": read "</span> + input.getFilePointer() + <span class="string">" vs size "</span> + input.length());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="CoreReaders-openDocStores"><a href="#CoreReaders-openDocStores" class="headerlink" title="CoreReaders.openDocStores()"></a>CoreReaders.openDocStores()</h3><figure class="highlight java"><figcaption><span>openDocStores()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">fieldsReaderOrig = <span class="keyword">new</span> FieldsReader(storeDir, storesSegment, fieldInfos, readBufferSize,</div><div class="line">                        si.getDocStoreOffset(), si.docCount);</div></pre></td></tr></table></figure>
+<p>构造一个<code>FieldsReader</code>实例，其构造方法中创建了一个<code>cloneableFieldsStream</code>和一个<code>cloneableIndexStream</code>，分别用于读取后面的<code>fdt</code>和<code>fdx</code>文件。</p>
+<figure class="highlight java"><figcaption><span>openDocStores()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">termVectorsReaderOrig = <span class="keyword">new</span> TermVectorsReader(storeDir, storesSegment, fieldInfos, readBufferSize, si.getDocStoreOffset(), si.docCount);</div></pre></td></tr></table></figure>
+<p>构造一个用于读取 term vector 相关文件（tvc, tvd, tvf）的<code>TermVectorsReader</code>实例，下篇博客会用到。</p>
+<h1 id="数据-fdt-fdx"><a href="#数据-fdt-fdx" class="headerlink" title="数据 .fdt .fdx"></a>数据 .fdt .fdx</h1><p>Searcher.doc() -&gt; IndexSearcher.doc() -&gt; IndexReader.document() -&gt; DirectoryReader.document() -&gt; SegmentReader.document() -&gt; FieldsReader.doc()</p>
+<blockquote>
+<p><code>SegmentReader.getFieldsReader().doc()</code>中调用文件流<code>indexStream</code>读取<code>fdx</code>和<code>fieldsStream</code>读取<code>fdt</code>都是在上面<code>CoreReaders.openDocStores()</code>中构造<code>FieldsReader</code>实例时创建的。</p>
+</blockquote>
+<h2 id="域数据文件-fdt"><a href="#域数据文件-fdt" class="headerlink" title="域数据文件 .fdt"></a>域数据文件 .fdt</h2><pre><code>* 真正保存 Stored Field 信息的文件。
+* 一个段中总共有 segment size 个 doc，fdt 文件中共有 segment size 个项，每一项保存一篇 doc 的域信息。
+
+| 域结构属性 | 描述 |
+|--------|--------|
+|numFields|域编号|
+|bits|代表一系列的标志位|
+|toRead|VInt，存储域值的长度|
+|bytes|阈值|
+
+bits标志位含义：
+* 倒数第 1 位 tokenize
+    1 表示分词，0 则不分词。
+* 倒数第 2 位 binary
+    1 表示存储的是二进制数据，0 则存储的是字符串。
+* 倒数第 3 位 compress
+    1 表示压缩，0 则不压缩。
+</code></pre><h2 id="域索引文件-fdx"><a href="#域索引文件-fdx" class="headerlink" title="域索引文件 .fdx"></a>域索引文件 .fdx</h2><pre><code>域索引文件也总共有segment size个项，每篇文档都有一个项，每一项都是一个long，大小固定，每一项都是对应的文档在fdt文件中的起始地址的偏移量，这样如果我们想找到第n篇文档的存储域的信息，只要在fdx中找到第n项，然后按照取出的long作为偏移量，就可以在fdt文件中找到对应的存储域的信息。
+</code></pre><hr>
+<p>感谢：<br><a href="http://www.cnblogs.com/forfuture1978/archive/2009/12/14/1623599.html" target="_blank" rel="external">http://www.cnblogs.com/forfuture1978/archive/2009/12/14/1623599.html</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[段的元数据信息]]></title>
+      <url>https://rogerfang.github.io/2017/05/28/%E6%AE%B5%E7%9A%84%E5%85%83%E6%95%B0%E6%8D%AE%E4%BF%A1%E6%81%AF/</url>
+      <content type="html"><![CDATA[<p><code>segments.gen</code>和<code>segments_N</code>保存了段的元数据信息，索引有多少个段，每个段有多少篇文档。而段的真正的数据信息是保存在域（Field）和词（Term）中的。</p>
+<p>一个索引只有一个<code>segments.gen</code>，而<code>segments_N</code>可能有多个。</p>
+<p>IndexReader.open() -&gt; DirectoryReader.open() -&gt; FindSegmentsFile.run() FindSegmentsFile.doBody() -&gt; SegmentInfos.read()</p>
+<p>相关辅助类：ChecksumIndexInput</p>
+<h2 id="DirectoryReader"><a href="#DirectoryReader" class="headerlink" title="DirectoryReader"></a>DirectoryReader</h2><p>通过调用<code>FindSegmentsFile</code>查找应该打开的<code>segmentFileName</code>，然后再调用<code>SegmentInfos.read()</code>去读取段的元数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> IndexReader <span class="title">open</span><span class="params">(<span class="keyword">final</span> Directory directory, <span class="keyword">final</span> IndexDeletionPolicy deletionPolicy, <span class="keyword">final</span> IndexCommit commit, <span class="keyword">final</span> <span class="keyword">boolean</span> readOnly,</span></span></div><div class="line">                            <span class="keyword">final</span> <span class="keyword">int</span> termInfosIndexDivisor) <span class="keyword">throws</span> CorruptIndexException, IOException &#123;</div><div class="line">    <span class="keyword">return</span> (IndexReader) <span class="keyword">new</span> SegmentInfos.FindSegmentsFile(directory) &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">protected</span> Object <span class="title">doBody</span><span class="params">(String segmentFileName)</span> <span class="keyword">throws</span> CorruptIndexException, IOException </span>&#123;</div><div class="line">            SegmentInfos infos = <span class="keyword">new</span> SegmentInfos();</div><div class="line">            <span class="comment">// 读取Segment元数据</span></div><div class="line">            infos.read(directory, segmentFileName);</div><div class="line">            <span class="keyword">if</span> (readOnly)</div><div class="line">                <span class="keyword">return</span> <span class="keyword">new</span> ReadOnlyDirectoryReader(directory, infos, deletionPolicy, termInfosIndexDivisor);</div><div class="line">            <span class="keyword">else</span></div><div class="line">                <span class="keyword">return</span> <span class="keyword">new</span> DirectoryReader(directory, infos, deletionPolicy, <span class="keyword">false</span>, termInfosIndexDivisor);</div><div class="line">        &#125;</div><div class="line">    &#125;.run(commit);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="SegmentInfos"><a href="#SegmentInfos" class="headerlink" title="SegmentInfos"></a>SegmentInfos</h2><h3 id="FindSegmentsFile-run"><a href="#FindSegmentsFile-run" class="headerlink" title="FindSegmentsFile.run()"></a>FindSegmentsFile.run()</h3><p>以下步骤是确定打开哪个<code>segments_N</code>文件。</p>
+<ol>
+<li>得到 genA<br> listAll所有索引目录文件，通过<code>SegmentInfos.getCurrentSegmentGeneration(files);</code>得到<code>genA</code>，基本逻辑是查找<code>segments</code>开头的文件并选择 N 最大的一个作为 <code>genA</code>。</li>
+<li>得到 genB<br> 通过<code>IndexInput</code>的子类读取<code>segments.gen</code>文件，该文件中保存了<code>version</code>、<code>gen1</code>和<code>gen2</code>几个值，如果<code>version</code>正确，则比较<code>gen1</code>和<code>gen2</code>，两个相等则为<code>genB</code>。</li>
+<li>得到 N<br> 选择<code>genA</code>和<code>genB</code>中最大的一个作为 N。</li>
+</ol>
+<p>确定了<code>segments_N</code>文件名后就调用<code>FindSegmentsFile.doBody()</code>方法，其实现调用了<code>SegmentInfos.read(directory, segmentFileName)</code>去读取具体的<code>segments_N</code>文件。</p>
+<h3 id="SegmentInfos-read"><a href="#SegmentInfos-read" class="headerlink" title="SegmentInfos.read()"></a>SegmentInfos.read()</h3><ol>
+<li>获取 IndexInput 实例<br> 通过<code>new ChecksumIndexInput(directory.openInput(segmentFileName))</code>得到input实例，</li>
+<li>读取 format, version, counter, segCount<br> | 属性 | 描述 |<br> |——–|——–|<br> |format|索引文件格式的版本号，主要是校验 IndexWriter 和 IndexReader 是否使用了同一个版本号。|<br> |version|索引的版本号，记录了 IndexWriter 将修改提交到索引文件中的次数。可以比较 IndexReader 中的 version 和索引文件中的 version 是否相同来判断此 IndexReader 被打开后，还有没有被 IndexWriter 更新。|<br> |counter|是下一个新段的段名。|<br> |segCount|段的个数。|</li>
+<li><p>读取每个段的元数据</p>
+ <figure class="highlight java"><figcaption><span>SegmentInfos.read()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = input.readInt(); i &gt; <span class="number">0</span>; i--) &#123; <span class="comment">// read segmentInfos</span></div><div class="line">       add(<span class="keyword">new</span> SegmentInfo(directory, format, input));</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p> | 属性 | 描述 |<br> |——–|——–|<br> |segName|存储段名。|<br> |segSize|存储段中包含的文档数。|<br> |delGen|.del文件的版本号，每当 IndexWriter 向索引提交删除操作的时候，加1。|<br> |docStoreOffset|标志位，域和词向量的存储方式，-1 表示单独存储，否则表示共享存储。|<br> |docStoreSegment|保存了共享段的名字。|<br> |docStoreIsCompoundFile|doc是否存储在 Compound File (.cfx) 文件中|<br> |hasSingleNormFile|标志位，1表示所有的 Norm Factor 都存在 .nrm 文件中，否则每个域都有自己的文件 .fN|<br> |numField|域的数量|<br> |normGen|记录每个域的 norm file|<br> |isCompoundFile|是否为复合文件，把同一个段中的文件按照一定的格式保存在一个文件当中，以减少每次打开文件的个数|<br> |delCount|记录了此段中删除的文档的数目|<br> |hasProx|如果至少有一个段 omitTf 为fase，也即词频需要被保存，则 hasProx 为1，否则为0|<br> |diagnostics|调试信息|</p>
+<blockquote>
+<p>对于<strong>域(Stored Field)</strong>和<strong>词向量(Term Vector)</strong>的存储可以有不同的方式，即可以每个段(Segment)单独存储自己的域和词向量信息，也可以多个段共享域和词向量，把它们存储到一个段中去。</p>
+</blockquote>
+<ul>
+<li>如果<code>DocStoreOffset</code>为-1，则此段单独存储自己的域和词向量，从存储文件上来看，如果此段段名为XXX，则此段有自己的XXX.fdt，XXX.fdx，XXX.tvf，XXX.tvd，XXX.tvx文件。<code>DocStoreSegment</code>和<code>DocStoreIsCompoundFile</code>在此处不被保存。</li>
+<li>如果<code>DocStoreOffset</code>不为-1，则<code>DocStoreSegment</code>保存了共享的段的名字，比如为YYY，<code>DocStoreOffset</code>则为此段的域及词向量信息在共享段中的偏移量。则此段没有自己的XXX.fdt，XXX.fdx，XXX.tvf，XXX.tvd，XXX.tvx文件，而是将信息存放在共享段的YYY.fdt，YYY.fdx，YYY.tvf，YYY.tvd，YYY.tvx文件中。</li>
+</ul>
+</li>
+<li>读取 userData<br> 保存了user在 IndexWriter.commit 提交的信息。</li>
+<li>checkSum<br> 存储了 segment_N 文件的校验和。</li>
+</ol>
+<hr>
+<p>感谢：<br><a href="http://www.cnblogs.com/forfuture1978/archive/2009/12/14/1623599.html" target="_blank" rel="external">http://www.cnblogs.com/forfuture1978/archive/2009/12/14/1623599.html</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[索引文件格式概述]]></title>
+      <url>https://rogerfang.github.io/2017/05/27/%E7%B4%A2%E5%BC%95%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%A6%82%E8%BF%B0/</url>
+      <content type="html"><![CDATA[<p>官网介绍：Lucene- <a href="https://lucene.apache.org/core/3_0_3/fileformats.html" target="_blank" rel="external">Index File Formats</a></p>
+<h1 id="索引层次结构"><a href="#索引层次结构" class="headerlink" title="索引层次结构"></a>索引层次结构</h1><p>Lucene的索引结构主要分为以下几个层次：</p>
+<ol>
+<li><strong>索引（Index）</strong><br> 一个索引对应一个索引目录（文件夹）。</li>
+<li><strong>段（Segment）</strong><ul>
+<li>一个索引可以包含多个段，段之间是相互独立的，可以被分开搜索，不同的段可以合并。</li>
+<li>有相同前缀如<code>_0</code>或<code>_1</code>的文件属于同一个段。</li>
+<li><code>segments.gen</code>和<code>segments_N</code>是段的元数据文件。</li>
+</ul>
+</li>
+<li><strong>文档（Document）</strong><ul>
+<li>文档是建索引的基本单位，一个段可以包含多个文档。</li>
+<li>新添加的文档是单独保存在一个新生成的段中，随着段的合并，不同的文档合并到一个段中。</li>
+</ul>
+</li>
+<li><strong>域（Field）</strong><ul>
+<li>一篇文档包含不同类型的信息，可以分开索引，保存在不同的域中。</li>
+<li>不同域的索引方式可以不同。</li>
+</ul>
+</li>
+<li><strong>词（Term）</strong><br> 词是索引的最小单位，是经过词法分析和语言处理后的字符串。（如果两个 Term 的 text 内容一样，但是分属不同的 Field，被认为是不同的 Term）</li>
+</ol>
+<h1 id="Field类型"><a href="#Field类型" class="headerlink" title="Field类型"></a>Field类型</h1><ol>
+<li><strong>存储域（Stored Field）</strong><br> 存储域的文本不会进行索引，也就不会被进行 tokenized 等操作，一般可以用于那些不希望被检索的信息，但是可以随着其他域的检索而一起返回。</li>
+<li><strong>索引域（Indexed Field）</strong><br> 索引域的文本会被 tokenized 从而被索引，可以用于检索。</li>
+</ol>
+<h1 id="Segment"><a href="#Segment" class="headerlink" title="Segment"></a>Segment</h1><p>每个段包含的信息：</p>
+<ol>
+<li><strong>Field names</strong><br> 索引中的域名信息。</li>
+<li><strong>Stored Field values</strong></li>
+<li><strong>Term dictionary</strong><br> 词典包含索引中的所有 term 以及term的文档频率、指向 term frequency 和 proximity data 的指针。</li>
+<li><strong>Term Frequency data</strong><br> term 在相应文档中的 TF 信息。</li>
+<li><strong>Term Proximity data</strong><br> term 在相应文档中的 position 信息。</li>
+<li><strong>Normalization factors</strong><br> For each field in each document, a value is stored that is multiplied into the score for hits on that field.</li>
+<li><strong>Term Vectors</strong><br> 有时也成为（document vector），包含 term text 和 tf。</li>
+<li><strong>Deleted documents</strong><br> 用于记录哪些 document 被删除了。</li>
+</ol>
+<h1 id="File-Extensions"><a href="#File-Extensions" class="headerlink" title="File Extensions"></a>File Extensions</h1><table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Extension</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Segments File</td>
+<td>segments.gen, segments_N</td>
+<td>段的元数据：索引有多少个段，每个段有多少篇文档</td>
+</tr>
+<tr>
+<td>Lock File</td>
+<td>write.lock</td>
+<td>用于阻止多个 IndexWriter 操作同一索引</td>
+</tr>
+<tr>
+<td>Compound Files</td>
+<td>.cfs</td>
+<td>可选的文件，包含一些经常用的文件</td>
+</tr>
+<tr>
+<td>Field Infos</td>
+<td>.fnm</td>
+<td>存储域相关的信息：保存了此段包含了多少域，每个域的名称以及索引方式</td>
+</tr>
+<tr>
+<td>Field Index</td>
+<td>.fdx</td>
+<td>存储了指向每个文档的 field data 的指针</td>
+</tr>
+<tr>
+<td>Field Data</td>
+<td>.fdt</td>
+<td>保存每个文档的 stored field</td>
+</tr>
+<tr>
+<td>Term Infos</td>
+<td>.tis</td>
+<td>存储 term info，term根据 term’s field name 和 term text 进行字母排序</td>
+</tr>
+<tr>
+<td>Term Info Index</td>
+<td>.tii</td>
+<td>Term Infos文件的索引(跳表，IndexInterval)，用于random access to ‘.tis’ file</td>
+</tr>
+<tr>
+<td>Frequencies</td>
+<td>.frq</td>
+<td>存储 term 的文档列表，以及term在相应文档的 tf</td>
+</tr>
+<tr>
+<td>Positions</td>
+<td>.prx</td>
+<td>存储 term 在相应文档中的位置信息</td>
+</tr>
+<tr>
+<td>Norms</td>
+<td>.nrm</td>
+<td>docs和fields的编码长度和 boost factors</td>
+</tr>
+<tr>
+<td>Term Vector Index</td>
+<td>.tvx</td>
+<td>保存每个文档在 document data(.tvd) 和 field data(.tvf) 中的 offset</td>
+</tr>
+<tr>
+<td>Term Vector Documents</td>
+<td>.tvd</td>
+<td>保存每个文档的: the number of fields, a list of the fields with term vector info，以及一个指针指向 .tvf 文件中的域信息</td>
+</tr>
+<tr>
+<td>Term Vector Fields</td>
+<td>.tvf</td>
+<td>保存了每个域的 term vector（term列表, term’s frequncies, position and offset信息）</td>
+</tr>
+<tr>
+<td>Deleted Documents</td>
+<td>.del</td>
+<td>记录被删的文档信息</td>
+</tr>
+</tbody>
+</table>
+<h1 id="正向信息"><a href="#正向信息" class="headerlink" title="正向信息"></a>正向信息</h1><blockquote>
+<p>Index -&gt; Document -&gt; Field -&gt; Term</p>
+</blockquote>
+<p>相关的文件：</p>
+<ul>
+<li><code>segments_N</code><br>  保存了索引包含多少个段，每个段多少篇文档。</li>
+<li><code>.fnm</code><br>  保存了此段包含多少个域，每个域的名称及索引方式。</li>
+<li><code>fdx</code>、<code>fdt</code><br>  保存了此段包含的所有文档，每篇文档包含了多少域，每个域保存了哪些信息。</li>
+<li><code>tvx</code>、<code>tvd</code>、<code>tvf</code>。<br>  保存了此段包含多少文档，每篇文档包含了多少个域，每个域包含了多少词，每个词的信息。</li>
+</ul>
+<h1 id="反向信息"><a href="#反向信息" class="headerlink" title="反向信息"></a>反向信息</h1><blockquote>
+<p>Term -&gt; Document</p>
+</blockquote>
+<p>相关的文件：</p>
+<ul>
+<li><code>.tis</code>、<code>tii</code><br>  保存了词典，term 根据字典顺序排序。</li>
+<li><code>.frq</code><br>  保存了倒排表，即包含每个 term 的文档 ID 列表，</li>
+<li><code>prx</code><br>  保存了倒排表中每个词在包含此词的文档中的位置。</li>
+</ul>
+<h1 id="基本类型"><a href="#基本类型" class="headerlink" title="基本类型"></a>基本类型</h1><ol>
+<li>Byte<br> 最基本的类型，8位bit。</li>
+<li>UInt32<br> 4个Byte。</li>
+<li>UInt64<br> 8个Byte。</li>
+<li>VInt<br> 变长的整型，每个 Byte 的最高 1 位表示是否还有另一个 Byte（0表示没有，1表示有），后 7 位表示数值。越前面的 Byte 表示数值的低位，越后面的 Byte 表示数值的高位。</li>
+<li>Chars<br> utf-8编码的一系列 Byte。</li>
+<li>String<br> 一个字符串首先是一个 VInt 来表示所包含的字符个数，接着是 utf-8 编码的字符序列 Chars。</li>
+</ol>
+<h1 id="基本规则"><a href="#基本规则" class="headerlink" title="基本规则"></a>基本规则</h1><p>规则的目的：减小存储空间，加快访问速度。</p>
+<h2 id="前缀后缀规则（Prefix-Suffix）"><a href="#前缀后缀规则（Prefix-Suffix）" class="headerlink" title="前缀后缀规则（Prefix + Suffix）"></a>前缀后缀规则（Prefix + Suffix）</h2><p>首先前提是 Term Dictionary 中所有的 Term 是按照字典顺序进行排列的，采用前缀后缀规则，当某个词和前一个词有共同前缀的时候，后面的词仅仅保存前缀在词中偏移（offset），以及除前缀以外的字符串（后缀）。</p>
+<p>eg：存储词 term, termagancy, termagant, terminal<br>正常的方式存储（<strong>35</strong>个Byte）：[VInt=4]  [term], [VInt=10]  [termagancy], [VInt=9]  [termagant], [VInt=8]  [terminal]。</p>
+<p>前缀后缀规则（<strong>22</strong>个Byte）：[VInt=4]  [term], [VInt=4(offset)]  [VInt=6]  [agency], [VInt=8(offset)]  [VInt=1]  [t], [VInt=4(offset)]  [VInt=4]  [inal]。</p>
+<h2 id="差值规则-Delta"><a href="#差值规则-Delta" class="headerlink" title="差值规则(Delta)"></a>差值规则(Delta)</h2><p>在倒排索引中，需要保存很多整型数字的信息，比如文档 ID 号， Term的位置等（在索引中都是按从小到大的顺序排列）。<br>当数字增大时，每个数字占用的 Byte 的个数也随之增多。</p>
+<p>差值规则：就是先后保存两个整数的时候，后面的整数仅仅保存和前面整数的差即可。<br>eg：存储数字 (5, 9, 11) 时，可以存储为 (5, 4, 2)。</p>
+<h2 id="或然跟随规则-A-B"><a href="#或然跟随规则-A-B" class="headerlink" title="或然跟随规则(A, B?)"></a>或然跟随规则(A, B?)</h2><p>索引结构中存在这一的情况：某个值 A 后面可能存在某个值 B，需要一个标志来表示后面是否跟随 B。<br>如果在 A 后面放一个 Byte 来存储标志会造成空间浪费。将 A 的值左移一位，空出最后一位作为标志位，空间将为 1 Bit。（当大量存在这种情况时，这个规则可以有效减小存储空间。）</p>
+<h2 id="跳表规则-Skip-List"><a href="#跳表规则-Skip-List" class="headerlink" title="跳表规则(Skip List)"></a>跳表规则(Skip List)</h2><p>跳表这种结构主要是为了提高查找的性能。</p>
+<ul>
+<li>元素是按顺序排列的。</li>
+<li>存在跳跃间隔（Interval）。Lucene中间隔为两个元素索引之间的差值。</li>
+<li>跳表是有层次（Level）的，每层间隔不同。Lucene中层次从0开始计数，且计数不包括原链表。</li>
+</ul>
+<hr>
+<p>感谢：<br><a href="http://www.cnblogs.com/forfuture1978/archive/2009/12/14/1623597.html" target="_blank" rel="external">http://www.cnblogs.com/forfuture1978/archive/2009/12/14/1623597.html</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[branch upstream]]></title>
       <url>https://rogerfang.github.io/2017/04/26/branch-upstream/</url>
       <content type="html"><![CDATA[<h1 id="upstream设置"><a href="#upstream设置" class="headerlink" title="upstream设置"></a>upstream设置</h1><p>当前工作目录工作分支，跟远程的仓库，分支之间的链接关系。</p>

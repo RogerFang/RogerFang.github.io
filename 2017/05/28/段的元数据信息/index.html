@@ -1,0 +1,825 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Lucene,Lucene3," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="segments.gen和segments_N保存了段的元数据信息，索引有多少个段，每个段有多少篇文档。而段的真正的数据信息是保存在域（Field）和词（Term）中的。
+一个索引只有一个segments.gen，而segments_N可能有多个。
+IndexReader.open() -&amp;gt; DirectoryReader.open() -&amp;gt; FindSegmentsFile.run(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="段的元数据信息">
+<meta property="og:url" content="https://rogerfang.github.io/2017/05/28/段的元数据信息/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="segments.gen和segments_N保存了段的元数据信息，索引有多少个段，每个段有多少篇文档。而段的真正的数据信息是保存在域（Field）和词（Term）中的。
+一个索引只有一个segments.gen，而segments_N可能有多个。
+IndexReader.open() -&amp;gt; DirectoryReader.open() -&amp;gt; FindSegmentsFile.run(">
+<meta property="og:updated_time" content="2017-05-28T06:41:31.822Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="段的元数据信息">
+<meta name="twitter:description" content="segments.gen和segments_N保存了段的元数据信息，索引有多少个段，每个段有多少篇文档。而段的真正的数据信息是保存在域（Field）和词（Term）中的。
+一个索引只有一个segments.gen，而segments_N可能有多个。
+IndexReader.open() -&amp;gt; DirectoryReader.open() -&amp;gt; FindSegmentsFile.run(">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://rogerfang.github.io/2017/05/28/段的元数据信息/"/>
+
+
+  <title> 段的元数据信息 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                段的元数据信息
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-05-28T11:27:35+08:00" content="2017-05-28">
+              2017-05-28
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Lucene/" itemprop="url" rel="index">
+                    <span itemprop="name">Lucene</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><code>segments.gen</code>和<code>segments_N</code>保存了段的元数据信息，索引有多少个段，每个段有多少篇文档。而段的真正的数据信息是保存在域（Field）和词（Term）中的。</p>
+<p>一个索引只有一个<code>segments.gen</code>，而<code>segments_N</code>可能有多个。</p>
+<p>IndexReader.open() -&gt; DirectoryReader.open() -&gt; FindSegmentsFile.run() FindSegmentsFile.doBody() -&gt; SegmentInfos.read()</p>
+<p>相关辅助类：ChecksumIndexInput</p>
+<h2 id="DirectoryReader"><a href="#DirectoryReader" class="headerlink" title="DirectoryReader"></a>DirectoryReader</h2><p>通过调用<code>FindSegmentsFile</code>查找应该打开的<code>segmentFileName</code>，然后再调用<code>SegmentInfos.read()</code>去读取段的元数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> IndexReader <span class="title">open</span><span class="params">(<span class="keyword">final</span> Directory directory, <span class="keyword">final</span> IndexDeletionPolicy deletionPolicy, <span class="keyword">final</span> IndexCommit commit, <span class="keyword">final</span> <span class="keyword">boolean</span> readOnly,</span></span></div><div class="line">                            <span class="keyword">final</span> <span class="keyword">int</span> termInfosIndexDivisor) <span class="keyword">throws</span> CorruptIndexException, IOException &#123;</div><div class="line">    <span class="keyword">return</span> (IndexReader) <span class="keyword">new</span> SegmentInfos.FindSegmentsFile(directory) &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">protected</span> Object <span class="title">doBody</span><span class="params">(String segmentFileName)</span> <span class="keyword">throws</span> CorruptIndexException, IOException </span>&#123;</div><div class="line">            SegmentInfos infos = <span class="keyword">new</span> SegmentInfos();</div><div class="line">            <span class="comment">// 读取Segment元数据</span></div><div class="line">            infos.read(directory, segmentFileName);</div><div class="line">            <span class="keyword">if</span> (readOnly)</div><div class="line">                <span class="keyword">return</span> <span class="keyword">new</span> ReadOnlyDirectoryReader(directory, infos, deletionPolicy, termInfosIndexDivisor);</div><div class="line">            <span class="keyword">else</span></div><div class="line">                <span class="keyword">return</span> <span class="keyword">new</span> DirectoryReader(directory, infos, deletionPolicy, <span class="keyword">false</span>, termInfosIndexDivisor);</div><div class="line">        &#125;</div><div class="line">    &#125;.run(commit);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="SegmentInfos"><a href="#SegmentInfos" class="headerlink" title="SegmentInfos"></a>SegmentInfos</h2><h3 id="FindSegmentsFile-run"><a href="#FindSegmentsFile-run" class="headerlink" title="FindSegmentsFile.run()"></a>FindSegmentsFile.run()</h3><p>以下步骤是确定打开哪个<code>segments_N</code>文件。</p>
+<ol>
+<li>得到 genA<br> listAll所有索引目录文件，通过<code>SegmentInfos.getCurrentSegmentGeneration(files);</code>得到<code>genA</code>，基本逻辑是查找<code>segments</code>开头的文件并选择 N 最大的一个作为 <code>genA</code>。</li>
+<li>得到 genB<br> 通过<code>IndexInput</code>的子类读取<code>segments.gen</code>文件，该文件中保存了<code>version</code>、<code>gen1</code>和<code>gen2</code>几个值，如果<code>version</code>正确，则比较<code>gen1</code>和<code>gen2</code>，两个相等则为<code>genB</code>。</li>
+<li>得到 N<br> 选择<code>genA</code>和<code>genB</code>中最大的一个作为 N。</li>
+</ol>
+<p>确定了<code>segments_N</code>文件名后就调用<code>FindSegmentsFile.doBody()</code>方法，其实现调用了<code>SegmentInfos.read(directory, segmentFileName)</code>去读取具体的<code>segments_N</code>文件。</p>
+<h3 id="SegmentInfos-read"><a href="#SegmentInfos-read" class="headerlink" title="SegmentInfos.read()"></a>SegmentInfos.read()</h3><ol>
+<li>获取 IndexInput 实例<br> 通过<code>new ChecksumIndexInput(directory.openInput(segmentFileName))</code>得到input实例，</li>
+<li>读取 format, version, counter, segCount<br> | 属性 | 描述 |<br> |——–|——–|<br> |format|索引文件格式的版本号，主要是校验 IndexWriter 和 IndexReader 是否使用了同一个版本号。|<br> |version|索引的版本号，记录了 IndexWriter 将修改提交到索引文件中的次数。可以比较 IndexReader 中的 version 和索引文件中的 version 是否相同来判断此 IndexReader 被打开后，还有没有被 IndexWriter 更新。|<br> |counter|是下一个新段的段名。|<br> |segCount|段的个数。|</li>
+<li><p>读取每个段的元数据</p>
+ <figure class="highlight java"><figcaption><span>SegmentInfos.read()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = input.readInt(); i &gt; <span class="number">0</span>; i--) &#123; <span class="comment">// read segmentInfos</span></div><div class="line">       add(<span class="keyword">new</span> SegmentInfo(directory, format, input));</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p> | 属性 | 描述 |<br> |——–|——–|<br> |segName|存储段名。|<br> |segSize|存储段中包含的文档数。|<br> |delGen|.del文件的版本号，每当 IndexWriter 向索引提交删除操作的时候，加1。|<br> |docStoreOffset|标志位，域和词向量的存储方式，-1 表示单独存储，否则表示共享存储。|<br> |docStoreSegment|保存了共享段的名字。|<br> |docStoreIsCompoundFile|doc是否存储在 Compound File (.cfx) 文件中|<br> |hasSingleNormFile|标志位，1表示所有的 Norm Factor 都存在 .nrm 文件中，否则每个域都有自己的文件 .fN|<br> |numField|域的数量|<br> |normGen|记录每个域的 norm file|<br> |isCompoundFile|是否为复合文件，把同一个段中的文件按照一定的格式保存在一个文件当中，以减少每次打开文件的个数|<br> |delCount|记录了此段中删除的文档的数目|<br> |hasProx|如果至少有一个段 omitTf 为fase，也即词频需要被保存，则 hasProx 为1，否则为0|<br> |diagnostics|调试信息|</p>
+<blockquote>
+<p>对于<strong>域(Stored Field)</strong>和<strong>词向量(Term Vector)</strong>的存储可以有不同的方式，即可以每个段(Segment)单独存储自己的域和词向量信息，也可以多个段共享域和词向量，把它们存储到一个段中去。</p>
+</blockquote>
+<ul>
+<li>如果<code>DocStoreOffset</code>为-1，则此段单独存储自己的域和词向量，从存储文件上来看，如果此段段名为XXX，则此段有自己的XXX.fdt，XXX.fdx，XXX.tvf，XXX.tvd，XXX.tvx文件。<code>DocStoreSegment</code>和<code>DocStoreIsCompoundFile</code>在此处不被保存。</li>
+<li>如果<code>DocStoreOffset</code>不为-1，则<code>DocStoreSegment</code>保存了共享的段的名字，比如为YYY，<code>DocStoreOffset</code>则为此段的域及词向量信息在共享段中的偏移量。则此段没有自己的XXX.fdt，XXX.fdx，XXX.tvf，XXX.tvd，XXX.tvx文件，而是将信息存放在共享段的YYY.fdt，YYY.fdx，YYY.tvf，YYY.tvd，YYY.tvx文件中。</li>
+</ul>
+</li>
+<li>读取 userData<br> 保存了user在 IndexWriter.commit 提交的信息。</li>
+<li>checkSum<br> 存储了 segment_N 文件的校验和。</li>
+</ol>
+<hr>
+<p>感谢：<br><a href="http://www.cnblogs.com/forfuture1978/archive/2009/12/14/1623599.html" target="_blank" rel="external">http://www.cnblogs.com/forfuture1978/archive/2009/12/14/1623599.html</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Lucene/" rel="tag">#Lucene</a>
+          
+            <a href="/tags/Lucene3/" rel="tag">#Lucene3</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/27/索引文件格式概述/" rel="next" title="索引文件格式概述">
+                <i class="fa fa-chevron-left"></i> 索引文件格式概述
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/28/域的元数据信息和数据信息/" rel="prev" title="域的元数据信息和数据信息">
+                域的元数据信息和数据信息 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">梦想还是要有的，万一实现了呢</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">220</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">147</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#DirectoryReader"><span class="nav-number">1.</span> <span class="nav-text">DirectoryReader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SegmentInfos"><span class="nav-number">2.</span> <span class="nav-text">SegmentInfos</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FindSegmentsFile-run"><span class="nav-number">2.1.</span> <span class="nav-text">FindSegmentsFile.run()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SegmentInfos-read"><span class="nav-number">2.2.</span> <span class="nav-text">SegmentInfos.read()</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = false;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title >= 0 || index_content >= 0 ){
+                                isMatch = true;
+								if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            } 
+							
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

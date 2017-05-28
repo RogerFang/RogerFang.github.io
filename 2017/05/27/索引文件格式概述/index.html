@@ -1,0 +1,982 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Lucene,Lucene3," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="官网介绍：Lucene- Index File Formats
+索引层次结构Lucene的索引结构主要分为以下几个层次：
+
+索引（Index） 一个索引对应一个索引目录（文件夹）。
+段（Segment）
+一个索引可以包含多个段，段之间是相互独立的，可以被分开搜索，不同的段可以合并。
+有相同前缀如_0或_1的文件属于同一个段。
+segments.gen和segments_N是段的元数据文件。
+
+
+文">
+<meta property="og:type" content="article">
+<meta property="og:title" content="索引文件格式概述">
+<meta property="og:url" content="https://rogerfang.github.io/2017/05/27/索引文件格式概述/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="官网介绍：Lucene- Index File Formats
+索引层次结构Lucene的索引结构主要分为以下几个层次：
+
+索引（Index） 一个索引对应一个索引目录（文件夹）。
+段（Segment）
+一个索引可以包含多个段，段之间是相互独立的，可以被分开搜索，不同的段可以合并。
+有相同前缀如_0或_1的文件属于同一个段。
+segments.gen和segments_N是段的元数据文件。
+
+
+文">
+<meta property="og:updated_time" content="2017-05-28T03:24:03.014Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="索引文件格式概述">
+<meta name="twitter:description" content="官网介绍：Lucene- Index File Formats
+索引层次结构Lucene的索引结构主要分为以下几个层次：
+
+索引（Index） 一个索引对应一个索引目录（文件夹）。
+段（Segment）
+一个索引可以包含多个段，段之间是相互独立的，可以被分开搜索，不同的段可以合并。
+有相同前缀如_0或_1的文件属于同一个段。
+segments.gen和segments_N是段的元数据文件。
+
+
+文">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://rogerfang.github.io/2017/05/27/索引文件格式概述/"/>
+
+
+  <title> 索引文件格式概述 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                索引文件格式概述
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-05-27T10:44:49+08:00" content="2017-05-27">
+              2017-05-27
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Lucene/" itemprop="url" rel="index">
+                    <span itemprop="name">Lucene</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>官网介绍：Lucene- <a href="https://lucene.apache.org/core/3_0_3/fileformats.html" target="_blank" rel="external">Index File Formats</a></p>
+<h1 id="索引层次结构"><a href="#索引层次结构" class="headerlink" title="索引层次结构"></a>索引层次结构</h1><p>Lucene的索引结构主要分为以下几个层次：</p>
+<ol>
+<li><strong>索引（Index）</strong><br> 一个索引对应一个索引目录（文件夹）。</li>
+<li><strong>段（Segment）</strong><ul>
+<li>一个索引可以包含多个段，段之间是相互独立的，可以被分开搜索，不同的段可以合并。</li>
+<li>有相同前缀如<code>_0</code>或<code>_1</code>的文件属于同一个段。</li>
+<li><code>segments.gen</code>和<code>segments_N</code>是段的元数据文件。</li>
+</ul>
+</li>
+<li><strong>文档（Document）</strong><ul>
+<li>文档是建索引的基本单位，一个段可以包含多个文档。</li>
+<li>新添加的文档是单独保存在一个新生成的段中，随着段的合并，不同的文档合并到一个段中。</li>
+</ul>
+</li>
+<li><strong>域（Field）</strong><ul>
+<li>一篇文档包含不同类型的信息，可以分开索引，保存在不同的域中。</li>
+<li>不同域的索引方式可以不同。</li>
+</ul>
+</li>
+<li><strong>词（Term）</strong><br> 词是索引的最小单位，是经过词法分析和语言处理后的字符串。（如果两个 Term 的 text 内容一样，但是分属不同的 Field，被认为是不同的 Term）</li>
+</ol>
+<h1 id="Field类型"><a href="#Field类型" class="headerlink" title="Field类型"></a>Field类型</h1><ol>
+<li><strong>存储域（Stored Field）</strong><br> 存储域的文本不会进行索引，也就不会被进行 tokenized 等操作，一般可以用于那些不希望被检索的信息，但是可以随着其他域的检索而一起返回。</li>
+<li><strong>索引域（Indexed Field）</strong><br> 索引域的文本会被 tokenized 从而被索引，可以用于检索。</li>
+</ol>
+<h1 id="Segment"><a href="#Segment" class="headerlink" title="Segment"></a>Segment</h1><p>每个段包含的信息：</p>
+<ol>
+<li><strong>Field names</strong><br> 索引中的域名信息。</li>
+<li><strong>Stored Field values</strong></li>
+<li><strong>Term dictionary</strong><br> 词典包含索引中的所有 term 以及term的文档频率、指向 term frequency 和 proximity data 的指针。</li>
+<li><strong>Term Frequency data</strong><br> term 在相应文档中的 TF 信息。</li>
+<li><strong>Term Proximity data</strong><br> term 在相应文档中的 position 信息。</li>
+<li><strong>Normalization factors</strong><br> For each field in each document, a value is stored that is multiplied into the score for hits on that field.</li>
+<li><strong>Term Vectors</strong><br> 有时也成为（document vector），包含 term text 和 tf。</li>
+<li><strong>Deleted documents</strong><br> 用于记录哪些 document 被删除了。</li>
+</ol>
+<h1 id="File-Extensions"><a href="#File-Extensions" class="headerlink" title="File Extensions"></a>File Extensions</h1><table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Extension</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Segments File</td>
+<td>segments.gen, segments_N</td>
+<td>段的元数据：索引有多少个段，每个段有多少篇文档</td>
+</tr>
+<tr>
+<td>Lock File</td>
+<td>write.lock</td>
+<td>用于阻止多个 IndexWriter 操作同一索引</td>
+</tr>
+<tr>
+<td>Compound Files</td>
+<td>.cfs</td>
+<td>可选的文件，包含一些经常用的文件</td>
+</tr>
+<tr>
+<td>Field Infos</td>
+<td>.fnm</td>
+<td>存储域相关的信息：保存了此段包含了多少域，每个域的名称以及索引方式</td>
+</tr>
+<tr>
+<td>Field Index</td>
+<td>.fdx</td>
+<td>存储了指向每个文档的 field data 的指针</td>
+</tr>
+<tr>
+<td>Field Data</td>
+<td>.fdt</td>
+<td>保存每个文档的 stored field</td>
+</tr>
+<tr>
+<td>Term Infos</td>
+<td>.tis</td>
+<td>存储 term info，term根据 term’s field name 和 term text 进行字母排序</td>
+</tr>
+<tr>
+<td>Term Info Index</td>
+<td>.tii</td>
+<td>Term Infos文件的索引(跳表，IndexInterval)，用于random access to ‘.tis’ file</td>
+</tr>
+<tr>
+<td>Frequencies</td>
+<td>.frq</td>
+<td>存储 term 的文档列表，以及term在相应文档的 tf</td>
+</tr>
+<tr>
+<td>Positions</td>
+<td>.prx</td>
+<td>存储 term 在相应文档中的位置信息</td>
+</tr>
+<tr>
+<td>Norms</td>
+<td>.nrm</td>
+<td>docs和fields的编码长度和 boost factors</td>
+</tr>
+<tr>
+<td>Term Vector Index</td>
+<td>.tvx</td>
+<td>保存每个文档在 document data(.tvd) 和 field data(.tvf) 中的 offset</td>
+</tr>
+<tr>
+<td>Term Vector Documents</td>
+<td>.tvd</td>
+<td>保存每个文档的: the number of fields, a list of the fields with term vector info，以及一个指针指向 .tvf 文件中的域信息</td>
+</tr>
+<tr>
+<td>Term Vector Fields</td>
+<td>.tvf</td>
+<td>保存了每个域的 term vector（term列表, term’s frequncies, position and offset信息）</td>
+</tr>
+<tr>
+<td>Deleted Documents</td>
+<td>.del</td>
+<td>记录被删的文档信息</td>
+</tr>
+</tbody>
+</table>
+<h1 id="正向信息"><a href="#正向信息" class="headerlink" title="正向信息"></a>正向信息</h1><blockquote>
+<p>Index -&gt; Document -&gt; Field -&gt; Term</p>
+</blockquote>
+<p>相关的文件：</p>
+<ul>
+<li><code>segments_N</code><br>  保存了索引包含多少个段，每个段多少篇文档。</li>
+<li><code>.fnm</code><br>  保存了此段包含多少个域，每个域的名称及索引方式。</li>
+<li><code>fdx</code>、<code>fdt</code><br>  保存了此段包含的所有文档，每篇文档包含了多少域，每个域保存了哪些信息。</li>
+<li><code>tvx</code>、<code>tvd</code>、<code>tvf</code>。<br>  保存了此段包含多少文档，每篇文档包含了多少个域，每个域包含了多少词，每个词的信息。</li>
+</ul>
+<h1 id="反向信息"><a href="#反向信息" class="headerlink" title="反向信息"></a>反向信息</h1><blockquote>
+<p>Term -&gt; Document</p>
+</blockquote>
+<p>相关的文件：</p>
+<ul>
+<li><code>.tis</code>、<code>tii</code><br>  保存了词典，term 根据字典顺序排序。</li>
+<li><code>.frq</code><br>  保存了倒排表，即包含每个 term 的文档 ID 列表，</li>
+<li><code>prx</code><br>  保存了倒排表中每个词在包含此词的文档中的位置。</li>
+</ul>
+<h1 id="基本类型"><a href="#基本类型" class="headerlink" title="基本类型"></a>基本类型</h1><ol>
+<li>Byte<br> 最基本的类型，8位bit。</li>
+<li>UInt32<br> 4个Byte。</li>
+<li>UInt64<br> 8个Byte。</li>
+<li>VInt<br> 变长的整型，每个 Byte 的最高 1 位表示是否还有另一个 Byte（0表示没有，1表示有），后 7 位表示数值。越前面的 Byte 表示数值的低位，越后面的 Byte 表示数值的高位。</li>
+<li>Chars<br> utf-8编码的一系列 Byte。</li>
+<li>String<br> 一个字符串首先是一个 VInt 来表示所包含的字符个数，接着是 utf-8 编码的字符序列 Chars。</li>
+</ol>
+<h1 id="基本规则"><a href="#基本规则" class="headerlink" title="基本规则"></a>基本规则</h1><p>规则的目的：减小存储空间，加快访问速度。</p>
+<h2 id="前缀后缀规则（Prefix-Suffix）"><a href="#前缀后缀规则（Prefix-Suffix）" class="headerlink" title="前缀后缀规则（Prefix + Suffix）"></a>前缀后缀规则（Prefix + Suffix）</h2><p>首先前提是 Term Dictionary 中所有的 Term 是按照字典顺序进行排列的，采用前缀后缀规则，当某个词和前一个词有共同前缀的时候，后面的词仅仅保存前缀在词中偏移（offset），以及除前缀以外的字符串（后缀）。</p>
+<p>eg：存储词 term, termagancy, termagant, terminal<br>正常的方式存储（<strong>35</strong>个Byte）：[VInt=4]  [term], [VInt=10]  [termagancy], [VInt=9]  [termagant], [VInt=8]  [terminal]。</p>
+<p>前缀后缀规则（<strong>22</strong>个Byte）：[VInt=4]  [term], [VInt=4(offset)]  [VInt=6]  [agency], [VInt=8(offset)]  [VInt=1]  [t], [VInt=4(offset)]  [VInt=4]  [inal]。</p>
+<h2 id="差值规则-Delta"><a href="#差值规则-Delta" class="headerlink" title="差值规则(Delta)"></a>差值规则(Delta)</h2><p>在倒排索引中，需要保存很多整型数字的信息，比如文档 ID 号， Term的位置等（在索引中都是按从小到大的顺序排列）。<br>当数字增大时，每个数字占用的 Byte 的个数也随之增多。</p>
+<p>差值规则：就是先后保存两个整数的时候，后面的整数仅仅保存和前面整数的差即可。<br>eg：存储数字 (5, 9, 11) 时，可以存储为 (5, 4, 2)。</p>
+<h2 id="或然跟随规则-A-B"><a href="#或然跟随规则-A-B" class="headerlink" title="或然跟随规则(A, B?)"></a>或然跟随规则(A, B?)</h2><p>索引结构中存在这一的情况：某个值 A 后面可能存在某个值 B，需要一个标志来表示后面是否跟随 B。<br>如果在 A 后面放一个 Byte 来存储标志会造成空间浪费。将 A 的值左移一位，空出最后一位作为标志位，空间将为 1 Bit。（当大量存在这种情况时，这个规则可以有效减小存储空间。）</p>
+<h2 id="跳表规则-Skip-List"><a href="#跳表规则-Skip-List" class="headerlink" title="跳表规则(Skip List)"></a>跳表规则(Skip List)</h2><p>跳表这种结构主要是为了提高查找的性能。</p>
+<ul>
+<li>元素是按顺序排列的。</li>
+<li>存在跳跃间隔（Interval）。Lucene中间隔为两个元素索引之间的差值。</li>
+<li>跳表是有层次（Level）的，每层间隔不同。Lucene中层次从0开始计数，且计数不包括原链表。</li>
+</ul>
+<hr>
+<p>感谢：<br><a href="http://www.cnblogs.com/forfuture1978/archive/2009/12/14/1623597.html" target="_blank" rel="external">http://www.cnblogs.com/forfuture1978/archive/2009/12/14/1623597.html</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Lucene/" rel="tag">#Lucene</a>
+          
+            <a href="/tags/Lucene3/" rel="tag">#Lucene3</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/26/branch-upstream/" rel="next" title="branch upstream">
+                <i class="fa fa-chevron-left"></i> branch upstream
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/28/段的元数据信息/" rel="prev" title="段的元数据信息">
+                段的元数据信息 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">梦想还是要有的，万一实现了呢</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">220</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">147</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#索引层次结构"><span class="nav-number">1.</span> <span class="nav-text">索引层次结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Field类型"><span class="nav-number">2.</span> <span class="nav-text">Field类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Segment"><span class="nav-number">3.</span> <span class="nav-text">Segment</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#File-Extensions"><span class="nav-number">4.</span> <span class="nav-text">File Extensions</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正向信息"><span class="nav-number">5.</span> <span class="nav-text">正向信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#反向信息"><span class="nav-number">6.</span> <span class="nav-text">反向信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本类型"><span class="nav-number">7.</span> <span class="nav-text">基本类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本规则"><span class="nav-number">8.</span> <span class="nav-text">基本规则</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#前缀后缀规则（Prefix-Suffix）"><span class="nav-number">8.1.</span> <span class="nav-text">前缀后缀规则（Prefix + Suffix）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#差值规则-Delta"><span class="nav-number">8.2.</span> <span class="nav-text">差值规则(Delta)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#或然跟随规则-A-B"><span class="nav-number">8.3.</span> <span class="nav-text">或然跟随规则(A, B?)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跳表规则-Skip-List"><span class="nav-number">8.4.</span> <span class="nav-text">跳表规则(Skip List)</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = false;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title >= 0 || index_content >= 0 ){
+                                isMatch = true;
+								if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            } 
+							
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
