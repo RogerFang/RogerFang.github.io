@@ -4,6 +4,337 @@
   
     
     <entry>
+      <title><![CDATA[索引过程分析]]></title>
+      <url>https://rogerfang.github.io/2017/06/03/%E7%B4%A2%E5%BC%95%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90/</url>
+      <content type="html"><![CDATA[<p>Lucene3 中的索引过程设计很多对象，分别负责索引文档的不同部分的信息，同时也注重复用一些对象集。索引过程中涉及3种索引链：基本索引链、线程索引链、域索引链。</p>
+<h1 id="IndexWriter"><a href="#IndexWriter" class="headerlink" title="IndexWriter"></a>IndexWriter</h1><p>IndexWriter 对象主要包括几方面的信息：<br>1.用于索引文档</p>
+<table>
+<thead>
+<tr>
+<th>成员</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Directory directory;</td>
+<td>指向索引文件夹</td>
+</tr>
+<tr>
+<td>Analyzer analyzer;</td>
+<td>分析器</td>
+</tr>
+<tr>
+<td>Similarity similarity = Similarity.getDefault();</td>
+<td>相似度计算，默认是tf-idf模型。</td>
+</tr>
+<tr>
+<td>SegmentInfos segmentInfos = new SegmentInfos();</td>
+<td>保存段信息 segments_N。</td>
+</tr>
+<tr>
+<td>IndexFileDeleter deleter;</td>
+<td>用来管理索引文件。</td>
+</tr>
+<tr>
+<td>Lock writeLock;</td>
+<td>文件锁，每个索引文件夹只能打开一个 IndexWriter。</td>
+</tr>
+<tr>
+<td>Set<segmentinfo> segmentsToOptimize = new HashSet<segmentinfo>();</segmentinfo></segmentinfo></td>
+<td>保存正在optimize的段信息，当调用optimize()时当前所有的段信息加入到此set，之后新生成的段不参与此次优化。</td>
+</tr>
+</tbody>
+</table>
+<p>2.用于合并段</p>
+<table>
+<thead>
+<tr>
+<th>成员</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HashSet&lt; SegmentInfo&gt; mergingSegments = new HashSet&lt; SegmentInfo&gt;();</td>
+<td></td>
+</tr>
+<tr>
+<td>MergePolicy mergePolicy = new LogByteSizeMergePolicy(this);</td>
+<td></td>
+</tr>
+<tr>
+<td>MergeScheduler mergeScheduler = new ConcurrentMergeScheduler();</td>
+<td></td>
+</tr>
+<tr>
+<td>LinkedList&lt; MergePolicy.OneMerge&gt; pendingMerges = new LinkedList&lt; MergePolicy.OneMerge&gt;();</td>
+<td></td>
+</tr>
+<tr>
+<td>Set&lt; MergePolicy.OneMerge&gt; runningMerges = new HashSet&lt; MergePolicy.OneMerge&gt;();</td>
+<td></td>
+</tr>
+<tr>
+<td>List&lt; MergePolicy.OneMerge&gt; mergeExceptions = new ArrayList&lt; MergePolicy.OneMerge&gt;();</td>
+<td></td>
+</tr>
+<tr>
+<td>long mergeGen;</td>
+</tr>
+</tbody>
+</table>
+<p>3.保持索引完整性、一致性和事务性</p>
+<table>
+<thead>
+<tr>
+<th>成员</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SegmentInfos rollbackSegmentInfos;</td>
+<td>当IndexWriter对索引进行更改操作后，可以commit提交到文件中去，也可以rollback取消上次commit到此时的修改。</td>
+</tr>
+<tr>
+<td>SegmentInfos localRollbackSegmentInfos;</td>
+<td>主要用于将其他的索引文件合并到此文件夹的时候，为防止出错可回滚所保存的原来的段信息。</td>
+</tr>
+</tbody>
+</table>
+<p>4.配置信息</p>
+<table>
+<thead>
+<tr>
+<th>成员</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>long writeLockTimeout;</td>
+<td>获得锁的超时时间</td>
+</tr>
+<tr>
+<td>int termIndexInterval;</td>
+<td>同 tii 和 tis 文件中的 indexInterval</td>
+</tr>
+</tbody>
+</table>
+<h2 id="创建IndexWriter对象"><a href="#创建IndexWriter对象" class="headerlink" title="创建IndexWriter对象"></a>创建IndexWriter对象</h2><p>IndexWriter 构造函数中调用 init() 方法进行初始化。</p>
+<ol>
+<li>构造索引链 IndexingChain。<br> 对文档的索引过程，不是由一个对象完成的，而是对象组合成一个处理链，链上的对象仅完成处理的一部分。</li>
+<li>创建文件锁。</li>
+<li>设置 rollbackSegmentInfos，用于失败回滚。</li>
+<li>构造 DocumentsWriter 对象。</li>
+<li>构造 IndexFileDeleter 对象。</li>
+</ol>
+<h1 id="索引链-IndexingChain"><a href="#索引链-IndexingChain" class="headerlink" title="索引链 IndexingChain"></a>索引链 IndexingChain</h1><ol>
+<li>索引链的源头 <code>DocConsumer</code><ul>
+<li><code>DocConsumer</code> 其子类 <code>DocFieldProcessor</code></li>
+</ul>
+</li>
+<li>索引域的处理<ul>
+<li><code>DocFieldConsumer</code> 其子类 <code>DocInverter</code></li>
+<li><code>InvertedDocConsumer</code> 其子类 <code>TermsHash</code></li>
+<li><code>TermsHashConsumer</code> 其子类 <code>TermVectorsTermsWriter</code>和<code>FreqProxTermsWriter</code>，分别负责写tvx、tvd、tvf信息和freq、prox信息。</li>
+<li><code>InvertedDocEndConsumer</code> 其子类 <code>NormsWriter</code>，负责写nrm信息。</li>
+</ul>
+</li>
+<li>存储域的处理<ul>
+<li><code>StoredFieldsWriter</code> 负责写 fnm、fdt、fdx信息。</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">DocConsumer / DocConsumerPerThread</div><div class="line">    --&gt; code: DocFieldProcessor / DocFieldProcessorPerThread</div><div class="line">      --&gt; DocFieldConsumer / DocFieldConsumerPerThread / DocFieldConsumerPerField</div><div class="line">        --&gt; code: DocFieldConsumers / DocFieldConsumersPerThread / DocFieldConsumersPerField</div><div class="line">          --&gt; code: DocInverter / DocInverterPerThread / DocInverterPerField</div><div class="line">            --&gt; InvertedDocConsumer / InvertedDocConsumerPerThread / InvertedDocConsumerPerField</div><div class="line">              --&gt; code: TermsHash / TermsHashPerThread / TermsHashPerField</div><div class="line">                --&gt; TermsHashConsumer / TermsHashConsumerPerThread / TermsHashConsumerPerField</div><div class="line">                  --&gt; code: FreqProxTermsWriter / FreqProxTermsWriterPerThread / FreqProxTermsWriterPerField</div><div class="line">                  --&gt; code: TermVectorsTermsWriter / TermVectorsTermsWriterPerThread / TermVectorsTermsWriterPerField</div><div class="line">            --&gt; InvertedDocEndConsumer / InvertedDocConsumerPerThread / InvertedDocConsumerPerField</div><div class="line">              --&gt; code: NormsWriter / NormsWriterPerThread / NormsWriterPerField</div><div class="line">          --&gt; code: StoredFieldsWriter / StoredFieldsWriterPerThread / StoredFieldsWriterPerField</div></pre></td></tr></table></figure>
+<h1 id="DocumentsWriter"><a href="#DocumentsWriter" class="headerlink" title="DocumentsWriter"></a>DocumentsWriter</h1><p>DocumentsWriter 主要包括以下几部分：</p>
+<h2 id="用于写索引文件"><a href="#用于写索引文件" class="headerlink" title="用于写索引文件"></a>用于写索引文件</h2><table>
+<thead>
+<tr>
+<th>成员</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IndexWriter writer;</td>
+<td>在IndexWriter初始化时，构造DocumentsWriter对象时传入</td>
+</tr>
+<tr>
+<td>Directory directory;</td>
+<td></td>
+</tr>
+<tr>
+<td>Similarity similarity;</td>
+<td></td>
+</tr>
+<tr>
+<td>String segment;</td>
+<td>当前的段名，每当flush的时候，将索引写入以此为名的段。</td>
+</tr>
+<tr>
+<td>String docStoreSegment;</td>
+<td>存储域索要写入的目标段。</td>
+</tr>
+<tr>
+<td>int docStoreOffset;</td>
+<td>存储域在目标端中的偏移量。</td>
+</tr>
+<tr>
+<td>int nextDocID;</td>
+<td>下一篇添加到此索引的文档ID，对于同一个索引文件夹，此变量唯一且同步访问。</td>
+</tr>
+<tr>
+<td>DocConsumer consumer;</td>
+<td>索引链的源头。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="删除文档"><a href="#删除文档" class="headerlink" title="删除文档"></a>删除文档</h2><table>
+<thead>
+<tr>
+<th>成员</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BufferedDeletes deletesInRAM = new BufferedDeletes();</td>
+<td>用于一直缓存删除文档，flush的时候同步的push到deletesFlushed中去，之后再次新增的删除文档则继续停留在deletesInRAM中直到下次flush。</td>
+</tr>
+<tr>
+<td>BufferedDeletes deletesFlushed = new BufferedDeletes();</td>
+<td>缓存删除文档，当flush的时候，将删除的文档写入索引文件。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="缓存管理"><a href="#缓存管理" class="headerlink" title="缓存管理"></a>缓存管理</h2><pre><code>为了提供索引速度，Lucene对很多数据进行了缓存，包括缓存分配和回收。
+</code></pre><table>
+<thead>
+<tr>
+<th>成员</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ArrayList<char[]> freeCharBlocks = new ArrayList<char[]>();</char[]></char[]></td>
+<td>用于缓存Term信息的空闲块。</td>
+</tr>
+<tr>
+<td>ByteBlockAllocator byteBlockAllocator = new ByteBlockAllocator();</td>
+<td>通过ArrayList<byte[]> freeByteBlocks缓存文档号（doc id）、词频（freq）、位置（prox）信息的空闲块。</byte[]></td>
+</tr>
+<tr>
+<td>ArrayList<int[]> freeIntBlocks = new ArrayList<int[]>();</int[]></int[]></td>
+<td>用于存储某词的词频（freq）和位置（prox）分别在 byteBlocks 中的偏移量。</td>
+</tr>
+<tr>
+<td>boolean bufferIsFull;</td>
+<td>缓存是否满了，需要写入磁盘。</td>
+</tr>
+<tr>
+<td>long numBytesAlloc;</td>
+<td>分配的内存数量。</td>
+</tr>
+<tr>
+<td>long numBytesUsed;</td>
+<td>使用的内存数量。</td>
+</tr>
+<tr>
+<td>long freeTrigge;</td>
+<td>应该回收内存时的内存用量。</td>
+</tr>
+<tr>
+<td>long freeLevel;</td>
+<td>回收内存直到该内存用量。free down to</td>
+</tr>
+<tr>
+<td>long ramBufferSize;</td>
+<td>设定的内存用量。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="多线程并发索引"><a href="#多线程并发索引" class="headerlink" title="多线程并发索引"></a>多线程并发索引</h2><pre><code>为了支持多线程并发索引，每个线程都有一个 DocumentsWriterThreadState，根据 DocConsumer 的索引链来创建每个线程的索引链（xxPerThread）。
+**并发处理文档，串行写入索引**。
+</code></pre><table>
+<thead>
+<tr>
+<th>成员</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DocumentsWriterThreadState[] threadStates;</td>
+</tr>
+<tr>
+<td>HashMap<thread, documentswriterthreadstate=""> threadBindings;</thread,></td>
+</tr>
+<tr>
+<td>WaitQueue waitQueue;</td>
+</tr>
+<tr>
+<td>long waitQueuePauseBytes;</td>
+</tr>
+<tr>
+<td>long waitQueueResumeBytes;</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Lucene中文档是添加的顺序编号的，多线程通过 synchronized 方法来讲 nextDocID 加一，这些在 <code>DocumentsWriter.getThreadState()</code>里面完成的。</li>
+<li>Lucene中是按照文档的ID顺序从小到大的写到索引文件中去的，然而文档的处理速度不同，需要将后面已经处理完的文档放到 <code>waitQueue</code> 中，根据 <code>nextWriteDocID</code> 写入下个文件。</li>
+<li><code>waitQueue</code> 的内存问题，往里添加时内存不足则调用 <code>doPause()</code> 使得线程暂时不再处理文档。</li>
+</ul>
+<h2 id="标志位"><a href="#标志位" class="headerlink" title="标志位"></a>标志位</h2><table>
+<thead>
+<tr>
+<th>成员</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int maxFieldLength</td>
+<td>一篇文档中，一个域内可索引的最大 term 数。</td>
+</tr>
+<tr>
+<td>int maxBufferedDeleteTerms</td>
+<td>可缓存的最大的删除 term 数，超过则写到文件中。</td>
+</tr>
+</tbody>
+</table>
+<h1 id="DocumentsWriterThreadState"><a href="#DocumentsWriterThreadState" class="headerlink" title="DocumentsWriterThreadState"></a>DocumentsWriterThreadState</h1><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><ul>
+<li><strong>问题</strong><br>  Lucene中只能有一个 <code>IndexWriter</code> 打开索引文件夹，同时生成文件锁<code>write.lock</code>。<br>  而且<code>IndexWriter.addDocument()</code>是同步的（synchronized），这就导致多线程并不能起到提高性能的效果。</li>
+<li><strong>解决</strong><br>  为了支持索引中多线程处理文档，不使<code>IndexWriter</code>成为瓶颈，对每个线程都有一个相应的文档集处理对象<code>DocumentsWriterThreadState</code>，这就使得可以多线程并行处理文档。</li>
+</ul>
+<p><code>IndexWriter</code>中通过同步方法<code>getThreadState</code>获取各线程对应的<code>DocumentsWriterThreadState</code>，同时维护一个成员变量<code>threadBindings</code>（HashMap），键为线程对象，值为线程对应的 DocumentsWriterThreadState 对象。</p>
+<figure class="highlight java"><figcaption><span>DocumentsWriter</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">synchronized</span> DocumentsWriterThreadState <span class="title">getThreadState</span><span class="params">(doc, delTerm)</span></span>;</div></pre></td></tr></table></figure>
+<h2 id="处理文档（线程索引链）"><a href="#处理文档（线程索引链）" class="headerlink" title="处理文档（线程索引链）"></a>处理文档（线程索引链）</h2><p>每个<code>DocumentsWriterThreadState</code>对象都有一个文档及域处理对象<code>DocFieldProcessorPerThread</code>，它的成员函数<code>processDocument()</code>被调用来对文档及域进行处理。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">DocWriter perDoc = state.consumer.processDocument();</div></pre></td></tr></table></figure></p>
+<p><code>DocFieldProcessorPerThread</code>是<strong>线程索引链</strong>的源头。</p>
+<h3 id="开始处理"><a href="#开始处理" class="headerlink" title="开始处理"></a>开始处理</h3><p>在 <code>DocFieldProcessorPerThread.processDocument()</code>中会调用相关的对象对文档进行处理（<code>DocFieldConsumerPerThread</code>和<code>StoredFieldWriterPerThread</code>等）。<br>几乎各部分的处理对象都有<code>startDocument()</code>和<code>finishDocument()</code>两个方法，一般在<code>startDocument()</code>方法中清理上篇被处理文档遗留的数据，在<code>finishDocument</code>中收集本次处理的结果数据并返回。</p>
+<h3 id="处理文档的每个域（域索引链）"><a href="#处理文档的每个域（域索引链）" class="headerlink" title="处理文档的每个域（域索引链）"></a>处理文档的每个域（域索引链）</h3><p>一个线程可以处理多个文档，而几乎每个文档的域大致相同，因而复用域处理对象<code>DocFieldProcessorPerField</code>，对于每个域都有一个此对象。<code>DocFieldProcessorPerField</code>对象是<strong>域索引链</strong>的源头，和基本索引链、线程索引链不同的是，<strong>域索引链仅仅负责处理索引域而不负责存储域</strong>。</p>
+<p><code>DocFieldProcessorPerThread</code>中维护着一个链式哈希表<code>DocFieldProcessorPerField[] fieldHash</code>方便更快查找域对应的处理对象，一个数组<code>DocFieldProcessorPerField[] fields</code>方便按域名字典顺序进行查找。<code>DocFieldProcessorPerField</code>并非每个域都有一个处理对象，而是对每一组相同名字的域有相同的处理对象。</p>
+<ol>
+<li>不分词的域处理<ul>
+<li>构造Token及其属性</li>
+<li>将Token加入倒排表</li>
+</ul>
+</li>
+<li>分词的域处理<ul>
+<li>构建域的TokenStream</li>
+<li>循环构造Token及其属性，并加入倒排表</li>
+</ul>
+</li>
+</ol>
+<h3 id="结束处理"><a href="#结束处理" class="headerlink" title="结束处理"></a>结束处理</h3><p>存储域返回一个二进制的存储域缓存<code>DocumentsWriter.DocWriter</code>，索引域返回结果 null。最终返回到<code>DocumentsWriter.finishDocument()</code>，然后通过<code>DocumentsWriter.updateDocument()</code>条件判断是否要写到磁盘中。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">StoredFieldsWriterPerThread.finishDocument();</div><div class="line">DocInverterPerThread.finishDocument();</div></pre></td></tr></table></figure></p>
+<hr>
+<p>感谢：<br><a href="http://www.cnblogs.com/forfuture1978/archive/2010/02/02/1661439.html" target="_blank" rel="external">http://www.cnblogs.com/forfuture1978/archive/2010/02/02/1661439.html</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[词典和倒排表信息]]></title>
       <url>https://rogerfang.github.io/2017/05/29/%E8%AF%8D%E5%85%B8%E5%92%8C%E5%80%92%E6%8E%92%E8%A1%A8%E4%BF%A1%E6%81%AF/</url>
       <content type="html"><![CDATA[<p>反向信息也就是反向索引，包括词典（Term Dictionary）和倒排表（Posting List）。这两部分分别存在 <code>.tii</code>、<code>.tis</code>和<code>.frq</code>、<code>prx</code>中。</p>
