@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="数据结构,树形结构,二叉树,二叉查找树,B树,TODO," />
+  <meta name="keywords" content="数据结构,树形结构,二叉树,二叉查找树,B树," />
 
 
 
@@ -84,16 +84,19 @@
 
 
 
-<meta name="description" content="梦想还是要有的，万一实现了呢">
+<meta name="description" content="B+树 可以被看作是：一个B树作为索引，但是其每个节点只包含键，同时所有的叶子节点有一个指向数据记录的指针，且叶子节点本身根据关键字大小顺序链接。（B+树只有叶子节点会带有指向数据记录的指针，而B树是所有节点都有，B树中内部出现的索引项不会出现在叶子节点中。）
+B+树的结构使得每个磁盘中磁道的块可以容纳更多的索引项，可以降低树的高度，同时一个内部节点可以定位更多的子节点。但是B+树获取数据记录时必">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据结构与算法(11): 树形结构- B树">
 <meta property="og:url" content="https://rogerfang.github.io/2016/10/31/数据结构与算法-11-树形结构-B树/index.html">
 <meta property="og:site_name" content="方龙的博客">
-<meta property="og:description" content="梦想还是要有的，万一实现了呢">
-<meta property="og:updated_time" content="2016-12-27T11:38:38.281Z">
+<meta property="og:description" content="B+树 可以被看作是：一个B树作为索引，但是其每个节点只包含键，同时所有的叶子节点有一个指向数据记录的指针，且叶子节点本身根据关键字大小顺序链接。（B+树只有叶子节点会带有指向数据记录的指针，而B树是所有节点都有，B树中内部出现的索引项不会出现在叶子节点中。）
+B+树的结构使得每个磁盘中磁道的块可以容纳更多的索引项，可以降低树的高度，同时一个内部节点可以定位更多的子节点。但是B+树获取数据记录时必">
+<meta property="og:updated_time" content="2017-06-06T02:27:16.141Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据结构与算法(11): 树形结构- B树">
-<meta name="twitter:description" content="梦想还是要有的，万一实现了呢">
+<meta name="twitter:description" content="B+树 可以被看作是：一个B树作为索引，但是其每个节点只包含键，同时所有的叶子节点有一个指向数据记录的指针，且叶子节点本身根据关键字大小顺序链接。（B+树只有叶子节点会带有指向数据记录的指针，而B树是所有节点都有，B树中内部出现的索引项不会出现在叶子节点中。）
+B+树的结构使得每个磁盘中磁道的块可以容纳更多的索引项，可以降低树的高度，同时一个内部节点可以定位更多的子节点。但是B+树获取数据记录时必">
 
 
 
@@ -339,7 +342,9 @@
       
 
       
-        
+        <p>B+树 可以被看作是：一个B树作为索引，但是其每个节点只包含键，同时所有的叶子节点有一个指向数据记录的指针，且叶子节点本身根据关键字大小顺序链接。（B+树只有叶子节点会带有指向数据记录的指针，而B树是所有节点都有，B树中内部出现的索引项不会出现在叶子节点中。）</p>
+<p>B+树的结构使得每个磁盘中磁道的块可以容纳更多的索引项，可以降低树的高度，同时一个内部节点可以定位更多的子节点。但是B+树获取数据记录时必须定位到叶子节点。</p>
+
       
     </div>
 
@@ -370,8 +375,6 @@
             <a href="/tags/二叉查找树/" rel="tag">#二叉查找树</a>
           
             <a href="/tags/B树/" rel="tag">#B树</a>
-          
-            <a href="/tags/TODO/" rel="tag">#TODO</a>
           
         </div>
       
@@ -458,7 +461,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">229</span>
+              <span class="site-state-item-count">232</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
