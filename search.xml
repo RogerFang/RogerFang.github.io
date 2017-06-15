@@ -4,6 +4,89 @@
   
     
     <entry>
+      <title><![CDATA[Lucene查询语法]]></title>
+      <url>https://rogerfang.github.io/2017/06/15/Lucene%E6%9F%A5%E8%AF%A2%E8%AF%AD%E6%B3%95/</url>
+      <content type="html"><![CDATA[<p>语法关键字: <code>+ - &amp;$ || ! () {} [] ^ &quot; ~ * ? : \</code>。</p>
+<h1 id="查询-Term"><a href="#查询-Term" class="headerlink" title="查询 Term"></a>查询 Term</h1><ul>
+<li>单一查询词，eg:<code>&quot;hello&quot;</code></li>
+<li>词组 phrase，eg:<code>&quot;hello world&quot;</code></li>
+</ul>
+<h1 id="查询-Field"><a href="#查询-Field" class="headerlink" title="查询 Field"></a>查询 Field</h1><p>使用域名和关键字<code>:</code>，<code>:</code>仅对紧跟其后的查询词其作用，或者用<code>&quot;</code>引起来。<br>eg: <code>title:&quot;just do it&quot;</code>。</p>
+<h1 id="通配符-Wildcard"><a href="#通配符-Wildcard" class="headerlink" title="通配符 Wildcard"></a>通配符 Wildcard</h1><p><code>?</code>: 表示单个字符。<br><code>*</code>: 表示多个字符。<br>通配符不能出现在查询词的开始。<br>eg: <code>te?t</code>、<code>test*</code>。</p>
+<h1 id="模糊查询-Fuzzy"><a href="#模糊查询-Fuzzy" class="headerlink" title="模糊查询 Fuzzy"></a>模糊查询 Fuzzy</h1><p>模糊查询时基于 Levenshtein Distance 编辑距离，当两个词的差别小于某个比例时，就算匹配。<br>eg: <code>helol~0.8</code>，表示差别小于 0.2，相似度大于 0.8 才算匹配。</p>
+<h1 id="临近查询-Proximity"><a href="#临近查询-Proximity" class="headerlink" title="临近查询 Proximity"></a>临近查询 Proximity</h1><p>词组后面紧跟<code>~n</code>，表示词组中的多个词之间的局里之和不超过 n，则满足查询。<br>词间距离，即词组中词为了和目标词相同所需的最小移动次数。<br>eg: 索引中的词组<code>apple boy cat</code>，查询为<code>&quot;boy apple cat&quot;~2</code>可以匹配，但是<code>&quot;boy apple cat&quot;~1</code>则不能匹配。</p>
+<h1 id="区间查询-Range"><a href="#区间查询-Range" class="headerlink" title="区间查询 Range"></a>区间查询 Range</h1><p>分为包含边界<code>[A TO B]</code>和不包含边界<code>{A TO B}</code>。</p>
+<h1 id="增加-Term-权重-Boost"><a href="#增加-Term-权重-Boost" class="headerlink" title="增加 Term 权重 Boost"></a>增加 Term 权重 Boost</h1><p>通过在词的后面使用<code>^n</code>来设定词的权重，默认是 1。</p>
+<h1 id="布尔操作"><a href="#布尔操作" class="headerlink" title="布尔操作"></a>布尔操作</h1><p><code>AND OR NOT</code> 和 <code>+ -</code></p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[搜索过程分析]]></title>
+      <url>https://rogerfang.github.io/2017/06/15/%E6%90%9C%E7%B4%A2%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90/</url>
+      <content type="html"><![CDATA[<p>Lucene的搜索过程：</p>
+<ol>
+<li>IndexReader 打开索引文件，读取并打开指向索引文件的流。</li>
+<li>用户输入查询语句。</li>
+<li>将查询语句转换为查询对象Query对象树。</li>
+<li>构造Weight对象树，用于计算词的权重（仅计算搜索语句相关的部分）。</li>
+<li>构造Scorer对象树，用于计算打分。</li>
+<li>在构造Scorer对象树的过程中，其叶子节点的 TermScorer 会将词典和倒排表从索引中读出来。</li>
+<li>构造 SumScorer 对象树，为了方便合并倒排表对Scorer对象树的重新组织，得到结果文档集。</li>
+<li>将收集的结果集合打分返回给用户。</li>
+</ol>
+<h1 id="IndexReader"><a href="#IndexReader" class="headerlink" title="IndexReader"></a>IndexReader</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">IndexReader reader = IndexReader.open(FSDirectory.open(indexDir));</div></pre></td></tr></table></figure>
+<ol>
+<li>段元数据信息已经被读入到内存中。<br> 因而索引文件夹中因为新添加文档而新增加的段对已经打开的reader是不可见的。</li>
+<li>.del文件已经读入内存。<br> 因而其他的reader或者writer删除的文档对打开的reader也是不可见的。</li>
+<li>打开的reader已经有inputstream指向cfs文件。<br> 一个段文件从生成起就不会改变，新添加的文档都在新的段中，删除的文档都在.del中。段之间的合并是生成新的段，而不会改变旧的段，只不过在段的合并过程中，会将旧的段文件删除。</li>
+</ol>
+<p>以上三点保证了 IndexReader 的 <strong>snapshot</strong> 的性质，也即一个IndexReader打开一个索引，就好像对此索引照了一张像，无论背后索引如何改变，此IndexReader在被重新打开之前，看到的信息总是相同的。</p>
+<p>严格的来讲，Lucene的文档号仅仅对打开的某个reader有效，当索引发生了变化，再打开另外一个reader的时候，前面reader的文档0就不一定是后面reader的文档0了，因而我们进行查询的时候，从结果中得到文档号的时候，一定要在reader关闭之前应用，一旦reader关闭了，则文档号已经无意义，如果用其他的reader查询这些文档号，得到的可能是不期望的文档。</p>
+<h1 id="IndexSearcher"><a href="#IndexSearcher" class="headerlink" title="IndexSearcher"></a>IndexSearcher</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">IndexSearcher searcher = <span class="keyword">new</span> IndexSearcher(reader);</div></pre></td></tr></table></figure>
+<p>IndexSearcher 提供了两个重要的函数：</p>
+<ul>
+<li>setSimilarity()<br>  可以自定义 Similarity 对象，从而影响搜索过程的打分。</li>
+<li>search()<br>  负责打分的计算和倒排表的合并。</li>
+</ul>
+<h2 id="search"><a href="#search" class="headerlink" title="search()"></a>search()</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">TopDocs docs = searcher.search(query, n);</div></pre></td></tr></table></figure>
+<p>搜索查询对象包括以下过程：</p>
+<ul>
+<li>创建 Weight 树，计算 term weight。</li>
+<li>创建 scorer 及 SumScorer 树，为合并到排表做准备。</li>
+<li>用 SumScorer 进行倒排表合并。</li>
+<li>收集文档结果集和计算打分。</li>
+</ul>
+<h2 id="创建-Weight-树，计算-Term-Weight"><a href="#创建-Weight-树，计算-Term-Weight" class="headerlink" title="创建 Weight 树，计算 Term Weight"></a>创建 Weight 树，计算 Term Weight</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">searcher.createWeight(query);</div></pre></td></tr></table></figure>
+<p>包括以下过程：</p>
+<ul>
+<li>重写 Query 对象树</li>
+<li>创建 Term Weight 对象树</li>
+<li>计算 Term Weight 得分</li>
+</ul>
+<p><strong>重写</strong> rewrite 主要涉及<code>TermQuery</code>和<code>MultiTermQuery</code>，真正需要重写的是<code>MultiTermQuery</code>，也即一个 Query 代表多个 Term 参与查询，例如 PrefixQuery 和 FuzzyQuery。</p>
+<p>对于此类Query，Lucene不能直接进行查询，必须进行重写处理，有两种方式：</p>
+<ul>
+<li>方式一，将MultiTermQuery对应的所有 Term 看成一个 Term，将包含它们的文档号取出来组成一个 docId Set。<br>  无论多少 Term，都只有一个倒排表参与合并，不会产生 TooManyClauses异常，性能得到提高。</li>
+<li>方式二，将多个 Term 组成一个 BooleanQuery，组成 OR 关系。<br>  涉及的多个 Term 需要根据索引中的tf、idf参与打分计算。</li>
+</ul>
+<h2 id="创建-Scorer-和-SumScorer-树"><a href="#创建-Scorer-和-SumScorer-树" class="headerlink" title="创建 Scorer 和 SumScorer 树"></a>创建 Scorer 和 SumScorer 树</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">searcher.search(Weight, Filter, <span class="keyword">int</span>);</div></pre></td></tr></table></figure>
+<p>除了创建 Scorer 对象树之外，还会创建 SumScorer 树来表示各个语句之间的关系，为合并倒排表做准备。</p>
+<h2 id="合并倒排表"><a href="#合并倒排表" class="headerlink" title="合并倒排表"></a>合并倒排表</h2><ul>
+<li>交集 ConjunctionScorer，多个must</li>
+<li>并集 DisjunctionSumScorer，多个should</li>
+<li>差集 ReqExclScorer，must + must_not</li>
+<li>ReqOptSumScorer，must + should</li>
+</ul>
+<h2 id="收集文档结果集和计算打分"><a href="#收集文档结果集和计算打分" class="headerlink" title="收集文档结果集和计算打分"></a>收集文档结果集和计算打分</h2><p>文档收集器 TopScoreDocCollector，主要作用是先计算文档的得分，然后将 文档放入优先队列中，最后取出前 n 篇文档（得分相同，文档号小的优先）。</p>
+<h1 id="QueryParser"><a href="#QueryParser" class="headerlink" title="QueryParser"></a>QueryParser</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">QueryParser parser = <span class="keyword">new</span> QueryParser(Version.LUCENE_CURRENT, <span class="string">"fieldName"</span>, analyzer);</div><div class="line">Query query = parser.parse(q);</div></pre></td></tr></table></figure>
+<p>对查询进行解析成Query的过程，涉及到 JavaCC、QueryParser、分词器、查询语法等，从而生成一个 Query 树。</p>
+<hr>
+<p>感谢：<br><a href="http://www.cnblogs.com/forfuture1978/archive/2010/04/04/1704282.html" target="_blank" rel="external">http://www.cnblogs.com/forfuture1978/archive/2010/04/04/1704282.html</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[结构型：适配器模式]]></title>
       <url>https://rogerfang.github.io/2017/06/06/%E7%BB%93%E6%9E%84%E5%9E%8B%EF%BC%9A%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -53,7 +136,7 @@
 </ul>
 </li>
 </ol>
-<p><img src="../images/designpattern/builder.png" alt=""></p>
+<p><img src="/images/designpattern/builder.png" alt=""></p>
 <p>对于具体的建造者可以通过配置文件来增加灵活性，原有代码无须更改。</p>
 <p>有些情况可以将 Director 和 Builder 进行合并，也可以增加 钩子方法 来控制具体的 buildPartX()。</p>
 <figure class="highlight java"><figcaption><span>Product.java</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Product</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> String partA;</div><div class="line">    <span class="keyword">private</span> String partB;</div><div class="line">    <span class="keyword">private</span> String partC;</div><div class="line"></div><div class="line">	...setter getter...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -526,8 +609,8 @@
 </tr>
 </tbody>
 </table>
-<h2 id="缓存管理"><a href="#缓存管理" class="headerlink" title="缓存管理"></a>缓存管理</h2><pre><code>为了提供索引速度，Lucene对很多数据进行了缓存，包括缓存分配和回收。
-</code></pre><table>
+<h2 id="缓存管理"><a href="#缓存管理" class="headerlink" title="缓存管理"></a>缓存管理</h2><p>为了提供索引速度，Lucene对很多数据进行了缓存，包括缓存分配和回收。</p>
+<table>
 <thead>
 <tr>
 <th>成员</th>
@@ -573,9 +656,8 @@
 </tr>
 </tbody>
 </table>
-<h2 id="多线程并发索引"><a href="#多线程并发索引" class="headerlink" title="多线程并发索引"></a>多线程并发索引</h2><pre><code>为了支持多线程并发索引，每个线程都有一个 DocumentsWriterThreadState，根据 DocConsumer 的索引链来创建每个线程的索引链（xxPerThread）。
-**并发处理文档，串行写入索引**。
-</code></pre><table>
+<h2 id="多线程并发索引"><a href="#多线程并发索引" class="headerlink" title="多线程并发索引"></a>多线程并发索引</h2><p>为了支持多线程并发索引，每个线程都有一个 DocumentsWriterThreadState，根据 DocConsumer 的索引链来创建每个线程的索引链（xxPerThread）。<br><strong>并发处理文档，串行写入索引</strong>。</p>
+<table>
 <thead>
 <tr>
 <th>成员</th>

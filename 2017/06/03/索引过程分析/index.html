@@ -128,7 +128,7 @@ Analyzer analyzer;
 
 
 Simi">
-<meta property="og:updated_time" content="2017-06-04T06:35:30.006Z">
+<meta property="og:updated_time" content="2017-06-15T11:24:08.618Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="索引过程分析">
 <meta name="twitter:description" content="Lucene3 中的索引过程设计很多对象，分别负责索引文档的不同部分的信息，同时也注重复用一些对象集。索引过程中涉及3种索引链：基本索引链、线程索引链、域索引链。
@@ -599,8 +599,8 @@ Simi">
 </tr>
 </tbody>
 </table>
-<h2 id="缓存管理"><a href="#缓存管理" class="headerlink" title="缓存管理"></a>缓存管理</h2><pre><code>为了提供索引速度，Lucene对很多数据进行了缓存，包括缓存分配和回收。
-</code></pre><table>
+<h2 id="缓存管理"><a href="#缓存管理" class="headerlink" title="缓存管理"></a>缓存管理</h2><p>为了提供索引速度，Lucene对很多数据进行了缓存，包括缓存分配和回收。</p>
+<table>
 <thead>
 <tr>
 <th>成员</th>
@@ -646,9 +646,8 @@ Simi">
 </tr>
 </tbody>
 </table>
-<h2 id="多线程并发索引"><a href="#多线程并发索引" class="headerlink" title="多线程并发索引"></a>多线程并发索引</h2><pre><code>为了支持多线程并发索引，每个线程都有一个 DocumentsWriterThreadState，根据 DocConsumer 的索引链来创建每个线程的索引链（xxPerThread）。
-**并发处理文档，串行写入索引**。
-</code></pre><table>
+<h2 id="多线程并发索引"><a href="#多线程并发索引" class="headerlink" title="多线程并发索引"></a>多线程并发索引</h2><p>为了支持多线程并发索引，每个线程都有一个 DocumentsWriterThreadState，根据 DocConsumer 的索引链来创建每个线程的索引链（xxPerThread）。<br><strong>并发处理文档，串行写入索引</strong>。</p>
+<table>
 <thead>
 <tr>
 <th>成员</th>
@@ -832,7 +831,7 @@ Simi">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">232</span>
+              <span class="site-state-item-count">234</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
