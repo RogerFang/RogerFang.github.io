@@ -89,8 +89,9 @@
 线程是比进程更轻量级的调用执行单位，是CPU调度的基本单位。
 
 线程的引入，可以把一个进程的资源分配和执行调度分开，各个线程共享资源，又可以独立调度。
+相关：线程与进程
 线程的实现实现线程主要有3种方式：使用内核线程实现、使用用户线程实现和使用用户线程加轻量级进程混合实现。
-使用内核线程实现内核线程就是直接使用操作系统">
+使用内核线程实现内核线程就">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java与线程">
 <meta property="og:url" content="https://rogerfang.github.io/2017/01/06/Java与线程/index.html">
@@ -100,9 +101,10 @@
 线程是比进程更轻量级的调用执行单位，是CPU调度的基本单位。
 
 线程的引入，可以把一个进程的资源分配和执行调度分开，各个线程共享资源，又可以独立调度。
+相关：线程与进程
 线程的实现实现线程主要有3种方式：使用内核线程实现、使用用户线程实现和使用用户线程加轻量级进程混合实现。
-使用内核线程实现内核线程就是直接使用操作系统">
-<meta property="og:updated_time" content="2017-01-07T14:55:08.178Z">
+使用内核线程实现内核线程就">
+<meta property="og:updated_time" content="2017-07-02T10:48:37.435Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java与线程">
 <meta name="twitter:description" content="并发不一定依赖多线程（例如PHP的多进程并发），但是在Java里面讨论并发大多数和线程离不开。
@@ -110,8 +112,9 @@
 线程是比进程更轻量级的调用执行单位，是CPU调度的基本单位。
 
 线程的引入，可以把一个进程的资源分配和执行调度分开，各个线程共享资源，又可以独立调度。
+相关：线程与进程
 线程的实现实现线程主要有3种方式：使用内核线程实现、使用用户线程实现和使用用户线程加轻量级进程混合实现。
-使用内核线程实现内核线程就是直接使用操作系统">
+使用内核线程实现内核线程就">
 
 
 
@@ -362,9 +365,10 @@
 <p>线程是比进程更轻量级的调用执行单位，是CPU调度的基本单位。</p>
 </blockquote>
 <p>线程的引入，可以把一个进程的资源分配和执行调度分开，各个线程共享资源，又可以独立调度。</p>
+<p>相关：<a href="https://rogerfang.github.io/2017/01/19/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/">线程与进程</a></p>
 <h1 id="线程的实现"><a href="#线程的实现" class="headerlink" title="线程的实现"></a>线程的实现</h1><p>实现线程主要有3种方式：使用内核线程实现、使用用户线程实现和使用用户线程加轻量级进程混合实现。</p>
-<h2 id="使用内核线程实现"><a href="#使用内核线程实现" class="headerlink" title="使用内核线程实现"></a>使用内核线程实现</h2><p>内核线程就是直接使用操作系统内核支持的线程，这种线程由内核完成线程切换，内核听过操纵调度器堆线程进行调度，并负责将线程的任务映射到各个处理器上。</p>
-<p>程序一般不会直接去使用内核线程，而是使用内核线程的一种高级接口——轻量级进程（Light Weight Process, LWP），轻量级进程就是通常意义上所讲的线程。</p>
+<h2 id="使用内核线程实现"><a href="#使用内核线程实现" class="headerlink" title="使用内核线程实现"></a>使用内核线程实现</h2><p>内核线程就是直接使用操作系统内核支持的线程，这种线程由内核完成线程切换，内核通过操纵调度器堆线程进行调度，并负责将线程的任务映射到各个处理器上。</p>
+<p>程序一般不会直接去使用内核线程，而是使用内核线程的一种高级接口——<strong>轻量级进程</strong>（Light Weight Process, LWP），轻量级进程就是通常意义上所讲的线程。</p>
 <blockquote>
 <p>每个轻量级进程都由一个内核线程支持。</p>
 </blockquote>
@@ -499,7 +503,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">248</span>
+              <span class="site-state-item-count">250</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

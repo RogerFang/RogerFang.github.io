@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="IO," />
 
 
 
@@ -84,15 +84,22 @@
 
 
 
-<meta name="description" content="梦想还是要有的，万一实现了呢">
-<meta property="og:type" content="website">
-<meta property="og:title" content="方龙的博客">
-<meta property="og:url" content="https://rogerfang.github.io/categories/I-O/index.html">
+<meta name="description" content="问题：最传统的多进程并发模型，每进来一个新的I/O流会分配一个新的进程管理。
+IO多路复用（I/O Multiplexing）：单个进程，通过记录跟踪每个 IO 流的状态，来同时管理多个 IO 流。内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。
+与多进程和多线程技术相比，I/O多路复用技术的最大优势是系统开销小，系统不必创建进程/线程，也不必维护这些进程/线程，从而大大减小了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IO多路复用">
+<meta property="og:url" content="https://rogerfang.github.io/2017/07/02/IO多路复用/index.html">
 <meta property="og:site_name" content="方龙的博客">
-<meta property="og:description" content="梦想还是要有的，万一实现了呢">
+<meta property="og:description" content="问题：最传统的多进程并发模型，每进来一个新的I/O流会分配一个新的进程管理。
+IO多路复用（I/O Multiplexing）：单个进程，通过记录跟踪每个 IO 流的状态，来同时管理多个 IO 流。内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。
+与多进程和多线程技术相比，I/O多路复用技术的最大优势是系统开销小，系统不必创建进程/线程，也不必维护这些进程/线程，从而大大减小了">
+<meta property="og:updated_time" content="2017-07-02T06:10:26.576Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="方龙的博客">
-<meta name="twitter:description" content="梦想还是要有的，万一实现了呢">
+<meta name="twitter:title" content="IO多路复用">
+<meta name="twitter:description" content="问题：最传统的多进程并发模型，每进来一个新的I/O流会分配一个新的进程管理。
+IO多路复用（I/O Multiplexing）：单个进程，通过记录跟踪每个 IO 流的状态，来同时管理多个 IO 流。内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。
+与多进程和多线程技术相比，I/O多路复用技术的最大优势是系统开销小，系统不必创建进程/线程，也不必维护这些进程/线程，从而大大减小了">
 
 
 
@@ -113,10 +120,10 @@
 
 
 
-  <link rel="canonical" href="https://rogerfang.github.io/categories/I-O/"/>
+  <link rel="canonical" href="https://rogerfang.github.io/2017/07/02/IO多路复用/"/>
 
 
-  <title> 分类: I/O | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title> IO多路复用 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -137,7 +144,7 @@
     
   
 
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left  ">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
@@ -258,131 +265,159 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        I/O
-        <small>分类</small>
-      </h2>
-    </div>
-
+  <div id="posts" class="posts-expand">
     
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/02/25/Java-网络通信模型/" itemprop="url">
-              
-                <span itemprop="name">Java 网络通信模型</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-02-25T21:43:28+08:00"
-              content="2017-02-25" >
-          02-25
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/02/25/Java-I-O发展/" itemprop="url">
-              
-                <span itemprop="name">Java I/O发展</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-02-25T21:04:51+08:00"
-              content="2017-02-25" >
-          02-25
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/02/25/同步、异步、阻塞和非阻塞/" itemprop="url">
-              
-                <span itemprop="name">同步、异步、阻塞和非阻塞</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-02-25T11:18:40+08:00"
-              content="2017-02-25" >
-          02-25
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/02/12/Java-序列化/" itemprop="url">
-              
-                <span itemprop="name">Java 序列化</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-02-12T10:43:33+08:00"
-              content="2017-02-12" >
-          02-12
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-  </section>
 
   
+  
 
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                IO多路复用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-02T13:38:39+08:00" content="2017-07-02">
+              2017-07-02
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/操作系统/" itemprop="url" rel="index">
+                    <span itemprop="name">操作系统</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>问题</strong>：最传统的多进程并发模型，每进来一个新的I/O流会分配一个新的进程管理。</p>
+<p><strong>IO多路复用</strong>（I/O Multiplexing）：单个进程，通过记录跟踪每个 IO 流的状态，来同时管理多个 IO 流。内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。</p>
+<p>与多进程和多线程技术相比，I/O多路复用技术的最大优势是<strong>系统开销小</strong>，系统不必创建进程/线程，也不必维护这些进程/线程，从而大大减小了系统的开销。</p>
+<p>常见的I/O多路复用实现有系统调用 <code>select</code>，<code>poll</code>，<code>epoll</code>，I/O多路复用就是通过一种机制，一个进程可以监视多个描述符，一旦某个描述符就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作。</p>
+<p>但select，pselect，poll，epoll本质上都是同步I/O，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说这个读写过程是阻塞的，而异步I/O则无需自己负责进行读写，异步I/O的实现会负责把数据从内核拷贝到用户空间。</p>
+<h1 id="初级-IO-复用"><a href="#初级-IO-复用" class="headerlink" title="初级 IO 复用"></a>初级 IO 复用</h1><p>采用<strong>非阻塞</strong>的模式，当一个连接过来时，不阻塞住，这样一个进程可以同时处理多个连接了，然后进程就轮询这些连接，如果这些连接都没有I/O事件，就会造成<strong>CPU的空转</strong>，并且效率也很低。</p>
+<h1 id="select、poll"><a href="#select、poll" class="headerlink" title="select、poll"></a>select、poll</h1><p>通过将用户的 IO 请求阻塞在<code>select</code>、<code>poll</code>等系统调用上，即可实现同一线程/进程内同时处理多个 IO 请求。</p>
+<p>当没有I/O事件的时候，这个进程处于阻塞状态；当有I/O事件的时候，<code>select</code>、<code>poll</code>就唤醒进程去处理。</p>
+<blockquote>
+<p>select、poll的原理是一样的，但是 select 观察的连接有限（32个整数的大小），poll可以观察无限个连接（基于链表来存储的）。</p>
+</blockquote>
+<p><strong>缺点</strong>：select、poll不知道哪个连接有 IO 事件需要处理，还是得去轮序连接。</p>
+<h1 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h1><p><code>epoll</code> 的原理：当连接有I/O流事件产生的时候，epoll就会去告诉进程哪个连接有I/O流事件产生，然后进程就去处理这个进程。</p>
+<p><code>epoll</code>是线程安全的，而且只有 linux 支持。<br>epoll 连接数虽然有上限但是很大，1G 内存可以打开 10 万左右的连接。</p>
+<p><strong>epoll和select/poll区别是：</strong></p>
+<ul>
+<li>epoll内部使用了<strong>mmap共享</strong>了用户和内核的部分空间，避免了数据的来回拷贝。</li>
+<li>epoll基于<strong>事件驱动</strong>，epoll_ctl注册事件并注册callback<strong>回调函数</strong>，epoll_wait只返回发生的事件避免了像select和poll对事件的整个轮寻操作。</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/IO/" rel="tag">#IO</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/02/After-URL/" rel="next" title="After URL">
+                <i class="fa fa-chevron-left"></i> After URL
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -390,6 +425,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -409,8 +448,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -421,7 +469,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">248</span>
+              <span class="site-state-item-count">250</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -471,6 +519,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#初级-IO-复用"><span class="nav-number">1.</span> <span class="nav-text">初级 IO 复用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#select、poll"><span class="nav-number">2.</span> <span class="nav-text">select、poll</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#epoll"><span class="nav-number">3.</span> <span class="nav-text">epoll</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -567,6 +626,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
 
   
 

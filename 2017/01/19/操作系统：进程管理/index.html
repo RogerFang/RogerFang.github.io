@@ -84,25 +84,22 @@
 
 
 
-<meta name="description" content="进程和线程的区别进程是一个执行中的程序的实例，它是系统进行资源分配和调度的一个独立单位。
-线程是进程的一个实体，是CPU调度和分配的基本单位，线程基本上不拥有系统资源，只拥有一点在运行中必不可少的资源（如：程序计数器、寄存器和栈），但是它可以与同属一个进程的其他线程共享进程所拥有的所有资源。
-在实现了线程的操作系统中，进程是资源分配的基本单位，线程是调度的基本单位，是系统中并发执行的单元。
-引入线">
+<meta name="description" content="进程和线程的区别进程(process)与线程(thread)最大的区别是进程拥有自己的地址空间，某进程内的线程对于其他进程不可见，即进程A不能通过传地址的方式直接读写进程B的存储区域。与之相对的，同一进程的各线程间之间可以直接通过传递地址或全局变量的方式传递信息。
+进程是一个执行中的程序的实例，它是系统进行资源分配和调度的一个独立单位，可以拥有多个线程。
+线程是进程的一个实体，是CPU调度和分配的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="操作系统：进程管理">
 <meta property="og:url" content="https://rogerfang.github.io/2017/01/19/操作系统：进程管理/index.html">
 <meta property="og:site_name" content="方龙的博客">
-<meta property="og:description" content="进程和线程的区别进程是一个执行中的程序的实例，它是系统进行资源分配和调度的一个独立单位。
-线程是进程的一个实体，是CPU调度和分配的基本单位，线程基本上不拥有系统资源，只拥有一点在运行中必不可少的资源（如：程序计数器、寄存器和栈），但是它可以与同属一个进程的其他线程共享进程所拥有的所有资源。
-在实现了线程的操作系统中，进程是资源分配的基本单位，线程是调度的基本单位，是系统中并发执行的单元。
-引入线">
-<meta property="og:updated_time" content="2017-02-17T01:39:14.002Z">
+<meta property="og:description" content="进程和线程的区别进程(process)与线程(thread)最大的区别是进程拥有自己的地址空间，某进程内的线程对于其他进程不可见，即进程A不能通过传地址的方式直接读写进程B的存储区域。与之相对的，同一进程的各线程间之间可以直接通过传递地址或全局变量的方式传递信息。
+进程是一个执行中的程序的实例，它是系统进行资源分配和调度的一个独立单位，可以拥有多个线程。
+线程是进程的一个实体，是CPU调度和分配的">
+<meta property="og:updated_time" content="2017-07-02T03:34:28.333Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统：进程管理">
-<meta name="twitter:description" content="进程和线程的区别进程是一个执行中的程序的实例，它是系统进行资源分配和调度的一个独立单位。
-线程是进程的一个实体，是CPU调度和分配的基本单位，线程基本上不拥有系统资源，只拥有一点在运行中必不可少的资源（如：程序计数器、寄存器和栈），但是它可以与同属一个进程的其他线程共享进程所拥有的所有资源。
-在实现了线程的操作系统中，进程是资源分配的基本单位，线程是调度的基本单位，是系统中并发执行的单元。
-引入线">
+<meta name="twitter:description" content="进程和线程的区别进程(process)与线程(thread)最大的区别是进程拥有自己的地址空间，某进程内的线程对于其他进程不可见，即进程A不能通过传地址的方式直接读写进程B的存储区域。与之相对的，同一进程的各线程间之间可以直接通过传递地址或全局变量的方式传递信息。
+进程是一个执行中的程序的实例，它是系统进行资源分配和调度的一个独立单位，可以拥有多个线程。
+线程是进程的一个实体，是CPU调度和分配的">
 
 
 
@@ -348,7 +345,8 @@
       
 
       
-        <h1 id="进程和线程的区别"><a href="#进程和线程的区别" class="headerlink" title="进程和线程的区别"></a>进程和线程的区别</h1><p><strong>进程</strong>是一个执行中的程序的实例，它是系统进行资源分配和调度的一个独立单位。</p>
+        <h1 id="进程和线程的区别"><a href="#进程和线程的区别" class="headerlink" title="进程和线程的区别"></a>进程和线程的区别</h1><p>进程(process)与线程(thread)<strong>最大的区别是进程拥有自己的地址空间</strong>，某进程内的线程对于其他进程不可见，即进程A不能通过传地址的方式直接读写进程B的存储区域。与之相对的，<strong>同一进程的各线程间之间可以直接通过传递地址或全局变量的方式传递信息</strong>。</p>
+<p><strong>进程</strong>是一个执行中的程序的实例，它是系统进行资源分配和调度的一个独立单位，可以拥有多个线程。</p>
 <p><strong>线程</strong>是进程的一个实体，是CPU调度和分配的基本单位，线程基本上不拥有系统资源，只拥有一点在运行中必不可少的资源（如：程序计数器、寄存器和栈），但是它可以与同属一个进程的其他线程共享进程所拥有的所有资源。</p>
 <p>在实现了线程的操作系统中，进程是资源分配的基本单位，线程是调度的基本单位，是系统中并发执行的单元。</p>
 <p>引入线程的主要优点：</p>
@@ -358,6 +356,7 @@
 <li>开销小。</li>
 <li>有利于发挥多处理器的功能。</li>
 </ul>
+<p>在同一进程中，线程的切换不会引起进程切换。在不同进程中进行线程切换，如从一个进程内的线程切换到另一个进程中的线程时，会引起<strong>进程切换</strong>。相比进程切换，线程切换的开销要小很多。线程与进程相互结合能够提高系统的运行效率。</p>
 <p><strong>进程和线程的区别：</strong></p>
 <ol>
 <li>一个线程必定属于也只能属于一个进程；而一个进程可以拥有多个线程并且至少拥有一个线程。</li>
@@ -366,14 +365,7 @@
 <li>进程是程序的一次执行，线程可以理解为程序中一段程序片段的执行。</li>
 <li>每个进程都有独立的内存空间，而线程共享其所属进程的内存空间。</li>
 </ol>
-<h1 id="线程同步机制"><a href="#线程同步机制" class="headerlink" title="线程同步机制"></a>线程同步机制</h1><p>线程同步互斥的控制机制，其实是由最基本的4种方法实现的：</p>
-<ol>
-<li><strong>临界区</strong><br> 通过对多线程的串行化来访问公共资源或一段代码，适合控制数据访问。</li>
-<li><strong>互斥量</strong><br> 为协调共同对一个共享资源的单独访问而设计。只有拥有互斥对象的线程才有权限去访问系统的公共资源，因为互斥对象只有一个。</li>
-<li><strong>信号量</strong><br> 为控制一个具有有限数量的用户资源而设计。它允许多个线程在同一时刻去访问同一资源，但是一般需要限制同时访问的最大线程数目。</li>
-<li><strong>事件</strong><br> 用来通知线程有一些事件已发生，从而启动后继任务的开始。</li>
-</ol>
-<h1 id="内核线程和用户线程"><a href="#内核线程和用户线程" class="headerlink" title="内核线程和用户线程"></a>内核线程和用户线程</h1><p><strong>内核线程</strong>的建立和销毁都是由操作系统负责、通过系统调用完成。</p>
+<h1 id="内核线程和用户线程"><a href="#内核线程和用户线程" class="headerlink" title="内核线程和用户线程"></a>内核线程和用户线程</h1><p><strong>内核线程</strong>的建立和销毁都是由操作系统负责、通过系统调用完成，所有管理工作都由内核完成。</p>
 <p><strong>用户线程</strong>是指不需要内核支持而在用户程序中实现的线程，其不依赖于操作系统的核心。用户线程利用线程库提供创建、同步、调度和管理线程的函数来控制用户线程。速度快，不需要用户态/内核态切换，操作系统不知道多线程的存在。</p>
 <p>用户线程的优点：</p>
 <ul>
@@ -384,18 +376,51 @@
 </ul>
 <p>用户线程的缺点：</p>
 <ul>
-<li>同一进程中只能同时有一个线程在运行，因为操作系统内核不知道用户线程的存在，此时处理器时间片分配是以进程为基本单位的，如果一个线程阻塞会导致整个进程挂起。</li>
+<li>同一进程中只能同时有一个线程在运行，因为操作系统内核不知道用户线程的存在，此时处理器时间片分配是以进程为基本单位的，如果一个线程阻塞会导致整个进程挂起。也就是说<strong>并发效率不高</strong>。</li>
 <li>页面失效也会产生类似的问题。</li>
 </ul>
-<h1 id="进程通信-IPC"><a href="#进程通信-IPC" class="headerlink" title="进程通信 IPC"></a>进程通信 IPC</h1><p>进程通信（Inter-Process Communication）的方式包括以下几种：</p>
+<p>内核线程的好处是，内核可以将不同线程更好地分配到不同的CPU，以实现真正的并行计算。</p>
+<p>现代操作系统中，往往使用组合方式实现多线程，即线程创建完全在用户空间中完成，并且<strong>一个应用程序中的多个用户级线程被映射到一些内核级线程上</strong>。</p>
+<h1 id="上下文切换"><a href="#上下文切换" class="headerlink" title="上下文切换"></a>上下文切换</h1><p>对于单核单线程CPU而言，在某一时刻只能执行一条CPU指令。<strong>上下文切换</strong>(Context Switch)是一种将CPU资源从一个进程分配给另一个进程的机制。</p>
+<p>从用户角度看，计算机能够并行运行多个进程，这恰恰是操作系统通过快速上下文切换造成的结果。<em>在切换的过程中，操作系统需要先存储当前进程的状态(包括内存空间的指针，当前执行完的指令等等)，再读入下一个进程的状态，然后执行此进程</em>。</p>
+<h1 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h1><p>系统调用(System call)是<strong>程序向系统内核请求服务的方式</strong>。可以包括硬件相关的服务(例如，访问硬盘等)，或者创建新进程，调度其他进程等。系统调用是程序和操作系统之间的重要接口。</p>
+<h1 id="线程同步机制"><a href="#线程同步机制" class="headerlink" title="线程同步机制"></a>线程同步机制</h1><p>线程同步互斥的控制机制，其实是由最基本的4种方法实现的：</p>
 <ol>
-<li><strong>管道</strong>（Pipe）及<strong>有名管道</strong>（FIFO, named pipe）：在内核中开辟一块缓冲区（称为管道）用于通信，管道可用于具有亲缘关系进程间的通信，有名管道克服了管道没有名字的限制，因此，除具有管道所具有的功能外，它还允许无亲缘关系进程间的通信；</li>
-<li><strong>信号</strong>（Signal）：信号是比较复杂的通信方式，用于通知接受进程有某种事件发生，除了用于进程间通信外，进程还可以发送信号给进程本身。</li>
-<li><strong>消息队列</strong>：消息队列是消息的链接表，包括Posix消息队列system V消息队列。有足够权限的进程可以向队列中添加消息，被赋予读权限的进程则可以读走队列中的消息。消息队列克服了信号承载信息量少，管道只能承载无格式字节流以及缓冲区大小受限等缺点。</li>
-<li><strong>共享内存</strong>：使得多个进程可以访问同一块内存空间，是最快的可用IPC形式。是针对其他通信机制运行效率较低而设计的。往往与其它通信机制，如信号量结合使用，来达到进程间的同步及互斥。</li>
-<li><strong>信号量</strong>（semaphore）：主要作为进程间以及同一进程不同线程之间的同步手段。</li>
-<li><strong>Socket</strong>：更为一般的进程间通信机制，可用于不同机器之间的进程间通信。起初是由Unix系统的BSD分支开发出来的，但现在一般可以移植到其它类Unix系统上：Linux和System V的变种都支持套接字。</li>
-<li>文件和记录锁定：为避免两个进程间同时要求访问同一共享资源而引起访问和操作的混乱，在进程对共享资源进行访问前必须对其进行锁定，该进程访问完后再释放。这是UNIX为共享资源提供的互斥性保障。</li>
+<li><strong>临界区</strong><br> 通过对多线程的串行化来访问公共资源或一段代码，适合控制数据访问。</li>
+<li><strong>互斥量</strong><br> 为协调共同对一个共享资源的单独访问而设计。只有拥有互斥对象的线程才有权限去访问系统的公共资源，因为互斥对象只有一个。</li>
+<li><strong>信号量</strong><br> 为控制一个具有有限数量的用户资源而设计。它允许多个线程在同一时刻去访问同一资源，但是一般需要限制同时访问的最大线程数目。</li>
+<li><strong>事件</strong><br> 用来通知线程有一些事件已发生，从而启动后继任务的开始。</li>
+</ol>
+<h1 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h1><p>形成死锁的条件：</p>
+<ol>
+<li><strong>互斥条件</strong><br> 指进程对所分配到的资源进行排它性使用，即在一段时间内某资源只由一个进程占用。如果此时还有其它进程请求资源，则请求者只能等待，直至占有资源的进程用毕释放。</li>
+<li><strong>请求与保持条件</strong><br> 指进程已经保持至少一个资源，但又提出了新的资源请求，而该资源已被其它进程占有，此时请求进程阻塞，但又对自己已获得的其它资源保持不放。</li>
+<li><strong>非剥夺条件</strong><br> 指进程已获得的资源，在未使用完之前，不能被剥夺，只能在使用完时由自己释放。</li>
+<li><strong>循环等待条件</strong><br> 系统中若干进程组成环路，该环路中每个进程都在等待相邻进程正占用的资源。</li>
+</ol>
+<h1 id="进程通信-IPC"><a href="#进程通信-IPC" class="headerlink" title="进程通信 IPC"></a>进程通信 IPC</h1><p>一个进程不能直接读写另一个进程的数据，两者之间的通信需要通过进程间通信(inter-process communication, IPC)进行。进程通信的方式通常遵从生产者消费者模型，需要实现<strong>数据交换</strong>和<strong>同步</strong>两大功能。</p>
+<p>进程通信（Inter-Process Communication）的方式包括以下几种：</p>
+<ol>
+<li><strong>管道</strong>（Pipe）及<strong>有名管道</strong>（FIFO, named pipe）<br> 在内核中开辟一块缓冲区（称为管道）用于通信，管道可用于具有亲缘关系进程间的通信，有名管道克服了管道没有名字的限制，因此，除具有管道所具有的功能外，它还允许无亲缘关系进程间的通信。<br> 管道是单向的、先进先出的、无结构的、固定大小的字节流，它把一个进程的标准输出和另一个进程的标准输入连接在一起。</li>
+<li><strong>信号</strong>（Signal）<br> 信号是比较复杂的通信方式，用于通知接受进程有某种事件发生，除了用于进程间通信外，进程还可以发送信号给进程本身。</li>
+<li><strong>消息队列</strong><br> 消息队列是消息的链接表，包括Posix消息队列system V消息队列。有足够权限的进程可以向队列中添加消息，被赋予读权限的进程则可以读走队列中的消息。消息队列克服了信号承载信息量少，管道只能承载无格式字节流以及缓冲区大小受限等缺点。</li>
+<li><strong>共享内存</strong><br> 使得多个进程可以访问同一块内存空间，是最快的可用IPC形式。是针对其他通信机制运行效率较低而设计的。往往与其它通信机制，如信号量结合使用，来达到进程间的同步及互斥。</li>
+<li><strong>信号量</strong>（semaphore）<br> 信号量是一个计数器，可以用来控制多个进程对共享资源的访问。<br> 主要作为进程间以及同一进程不同线程之间的同步手段。</li>
+<li><strong>Socket</strong><br> 更为一般的进程间通信机制，可用于不同机器之间的进程间通信。起初是由Unix系统的BSD分支开发出来的，但现在一般可以移植到其它类Unix系统上：Linux和System V的变种都支持套接字。</li>
+<li>文件和记录锁<br> 为避免两个进程间同时要求访问同一共享资源而引起访问和操作的混乱，在进程对共享资源进行访问前必须对其进行锁定，该进程访问完后再释放。这是UNIX为共享资源提供的互斥性保障。</li>
+</ol>
+<h1 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h1><p>进程调度，它决定把就绪队列的某进程获得CPU。</p>
+<ul>
+<li><strong>非抢占式</strong><br>  分派程序一旦把处理机分配给某进程后便让它一直运行下去，直到进程完成或发生进程调度进程调度某事件而阻塞时，才把处理机分配给另一个进程。</li>
+<li><strong>抢占式</strong><br>  操作系统将正在运行的进程强行暂停，由调度程序将CPU分配给其他就绪进程的调度方式。</li>
+</ul>
+<h2 id="调度算法"><a href="#调度算法" class="headerlink" title="调度算法"></a>调度算法</h2><ol>
+<li><strong>FIFO</strong>或First Come, First Served (FCFS)<br> 调度的顺序就是任务到达就绪队列的顺序。<br> 公平、简单(FIFO队列)、非抢占、不适合交互式。未考虑任务特性，平均等待时间可以缩短</li>
+<li>Shortest Job First (<strong>SJF</strong>)<br> 最短的作业(CPU区间长度最小)最先调度。<br> 可以证明，SJF可以保证最小的平均等待时间。<br> Shortest Remaining Job First (SRJF)<br> SJF的可抢占版本，比SJF更有优势。<br> SJF(SRJF): 如何知道下一CPU区间大小？根据历史进行预测: 指数平均法。</li>
+<li><strong>优先权调度</strong><br> 每个任务关联一个优先权，调度优先权最高的任务。<br> 注意：优先权太低的任务一直就绪，得不到运行，出现“饥饿”现象。<br> FCFS是RR的特例，SJF是优先权调度的特例。这些调度算法都不适合于交互式系统。</li>
+<li><strong>Round-Robin</strong>(RR)<br> 设置一个时间片，按时间片来轮转调度（“轮叫”算法）<br> 优点: 定时有响应，等待时间较短；缺点: 上下文切换次数较多；<br> 如何确定时间片？<br> 时间片太大，响应时间太长；吞吐量变小，周转时间变长；当时间片过长时，退化为FCFS。</li>
+<li><strong>多级队列调度</strong><br> 按照一定的规则建立多个进程队列<br> 不同的队列有固定的优先级（高优先级有抢占权）<br> 不同的队列可以给不同的时间片和采用不同的调度方法<br> 存在问题1：没法区分I/O bound和CPU bound；<br> 存在问题2：也存在一定程度的“饥饿”现象；</li>
+<li><strong>多级反馈队列</strong><br> 在多级队列的基础上，任务可以在队列之间移动，更细致的区分任务。<br> 可以根据“享用”CPU时间多少来移动队列，阻止“饥饿”。<br> 最通用的调度算法，多数OS都使用该方法或其变形，如UNIX、Windows等。</li>
 </ol>
 
       
@@ -514,7 +539,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">248</span>
+              <span class="site-state-item-count">250</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -571,7 +596,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#进程和线程的区别"><span class="nav-number">1.</span> <span class="nav-text">进程和线程的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程同步机制"><span class="nav-number">2.</span> <span class="nav-text">线程同步机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内核线程和用户线程"><span class="nav-number">3.</span> <span class="nav-text">内核线程和用户线程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程通信-IPC"><span class="nav-number">4.</span> <span class="nav-text">进程通信 IPC</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#进程和线程的区别"><span class="nav-number">1.</span> <span class="nav-text">进程和线程的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内核线程和用户线程"><span class="nav-number">2.</span> <span class="nav-text">内核线程和用户线程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#上下文切换"><span class="nav-number">3.</span> <span class="nav-text">上下文切换</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#系统调用"><span class="nav-number">4.</span> <span class="nav-text">系统调用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程同步机制"><span class="nav-number">5.</span> <span class="nav-text">线程同步机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#死锁"><span class="nav-number">6.</span> <span class="nav-text">死锁</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程通信-IPC"><span class="nav-number">7.</span> <span class="nav-text">进程通信 IPC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程调度"><span class="nav-number">8.</span> <span class="nav-text">进程调度</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#调度算法"><span class="nav-number">8.1.</span> <span class="nav-text">调度算法</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

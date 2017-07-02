@@ -4,6 +4,76 @@
   
     
     <entry>
+      <title><![CDATA[IO多路复用]]></title>
+      <url>https://rogerfang.github.io/2017/07/02/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/</url>
+      <content type="html"><![CDATA[<p><strong>问题</strong>：最传统的多进程并发模型，每进来一个新的I/O流会分配一个新的进程管理。</p>
+<p><strong>IO多路复用</strong>（I/O Multiplexing）：单个进程，通过记录跟踪每个 IO 流的状态，来同时管理多个 IO 流。内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。</p>
+<p>与多进程和多线程技术相比，I/O多路复用技术的最大优势是<strong>系统开销小</strong>，系统不必创建进程/线程，也不必维护这些进程/线程，从而大大减小了系统的开销。</p>
+<p>常见的I/O多路复用实现有系统调用 <code>select</code>，<code>poll</code>，<code>epoll</code>，I/O多路复用就是通过一种机制，一个进程可以监视多个描述符，一旦某个描述符就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作。</p>
+<p>但select，pselect，poll，epoll本质上都是同步I/O，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说这个读写过程是阻塞的，而异步I/O则无需自己负责进行读写，异步I/O的实现会负责把数据从内核拷贝到用户空间。</p>
+<h1 id="初级-IO-复用"><a href="#初级-IO-复用" class="headerlink" title="初级 IO 复用"></a>初级 IO 复用</h1><p>采用<strong>非阻塞</strong>的模式，当一个连接过来时，不阻塞住，这样一个进程可以同时处理多个连接了，然后进程就轮询这些连接，如果这些连接都没有I/O事件，就会造成<strong>CPU的空转</strong>，并且效率也很低。</p>
+<h1 id="select、poll"><a href="#select、poll" class="headerlink" title="select、poll"></a>select、poll</h1><p>通过将用户的 IO 请求阻塞在<code>select</code>、<code>poll</code>等系统调用上，即可实现同一线程/进程内同时处理多个 IO 请求。</p>
+<p>当没有I/O事件的时候，这个进程处于阻塞状态；当有I/O事件的时候，<code>select</code>、<code>poll</code>就唤醒进程去处理。</p>
+<blockquote>
+<p>select、poll的原理是一样的，但是 select 观察的连接有限（32个整数的大小），poll可以观察无限个连接（基于链表来存储的）。</p>
+</blockquote>
+<p><strong>缺点</strong>：select、poll不知道哪个连接有 IO 事件需要处理，还是得去轮序连接。</p>
+<h1 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h1><p><code>epoll</code> 的原理：当连接有I/O流事件产生的时候，epoll就会去告诉进程哪个连接有I/O流事件产生，然后进程就去处理这个进程。</p>
+<p><code>epoll</code>是线程安全的，而且只有 linux 支持。<br>epoll 连接数虽然有上限但是很大，1G 内存可以打开 10 万左右的连接。</p>
+<p><strong>epoll和select/poll区别是：</strong></p>
+<ul>
+<li>epoll内部使用了<strong>mmap共享</strong>了用户和内核的部分空间，避免了数据的来回拷贝。</li>
+<li>epoll基于<strong>事件驱动</strong>，epoll_ctl注册事件并注册callback<strong>回调函数</strong>，epoll_wait只返回发生的事件避免了像select和poll对事件的整个轮寻操作。</li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[After URL]]></title>
+      <url>https://rogerfang.github.io/2017/07/02/After-URL/</url>
+      <content type="html"><![CDATA[<p>输入网址后发生了什么？</p>
+<h1 id="浏览器查找域名对应-IP"><a href="#浏览器查找域名对应-IP" class="headerlink" title="浏览器查找域名对应 IP"></a>浏览器查找域名对应 IP</h1><h2 id="DNS-查找过程"><a href="#DNS-查找过程" class="headerlink" title="DNS 查找过程"></a>DNS 查找过程</h2><ol>
+<li>浏览器缓存<br> 浏览器会记录 DNS 一段时间。</li>
+<li>系统缓存<br> 浏览器没找到 DNS 缓存，此时做一个系统调用。</li>
+<li>路由器缓存</li>
+<li>ISP DNS 缓存</li>
+<li>递归查找<br> DNS 缓存没有时，ISP DNS服务器会先后从 <strong>根域名服务器</strong>，<strong>顶级域名服务器</strong>等获取IP。</li>
+</ol>
+<h2 id="多-IP-域名-DNS-查询解决方案"><a href="#多-IP-域名-DNS-查询解决方案" class="headerlink" title="多 IP 域名 DNS 查询解决方案"></a>多 IP 域名 DNS 查询解决方案</h2><ul>
+<li>循环DNS——单个域名、多个IP列表循环应对DNS查询</li>
+<li>负载均衡器——一个特定IP的负载均衡服务器（例如：反向代理服务器）负责监听请求并转发给后面的多个服务器集群的某一个，实现多个服务器负载均衡</li>
+<li>地理DNS——根据用户所处地理位置，返回不同的IP（应用：CDN）</li>
+<li>anycast——一个IP地址映射多个物理主机的路由技术</li>
+</ul>
+<h1 id="发送请求"><a href="#发送请求" class="headerlink" title="发送请求"></a>发送请求</h1><p>得到域名对应的 IP，就开始发送 HTTP 请求。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8</div><div class="line">Accept-Encoding:gzip, deflate</div><div class="line">Accept-Language:zh-CN,zh;q=0.8</div><div class="line">Connection:keep-alive</div><div class="line">Cookie:JSESSIONID=0ED502F94D370F73E39723CDE43DF760</div><div class="line">Host:www.whu.edu.cn</div><div class="line">User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36</div></pre></td></tr></table></figure>
+<ol>
+<li>我要获取（GET 的URL）这个页面</li>
+<li>Accept：我能接受这些类型的文件</li>
+<li>我使用的是何种操作系统上的哪个类型那个版本的浏览器</li>
+<li>承认接受何种方式的压缩文件</li>
+<li>连接类型：短连接？长连接</li>
+<li>主机域名</li>
+<li>发送存储在本机的cookies信息给服务器（如果有）</li>
+</ol>
+<blockquote>
+<p>网站迁移做了重定向设置时，服务器会进行一次重定向响应。</p>
+</blockquote>
+<h1 id="传输层通过-TCP-协议传输报文"><a href="#传输层通过-TCP-协议传输报文" class="headerlink" title="传输层通过 TCP 协议传输报文"></a>传输层通过 TCP 协议传输报文</h1><p>TCP 连接三次握手<br>参见：<a href="https://rogerfang.github.io/2017/01/19/%E4%BC%A0%E8%BE%93%E5%B1%82/">传输层</a></p>
+<h1 id="网络层-IP-协议查询-MAC-地址"><a href="#网络层-IP-协议查询-MAC-地址" class="headerlink" title="网络层 IP 协议查询 MAC 地址"></a>网络层 IP 协议查询 MAC 地址</h1><p>IP协议的作用是把TCP分割好的各种数据包传送给接收方，要保证确实能传到接收方还需要接收方的MAC地址。</p>
+<p>ARP 协议可以将IP地址解析成对应的MAC地址。<br>参见：<a href="https://rogerfang.github.io/2017/01/19/%E7%BD%91%E7%BB%9C%E5%B1%82/">网络层</a></p>
+<h1 id="数据链路层传输"><a href="#数据链路层传输" class="headerlink" title="数据链路层传输"></a>数据链路层传输</h1><p>客户端找到对方IP对应的MAC地址后，就把数据发送到数据链路层传输。这时，客户端发送请求的过程的阶段才结束。</p>
+<h1 id="服务端接收数据"><a href="#服务端接收数据" class="headerlink" title="服务端接收数据"></a>服务端接收数据</h1><p>接收端的服务器在链路层接收到数据包，再层层向上直到应用层。这过程中包括在运输层通过TCP协议讲分段的数据包重新组成原来的 HTTP 请求报文。</p>
+<h1 id="服务端处理请求，返回响应请求"><a href="#服务端处理请求，返回响应请求" class="headerlink" title="服务端处理请求，返回响应请求"></a>服务端处理请求，返回响应请求</h1><p>服务器接收到获取请求，然后处理并返回一个响应。</p>
+<h1 id="浏览器渲染接收到的文件"><a href="#浏览器渲染接收到的文件" class="headerlink" title="浏览器渲染接收到的文件"></a>浏览器渲染接收到的文件</h1><p>HTML文件还没完整的接受到的时候，就开始显示这个页面了，一般最先开始显示的就是HTML中的纯DOM结构。</p>
+<h1 id="浏览器发送并获取嵌入到HTML文档里边的对象"><a href="#浏览器发送并获取嵌入到HTML文档里边的对象" class="headerlink" title="浏览器发送并获取嵌入到HTML文档里边的对象"></a>浏览器发送并获取嵌入到HTML文档里边的对象</h1><p>这些对象其实就是浏览器解析到的CSS文件，JS文件，图片和其它一些资源。这些资源的获取都要重新经历HTML文件获取的过程。</p>
+<h1 id="浏览器的异步请求-AJAX"><a href="#浏览器的异步请求-AJAX" class="headerlink" title="浏览器的异步请求(AJAX)"></a>浏览器的异步请求(AJAX)</h1><p>页面显示完成后客户端仍与服务器端保持着联系（keep-alive）。<br>浏览器执行JavaScript，向服务器发送一系列的异步请求，从而更新页面上的局部区域，达到动态网站的效果。</p>
+<hr>
+<p>感谢：<br><a href="http://mmzer.net/2017/02/08/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BB%8E%E8%BE%93%E5%85%A5%E7%BD%91%E5%9D%80%E5%88%B0%E6%98%BE%E7%A4%BA%E9%83%BD%E5%8F%91%E7%94%9F%E4%BA%86%E4%BA%9B%E4%BB%80%E4%B9%88%EF%BC%9F/" target="_blank" rel="external">http://mmzer.net/2017/02/08/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BB%8E%E8%BE%93%E5%85%A5%E7%BD%91%E5%9D%80%E5%88%B0%E6%98%BE%E7%A4%BA%E9%83%BD%E5%8F%91%E7%94%9F%E4%BA%86%E4%BA%9B%E4%BB%80%E4%B9%88%EF%BC%9F/</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[HTTP]]></title>
       <url>https://rogerfang.github.io/2017/07/01/HTTP/</url>
       <content type="html"><![CDATA[<p>HTTP构建于 TCP/IP 协议之上，默认端口号 80，是无连接状态的。</p>
@@ -2373,7 +2443,7 @@ bits标志位含义：
 <li>RUNTIME: 在运行时有效（注解处理器可以通过反射获取注解的属性值）。</li>
 </ol>
 <h2 id="Documented"><a href="#Documented" class="headerlink" title="@Documented"></a>@Documented</h2><p><strong>@Documented</strong>用于描述注解可以文档化JavaDoc，是一个标记注解，没有成员。</p>
-<h2 id="Inherited"><a href="#Inherited" class="headerlink" title="@Inherited"></a>@Inherited</h2><p><strong>@Inherited</strong>是一个标记注解，表示该注解类型是被自动继承的。</p>
+<h2 id="Inherited"><a href="#Inherited" class="headerlink" title="@Inherited"></a>@Inherited</h2><p><strong>@Inherited</strong>是一个标记注解，表示被注解的类，其子类会自动继承该注解。</p>
 <h1 id="自定义注解"><a href="#自定义注解" class="headerlink" title="自定义注解"></a>自定义注解</h1><p>使用<strong>@interface</strong>自定义注解时，自动继承了java.lang.annotation.Annotation接口，由编译程序自动完成其他细节。<strong>在定义注解时，不能继承其他的注解或接口。</strong></p>
 <p>@interface用来声明一个注解，其中的每一个<strong>方法</strong>实际上是声明了一个<strong>配置参数</strong>。<br><strong>方法的名称就是参数的名称，注解的方法修饰符只能是public或默认；返回值类型就是参数的类型，可以通过default来声明参数的默认值。</strong></p>
 <p>注解参数的可支持数据类型：</p>
@@ -2673,7 +2743,7 @@ bits标志位含义：
       <title><![CDATA[hashCode()和equals()]]></title>
       <url>https://rogerfang.github.io/2017/02/13/hashcode-%E5%92%8Cequals/</url>
       <content type="html"><![CDATA[<h1 id="hashcode的作用"><a href="#hashcode的作用" class="headerlink" title="hashcode的作用"></a>hashcode的作用</h1><p>Java中的hashCode方法就是根据一定的规则将与对象相关的信息（比如对象的存储地址，对象的字段等）映射成一个数值，这个数值称作为散列值。</p>
-<p>虽然，每个Java类都包含hashCode() 函数。但是，仅仅当创建并某个“类的散列表”(HashMap，Hashtable，HashSet)时，该类的hashCode() 才有用(作用是：确定该类的每一个对象在散列表中的位置；其它情况下(例如，创建类的单个对象，或者创建类的对象数组等等)，类的hashCode() 没有作用。</p>
+<p>虽然，每个Java类都包含hashCode() 函数。但是，仅仅当创建某个“类的散列表”(HashMap，Hashtable，HashSet)时，该类的hashCode() 才有用(作用是：确定该类的每一个对象在散列表中的位置；其它情况下(例如，创建类的单个对象，或者创建类的对象数组等等)，类的hashCode() 没有作用。</p>
 <h1 id="hashCode和equals方法"><a href="#hashCode和equals方法" class="headerlink" title="hashCode和equals方法"></a>hashCode和equals方法</h1><ol>
 <li>hashCode的存在主要是用于查找的快捷性，如Hashtable，HashMap等，hashCode是用来在散列存储结构中确定对象的存储地址的；</li>
 <li>如果两个对象相同，就是适用于equals(java.lang.Object) 方法，那么这两个对象的hashCode一定要相同；</li>
@@ -3900,7 +3970,8 @@ bits标志位含义：
     <entry>
       <title><![CDATA[操作系统：进程管理]]></title>
       <url>https://rogerfang.github.io/2017/01/19/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</url>
-      <content type="html"><![CDATA[<h1 id="进程和线程的区别"><a href="#进程和线程的区别" class="headerlink" title="进程和线程的区别"></a>进程和线程的区别</h1><p><strong>进程</strong>是一个执行中的程序的实例，它是系统进行资源分配和调度的一个独立单位。</p>
+      <content type="html"><![CDATA[<h1 id="进程和线程的区别"><a href="#进程和线程的区别" class="headerlink" title="进程和线程的区别"></a>进程和线程的区别</h1><p>进程(process)与线程(thread)<strong>最大的区别是进程拥有自己的地址空间</strong>，某进程内的线程对于其他进程不可见，即进程A不能通过传地址的方式直接读写进程B的存储区域。与之相对的，<strong>同一进程的各线程间之间可以直接通过传递地址或全局变量的方式传递信息</strong>。</p>
+<p><strong>进程</strong>是一个执行中的程序的实例，它是系统进行资源分配和调度的一个独立单位，可以拥有多个线程。</p>
 <p><strong>线程</strong>是进程的一个实体，是CPU调度和分配的基本单位，线程基本上不拥有系统资源，只拥有一点在运行中必不可少的资源（如：程序计数器、寄存器和栈），但是它可以与同属一个进程的其他线程共享进程所拥有的所有资源。</p>
 <p>在实现了线程的操作系统中，进程是资源分配的基本单位，线程是调度的基本单位，是系统中并发执行的单元。</p>
 <p>引入线程的主要优点：</p>
@@ -3910,6 +3981,7 @@ bits标志位含义：
 <li>开销小。</li>
 <li>有利于发挥多处理器的功能。</li>
 </ul>
+<p>在同一进程中，线程的切换不会引起进程切换。在不同进程中进行线程切换，如从一个进程内的线程切换到另一个进程中的线程时，会引起<strong>进程切换</strong>。相比进程切换，线程切换的开销要小很多。线程与进程相互结合能够提高系统的运行效率。</p>
 <p><strong>进程和线程的区别：</strong></p>
 <ol>
 <li>一个线程必定属于也只能属于一个进程；而一个进程可以拥有多个线程并且至少拥有一个线程。</li>
@@ -3918,14 +3990,7 @@ bits标志位含义：
 <li>进程是程序的一次执行，线程可以理解为程序中一段程序片段的执行。</li>
 <li>每个进程都有独立的内存空间，而线程共享其所属进程的内存空间。</li>
 </ol>
-<h1 id="线程同步机制"><a href="#线程同步机制" class="headerlink" title="线程同步机制"></a>线程同步机制</h1><p>线程同步互斥的控制机制，其实是由最基本的4种方法实现的：</p>
-<ol>
-<li><strong>临界区</strong><br> 通过对多线程的串行化来访问公共资源或一段代码，适合控制数据访问。</li>
-<li><strong>互斥量</strong><br> 为协调共同对一个共享资源的单独访问而设计。只有拥有互斥对象的线程才有权限去访问系统的公共资源，因为互斥对象只有一个。</li>
-<li><strong>信号量</strong><br> 为控制一个具有有限数量的用户资源而设计。它允许多个线程在同一时刻去访问同一资源，但是一般需要限制同时访问的最大线程数目。</li>
-<li><strong>事件</strong><br> 用来通知线程有一些事件已发生，从而启动后继任务的开始。</li>
-</ol>
-<h1 id="内核线程和用户线程"><a href="#内核线程和用户线程" class="headerlink" title="内核线程和用户线程"></a>内核线程和用户线程</h1><p><strong>内核线程</strong>的建立和销毁都是由操作系统负责、通过系统调用完成。</p>
+<h1 id="内核线程和用户线程"><a href="#内核线程和用户线程" class="headerlink" title="内核线程和用户线程"></a>内核线程和用户线程</h1><p><strong>内核线程</strong>的建立和销毁都是由操作系统负责、通过系统调用完成，所有管理工作都由内核完成。</p>
 <p><strong>用户线程</strong>是指不需要内核支持而在用户程序中实现的线程，其不依赖于操作系统的核心。用户线程利用线程库提供创建、同步、调度和管理线程的函数来控制用户线程。速度快，不需要用户态/内核态切换，操作系统不知道多线程的存在。</p>
 <p>用户线程的优点：</p>
 <ul>
@@ -3936,18 +4001,51 @@ bits标志位含义：
 </ul>
 <p>用户线程的缺点：</p>
 <ul>
-<li>同一进程中只能同时有一个线程在运行，因为操作系统内核不知道用户线程的存在，此时处理器时间片分配是以进程为基本单位的，如果一个线程阻塞会导致整个进程挂起。</li>
+<li>同一进程中只能同时有一个线程在运行，因为操作系统内核不知道用户线程的存在，此时处理器时间片分配是以进程为基本单位的，如果一个线程阻塞会导致整个进程挂起。也就是说<strong>并发效率不高</strong>。</li>
 <li>页面失效也会产生类似的问题。</li>
 </ul>
-<h1 id="进程通信-IPC"><a href="#进程通信-IPC" class="headerlink" title="进程通信 IPC"></a>进程通信 IPC</h1><p>进程通信（Inter-Process Communication）的方式包括以下几种：</p>
+<p>内核线程的好处是，内核可以将不同线程更好地分配到不同的CPU，以实现真正的并行计算。</p>
+<p>现代操作系统中，往往使用组合方式实现多线程，即线程创建完全在用户空间中完成，并且<strong>一个应用程序中的多个用户级线程被映射到一些内核级线程上</strong>。</p>
+<h1 id="上下文切换"><a href="#上下文切换" class="headerlink" title="上下文切换"></a>上下文切换</h1><p>对于单核单线程CPU而言，在某一时刻只能执行一条CPU指令。<strong>上下文切换</strong>(Context Switch)是一种将CPU资源从一个进程分配给另一个进程的机制。</p>
+<p>从用户角度看，计算机能够并行运行多个进程，这恰恰是操作系统通过快速上下文切换造成的结果。<em>在切换的过程中，操作系统需要先存储当前进程的状态(包括内存空间的指针，当前执行完的指令等等)，再读入下一个进程的状态，然后执行此进程</em>。</p>
+<h1 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h1><p>系统调用(System call)是<strong>程序向系统内核请求服务的方式</strong>。可以包括硬件相关的服务(例如，访问硬盘等)，或者创建新进程，调度其他进程等。系统调用是程序和操作系统之间的重要接口。</p>
+<h1 id="线程同步机制"><a href="#线程同步机制" class="headerlink" title="线程同步机制"></a>线程同步机制</h1><p>线程同步互斥的控制机制，其实是由最基本的4种方法实现的：</p>
 <ol>
-<li><strong>管道</strong>（Pipe）及<strong>有名管道</strong>（FIFO, named pipe）：在内核中开辟一块缓冲区（称为管道）用于通信，管道可用于具有亲缘关系进程间的通信，有名管道克服了管道没有名字的限制，因此，除具有管道所具有的功能外，它还允许无亲缘关系进程间的通信；</li>
-<li><strong>信号</strong>（Signal）：信号是比较复杂的通信方式，用于通知接受进程有某种事件发生，除了用于进程间通信外，进程还可以发送信号给进程本身。</li>
-<li><strong>消息队列</strong>：消息队列是消息的链接表，包括Posix消息队列system V消息队列。有足够权限的进程可以向队列中添加消息，被赋予读权限的进程则可以读走队列中的消息。消息队列克服了信号承载信息量少，管道只能承载无格式字节流以及缓冲区大小受限等缺点。</li>
-<li><strong>共享内存</strong>：使得多个进程可以访问同一块内存空间，是最快的可用IPC形式。是针对其他通信机制运行效率较低而设计的。往往与其它通信机制，如信号量结合使用，来达到进程间的同步及互斥。</li>
-<li><strong>信号量</strong>（semaphore）：主要作为进程间以及同一进程不同线程之间的同步手段。</li>
-<li><strong>Socket</strong>：更为一般的进程间通信机制，可用于不同机器之间的进程间通信。起初是由Unix系统的BSD分支开发出来的，但现在一般可以移植到其它类Unix系统上：Linux和System V的变种都支持套接字。</li>
-<li>文件和记录锁定：为避免两个进程间同时要求访问同一共享资源而引起访问和操作的混乱，在进程对共享资源进行访问前必须对其进行锁定，该进程访问完后再释放。这是UNIX为共享资源提供的互斥性保障。</li>
+<li><strong>临界区</strong><br> 通过对多线程的串行化来访问公共资源或一段代码，适合控制数据访问。</li>
+<li><strong>互斥量</strong><br> 为协调共同对一个共享资源的单独访问而设计。只有拥有互斥对象的线程才有权限去访问系统的公共资源，因为互斥对象只有一个。</li>
+<li><strong>信号量</strong><br> 为控制一个具有有限数量的用户资源而设计。它允许多个线程在同一时刻去访问同一资源，但是一般需要限制同时访问的最大线程数目。</li>
+<li><strong>事件</strong><br> 用来通知线程有一些事件已发生，从而启动后继任务的开始。</li>
+</ol>
+<h1 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h1><p>形成死锁的条件：</p>
+<ol>
+<li><strong>互斥条件</strong><br> 指进程对所分配到的资源进行排它性使用，即在一段时间内某资源只由一个进程占用。如果此时还有其它进程请求资源，则请求者只能等待，直至占有资源的进程用毕释放。</li>
+<li><strong>请求与保持条件</strong><br> 指进程已经保持至少一个资源，但又提出了新的资源请求，而该资源已被其它进程占有，此时请求进程阻塞，但又对自己已获得的其它资源保持不放。</li>
+<li><strong>非剥夺条件</strong><br> 指进程已获得的资源，在未使用完之前，不能被剥夺，只能在使用完时由自己释放。</li>
+<li><strong>循环等待条件</strong><br> 系统中若干进程组成环路，该环路中每个进程都在等待相邻进程正占用的资源。</li>
+</ol>
+<h1 id="进程通信-IPC"><a href="#进程通信-IPC" class="headerlink" title="进程通信 IPC"></a>进程通信 IPC</h1><p>一个进程不能直接读写另一个进程的数据，两者之间的通信需要通过进程间通信(inter-process communication, IPC)进行。进程通信的方式通常遵从生产者消费者模型，需要实现<strong>数据交换</strong>和<strong>同步</strong>两大功能。</p>
+<p>进程通信（Inter-Process Communication）的方式包括以下几种：</p>
+<ol>
+<li><strong>管道</strong>（Pipe）及<strong>有名管道</strong>（FIFO, named pipe）<br> 在内核中开辟一块缓冲区（称为管道）用于通信，管道可用于具有亲缘关系进程间的通信，有名管道克服了管道没有名字的限制，因此，除具有管道所具有的功能外，它还允许无亲缘关系进程间的通信。<br> 管道是单向的、先进先出的、无结构的、固定大小的字节流，它把一个进程的标准输出和另一个进程的标准输入连接在一起。</li>
+<li><strong>信号</strong>（Signal）<br> 信号是比较复杂的通信方式，用于通知接受进程有某种事件发生，除了用于进程间通信外，进程还可以发送信号给进程本身。</li>
+<li><strong>消息队列</strong><br> 消息队列是消息的链接表，包括Posix消息队列system V消息队列。有足够权限的进程可以向队列中添加消息，被赋予读权限的进程则可以读走队列中的消息。消息队列克服了信号承载信息量少，管道只能承载无格式字节流以及缓冲区大小受限等缺点。</li>
+<li><strong>共享内存</strong><br> 使得多个进程可以访问同一块内存空间，是最快的可用IPC形式。是针对其他通信机制运行效率较低而设计的。往往与其它通信机制，如信号量结合使用，来达到进程间的同步及互斥。</li>
+<li><strong>信号量</strong>（semaphore）<br> 信号量是一个计数器，可以用来控制多个进程对共享资源的访问。<br> 主要作为进程间以及同一进程不同线程之间的同步手段。</li>
+<li><strong>Socket</strong><br> 更为一般的进程间通信机制，可用于不同机器之间的进程间通信。起初是由Unix系统的BSD分支开发出来的，但现在一般可以移植到其它类Unix系统上：Linux和System V的变种都支持套接字。</li>
+<li>文件和记录锁<br> 为避免两个进程间同时要求访问同一共享资源而引起访问和操作的混乱，在进程对共享资源进行访问前必须对其进行锁定，该进程访问完后再释放。这是UNIX为共享资源提供的互斥性保障。</li>
+</ol>
+<h1 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h1><p>进程调度，它决定把就绪队列的某进程获得CPU。</p>
+<ul>
+<li><strong>非抢占式</strong><br>  分派程序一旦把处理机分配给某进程后便让它一直运行下去，直到进程完成或发生进程调度进程调度某事件而阻塞时，才把处理机分配给另一个进程。</li>
+<li><strong>抢占式</strong><br>  操作系统将正在运行的进程强行暂停，由调度程序将CPU分配给其他就绪进程的调度方式。</li>
+</ul>
+<h2 id="调度算法"><a href="#调度算法" class="headerlink" title="调度算法"></a>调度算法</h2><ol>
+<li><strong>FIFO</strong>或First Come, First Served (FCFS)<br> 调度的顺序就是任务到达就绪队列的顺序。<br> 公平、简单(FIFO队列)、非抢占、不适合交互式。未考虑任务特性，平均等待时间可以缩短</li>
+<li>Shortest Job First (<strong>SJF</strong>)<br> 最短的作业(CPU区间长度最小)最先调度。<br> 可以证明，SJF可以保证最小的平均等待时间。<br> Shortest Remaining Job First (SRJF)<br> SJF的可抢占版本，比SJF更有优势。<br> SJF(SRJF): 如何知道下一CPU区间大小？根据历史进行预测: 指数平均法。</li>
+<li><strong>优先权调度</strong><br> 每个任务关联一个优先权，调度优先权最高的任务。<br> 注意：优先权太低的任务一直就绪，得不到运行，出现“饥饿”现象。<br> FCFS是RR的特例，SJF是优先权调度的特例。这些调度算法都不适合于交互式系统。</li>
+<li><strong>Round-Robin</strong>(RR)<br> 设置一个时间片，按时间片来轮转调度（“轮叫”算法）<br> 优点: 定时有响应，等待时间较短；缺点: 上下文切换次数较多；<br> 如何确定时间片？<br> 时间片太大，响应时间太长；吞吐量变小，周转时间变长；当时间片过长时，退化为FCFS。</li>
+<li><strong>多级队列调度</strong><br> 按照一定的规则建立多个进程队列<br> 不同的队列有固定的优先级（高优先级有抢占权）<br> 不同的队列可以给不同的时间片和采用不同的调度方法<br> 存在问题1：没法区分I/O bound和CPU bound；<br> 存在问题2：也存在一定程度的“饥饿”现象；</li>
+<li><strong>多级反馈队列</strong><br> 在多级队列的基础上，任务可以在队列之间移动，更细致的区分任务。<br> 可以根据“享用”CPU时间多少来移动队列，阻止“饥饿”。<br> 最通用的调度算法，多数OS都使用该方法或其变形，如UNIX、Windows等。</li>
 </ol>
 ]]></content>
     </entry>
@@ -4831,9 +4929,10 @@ bits标志位含义：
 <p>线程是比进程更轻量级的调用执行单位，是CPU调度的基本单位。</p>
 </blockquote>
 <p>线程的引入，可以把一个进程的资源分配和执行调度分开，各个线程共享资源，又可以独立调度。</p>
+<p>相关：<a href="https://rogerfang.github.io/2017/01/19/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/">线程与进程</a></p>
 <h1 id="线程的实现"><a href="#线程的实现" class="headerlink" title="线程的实现"></a>线程的实现</h1><p>实现线程主要有3种方式：使用内核线程实现、使用用户线程实现和使用用户线程加轻量级进程混合实现。</p>
-<h2 id="使用内核线程实现"><a href="#使用内核线程实现" class="headerlink" title="使用内核线程实现"></a>使用内核线程实现</h2><p>内核线程就是直接使用操作系统内核支持的线程，这种线程由内核完成线程切换，内核听过操纵调度器堆线程进行调度，并负责将线程的任务映射到各个处理器上。</p>
-<p>程序一般不会直接去使用内核线程，而是使用内核线程的一种高级接口——轻量级进程（Light Weight Process, LWP），轻量级进程就是通常意义上所讲的线程。</p>
+<h2 id="使用内核线程实现"><a href="#使用内核线程实现" class="headerlink" title="使用内核线程实现"></a>使用内核线程实现</h2><p>内核线程就是直接使用操作系统内核支持的线程，这种线程由内核完成线程切换，内核通过操纵调度器堆线程进行调度，并负责将线程的任务映射到各个处理器上。</p>
+<p>程序一般不会直接去使用内核线程，而是使用内核线程的一种高级接口——<strong>轻量级进程</strong>（Light Weight Process, LWP），轻量级进程就是通常意义上所讲的线程。</p>
 <blockquote>
 <p>每个轻量级进程都由一个内核线程支持。</p>
 </blockquote>
@@ -6265,20 +6364,21 @@ bits标志位含义：
 <li>代理类的继承关系：继承<code>Proxy</code>类，并实现所有的代理接口。</li>
 </ol>
 <blockquote>
-<p>代理类总是从排在最前面的接口中获取方法对象并分派给调用处理器，而无论代理类实例是否正在以该接口（或继承于该接口的某子接口）的形式被外部引用，因为在代理类内部无法区分其当前的被引用类型。</p>
+<p><strong>代理类总是从排在最前面的接口中获取方法对象并分派给调用处理器</strong>，而无论代理类实例是否正在以该接口（或继承于该接口的某子接口）的形式被外部引用，因为在代理类内部无法区分其当前的被引用类型。</p>
 </blockquote>
-<p>代理类实现的代理接口的特点：</p>
+<p><strong>代理类实现的代理接口的特点</strong>：</p>
 <ol>
-<li>要注意不能有重复的接口，以避免动态代理类代码生成时的编译错误。2，这些接口对于类装载器必须可见，否则类装载器将无法链接它们，将会导致类定义失败。</li>
-<li>需被代理的所有非 public 的接口必须在同一个包中，否则代理类生成也会失败。</li>
-<li>接口的数目不能超过 65535，这是 JVM 设定的限制。</li>
+<li>要注意<strong>不能有重复的接口</strong>，以避免动态代理类代码生成时的编译错误。</li>
+<li>这些<strong>接口对于类装载器必须可见</strong>，否则类装载器将无法链接它们，将会导致类定义失败。</li>
+<li>需被代理的<strong>所有非 public 的接口必须在同一个包中</strong>，否则代理类生成也会失败。</li>
+<li><strong>接口的数目不能超过 65535</strong>，这是 JVM 设定的限制。</li>
 </ol>
-<h2 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h2><p><strong>优点</strong>：<br>动态代理与静态代理相比较，最大的好处是接口中声明的所有方法都被转移到调用处理器一个集中的方法中处理（InvocationHandler.invoke）。这样，在接口方法数量比较多的时候，我们可以进行灵活处理，而不需要像静态代理那样每一个方法进行中转。</p>
-<p><strong>缺点</strong>：<br>JDK动态代理始终无法摆脱仅支持 interface 代理的桎梏，因为它的设计注定了这个遗憾。回想一下那些动态生成的代理类的继承关系图，它们已经注定有一个共同的父类叫 Proxy。Java 的继承机制注定了这些动态代理类们无法实现对 class 的动态代理，原因是多继承在 Java 中本质上就行不通。</p>
+<h2 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h2><p><strong>优点</strong>：<br>动态代理与静态代理相比较，最大的好处是接口中声明的所有方法都被转移到调用处理器一个集中的方法中处理（<code>InvocationHandler.invoke</code>）。这样，在接口方法数量比较多的时候，我们可以进行灵活处理，而不需要像静态代理那样每一个方法进行中转。</p>
+<p><strong>缺点</strong>：<br>JDK动态代理始终无法摆脱仅支持 interface 代理的桎梏，因为它的设计注定了这个遗憾。回想一下那些动态生成的代理类的继承关系图，它们已经注定有一个共同的父类叫 <code>Proxy</code>。Java 的继承机制注定了这些动态代理类们无法实现对 class 的动态代理，原因是多继承在 Java 中本质上就行不通。</p>
 <h2 id="Java-API"><a href="#Java-API" class="headerlink" title="Java API"></a>Java API</h2><h3 id="Proxy"><a href="#Proxy" class="headerlink" title="Proxy"></a>Proxy</h3><p><code>java.lang.reflect.Proxy</code>是Java动态代理机制生成的所有代理类的父类，提供了一组静态方法为一组接口动态地生成代理对象。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Proxy类的静态方法</span></div><div class="line"></div><div class="line"><span class="comment">// 获取指定代理对象所关联的调用处理器</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> InvocationHandler  <span class="title">getInvocationHandler</span><span class="params">(Object proxy)</span></span></div><div class="line"></div><div class="line"><span class="comment">// 获取指定类加载器和一组接口的动态代理类的类对象</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> Class&lt;?&gt; <span class="title">getProxyClass</span><span class="params">(ClassLoader loader, Class&lt;?&gt;... interfaces)</span></div><div class="line"></div><div class="line"><span class="comment">// 判断指定类对象是否是一个动态代理类</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isProxyClass</span><span class="params">(Class&lt;?&gt; cl)</span></div><div class="line"></div><div class="line"><span class="comment">// 生成动态代理类的实例，传入指定的类加载器、一组接口及调用处理器</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">newProxyInstance</span><span class="params">(ClassLoader loader, Class&lt;?&gt;[] interfaces, InvocationHandler h)</span></div></pre></td></tr></table></figure></p>
 <h3 id="InvocationHandler"><a href="#InvocationHandler" class="headerlink" title="InvocationHandler"></a>InvocationHandler</h3><p>调用处理器接口<code>java.lang.reflect.InvocationHandler</code>，自定义了一个<code>invoke</code>方法，用于集中处理在动态代理类对象上的方法调用，通常在该方法中实现对委托类的代理访问。每次生成动态代理类对象时都要指定一个对应的调用处理器对象。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * proxy: 代理类的实例</div><div class="line"> * method: 被调用的方法对象</div><div class="line"> * args: 调用参数</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span></span></div></pre></td></tr></table></figure></p>
 <h3 id="Classloader"><a href="#Classloader" class="headerlink" title="Classloader"></a>Classloader</h3><p>类加载器<code>java.lang.Classloader</code>，负责将字节码装在到Java虚拟机中并为其定义Class对象，然后该类才能被使用。</p>
-<p>Proxy 静态方法生成动态代理类同样需要通过类装载器来进行装载才能使用，它与普通类的唯一区别就是其字节码是由 JVM 在运行时动态生成的而非预存在于任何一个 .class 文件中。<br>每次生成动态代理类对象时都需要指定一个类装载器对象</p>
+<p><code>Proxy</code> 静态方法生成动态代理类同样需要通过类装载器来进行装载才能使用，它与普通类的唯一区别就是<strong>其字节码是由 JVM 在运行时动态生成的而非预存在于任何一个 .class 文件中</strong>。<br>每次生成动态代理类对象时都需要指定一个类装载器对象。</p>
 <h2 id="动态代理实现步骤"><a href="#动态代理实现步骤" class="headerlink" title="动态代理实现步骤"></a>动态代理实现步骤</h2><p>具体步骤是：</p>
 <ol>
 <li>实现InvocationHandler接口创建自己的调用处理器</li>
@@ -6286,10 +6386,16 @@ bits标志位含义：
 <li>以调用处理器类型为参数，利用反射机制得到动态代理类的构造函数</li>
 <li>以调用处理器对象为参数，利用动态代理类的构造函数创建动态代理类对象</li>
 </ol>
-<h3 id="分步骤实现动态代理"><a href="#分步骤实现动态代理" class="headerlink" title="分步骤实现动态代理"></a>分步骤实现动态代理</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">// Step 1</span></div><div class="line">InvocationHandler handler = <span class="keyword">new</span> InvocationHandlerImpl(..);</div><div class="line"><span class="comment">// Step 2</span></div><div class="line">Class clazz = Proxy.getProxyClass(classLoader, <span class="keyword">new</span> Class[] &#123; Interface.class, ... &#125;);</div><div class="line"><span class="comment">// Step 3</span></div><div class="line">Constructor constructor = clazz.getConstructor(<span class="keyword">new</span> Class[] &#123; InvocationHandler.class &#125;);</div><div class="line"><span class="comment">// Step 4</span></div><div class="line">Interface Proxy = (Interface)constructor.newInstance(<span class="keyword">new</span> Object[] &#123; handler &#125;);</div></pre></td></tr></table></figure>
+<h3 id="分步骤实现动态代理"><a href="#分步骤实现动态代理" class="headerlink" title="分步骤实现动态代理"></a>分步骤实现动态代理</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Step 1</span></div><div class="line">InvocationHandler handler = <span class="keyword">new</span> InvocationHandlerImpl(..);</div><div class="line"><span class="comment">// Step 2</span></div><div class="line">Class clazz = Proxy.getProxyClass(classLoader, <span class="keyword">new</span> Class[] &#123; Interface.class, ... &#125;);</div><div class="line"><span class="comment">// Step 3</span></div><div class="line">Constructor constructor = clazz.getConstructor(<span class="keyword">new</span> Class[] &#123; InvocationHandler.class &#125;);</div><div class="line"><span class="comment">// Step 4</span></div><div class="line">Interface Proxy = (Interface)constructor.newInstance(<span class="keyword">new</span> Object[] &#123; handler &#125;);</div></pre></td></tr></table></figure>
 <p><strong>完整实例</strong>：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DynamicProxyTest</span> </span>&#123;</div><div class="line">	<span class="comment">// 可以通过代理工厂来屏蔽客户类具体的创建过程和返回的到底是代理类对象还是委托类对象。</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException </span>&#123;</div><div class="line">        <span class="comment">// Step 1. 实现InvocationHandler</span></div><div class="line">        InvocationHandler invocationHandler = <span class="keyword">new</span> MyInvocationHandler(<span class="keyword">new</span> RealSubject());</div><div class="line"></div><div class="line">        <span class="comment">// Step2. 获取代理类的Class对象</span></div><div class="line">        Class&lt;?&gt; cls = Proxy.getProxyClass(DynamicProxyTest.class.getClassLoader(), ISubject.class);</div><div class="line">        <span class="comment">// Step3. 反射得到构造函数对象</span></div><div class="line">        Constructor constructor = cls.getConstructor(InvocationHandler.class);</div><div class="line">        <span class="comment">// Step4. 反射创建代理类对象</span></div><div class="line">        ISubject proxy = (ISubject) constructor.newInstance(invocationHandler);</div><div class="line"></div><div class="line">        proxy.doSomething();</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyInvocationHandler</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span></span>&#123;</div><div class="line">        <span class="keyword">private</span> Object delegate;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">MyInvocationHandler</span><span class="params">(Object delegate)</span> </span>&#123;</div><div class="line">            <span class="keyword">this</span>.delegate = delegate;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">            <span class="keyword">long</span> start = System.currentTimeMillis();</div><div class="line">            <span class="comment">// 利用反射机制将请求分派给委托类处理。</span></div><div class="line">            <span class="comment">// Method的invoke返回Object对象作为方法执行结果</span></div><div class="line">            <span class="comment">// 因为示例程序没有返回值，所以这里忽略了返回值处理</span></div><div class="line">            method.invoke(delegate, args);</div><div class="line">            <span class="keyword">long</span> end = System.currentTimeMillis();</div><div class="line">            System.out.println(<span class="string">"Time cost: "</span>+(end - start)+<span class="string">"ms"</span>);</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h3 id="简化的动态代理实现"><a href="#简化的动态代理实现" class="headerlink" title="简化的动态代理实现"></a>简化的动态代理实现</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Step 1. 实现调用处理器</span></div><div class="line">InvocationHandler handler = <span class="keyword">new</span> InvocationHandlerImpl(..);</div><div class="line"><span class="comment">// Step2. 创建代理类实例</span></div><div class="line">Interface proxy = (Interface)Proxy.newProxyInstance( classLoader, <span class="keyword">new</span> Class[] &#123; Interface.class &#125;,  handler );</div></pre></td></tr></table></figure>
-<h1 id="Cglib动态代理"><a href="#Cglib动态代理" class="headerlink" title="Cglib动态代理"></a>Cglib动态代理</h1><p>JDK的动态代理机制只能代理实现了接口的类，而不能实现接口的类就不能实现JDK的动态代理。<br>Cglib动态代理是<strong>继承代理</strong>，它的底层使用ASM（JAVA字节码处理框架）在内存中动态的生成被代理类的子类，重写并增强方法的功能。但因为采用的是继承，所以不能对final修饰的类进行代理。<br><strong>1.委托类</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RealSubject</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"Real Subject: do something"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="Cglib动态代理"><a href="#Cglib动态代理" class="headerlink" title="Cglib动态代理"></a>Cglib动态代理</h1><p>JDK的动态代理机制只能代理实现了接口的类，而那么没有实现接口的委托类就不能通过JDK的完成动态代理。<br>Cglib动态代理是<strong>继承代理</strong>，它的底层使用ASM（JAVA字节码处理框架）在内存中动态的生成被代理类的子类，重写并增强方法的功能。但因为采用的是继承，所以不能对final修饰的类进行代理。</p>
+<p>cglib实现动态代理的步骤：</p>
+<ol>
+<li>实现MethodInterceptor接口</li>
+<li>通过Enhancer实现代理类的创建（生成一个继承了客户类的子类）</li>
+</ol>
+<p><strong>1.委托类</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RealSubject</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"Real Subject: do something"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p><strong>2.Cglib代理</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> net.sf.cglib.proxy.Enhancer;</div><div class="line"><span class="keyword">import</span> net.sf.cglib.proxy.MethodInterceptor;</div><div class="line"><span class="keyword">import</span> net.sf.cglib.proxy.MethodProxy;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.lang.reflect.Method;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SubjectProxy</span> <span class="keyword">implements</span> <span class="title">MethodInterceptor</span></span>&#123;</div><div class="line">    <span class="keyword">private</span> Object target;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 创建代理对象</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getInstance</span><span class="params">(Object target)</span></span>&#123;</div><div class="line">        <span class="keyword">this</span>.target = target;</div><div class="line">        Enhancer enhancer = <span class="keyword">new</span> Enhancer();</div><div class="line">        enhancer.setSuperclass(<span class="keyword">this</span>.target.getClass());</div><div class="line">        <span class="comment">// 回调方法，方法拦截器</span></div><div class="line">        enhancer.setCallback(<span class="keyword">this</span>);</div><div class="line">        <span class="comment">// 创建代理对象</span></div><div class="line">        <span class="keyword">return</span> enhancer.create();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 回调方法</div><div class="line">     */</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object o, Method method, Object[] args, MethodProxy methodProxy)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">        <span class="keyword">long</span> start = System.currentTimeMillis();</div><div class="line">        methodProxy.invokeSuper(o, args);</div><div class="line">        <span class="keyword">long</span> end = System.currentTimeMillis();</div><div class="line">        System.out.println(<span class="string">"Cglib proxy, time cost:"</span> + (end - start) + <span class="string">"ms"</span>);</div><div class="line">        <span class="comment">// 这里调用的doSomething无返回值，故使用return null</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <hr>
 <p>感谢：<br><a href="http://blog.jrwang.me/2015/java-dynamic-proxy-and%20java-reflection/" target="_blank" rel="external">http://blog.jrwang.me/2015/java-dynamic-proxy-and%20java-reflection/</a><br><a href="http://blog.csdn.net/giserstone/article/details/17199755" target="_blank" rel="external">http://blog.csdn.net/giserstone/article/details/17199755</a></p>
@@ -6332,7 +6438,7 @@ bits标志位含义：
 <p>使用反射获取方法返回类型的类型参数<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Method method1 = cls.getMethod(<span class="string">"getList"</span>);</div><div class="line">Type returnType = method1.getGenericReturnType();</div><div class="line"><span class="keyword">if</span> (returnType <span class="keyword">instanceof</span> ParameterizedType)&#123;</div><div class="line">    ParameterizedType paramType = (ParameterizedType) returnType;</div><div class="line">    Type[] typeArg = paramType.getActualTypeArguments();</div><div class="line">    <span class="keyword">for</span> (Type aType: typeArg)&#123;</div><div class="line">        Class aCls = (Class) aType;</div><div class="line">        System.out.println(<span class="string">"return: "</span> + aCls.getName()); <span class="comment">// 输出java.lang.String</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="方法参数类型"><a href="#方法参数类型" class="headerlink" title="方法参数类型"></a>方法参数类型</h2><p>定义方法参数为泛型的方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setList</span><span class="params">(List&lt;String&gt; list)</span></span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>使用反射获取方法的泛型参数<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">Method method2 = cls.getMethod(<span class="string">"setList"</span>, List.class);</div><div class="line">Type[] genericParameterTypes = method2.getGenericParameterTypes();</div><div class="line"><span class="keyword">for</span> (Type genericParameterType: genericParameterTypes)&#123;</div><div class="line">    <span class="keyword">if</span> (genericParameterType <span class="keyword">instanceof</span>  ParameterizedType)&#123;</div><div class="line">        ParameterizedType aType = (ParameterizedType) genericParameterType;</div><div class="line">        Type[] paramArgTypes = aType.getActualTypeArguments();</div><div class="line">        <span class="keyword">for</span> (Type paramArgType: paramArgTypes)&#123;</div><div class="line">            Class paramArgClass = (Class) paramArgType;</div><div class="line">            System.out.println(<span class="string">"arg: "</span> + paramArgClass.getName()); <span class="comment">// 输出java.lang.String</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="Type接口"><a href="#Type接口" class="headerlink" title="Type接口"></a>Type接口</h2><p>Java里<code>Type</code>接口是所有类型的超接口，<code>Class</code>类时<code>Type</code>接口的一个实现。</p>
+<h2 id="Type接口"><a href="#Type接口" class="headerlink" title="Type接口"></a>Type接口</h2><p>Java里<code>Type</code>接口是所有type的超接口，<code>Class</code>类是<code>Type</code>接口的一个实现。</p>
 <blockquote>
 <p>Type is the common superinterface for all types in the Java programming language. These include raw types, parameterized types, array types, type variables and primitive types.</p>
 </blockquote>
@@ -6391,11 +6497,11 @@ bits标志位含义：
 </ol>
 <h1 id="通配符与上下界"><a href="#通配符与上下界" class="headerlink" title="通配符与上下界"></a>通配符与上下界</h1><h2 id="通配符"><a href="#通配符" class="headerlink" title="通配符"></a>通配符</h2><p>通配符代表的是一组类型，但是具体的类型是未知的。</p>
 <p><code>List&lt;?&gt;</code>所声明的就是List中包含的元素类型是未知的，但是<code>List&lt;?&gt;</code>并不等同于<code>List&lt;Object&gt;</code>。<code>List&lt;Object&gt;</code>实际上确定了List中包含的是Object及其子类，而<code>List&lt;?&gt;</code>其中所包含的元素是不确定的。</p>
-<p>因为<code>List&lt;?&gt;</code>的中元素类型是位置的，所以不能通过<code>new ArrayList&lt;?&gt;</code>的方式来创建一个新的ArrayList对象（因为编译器无法知道具体的类型是什么）。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">(List&lt;?&gt; list)</span></span>&#123;</div><div class="line">	list.add(<span class="number">1</span>); <span class="comment">// 编译错误</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>因为<code>List&lt;?&gt;</code>的中元素类型是未知的，所以不能通过<code>new ArrayList&lt;?&gt;</code>的方式来创建一个新的ArrayList对象（因为编译器无法知道具体的类型是什么）。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">(List&lt;?&gt; list)</span></span>&#123;</div><div class="line">	list.add(<span class="number">1</span>); <span class="comment">// 编译错误</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="上下界"><a href="#上下界" class="headerlink" title="上下界"></a>上下界</h2><p><code>List&lt;?&gt;</code> 中的元素类型是未知的，但是可以使用上下界来限制未知类型的范围。当引入了上界类之后，在使用类型的时候就可以使用上界类中定义的方法。</p>
 <p><code>List&lt;? extends Number&gt;</code> 说明List中可能包含的元素类型是Number及其子类。访问<code>List&lt;? extends Number&gt;</code>的时候，可以使用Number类的方法（比如<code>intValue()</code>等）。<br><code>List&lt;? super Number&gt;</code>说明List中包含的元素类型是Number及其父类。</p>
 <blockquote>
-<p>Tips：当你需要从一个数据结构中获取数据时(get)，那么就使用 ? extends T；如果你需要存储数据(put)到一个数据结构时，那么就使用 ? super T； 如果你又想存储数据，又想获取数据，那么就不要使用通配符 ? ，即直接使用具体泛型T。</p>
+<p>Tips：当你需要从一个数据结构中获取数据时(get)，那么就使用 <code>? extends T</code>；如果你需要存储数据(put)到一个数据结构时，那么就使用 <code>? super T</code>； 如果你又想存储数据，又想获取数据，那么就不要使用通配符 <code>?</code> ，即直接使用具体泛型<code>T</code>。</p>
 </blockquote>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">List&lt;? extends Parent&gt; exParentlist = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">exParentlist.add(<span class="keyword">new</span> Child()); <span class="comment">// compile error, 编译器无法检测安全性</span></div><div class="line">exParentlist.add(<span class="keyword">new</span> Parent()); <span class="comment">// compile error</span></div><div class="line">exParentlist.add(<span class="keyword">new</span> GrandParent()); <span class="comment">// compile error</span></div><div class="line"></div><div class="line">List&lt;? <span class="keyword">super</span> Parent&gt; superParentList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">superParentList.add(<span class="keyword">new</span> GrandParent()); <span class="comment">// compile error</span></div><div class="line">superParentList.add(<span class="keyword">new</span> Parent()); <span class="comment">// ok</span></div><div class="line">superParentList.add(<span class="keyword">new</span> Child()); <span class="comment">// ok, Parent为下界，因此它的子类是安全的。</span></div></pre></td></tr></table></figure>
 <h1 id="泛型的类型系统"><a href="#泛型的类型系统" class="headerlink" title="泛型的类型系统"></a>泛型的类型系统</h1><p>引入泛型之后的类型系统增加了两个维度：一个是类型参数自身的继承体系结构，另外一个是泛型类或接口自身的继承体系结构。第一个指的是对于 <code>List&lt;String&gt;</code>和 <code>List&lt;Object&gt;</code>这样的情况，类型参数String是继承自Object的。而第二种指的是 List接口继承自Collection接口。对于这个类型系统，有如下的一些规则：</p>

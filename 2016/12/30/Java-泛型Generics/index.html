@@ -94,7 +94,7 @@
 <meta property="og:description" content="简介Java泛型(Generics)是JDK 1.5中引入的一个新特性，允许在定义类和接口的时候使用类型参数（type parameter）。声明的类型参数在使用时用具体的类型来替换，泛型最主要的应用是在JDK 1.5中的新集合类框架中。
 泛型使得编译器在编译时就可以发现很多错误，可以解决之前的集合类框架在使用过程中通常会出现的运行时类型错误。
 类型擦除(type erasure)类型擦除：使用泛">
-<meta property="og:updated_time" content="2017-02-17T06:25:56.397Z">
+<meta property="og:updated_time" content="2017-07-02T07:16:41.303Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 泛型Generics">
 <meta name="twitter:description" content="简介Java泛型(Generics)是JDK 1.5中引入的一个新特性，允许在定义类和接口的时候使用类型参数（type parameter）。声明的类型参数在使用时用具体的类型来替换，泛型最主要的应用是在JDK 1.5中的新集合类框架中。
@@ -364,11 +364,11 @@
 </ol>
 <h1 id="通配符与上下界"><a href="#通配符与上下界" class="headerlink" title="通配符与上下界"></a>通配符与上下界</h1><h2 id="通配符"><a href="#通配符" class="headerlink" title="通配符"></a>通配符</h2><p>通配符代表的是一组类型，但是具体的类型是未知的。</p>
 <p><code>List&lt;?&gt;</code>所声明的就是List中包含的元素类型是未知的，但是<code>List&lt;?&gt;</code>并不等同于<code>List&lt;Object&gt;</code>。<code>List&lt;Object&gt;</code>实际上确定了List中包含的是Object及其子类，而<code>List&lt;?&gt;</code>其中所包含的元素是不确定的。</p>
-<p>因为<code>List&lt;?&gt;</code>的中元素类型是位置的，所以不能通过<code>new ArrayList&lt;?&gt;</code>的方式来创建一个新的ArrayList对象（因为编译器无法知道具体的类型是什么）。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">(List&lt;?&gt; list)</span></span>&#123;</div><div class="line">	list.add(<span class="number">1</span>); <span class="comment">// 编译错误</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>因为<code>List&lt;?&gt;</code>的中元素类型是未知的，所以不能通过<code>new ArrayList&lt;?&gt;</code>的方式来创建一个新的ArrayList对象（因为编译器无法知道具体的类型是什么）。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">(List&lt;?&gt; list)</span></span>&#123;</div><div class="line">	list.add(<span class="number">1</span>); <span class="comment">// 编译错误</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="上下界"><a href="#上下界" class="headerlink" title="上下界"></a>上下界</h2><p><code>List&lt;?&gt;</code> 中的元素类型是未知的，但是可以使用上下界来限制未知类型的范围。当引入了上界类之后，在使用类型的时候就可以使用上界类中定义的方法。</p>
 <p><code>List&lt;? extends Number&gt;</code> 说明List中可能包含的元素类型是Number及其子类。访问<code>List&lt;? extends Number&gt;</code>的时候，可以使用Number类的方法（比如<code>intValue()</code>等）。<br><code>List&lt;? super Number&gt;</code>说明List中包含的元素类型是Number及其父类。</p>
 <blockquote>
-<p>Tips：当你需要从一个数据结构中获取数据时(get)，那么就使用 ? extends T；如果你需要存储数据(put)到一个数据结构时，那么就使用 ? super T； 如果你又想存储数据，又想获取数据，那么就不要使用通配符 ? ，即直接使用具体泛型T。</p>
+<p>Tips：当你需要从一个数据结构中获取数据时(get)，那么就使用 <code>? extends T</code>；如果你需要存储数据(put)到一个数据结构时，那么就使用 <code>? super T</code>； 如果你又想存储数据，又想获取数据，那么就不要使用通配符 <code>?</code> ，即直接使用具体泛型<code>T</code>。</p>
 </blockquote>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">List&lt;? extends Parent&gt; exParentlist = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">exParentlist.add(<span class="keyword">new</span> Child()); <span class="comment">// compile error, 编译器无法检测安全性</span></div><div class="line">exParentlist.add(<span class="keyword">new</span> Parent()); <span class="comment">// compile error</span></div><div class="line">exParentlist.add(<span class="keyword">new</span> GrandParent()); <span class="comment">// compile error</span></div><div class="line"></div><div class="line">List&lt;? <span class="keyword">super</span> Parent&gt; superParentList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">superParentList.add(<span class="keyword">new</span> GrandParent()); <span class="comment">// compile error</span></div><div class="line">superParentList.add(<span class="keyword">new</span> Parent()); <span class="comment">// ok</span></div><div class="line">superParentList.add(<span class="keyword">new</span> Child()); <span class="comment">// ok, Parent为下界，因此它的子类是安全的。</span></div></pre></td></tr></table></figure>
 <h1 id="泛型的类型系统"><a href="#泛型的类型系统" class="headerlink" title="泛型的类型系统"></a>泛型的类型系统</h1><p>引入泛型之后的类型系统增加了两个维度：一个是类型参数自身的继承体系结构，另外一个是泛型类或接口自身的继承体系结构。第一个指的是对于 <code>List&lt;String&gt;</code>和 <code>List&lt;Object&gt;</code>这样的情况，类型参数String是继承自Object的。而第二种指的是 List接口继承自Collection接口。对于这个类型系统，有如下的一些规则：</p>
@@ -499,7 +499,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">248</span>
+              <span class="site-state-item-count">250</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
