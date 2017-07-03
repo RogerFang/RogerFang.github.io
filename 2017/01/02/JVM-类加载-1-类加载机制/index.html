@@ -99,7 +99,7 @@ Java可以动态扩展的特性就是依赖运行期动态加载和动态连接�
 
 类加载的时机类的生命周期类从被加载到虚拟机内存中开始，到卸载出内存为止，整个生命周期包括：加载（Loading）、验证（Verification）、准备（Preparation）">
 <meta property="og:image" content="https://rogerfang.github.io/images/jvm/classloader-lifecycle.png">
-<meta property="og:updated_time" content="2017-02-27T14:01:16.308Z">
+<meta property="og:updated_time" content="2017-07-03T15:20:47.358Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM: 类加载(1)-类加载机制">
 <meta name="twitter:description" content="类加载机制：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型。
@@ -436,7 +436,7 @@ Java可以动态扩展的特性就是依赖运行期动态加载和动态连接�
 </li>
 <li><p><code>&lt;clinit&gt;()</code>方法对于类或接口并不是必需的，如果没有静态变量的赋值操作或静态语句块，那么编译器不会为这个类或接口生成<code>&lt;clinit&gt;()</code>方法。</p>
 </li>
-<li><p>接口可以由静态编赋值操作，但是不能使用静态语句块。执行接口的<code>&lt;clinit&gt;()</code>方法不需要先执行父接口的<code>&lt;clinit&gt;()</code>方法。接口的实现类在初始化时也一样不会执行接口的<code>&lt;clinit&gt;()</code>方法。</p>
+<li><p>接口可以有静态变量赋值操作，但是不能使用静态语句块。执行接口的<code>&lt;clinit&gt;()</code>方法不需要先执行父接口的<code>&lt;clinit&gt;()</code>方法。接口的实现类在初始化时也一样不会执行接口的<code>&lt;clinit&gt;()</code>方法。</p>
 </li>
 <li><p>虚拟机会保证<code>&lt;clinit&gt;()</code>方法在多线程环境下被正确地加锁、同步。</p>
 </li>

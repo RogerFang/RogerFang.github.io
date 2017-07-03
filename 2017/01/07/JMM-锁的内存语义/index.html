@@ -99,7 +99,7 @@
 
 对比锁释放-获">
 <meta property="og:image" content="https://rogerfang.github.io/images/jmm/concurrent-realization-mechanism.png">
-<meta property="og:updated_time" content="2017-02-28T07:55:03.918Z">
+<meta property="og:updated_time" content="2017-07-03T12:49:00.168Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JMM: 锁的内存语义">
 <meta name="twitter:description" content="锁是Java并发编程中最重要的同步机制，锁除了可以让临界区互斥执行外，还可以让释放锁的线程向获取同一个锁的线程发送消息。
@@ -377,6 +377,7 @@
 </ol>
 </li>
 </ol>
+<h2 id="CAS-还是-volatile？"><a href="#CAS-还是-volatile？" class="headerlink" title="CAS 还是 volatile？"></a>CAS 还是 volatile？</h2><p><strong>为什么有了 volatile 还要有 CAS？</strong><br><code>volatile</code>关键字虽然具有原子性，但是 volatile 变量的复合操作是不具有原子性的，例如自增操作，所以<code>volatile</code>关键字的应用场景受限，而 <strong>CAS</strong> 可以解决这种复杂的场景，提供原子性。</p>
 <h1 id="concurrent包的实现"><a href="#concurrent包的实现" class="headerlink" title="concurrent包的实现"></a>concurrent包的实现</h1><p>volatile变量的读/写和CAS可以实现线程之间的通信，这是整个concurrent包得以实现的基石。</p>
 <p>cocurrent包一个通用的实现模式：</p>
 <ol>
@@ -554,7 +555,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#锁释放-获取内存语义"><span class="nav-number">1.</span> <span class="nav-text">锁释放-获取内存语义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#锁内存语义的实现"><span class="nav-number">2.</span> <span class="nav-text">锁内存语义的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CAS"><span class="nav-number">2.1.</span> <span class="nav-text">CAS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CAS如何具有volatile的读-写内存语义？"><span class="nav-number">2.2.</span> <span class="nav-text">CAS如何具有volatile的读-写内存语义？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#concurrent包的实现"><span class="nav-number">3.</span> <span class="nav-text">concurrent包的实现</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#锁释放-获取内存语义"><span class="nav-number">1.</span> <span class="nav-text">锁释放-获取内存语义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#锁内存语义的实现"><span class="nav-number">2.</span> <span class="nav-text">锁内存语义的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CAS"><span class="nav-number">2.1.</span> <span class="nav-text">CAS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CAS如何具有volatile的读-写内存语义？"><span class="nav-number">2.2.</span> <span class="nav-text">CAS如何具有volatile的读-写内存语义？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CAS-还是-volatile？"><span class="nav-number">2.3.</span> <span class="nav-text">CAS 还是 volatile？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#concurrent包的实现"><span class="nav-number">3.</span> <span class="nav-text">concurrent包的实现</span></a></li></ol></div>
             
           </div>
         </section>
