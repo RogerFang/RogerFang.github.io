@@ -5,15 +5,14 @@
 # Site
 title: 方龙的博客
 subtitle:
-description: 码路漫漫，且行且珍惜
+description: 梦想还是要有的，万一实现了呢
 author: 方龙
 language: zh-Hans
 timezone:
-baidu_analytics: a1eb6dc312a93939356214ab5491901a
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
+url: https://rogerfang.github.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -76,7 +75,7 @@ deploy:
 
 # 插件:分页
 index_generator:
-  per_page: 5
+  per_page: 10
 
 archive_generator:
   per_page: 20
@@ -85,8 +84,13 @@ archive_generator:
 
 tag_generator:
   per_page: 10
- 
- 
+
+
 # math插件
 math:
   engine: 'mathjax' # or 'katex'
+
+# 站内搜索hexo-generator-search
+search:
+  path:search.xml
+  field:post 
