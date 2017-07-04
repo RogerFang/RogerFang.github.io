@@ -223,7 +223,7 @@
     <entry>
       <title><![CDATA[Elasticsearch5 集群部署]]></title>
       <url>https://rogerfang.github.io/2017/06/20/Elasticsearch5-%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/</url>
-      <content type="html"><![CDATA[<h1 id="配置说明"><a href="#配置说明" class="headerlink" title="配置说明"></a>配置说明</h1><p><img src="../images/es/es-network-setting.png" alt=""></p>
+      <content type="html"><![CDATA[<h1 id="配置说明"><a href="#配置说明" class="headerlink" title="配置说明"></a>配置说明</h1><p><img src="/images/es/es-network-setting.png" alt=""></p>
 <table>
 <thead>
 <tr>
@@ -4663,7 +4663,7 @@ bits标志位含义：
 <blockquote>
 <p>队列同步器的模板方法基本上分为3类：独占式获取和释放同步状态、共享式获取和释放同步状态、查询同步队列中的线程情况。</p>
 </blockquote>
-<p>AQS的功能可以分为两类：<strong>独占</strong>功能和<strong>共享</strong>功能，它的所有子类中，要么实现并使用了它独占功能的API，要么使用了共享锁的功能，而不会同时使用两套API，即便是它最有名的子类ReentrantReadWriteLock，也是通过两个内部类：读锁和写锁，分别实现的两套API来实现的。s</p>
+<p>AQS的功能可以分为两类：<strong>独占</strong>功能和<strong>共享</strong>功能，它的所有子类中，要么实现并使用了它独占功能的API，要么使用了共享锁的功能，而不会同时使用两套API，即便是它最有名的子类ReentrantReadWriteLock，也是通过两个内部类：读锁和写锁，分别实现的两套API来实现的。</p>
 <h1 id="队列同步器的实现分析"><a href="#队列同步器的实现分析" class="headerlink" title="队列同步器的实现分析"></a>队列同步器的实现分析</h1><h2 id="节点的waitStatus"><a href="#节点的waitStatus" class="headerlink" title="节点的waitStatus"></a>节点的waitStatus</h2><ul>
 <li><strong>CANCELLED</strong>：因为超时或者中断，结点会被设置为取消状态，被取消状态的结点不应该去竞争锁，只能保持取消状态不变，不能转换为其他状态。处于这种状态的结点会被踢出队列，被GC回收；</li>
 <li><strong>SIGNAL</strong>：表示这个结点的继任结点被阻塞了，到时需要通知它；</li>
@@ -5213,7 +5213,7 @@ bits标志位含义：
 </blockquote>
 <p>对象的创建过程：</p>
 <ol>
-<li>虚拟机遇到一条<code>new</code>指令时，首先去检查这个指令的参数是否能够在常量池中定位到一个类的符号引用，比检查这个符号引用代表的类是否已被加载、解析和初始化过。</li>
+<li>虚拟机遇到一条<code>new</code>指令时，首先去检查这个指令的参数是否能够在常量池中定位到一个类的符号引用，并检查这个符号引用代表的类是否已被加载、解析和初始化过。</li>
 <li><p>类加载检查通过后，接着虚拟机将为新生对象分配内存。对象所需的内存大小在类加载完成后可知。<br>Java堆中的内存分配有两种方式：<br><strong>指针碰撞</strong>（Bump the Pointer）：假设Java堆中内存是绝对规整的，所有用过的内存都放在一遍，没用过的内存放在另一边， 中间放着一个指针作为分界点的指示器。通过挪动指针来分配所需内存。<br><strong>空闲列表</strong>（Free List）：对于Java堆中的内存并不是规整的，虚拟机维护一个列表，记录上哪些内存块是可用的，分配的时候从列表中找到一块足够大的空间。</p>
 <blockquote>
 <p>分配方式是由Java堆是否规整决定，而Java堆是否规整是由所采用的垃圾回收器是否带有压缩整理的功能决定。</p>
