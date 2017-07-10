@@ -282,126 +282,6 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/19/Mybatis-插件及分页/" itemprop="url">
-                  Mybatis: 插件及分页
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-19T15:51:15+08:00" content="2017-02-19">
-              2017-02-19
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Mybatis/" itemprop="url" rel="index">
-                    <span itemprop="name">Mybatis</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          插件Mybatis采用责任链模式，通过动态代理组织多个拦截器（插件），通过这些拦截器可以改变Mybatis的默认行为（诸如SQL重写之类的）。
-Mybatis支持对Executor、StatementHandler、ParameterHandler和ResultSetHandler进行拦截。
-插件的
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/19/Mybatis-插件及分页/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2017/02/19/Mybatis-Mapper解析/" itemprop="url">
                   Mybatis: Mapper映射文件解析
                 </a>
@@ -587,9 +467,7 @@ Mapper元素只有一个属性namespace，它有两个作用：
         
           
           简介Mybatis框架的核心组成部分：mybatis-config.xml、SqlSession、Executor、StatementHandler、ResultSetHandler。
-配置文件Mybatis的全局配置文件 mybatis-config.xml，配置的内容有：
-
-properties
+原理JDBC数据库操作1234567891011Class.forName("com.mysql.jdbc.Dri
           ...
 
           <div class="post-more-link text-center">
@@ -1455,6 +1333,126 @@ Dat
 
 
     
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/16/动手写web框架-4-依赖注入实现/" itemprop="url">
+                  动手写web框架(4): 依赖注入实现
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-16T14:40:05+08:00" content="2017-02-16">
+              2017-02-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/动手写web框架/" itemprop="url" rel="index">
+                    <span itemprop="name">动手写web框架</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          IOC的原理参见：IOC原理
+对象交给第三方容器管理，维护对象间的关系，并将依赖的成员注入到相关的对象中。
+BeanHelper已经可以获取到所有Bean对象，现在就需要遍历这些Bean对象，通过反射获取对象的成员变量，判断成员变量是否带有@Inject注解，如果有就通过反射注入相关的Bean对象。
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/02/16/动手写web框架-4-依赖注入实现/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -1500,7 +1498,7 @@ Dat
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">250</span>
+              <span class="site-state-item-count">249</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1508,7 +1506,7 @@ Dat
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

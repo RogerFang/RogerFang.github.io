@@ -772,15 +772,6 @@
     </entry>
     
     <entry>
-      <title><![CDATA[人活着]]></title>
-      <url>https://rogerfang.github.io/2017/06/04/%E4%BA%BA%E6%B4%BB%E7%9D%80/</url>
-      <content type="html"><![CDATA[<p>人活着是为了什么？工作是为了什么？</p>
-<h1 id="乐观点"><a href="#乐观点" class="headerlink" title="乐观点"></a>乐观点</h1><p>为了拥有自己的生活。</p>
-<h1 id="消极点"><a href="#消极点" class="headerlink" title="消极点"></a>消极点</h1><p>为了拒绝生活在平静的绝望中。</p>
-]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[创建型：单例模式]]></title>
       <url>https://rogerfang.github.io/2017/06/04/%E5%88%9B%E5%BB%BA%E5%9E%8B%EF%BC%9A%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -2207,6 +2198,19 @@ bits标志位含义：
       <title><![CDATA[Mybatis: 入门]]></title>
       <url>https://rogerfang.github.io/2017/02/19/Mybatis-%E5%85%A5%E9%97%A8/</url>
       <content type="html"><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><strong>Mybatis</strong>框架的核心组成部分：mybatis-config.xml、SqlSession、Executor、StatementHandler、ResultSetHandler。<br><img src="/images/mybatis/mybatis-framework.png" alt=""></p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>JDBC数据库操作<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">Class.forName(<span class="string">"com.mysql.jdbc.Driver"</span>);</div><div class="line">String url = <span class="string">"jdbc:mysql://localhost:3306/test"</span>;</div><div class="line">Connection con = DriverManager.getConnection(url, <span class="string">"username"</span>,<span class="string">"password"</span>);</div><div class="line">String sql = <span class="string">"SELECT * FROM table_name WHERE id = ?"</span>;</div><div class="line">PreparedStatement ps = con.prepareStatement(sql);</div><div class="line">ps.setInt(<span class="number">1</span>, <span class="number">10</span>);</div><div class="line">ResultSet rs = ps.executeQuery();</div><div class="line"><span class="keyword">while</span>(rs.next())&#123;</div><div class="line">    System.out.println(<span class="string">"id:"</span> + rs.getInt(<span class="number">1</span>));</div><div class="line">&#125;</div><div class="line">con.close();</div></pre></td></tr></table></figure></p>
+<p>流程： 建立连接(<strong>数据源配置信息</strong>)-&gt;传递sql(<strong>sql语句</strong>)-&gt;传递参数(<strong>sql参数</strong>)-&gt;sql执行-&gt;处理结果(<strong>映射关系</strong>)-&gt;关闭连接。</p>
+<blockquote>
+<p><strong>ORM框架的本质是抽取共性、封装逻辑</strong>。</p>
+</blockquote>
+<p>括号中代表变化的部分。</p>
+<ul>
+<li>数据源配置信息:配置文件，在启动时从配置文件中读取并建立数据源对象。</li>
+<li>Sql语句：配置文件(代码)，在启动时抽取解析，以<key,sql>的形式存储。</key,sql></li>
+<li>Sql参数：java bean对象，在执行前从对象中抽取。</li>
+<li>映射关系：配置文件(代码)，根据映射关系读取结果集并创建java bean返回。</li>
+</ul>
+<p>参考：<a href="http://cyningsun.github.io/10-15-2014/reading-mybatis-source-code.html" target="_blank" rel="external">深入理解Mybatis工作原理</a></p>
 <h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>Mybatis的全局配置文件 mybatis-config.xml，配置的内容有：</p>
 <ul>
 <li>properties(属性)<br>  先解析其子节点<code>&lt;property&gt;</code>属性，再解析<code>resource</code>属性，后者会覆盖前者。</li>
@@ -2232,13 +2236,18 @@ bits标志位含义：
 <h2 id="Executor"><a href="#Executor" class="headerlink" title="Executor"></a>Executor</h2><p><code>Executor</code>是在调用<code>SqlSessionFactory</code>的<code>openSession()</code>过程中被创建的，默认创建的类型是<code>SimpleExecutor</code>，<code>Executor</code>对象的主要功能是调用<code>StatementHandler</code>访问数据库。<br><figure class="highlight java"><figcaption><span>DefaultSessionFactory</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> SqlSession <span class="title">openSessionFromDataSource</span><span class="params">(ExecutorType execType, TransactionIsolationLevel level, <span class="keyword">boolean</span> autoCommit)</span> </span>&#123;</div><div class="line">  ...</div><div class="line">  <span class="keyword">final</span> Executor executor = configuration.newExecutor(tx, execType);</div><div class="line">  <span class="keyword">return</span> <span class="keyword">new</span> DefaultSqlSession(configuration, executor, autoCommit);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <figure class="highlight java"><figcaption><span>Configuration</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Executor <span class="title">newExecutor</span><span class="params">(Transaction transaction, ExecutorType executorType)</span> </span>&#123;</div><div class="line">    executorType = executorType == <span class="keyword">null</span> ? defaultExecutorType : executorType;</div><div class="line">    executorType = executorType == <span class="keyword">null</span> ? ExecutorType.SIMPLE : executorType;</div><div class="line">    Executor executor;</div><div class="line">    <span class="keyword">if</span> (ExecutorType.BATCH == executorType) &#123;</div><div class="line">      executor = <span class="keyword">new</span> BatchExecutor(<span class="keyword">this</span>, transaction);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ExecutorType.REUSE == executorType) &#123;</div><div class="line">      executor = <span class="keyword">new</span> ReuseExecutor(<span class="keyword">this</span>, transaction);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      executor = <span class="keyword">new</span> SimpleExecutor(<span class="keyword">this</span>, transaction);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 默认为true</span></div><div class="line">    <span class="keyword">if</span> (cacheEnabled) &#123;</div><div class="line">      executor = <span class="keyword">new</span> CachingExecutor(executor);</div><div class="line">    &#125;</div><div class="line">    executor = (Executor) interceptorChain.pluginAll(executor);</div><div class="line">    <span class="keyword">return</span> executor;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="StatementHandler"><a href="#StatementHandler" class="headerlink" title="StatementHandler"></a>StatementHandler</h2><p><code>StatementHandler</code>是真正访问数据库的地方，在进行sql操作后，会调用<code>ResultSetHandler</code>处理查询结果。</p>
+<p>在解析sql语句时，会先调用<code>ParameterHandler</code>的<code>setParameters()</code>方法设置参数，对于每个参数再调用相应的<code>TypeHandler</code>的<code>setParameter()</code>去设置。</p>
+<p><code>ResultSetHandler</code>在对查询结果进行处理时，也会调用<code>TypeHandler</code>对相应类型的属性进行处理。</p>
 <h1 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h1><h2 id="PO"><a href="#PO" class="headerlink" title="PO"></a>PO</h2><figure class="highlight java"><figcaption><span>Actor.java</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> model;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.Date;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Actor</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Short actorId;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> String firstName;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> String lastName;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Date lastUpdate;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Short <span class="title">getActorId</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> actorId;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setActorId</span><span class="params">(Short actorId)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.actorId = actorId;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getFirstName</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> firstName;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setFirstName</span><span class="params">(String firstName)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.firstName = firstName == <span class="keyword">null</span> ? <span class="keyword">null</span> : firstName.trim();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getLastName</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> lastName;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLastName</span><span class="params">(String lastName)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.lastName = lastName == <span class="keyword">null</span> ? <span class="keyword">null</span> : lastName.trim();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Date <span class="title">getLastUpdate</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> lastUpdate;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLastUpdate</span><span class="params">(Date lastUpdate)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.lastUpdate = lastUpdate;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"Actor&#123;"</span> +</div><div class="line">                <span class="string">"actorId="</span> + actorId +</div><div class="line">                <span class="string">", firstName='"</span> + firstName + <span class="string">'\''</span> +</div><div class="line">                <span class="string">", lastName='"</span> + lastName + <span class="string">'\''</span> +</div><div class="line">                <span class="string">", lastUpdate="</span> + lastUpdate +</div><div class="line">                <span class="string">'&#125;'</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="映射文件"><a href="#映射文件" class="headerlink" title="映射文件"></a>映射文件</h2><figure class="highlight"><figcaption><span>ActorMapper.xml</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</div><div class="line">&lt;mapper namespace="dao.ActorMapper"&gt;</div><div class="line">  &lt;resultMap id="BaseResultMap" type="model.Actor"&gt;</div><div class="line">    &lt;id column="actor_id" jdbcType="SMALLINT" property="actorId" /&gt;</div><div class="line">    &lt;result column="first_name" jdbcType="VARCHAR" property="firstName" /&gt;</div><div class="line">    &lt;result column="last_name" jdbcType="VARCHAR" property="lastName" /&gt;</div><div class="line">    &lt;result column="last_update" jdbcType="TIMESTAMP" property="lastUpdate" /&gt;</div><div class="line">  &lt;/resultMap&gt;</div><div class="line">  &lt;sql id="Base_Column_List"&gt;</div><div class="line">    actor_id, first_name, last_name, last_update</div><div class="line">  &lt;/sql&gt;</div><div class="line">  &lt;select id="selectByPrimaryKey" parameterType="java.lang.Short" resultMap="BaseResultMap"&gt;</div><div class="line">    select </div><div class="line">    &lt;include refid="Base_Column_List" /&gt;</div><div class="line">    from actor</div><div class="line">    where actor_id = #&#123;actorId,jdbcType=SMALLINT&#125;</div><div class="line">  &lt;/select&gt;</div><div class="line">&lt;/mapper&gt;</div></pre></td></tr></table></figure>
 <h2 id="dao接口"><a href="#dao接口" class="headerlink" title="dao接口"></a>dao接口</h2><p>Mybatis会根据接口实现相应的代理对象。<br><figure class="highlight java"><figcaption><span>ActorMapper.java</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> dao;</div><div class="line"></div><div class="line"><span class="keyword">import</span> model.Actor;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ActorMapper</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function">Actor <span class="title">selectByPrimaryKey</span><span class="params">(Short actorId)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="配置文件-1"><a href="#配置文件-1" class="headerlink" title="配置文件"></a>配置文件</h2><figure class="highlight"><figcaption><span>mybatis-config.xml</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</div><div class="line">&lt;!DOCTYPE configuration</div><div class="line">        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"</div><div class="line">        "http://mybatis.org/dtd/mybatis-3-config.dtd"&gt;</div><div class="line">&lt;configuration&gt;</div><div class="line">    </div><div class="line">    &lt;properties resource="config.properties"/&gt;</div><div class="line">    </div><div class="line">    &lt;environments default="development"&gt;</div><div class="line">        &lt;environment id="development"&gt;</div><div class="line">            &lt;transactionManager type="JDBC"/&gt;</div><div class="line">            &lt;dataSource type="POOLED"&gt;</div><div class="line">                &lt;property name="driver" value="$&#123;jdbc.driver&#125;"/&gt;</div><div class="line">                &lt;property name="url" value="$&#123;jdbc.url&#125;"/&gt;</div><div class="line">                &lt;property name="username" value="$&#123;jdbc.username&#125;"/&gt;</div><div class="line">                &lt;property name="password" value="$&#123;jdbc.password&#125;"/&gt;</div><div class="line">            &lt;/dataSource&gt;</div><div class="line">        &lt;/environment&gt;</div><div class="line">    &lt;/environments&gt;</div><div class="line"></div><div class="line">    &lt;mappers&gt;</div><div class="line">        &lt;mapper resource="mapper/ActorMapper.xml"/&gt;</div><div class="line">    &lt;/mappers&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
 <h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String resource = <span class="string">"mybatis-config.xml"</span>;</div><div class="line">Reader reader = Resources.getResourceAsReader(resource);</div><div class="line">SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(reader);</div><div class="line"></div><div class="line">SqlSession session = factory.openSession();</div><div class="line">ActorMapper mapper = session.getMapper(ActorMapper.class);</div><div class="line">Actor actor = mapper.selectByPrimaryKey((<span class="keyword">short</span>) <span class="number">1</span>);</div><div class="line">System.out.println(actor);</div><div class="line">session.close();</div></pre></td></tr></table></figure>
 <h1 id="Mybatis和Hibernate"><a href="#Mybatis和Hibernate" class="headerlink" title="Mybatis和Hibernate"></a>Mybatis和Hibernate</h1><p><strong>Hibernate</strong>：标准的ORM框架，自动生成sql语句，对sql语句进行优化、修改较困难。</p>
-<p><strong>Mybatis</strong>：一个不完全的ORM框架，专注sql本身，程序员自己维护sql语句，sql修改优化比较方便。</p>
+<p><strong>Mybatis</strong>：专注sql本身，程序员自己维护sql语句，sql修改优化比较方便。</p>
+<blockquote>
+<p>Wiki: Unlike ORM frameworks, MyBatis does not map Java objects to database tables but Java methods to SQL statements.</p>
+</blockquote>
 ]]></content>
     </entry>
     
@@ -2462,7 +2471,7 @@ bits标志位含义：
     <entry>
       <title><![CDATA[Spring: AOP原理]]></title>
       <url>https://rogerfang.github.io/2017/02/15/Spring-AOP%E5%8E%9F%E7%90%86/</url>
-      <content type="html"><![CDATA[<h1 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h1><p>AOP，面向切面变成，将系统公共服务（例如，日志记录、事务管理、缓存、性能监测等）从核心业务逻辑中剥离出封装成独立的模块（切面）。</p>
+      <content type="html"><![CDATA[<h1 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h1><p>AOP，面向切面编程，将系统公共服务（例如，日志记录、事务管理、缓存、性能监测等）从核心业务逻辑中剥离出封装成独立的模块（切面）。</p>
 <blockquote>
 <p>AOP的具体实现由两种：编译期静态织入和运行期动态代理。</p>
 </blockquote>
@@ -2556,7 +2565,7 @@ bits标志位含义：
 </tr>
 </tbody>
 </table>
-<h2 id="引入通知"><a href="#引入通知" class="headerlink" title="引入通知"></a>引入通知</h2><p><img src="../images/spring/aop_introduce_advice.png" alt=""><br>通过引入通知来增强被通知的bean，看起来像是增加了新功能。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="meta">@Aspect</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EncoreableAspect</span></span>&#123;</div><div class="line">	<span class="comment">/**</span></div><div class="line">     * value指定哪种类型的Bean需要进行引入增强，“+”表示Performance的所有子类。</div><div class="line">     * defaultImpl指定提供引入功能的实现类。</div><div class="line">     */</div><div class="line">    <span class="meta">@DeclareParents</span>(value=<span class="string">"concert.Permormance+"</span>, defaultImpl=DefaultEncoreable.class)</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Encoreable encoreable;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="引入通知"><a href="#引入通知" class="headerlink" title="引入通知"></a>引入通知</h2><p><img src="/images/spring/aop_introduce_advice.png" alt=""><br>通过引入通知来增强被通知的bean，看起来像是增加了新功能。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="meta">@Aspect</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EncoreableAspect</span></span>&#123;</div><div class="line">	<span class="comment">/**</span></div><div class="line">     * value指定哪种类型的Bean需要进行引入增强，“+”表示Performance的所有子类。</div><div class="line">     * defaultImpl指定提供引入功能的实现类。</div><div class="line">     */</div><div class="line">    <span class="meta">@DeclareParents</span>(value=<span class="string">"concert.Permormance+"</span>, defaultImpl=DefaultEncoreable.class)</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Encoreable encoreable;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="配置切面"><a href="#配置切面" class="headerlink" title="配置切面"></a>配置切面</h2><h3 id="XML配置"><a href="#XML配置" class="headerlink" title="XML配置"></a>XML配置</h3><ol>
 <li><p>传统Spring AOP</p>
  <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">   <span class="tag">&lt;<span class="name">aop:config</span>&gt;</span></div><div class="line">   	<span class="tag">&lt;<span class="name">aop:advisor</span> <span class="attr">advice-ref</span>=<span class="string">".."</span> <span class="attr">point-ref</span>=<span class="string">".."</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">aop:config</span>&gt;</span></div></pre></td></tr></table></figure>
@@ -2695,9 +2704,13 @@ bits标志位含义：
 <li>函数只有一种参数(IN)，只有一条RETURN语句，只能返回单一的值。</li>
 <li>可在SQL语句（DML或SELECT）中调用函数。由于函数可以返回一个表对象，因此它可以在查询语句中位于FROM关键字的后面。</li>
 </ol>
-<h1 id="存储过程和触发器的比较"><a href="#存储过程和触发器的比较" class="headerlink" title="存储过程和触发器的比较"></a>存储过程和触发器的比较</h1><p>存储过程和函数都是事先经过编译并存储在数据库中的一段SQL语句的集合，可以提高数据处理的效率。</p>
-<p>区别在于函数必须有返回值，而存储过程没有；存储过程的参数可以使用IN、OUT、INOUT类型，而函数的参数只能是IN类型的。</p>
-<h1 id="触发器"><a href="#触发器" class="headerlink" title="触发器"></a>触发器</h1><p>触发器是特殊的存储过程，存储过程需要程序调用，而触发器会自动执行；</p>
+<h1 id="存储过程和函数的比较"><a href="#存储过程和函数的比较" class="headerlink" title="存储过程和函数的比较"></a>存储过程和函数的比较</h1><p>存储过程和函数都是事先经过编译并存储在数据库中的一段SQL语句的集合，可以提高数据处理的效率。</p>
+<p>区别：</p>
+<ul>
+<li>函数只能通过return语句返回单个值或者表对象。而存储过程不允许执行return，但是通过out参数返回多个值。</li>
+<li>函数是可以嵌入在sql中使用的,可以在select中调用，而存储过程不行。</li>
+</ul>
+<h1 id="触发器"><a href="#触发器" class="headerlink" title="触发器"></a>触发器</h1><p>触发器是特殊的存储过程，存储过程需要程序调用，而触发器会自动执行</p>
 ]]></content>
     </entry>
     
@@ -2711,6 +2724,15 @@ bits标志位含义：
 <h2 id="主键索引"><a href="#主键索引" class="headerlink" title="主键索引"></a>主键索引</h2><p>数据库表经常有一列或多列组合，其值唯一标识表中的每一行。该列称为表的主键。<br>在数据库关系图中为表定义主键将自动创建主键索引，主键索引是唯一索引的特定类型。</p>
 <h2 id="聚集索引"><a href="#聚集索引" class="headerlink" title="聚集索引"></a>聚集索引</h2><p><strong>聚集索引</strong>：表数据按照索引的顺序来存储的。对于聚集索引，叶子结点即存储了真实的数据行，不再有另外单独的数据页。</p>
 <p><strong>非聚集索引</strong>：表数据存储顺序与索引顺序无关。对于非聚集索引，叶结点包含索引字段值及指向数据页数据行的逻辑指针，该层紧邻数据页，其行数量与数据表行数据量一致。</p>
+<h1 id="索引实现"><a href="#索引实现" class="headerlink" title="索引实现"></a>索引实现</h1><p>B树和B+树。</p>
+<h1 id="不同存储引擎的索引"><a href="#不同存储引擎的索引" class="headerlink" title="不同存储引擎的索引"></a>不同存储引擎的索引</h1><h2 id="MyISAM"><a href="#MyISAM" class="headerlink" title="MyISAM"></a>MyISAM</h2><p><strong>MyISAM</strong> 存储引擎的索引方式是<strong>非聚集索引</strong>，<strong>索引文件和数据文件是分离的</strong>，索引文件仅保存数据记录的地址。</p>
+<p>在MyISAM中，主索引和辅助索引（Secondary key）在结构上没有任何区别，只是主索引要求key是唯一的，而辅助索引的key可以重复。</p>
+<h2 id="InnoDB"><a href="#InnoDB" class="headerlink" title="InnoDB"></a>InnoDB</h2><p> <strong>InnoDB</strong> 存储引擎的索引方式是<strong>聚集索引</strong>，叶节点data域保存了完整的数据记录，InnoDB表数据文件本身就是主索引。因为InnoDB的数据文件本身要按主键聚集，所以InnoDB要求表必须有主键（MyISAM可以没有）。</p>
+<p>与MyISAM索引的不同是InnoDB的辅助索引data域存储相应记录主键的值而不是地址。</p>
+<blockquote>
+<p>知道了InnoDB的索引实现后，就很容易明白为什么不建议使用过长的字段作为主键，因为所有辅助索引都引用主索引，过长的主索引会令辅助索引变得过大。</p>
+<p>用非单调的字段作为主键在InnoDB中不是个好主意，因为InnoDB数据文件本身是一颗B+Tree，非单调的主键会造成在插入新记录时数据文件为了维持B+Tree的特性而频繁的分裂调整，十分低效，而使用自增字段作为主键则是一个很好的选择。</p>
+</blockquote>
 <h1 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p><strong>创建索引可以大大提高系统的性能。</strong></p>
 <ol>
 <li>通过创建唯一性索引，可以保证数据库表中每一行数据的<strong>唯一性</strong>。</li>
@@ -2735,7 +2757,9 @@ bits标志位含义：
 <li>对于定义为text、image和bit数据类型的列不应该创建索引。</li>
 <li>当修改性能远远大于检索性能时，不应该创建索引。</li>
 </ol>
-<h1 id="索引实现"><a href="#索引实现" class="headerlink" title="索引实现"></a>索引实现</h1><p>B树和B+树。</p>
+<h1 id="索引优化策略"><a href="#索引优化策略" class="headerlink" title="索引优化策略"></a>索引优化策略</h1><p>MySQL的优化主要分为结构优化（Scheme optimization）和查询优化（Query optimization）<br>具体各种优化情况，可以参见下面的链接。</p>
+<hr>
+<p>感谢：<a href="http://blog.codinglabs.org/articles/theory-of-mysql-index.html" target="_blank" rel="external">MySQL索引背后的数据结构与算法原理</a></p>
 ]]></content>
     </entry>
     
@@ -2767,7 +2791,7 @@ bits标志位含义：
 <h2 id="不可重复读"><a href="#不可重复读" class="headerlink" title="不可重复读"></a>不可重复读</h2><p>不可重复读（Non-repeatable Read）：在一个事务里两次读入数据，但另一个事务已经更改了第一个事务涉及到的数据，造成第一个事务读入旧数据。</p>
 <h2 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h2><p>幻读（Phantom Read）：事务在操作过程中进行两次查询，第二次查询的结果包含了第一次查询中未出现的数据（这里并不要求两次查询的SQL语句相同）。这是因为在两次查询过程中有另外一个事务插入数据造成的。</p>
 <h2 id="丢失更新"><a href="#丢失更新" class="headerlink" title="丢失更新"></a>丢失更新</h2><p>丢失更新（Lost Update）：</p>
-<p>第一类：当两个事务更新相同的数据源，如果第一个事务被提交，第二个却被撤销，那么连同第一个事务做的更新也被撤销。<br>第二类：有两个并发事务同时读取同一行数据，然后其中一个对它进行修改提交，而另一个也进行了修改提交。这就会造成第一次写操作失效。</p>
+<p>第一类：当两个事务更新相同的数据源，如果第一个事务被提交，第二个却被撤销回滚，那么连同第一个事务做的更新也被覆盖。<br>第二类：有两个并发事务同时读取同一行数据，然后其中一个对它进行修改提交，而另一个也进行了修改提交。这就会造成第一次写操作可能被覆盖。</p>
 <h1 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h1><h2 id="Read-Uncommitted"><a href="#Read-Uncommitted" class="headerlink" title="Read Uncommitted"></a>Read Uncommitted</h2><p>读未提交数据。事务在执行过程既可以看到其他事务没有提交的新插入数据，也可看到其他事务已经提交的对已有记录的更新。</p>
 <p>Read Uncommitted会出现<strong>脏读</strong>。</p>
 <h2 id="Read-Committed"><a href="#Read-Committed" class="headerlink" title="Read Committed"></a>Read Committed</h2><p>读已提交数据。事务在执行过程中可以看到其他事务已提交的新插入记录，也可看到其他事务已提交的对已有记录的更新。</p>
@@ -2801,13 +2825,13 @@ bits标志位含义：
 <p>在任何一个关系数据库中，第一范式（1NF）是对关系模式的基本要求，不满足第一范式（1NF）的数据库就不是关系数据库。</p>
 </blockquote>
 <h1 id="第二范式（2NF）"><a href="#第二范式（2NF）" class="headerlink" title="第二范式（2NF）"></a>第二范式（2NF）</h1><p><strong>第二范式（2NF）</strong>：要求数据库表中的每个实例或行必须被唯一地区分。通常需要给表加上一列作为唯一标识符，这个属性列被称为<strong>主键</strong>或<strong>主关键字</strong>。</p>
-<p>第二范式（2NF）要求实体的<strong>属性完全依赖于主键</strong>。</p>
+<p>第二范式（2NF）要求实体的<strong>每一个非主属性完全依赖于主键</strong>。</p>
 <p>所谓<strong>完全依赖</strong>是指不能存在仅部分属性依赖主键，如果存在，那么这个属性和主键的这一部分应该分离出来形成一个新的实体，新实体和原实体之间是一对多的关系。为实现区分通常要为表加上一个列，以存储各个实例的唯一标识。</p>
 <h1 id="第三范式（3NF）"><a href="#第三范式（3NF）" class="headerlink" title="第三范式（3NF）"></a>第三范式（3NF）</h1><p><strong>第三范式（3NF）</strong>：要求一个数据库表中不包含已经在其他表中包含的非主键信息。</p>
-<p>第三范式要求属性不依赖其他表的非主键（消除传递依赖）。</p>
+<p>第三范式要求非主属性对任一候选关键字段不存在传递函数依赖（消除<strong>传递依赖</strong>）。</p>
 <p>例如，一个部门信息表，其中每个部门都有编号（dept_id）、部门名称、部门简介等信息。那么在员工信息表中列出 dep_id 后就不能再将部门名称、部门简介与部门有关的信息再加入员工信息表中。</p>
-<p>也就是表中属性{A,B,C}不能存在传递依赖：A-&gt;B-&gt;C。</p>
-<h1 id="BC范式（BCNF）"><a href="#BC范式（BCNF）" class="headerlink" title="BC范式（BCNF）"></a>BC范式（BCNF）</h1><p>BC范式是在第三范式基础上的一种特殊情况，要求主属性不依赖于主属性。</p>
+<p>也就是表中属性{A,B,C}不能存在传递依赖：A-&gt;B-&gt;C，主键A可以确定某一非主属性B，而B又可以确定C。</p>
+<h1 id="BC范式（BCNF）"><a href="#BC范式（BCNF）" class="headerlink" title="BC范式（BCNF）"></a>BC范式（BCNF）</h1><p>BC范式是在第三范式基础上的一种特殊情况，要求主属性不依赖于主属性，也就是任何属性（2NF和3NF所限制的是非主属性）都对候选键不能存在传递依赖和部分依赖。</p>
 <h1 id="函数依赖"><a href="#函数依赖" class="headerlink" title="函数依赖"></a>函数依赖</h1><p>设R(U)是属性集U上的关系模式。X，Y是U的子集。若对于R(U)的任意一个可能的关系r,r中不可能存在两个元组在X上的属性值相等，而在Y上的属性值不相等，则称X函数确定Y或者Y函数依赖于X。记为X-&gt;Y。</p>
 <h1 id="完全函数依赖"><a href="#完全函数依赖" class="headerlink" title="完全函数依赖"></a>完全函数依赖</h1><p>在R(U)中，如果Y函数依赖于X,并且对于X的任何一个真子集X’，都有Y不函数依赖于X’， 则称Y对X完全函数依赖。否则称Y对X部分函数依赖。</p>
 <h1 id="传递函数依赖"><a href="#传递函数依赖" class="headerlink" title="传递函数依赖"></a>传递函数依赖</h1><p>在R(U)中，如果X-&gt;Y, Y-&gt;Z, 则称Z对X传递函数依赖。</p>
@@ -3822,7 +3846,7 @@ bits标志位含义：
 </ul>
 <h2 id="init"><a href="#init" class="headerlink" title="init()"></a>init()</h2><p>Bootstrap的<code>init()</code>的主要任务是：</p>
 <ol>
-<li><p><strong>初始化类加载器</strong><br> Tomcat类加载器：commonLoader、catalinaLoader、sharedLoader。<br> <img src="../images/tomcat/tomcat-classloader.png" alt=""></p>
+<li><p><strong>初始化类加载器</strong><br> Tomcat类加载器：commonLoader、catalinaLoader、sharedLoader。<br><img src="/images/tomcat/tomcat-classloader.png" alt=""></p>
 </li>
 <li><p>主线程的classLoader设置为catalinaLoader，安全管理的classLoad设置为catalineLoader。</p>
 </li>
@@ -4394,7 +4418,7 @@ bits标志位含义：
 <ol>
 <li><p>线程不安全的HashMap<br> 在多线程环境下，使用HashMap进行put操作会导致HashMap中的Entry链表形成环形数据结构，从而使得在进行get等操作时引起死循环。</p>
 </li>
-<li><p>效率低下的HashTable<br> HashTable使用synchronized来保证线程安全，但是在线程竞争激烈的情况下效率低下。因为HashTable会对整个表进行加锁来实现同步，而JDK 1.8中的ConcurrentHashMap则使用更细粒度的锁来实现同步（对表中的某一列进行加锁）。</p>
+<li><p>效率低下的HashTable<br> HashTable使用synchronized来保证线程安全，但是在线程竞争激烈的情况下效率低下。因为HashTable会对整个表进行加锁来实现同步，而JDK 1.8中的ConcurrentHashMap则使用更细粒度的锁来实现同步（对表中的链表表头进行加锁）。</p>
 </li>
 </ol>
 <p>HashTable 虽然性能上不如 ConcurrentHashMap，但<strong>并不能完全被取代</strong>，两者的迭代器的一致性不同的，HashTable的迭代器是强一致性的，而<strong>ConcurrentHashMap是弱一致的</strong>。 ConcurrentHashMap的get，clear，iterator 都是弱一致性的。</p>
@@ -4465,7 +4489,7 @@ bits标志位含义：
 </ul>
 <h1 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h1><p>JUC集合包中Map的实现类有：</p>
 <ul>
-<li>ConcurrentSkipHashMap<br>  <code>ConcurrentSkipHashMap</code>相当于线程安全的<code>HashMap</code>，它继承于<code>AbstractMap</code>类，并实现了<code>ConcurrentMap</code>接口。</li>
+<li>ConcurrentHashMap<br>  <code>ConcurrentHashMap</code>相当于线程安全的<code>HashMap</code>，它继承于<code>AbstractMap</code>类，并实现了<code>ConcurrentMap</code>接口。</li>
 <li>ConcurrentSkipListMap<br>  <code>ConcurrentSkipListMap</code>相当于线程安全的<code>TreeMap</code>，它继承于<code>AbstractMap</code>类，并实现了<code>ConcurrentNavigableMap</code>接口。通过<strong>跳表</strong>实现的。</li>
 </ul>
 <h1 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h1><p>JUC集合包中Queue的实现类有:</p>

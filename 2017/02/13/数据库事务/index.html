@@ -96,7 +96,7 @@
 事务的ACID特性原子性原子性（Atomicity）：事务对数据的修改，要么全都执行，要么全都不执行。一个事务对同一数据项的多次读取的结果一定是相同的。
 一致性一致性（Consistency）：指数据库事务不能破坏关系数据的完整性以及业务逻辑上的一致性。
 有些时候这种一致性由数据库的内部规">
-<meta property="og:updated_time" content="2017-02-16T14:25:19.503Z">
+<meta property="og:updated_time" content="2017-07-08T06:18:24.914Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据库事务">
 <meta name="twitter:description" content="一个事务是可以被看作一系列SQL语句的集合。这些操作要么全部执行，要么全部不执行，是一个不可分割的工作单位。
@@ -359,7 +359,7 @@
 <h2 id="不可重复读"><a href="#不可重复读" class="headerlink" title="不可重复读"></a>不可重复读</h2><p>不可重复读（Non-repeatable Read）：在一个事务里两次读入数据，但另一个事务已经更改了第一个事务涉及到的数据，造成第一个事务读入旧数据。</p>
 <h2 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h2><p>幻读（Phantom Read）：事务在操作过程中进行两次查询，第二次查询的结果包含了第一次查询中未出现的数据（这里并不要求两次查询的SQL语句相同）。这是因为在两次查询过程中有另外一个事务插入数据造成的。</p>
 <h2 id="丢失更新"><a href="#丢失更新" class="headerlink" title="丢失更新"></a>丢失更新</h2><p>丢失更新（Lost Update）：</p>
-<p>第一类：当两个事务更新相同的数据源，如果第一个事务被提交，第二个却被撤销，那么连同第一个事务做的更新也被撤销。<br>第二类：有两个并发事务同时读取同一行数据，然后其中一个对它进行修改提交，而另一个也进行了修改提交。这就会造成第一次写操作失效。</p>
+<p>第一类：当两个事务更新相同的数据源，如果第一个事务被提交，第二个却被撤销回滚，那么连同第一个事务做的更新也被覆盖。<br>第二类：有两个并发事务同时读取同一行数据，然后其中一个对它进行修改提交，而另一个也进行了修改提交。这就会造成第一次写操作可能被覆盖。</p>
 <h1 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h1><h2 id="Read-Uncommitted"><a href="#Read-Uncommitted" class="headerlink" title="Read Uncommitted"></a>Read Uncommitted</h2><p>读未提交数据。事务在执行过程既可以看到其他事务没有提交的新插入数据，也可看到其他事务已经提交的对已有记录的更新。</p>
 <p>Read Uncommitted会出现<strong>脏读</strong>。</p>
 <h2 id="Read-Committed"><a href="#Read-Committed" class="headerlink" title="Read Committed"></a>Read Committed</h2><p>读已提交数据。事务在执行过程中可以看到其他事务已提交的新插入记录，也可看到其他事务已提交的对已有记录的更新。</p>
@@ -489,7 +489,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">250</span>
+              <span class="site-state-item-count">249</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -497,7 +497,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

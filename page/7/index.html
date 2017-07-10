@@ -282,126 +282,6 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/16/动手写web框架-4-依赖注入实现/" itemprop="url">
-                  动手写web框架(4): 依赖注入实现
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-16T14:40:05+08:00" content="2017-02-16">
-              2017-02-16
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/动手写web框架/" itemprop="url" rel="index">
-                    <span itemprop="name">动手写web框架</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          IOC的原理参见：IOC原理
-对象交给第三方容器管理，维护对象间的关系，并将依赖的成员注入到相关的对象中。
-BeanHelper已经可以获取到所有Bean对象，现在就需要遍历这些Bean对象，通过反射获取对象的成员变量，判断成员变量是否带有@Inject注解，如果有就通过反射注入相关的Bean对象。
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/16/动手写web框架-4-依赖注入实现/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2017/02/16/动手写web框架-3-Bean容器/" itemprop="url">
                   动手写web框架(3): Bean容器
                 </a>
@@ -947,7 +827,7 @@ BeanHelper12345678910111213141516171819202122232425
       
         
           
-          AOPAOP，面向切面变成，将系统公共服务（例如，日志记录、事务管理、缓存、性能监测等）从核心业务逻辑中剥离出封装成独立的模块（切面）。
+          AOPAOP，面向切面编程，将系统公共服务（例如，日志记录、事务管理、缓存、性能监测等）从核心业务逻辑中剥离出封装成独立的模块（切面）。
 
 AOP的具体实现由两种：编译期静态织入和运行期动态代理。
 
@@ -1466,6 +1346,127 @@ eg: show status like &#39;Com
 
 
     
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/14/数据库索引/" itemprop="url">
+                  数据库索引
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-14T11:38:53+08:00" content="2017-02-14">
+              2017-02-14
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          索引是对数据库表中一个或多个列的值进行排序的数据结构。建立索引的目的是加快表中记录的查找或排序。
+如果没有索引，必须遍历整个表，直到找到目标记录为止；有了索引之后即可在索引中查找。由于索引是经过某种算法优化过的，因而查找次数要少的多。
+类型普通索引普通索引是最基本的数据库索引，没有任何限制。
+唯一索
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/02/14/数据库索引/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -1511,7 +1512,7 @@ eg: show status like &#39;Com
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">250</span>
+              <span class="site-state-item-count">249</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1519,7 +1520,7 @@ eg: show status like &#39;Com
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

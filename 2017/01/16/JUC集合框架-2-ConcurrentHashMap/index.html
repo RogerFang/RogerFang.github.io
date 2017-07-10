@@ -96,7 +96,7 @@ ConcurrentHashMap相当于线程安全的HashMap，它继承于AbstractMap类，
 C">
 <meta property="og:image" content="https://rogerfang.github.io/images/juc/juc-concurrenthashmap-java7.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/juc/juc-concurrenthashmap-java8.png">
-<meta property="og:updated_time" content="2017-03-02T11:43:25.618Z">
+<meta property="og:updated_time" content="2017-07-05T01:29:42.542Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JUC集合框架(2): ConcurrentHashMap">
 <meta name="twitter:description" content="12public class ConcurrentHashMap&amp;lt;K,V&amp;gt; extends AbstractMap&amp;lt;K,V&amp;gt;    implements ConcurrentMap&amp;lt;K,V&amp;gt;, Serializable
@@ -355,7 +355,7 @@ C">
 <ol>
 <li><p>线程不安全的HashMap<br> 在多线程环境下，使用HashMap进行put操作会导致HashMap中的Entry链表形成环形数据结构，从而使得在进行get等操作时引起死循环。</p>
 </li>
-<li><p>效率低下的HashTable<br> HashTable使用synchronized来保证线程安全，但是在线程竞争激烈的情况下效率低下。因为HashTable会对整个表进行加锁来实现同步，而JDK 1.8中的ConcurrentHashMap则使用更细粒度的锁来实现同步（对表中的某一列进行加锁）。</p>
+<li><p>效率低下的HashTable<br> HashTable使用synchronized来保证线程安全，但是在线程竞争激烈的情况下效率低下。因为HashTable会对整个表进行加锁来实现同步，而JDK 1.8中的ConcurrentHashMap则使用更细粒度的锁来实现同步（对表中的链表表头进行加锁）。</p>
 </li>
 </ol>
 <p>HashTable 虽然性能上不如 ConcurrentHashMap，但<strong>并不能完全被取代</strong>，两者的迭代器的一致性不同的，HashTable的迭代器是强一致性的，而<strong>ConcurrentHashMap是弱一致的</strong>。 ConcurrentHashMap的get，clear，iterator 都是弱一致性的。</p>
@@ -522,7 +522,7 @@ C">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">250</span>
+              <span class="site-state-item-count">249</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -530,7 +530,7 @@ C">
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

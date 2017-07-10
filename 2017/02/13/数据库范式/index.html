@@ -98,7 +98,7 @@
 如果可以再分或者出现重复属性，就可能需要定义一个新的实体，新实体与原实体构成一对多的关系。
 
 在任何一个关系数据库中，第一范式（1NF）是对关系模式的基本要">
-<meta property="og:updated_time" content="2017-02-13T08:17:58.793Z">
+<meta property="og:updated_time" content="2017-07-08T05:58:33.712Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据库范式">
 <meta name="twitter:description" content="范式是为了消除重复数据减少冗余数据，从而让数据库内的数据更好的组织，让磁盘空间得到更有效利用的一种标准化标准，满足高等级的范式的先决条件是满足低等级范式。
@@ -358,13 +358,13 @@
 <p>在任何一个关系数据库中，第一范式（1NF）是对关系模式的基本要求，不满足第一范式（1NF）的数据库就不是关系数据库。</p>
 </blockquote>
 <h1 id="第二范式（2NF）"><a href="#第二范式（2NF）" class="headerlink" title="第二范式（2NF）"></a>第二范式（2NF）</h1><p><strong>第二范式（2NF）</strong>：要求数据库表中的每个实例或行必须被唯一地区分。通常需要给表加上一列作为唯一标识符，这个属性列被称为<strong>主键</strong>或<strong>主关键字</strong>。</p>
-<p>第二范式（2NF）要求实体的<strong>属性完全依赖于主键</strong>。</p>
+<p>第二范式（2NF）要求实体的<strong>每一个非主属性完全依赖于主键</strong>。</p>
 <p>所谓<strong>完全依赖</strong>是指不能存在仅部分属性依赖主键，如果存在，那么这个属性和主键的这一部分应该分离出来形成一个新的实体，新实体和原实体之间是一对多的关系。为实现区分通常要为表加上一个列，以存储各个实例的唯一标识。</p>
 <h1 id="第三范式（3NF）"><a href="#第三范式（3NF）" class="headerlink" title="第三范式（3NF）"></a>第三范式（3NF）</h1><p><strong>第三范式（3NF）</strong>：要求一个数据库表中不包含已经在其他表中包含的非主键信息。</p>
-<p>第三范式要求属性不依赖其他表的非主键（消除传递依赖）。</p>
+<p>第三范式要求非主属性对任一候选关键字段不存在传递函数依赖（消除<strong>传递依赖</strong>）。</p>
 <p>例如，一个部门信息表，其中每个部门都有编号（dept_id）、部门名称、部门简介等信息。那么在员工信息表中列出 dep_id 后就不能再将部门名称、部门简介与部门有关的信息再加入员工信息表中。</p>
-<p>也就是表中属性{A,B,C}不能存在传递依赖：A-&gt;B-&gt;C。</p>
-<h1 id="BC范式（BCNF）"><a href="#BC范式（BCNF）" class="headerlink" title="BC范式（BCNF）"></a>BC范式（BCNF）</h1><p>BC范式是在第三范式基础上的一种特殊情况，要求主属性不依赖于主属性。</p>
+<p>也就是表中属性{A,B,C}不能存在传递依赖：A-&gt;B-&gt;C，主键A可以确定某一非主属性B，而B又可以确定C。</p>
+<h1 id="BC范式（BCNF）"><a href="#BC范式（BCNF）" class="headerlink" title="BC范式（BCNF）"></a>BC范式（BCNF）</h1><p>BC范式是在第三范式基础上的一种特殊情况，要求主属性不依赖于主属性，也就是任何属性（2NF和3NF所限制的是非主属性）都对候选键不能存在传递依赖和部分依赖。</p>
 <h1 id="函数依赖"><a href="#函数依赖" class="headerlink" title="函数依赖"></a>函数依赖</h1><p>设R(U)是属性集U上的关系模式。X，Y是U的子集。若对于R(U)的任意一个可能的关系r,r中不可能存在两个元组在X上的属性值相等，而在Y上的属性值不相等，则称X函数确定Y或者Y函数依赖于X。记为X-&gt;Y。</p>
 <h1 id="完全函数依赖"><a href="#完全函数依赖" class="headerlink" title="完全函数依赖"></a>完全函数依赖</h1><p>在R(U)中，如果Y函数依赖于X,并且对于X的任何一个真子集X’，都有Y不函数依赖于X’， 则称Y对X完全函数依赖。否则称Y对X部分函数依赖。</p>
 <h1 id="传递函数依赖"><a href="#传递函数依赖" class="headerlink" title="传递函数依赖"></a>传递函数依赖</h1><p>在R(U)中，如果X-&gt;Y, Y-&gt;Z, 则称Z对X传递函数依赖。</p>
@@ -474,7 +474,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">250</span>
+              <span class="site-state-item-count">249</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -482,7 +482,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

@@ -84,7 +84,7 @@
 
 
 
-<meta name="description" content="AOPAOP，面向切面变成，将系统公共服务（例如，日志记录、事务管理、缓存、性能监测等）从核心业务逻辑中剥离出封装成独立的模块（切面）。
+<meta name="description" content="AOPAOP，面向切面编程，将系统公共服务（例如，日志记录、事务管理、缓存、性能监测等）从核心业务逻辑中剥离出封装成独立的模块（切面）。
 
 AOP的具体实现由两种：编译期静态织入和运行期动态代理。
 
@@ -94,23 +94,23 @@ AspectJ 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功�
 <meta property="og:title" content="Spring: AOP原理">
 <meta property="og:url" content="https://rogerfang.github.io/2017/02/15/Spring-AOP原理/index.html">
 <meta property="og:site_name" content="方龙的博客">
-<meta property="og:description" content="AOPAOP，面向切面变成，将系统公共服务（例如，日志记录、事务管理、缓存、性能监测等）从核心业务逻辑中剥离出封装成独立的模块（切面）。
+<meta property="og:description" content="AOPAOP，面向切面编程，将系统公共服务（例如，日志记录、事务管理、缓存、性能监测等）从核心业务逻辑中剥离出封装成独立的模块（切面）。
 
 AOP的具体实现由两种：编译期静态织入和运行期动态代理。
 
 AspectJ 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功能，其他很多 AOP 框架都借鉴或采纳其中的一些思想。AspectJ是通过特殊命令在编译时对目标类进行增强。
 与 A">
-<meta property="og:image" content="https://rogerfang.github.io/../images/spring/aop_introduce_advice.png">
-<meta property="og:updated_time" content="2017-02-16T08:43:37.195Z">
+<meta property="og:image" content="https://rogerfang.github.io/images/spring/aop_introduce_advice.png">
+<meta property="og:updated_time" content="2017-07-07T03:34:30.317Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring: AOP原理">
-<meta name="twitter:description" content="AOPAOP，面向切面变成，将系统公共服务（例如，日志记录、事务管理、缓存、性能监测等）从核心业务逻辑中剥离出封装成独立的模块（切面）。
+<meta name="twitter:description" content="AOPAOP，面向切面编程，将系统公共服务（例如，日志记录、事务管理、缓存、性能监测等）从核心业务逻辑中剥离出封装成独立的模块（切面）。
 
 AOP的具体实现由两种：编译期静态织入和运行期动态代理。
 
 AspectJ 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功能，其他很多 AOP 框架都借鉴或采纳其中的一些思想。AspectJ是通过特殊命令在编译时对目标类进行增强。
 与 A">
-<meta name="twitter:image" content="https://rogerfang.github.io/../images/spring/aop_introduce_advice.png">
+<meta name="twitter:image" content="https://rogerfang.github.io/images/spring/aop_introduce_advice.png">
 
 
 
@@ -356,7 +356,7 @@ AspectJ 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功�
       
 
       
-        <h1 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h1><p>AOP，面向切面变成，将系统公共服务（例如，日志记录、事务管理、缓存、性能监测等）从核心业务逻辑中剥离出封装成独立的模块（切面）。</p>
+        <h1 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h1><p>AOP，面向切面编程，将系统公共服务（例如，日志记录、事务管理、缓存、性能监测等）从核心业务逻辑中剥离出封装成独立的模块（切面）。</p>
 <blockquote>
 <p>AOP的具体实现由两种：编译期静态织入和运行期动态代理。</p>
 </blockquote>
@@ -450,7 +450,7 @@ AspectJ 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功�
 </tr>
 </tbody>
 </table>
-<h2 id="引入通知"><a href="#引入通知" class="headerlink" title="引入通知"></a>引入通知</h2><p><img src="../images/spring/aop_introduce_advice.png" alt=""><br>通过引入通知来增强被通知的bean，看起来像是增加了新功能。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="meta">@Aspect</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EncoreableAspect</span></span>&#123;</div><div class="line">	<span class="comment">/**</span></div><div class="line">     * value指定哪种类型的Bean需要进行引入增强，“+”表示Performance的所有子类。</div><div class="line">     * defaultImpl指定提供引入功能的实现类。</div><div class="line">     */</div><div class="line">    <span class="meta">@DeclareParents</span>(value=<span class="string">"concert.Permormance+"</span>, defaultImpl=DefaultEncoreable.class)</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Encoreable encoreable;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="引入通知"><a href="#引入通知" class="headerlink" title="引入通知"></a>引入通知</h2><p><img src="/images/spring/aop_introduce_advice.png" alt=""><br>通过引入通知来增强被通知的bean，看起来像是增加了新功能。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="meta">@Aspect</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EncoreableAspect</span></span>&#123;</div><div class="line">	<span class="comment">/**</span></div><div class="line">     * value指定哪种类型的Bean需要进行引入增强，“+”表示Performance的所有子类。</div><div class="line">     * defaultImpl指定提供引入功能的实现类。</div><div class="line">     */</div><div class="line">    <span class="meta">@DeclareParents</span>(value=<span class="string">"concert.Permormance+"</span>, defaultImpl=DefaultEncoreable.class)</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Encoreable encoreable;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="配置切面"><a href="#配置切面" class="headerlink" title="配置切面"></a>配置切面</h2><h3 id="XML配置"><a href="#XML配置" class="headerlink" title="XML配置"></a>XML配置</h3><ol>
 <li><p>传统Spring AOP</p>
  <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">   <span class="tag">&lt;<span class="name">aop:config</span>&gt;</span></div><div class="line">   	<span class="tag">&lt;<span class="name">aop:advisor</span> <span class="attr">advice-ref</span>=<span class="string">".."</span> <span class="attr">point-ref</span>=<span class="string">".."</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">aop:config</span>&gt;</span></div></pre></td></tr></table></figure>
@@ -572,7 +572,7 @@ AspectJ 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">250</span>
+              <span class="site-state-item-count">249</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -580,7 +580,7 @@ AspectJ 是一个基于 Java 语言的 AOP 框架，提供了强大的 AOP 功�
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
