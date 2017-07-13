@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Executor,并发框架," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -84,26 +84,44 @@
 
 
 
-<meta name="description" content="Java的线程既是工作单元，也是执行机制。从JDK 5开始，把工作单元与执行机制分离开来。工作单元包括Runnable和Callable，而执行机制由Executor框架提供。
-Executor框架Executor框架的两级调度模型
-对于Sun JDK来说，它的Windows版和Linux版都是使用一对一的线程模型实现的，一条Java线程就映射到一条轻量级进程(LWP)中。参见：Java与线程">
+<meta name="description" content="title: Executor框架date: 2017-01-17 16:43:15categories:
+
+Java SEtags:
+Executor
+并发框架
+
+
+Java的线程既是工作单元，也是执行机制。从JDK 5开始，把工作单元与执行机制分离开来。工作单元包括Runnable和Callable，而执行机制由Executor框架提供。
+Executor框架Executor框架的两级调度模">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Executor框架">
+<meta property="og:title" content="方龙的博客">
 <meta property="og:url" content="https://rogerfang.github.io/2017/01/17/Executor框架/index.html">
 <meta property="og:site_name" content="方龙的博客">
-<meta property="og:description" content="Java的线程既是工作单元，也是执行机制。从JDK 5开始，把工作单元与执行机制分离开来。工作单元包括Runnable和Callable，而执行机制由Executor框架提供。
-Executor框架Executor框架的两级调度模型
-对于Sun JDK来说，它的Windows版和Linux版都是使用一对一的线程模型实现的，一条Java线程就映射到一条轻量级进程(LWP)中。参见：Java与线程">
+<meta property="og:description" content="title: Executor框架date: 2017-01-17 16:43:15categories:
+
+Java SEtags:
+Executor
+并发框架
+
+
+Java的线程既是工作单元，也是执行机制。从JDK 5开始，把工作单元与执行机制分离开来。工作单元包括Runnable和Callable，而执行机制由Executor框架提供。
+Executor框架Executor框架的两级调度模">
 <meta property="og:image" content="https://rogerfang.github.io/../images/javase/executor-two-level-scheduling-model.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/javase/executor-framework-interface-class.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/javase/executor-framework-use.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/javase/futuretask-get-cancel-state.png">
-<meta property="og:updated_time" content="2017-07-02T11:59:00.270Z">
+<meta property="og:updated_time" content="2017-07-13T14:36:10.011Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Executor框架">
-<meta name="twitter:description" content="Java的线程既是工作单元，也是执行机制。从JDK 5开始，把工作单元与执行机制分离开来。工作单元包括Runnable和Callable，而执行机制由Executor框架提供。
-Executor框架Executor框架的两级调度模型
-对于Sun JDK来说，它的Windows版和Linux版都是使用一对一的线程模型实现的，一条Java线程就映射到一条轻量级进程(LWP)中。参见：Java与线程">
+<meta name="twitter:title" content="方龙的博客">
+<meta name="twitter:description" content="title: Executor框架date: 2017-01-17 16:43:15categories:
+
+Java SEtags:
+Executor
+并发框架
+
+
+Java的线程既是工作单元，也是执行机制。从JDK 5开始，把工作单元与执行机制分离开来。工作单元包括Runnable和Callable，而执行机制由Executor框架提供。
+Executor框架Executor框架的两级调度模">
 <meta name="twitter:image" content="https://rogerfang.github.io/../images/javase/executor-two-level-scheduling-model.png">
 
 
@@ -128,7 +146,7 @@ Executor框架Executor框架的两级调度模型
   <link rel="canonical" href="https://rogerfang.github.io/2017/01/17/Executor框架/"/>
 
 
-  <title> Executor框架 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>  | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -291,7 +309,7 @@ Executor框架Executor框架的两级调度模型
             
             
               
-                Executor框架
+                
               
             
           </h1>
@@ -303,30 +321,11 @@ Executor框架Executor框架的两级调度模型
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-17T16:43:15+08:00" content="2017-01-17">
+            <time itemprop="dateCreated" datetime="2017-01-17T00:00:00+08:00" content="2017-01-17">
               2017-01-17
             </time>
           </span>
 
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
-                    <span itemprop="name">Java SE</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
           
 
           
@@ -350,7 +349,15 @@ Executor框架Executor框架的两级调度模型
       
 
       
-        <p>Java的线程既是<strong>工作单元</strong>，也是<strong>执行机制</strong>。从JDK 5开始，把工作单元与执行机制分离开来。工作单元包括<code>Runnable</code>和<code>Callable</code>，而执行机制由<code>Executor</code>框架提供。</p>
+        <hr>
+<p>title: Executor框架<br>date: 2017-01-17 16:43:15<br>categories:</p>
+<ul>
+<li>Java SE<br>tags:</li>
+<li>Executor</li>
+<li>并发框架</li>
+</ul>
+<hr>
+<p>Java的线程既是<strong>工作单元</strong>，也是<strong>执行机制</strong>。从JDK 5开始，把工作单元与执行机制分离开来。工作单元包括<code>Runnable</code>和<code>Callable</code>，而执行机制由<code>Executor</code>框架提供。</p>
 <h1 id="Executor框架"><a href="#Executor框架" class="headerlink" title="Executor框架"></a>Executor框架</h1><h2 id="Executor框架的两级调度模型"><a href="#Executor框架的两级调度模型" class="headerlink" title="Executor框架的两级调度模型"></a>Executor框架的两级调度模型</h2><blockquote>
 <p>对于Sun JDK来说，它的Windows版和Linux版都是使用一对一的线程模型实现的，一条Java线程就映射到一条<strong>轻量级进程</strong>(LWP)中。<br>参见：<a href="https://rogerfang.github.io/2017/01/06/Java%E4%B8%8E%E7%BA%BF%E7%A8%8B/">Java与线程</a></p>
 </blockquote>
@@ -377,7 +384,10 @@ Executor框架Executor框架的两级调度模型
 </ol>
 <p><code>ScheduledThreadPoolExecutor</code>会把调度任务（ScheduledFutureTask）放到<code>DelayQueue</code>中。</p>
 <h2 id="FutureTask"><a href="#FutureTask" class="headerlink" title="FutureTask"></a>FutureTask</h2><p><code>Future</code>接口和其实现类<code>FutureTask</code>代表了异步计算的结果。<br>FutureTask实现了两个接口，Runnable和Future，所以它既可以作为Runnable被线程执行，又可以作为Future得到Callable的返回值。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FutureTask</span>&lt;<span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">RunnableFuture</span>&lt;<span class="title">V</span>&gt;</span></div><div class="line"></div><div class="line"><span class="title">public</span> <span class="title">interface</span> <span class="title">RunnableFuture</span>&lt;<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">Runnable</span>, <span class="title">Future</span>&lt;<span class="title">V</span>&gt;</div></pre></td></tr></table></figure>
+<pre><code class="java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FutureTask</span>&lt;<span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">RunnableFuture</span>&lt;<span class="title">V</span>&gt;
+
+<span class="title">public</span> <span class="title">interface</span> <span class="title">RunnableFuture</span>&lt;<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">Runnable</span>, <span class="title">Future</span>&lt;<span class="title">V</span>&gt;</span>
+</code></pre>
 <p><code>FutureTask</code>除了实现了<code>Future</code>接口外，还实现了<code>Runnable</code>接口，因此<code>FutureTask</code>可以交给<code>Executor</code>执行，也可以由调用线程直接执行（<code>FutureTask.run()</code>）。</p>
 <h3 id="FutureTask的状态"><a href="#FutureTask的状态" class="headerlink" title="FutureTask的状态"></a>FutureTask的状态</h3><p>FutureTask可以处于以下3种状态：</p>
 <ol>
@@ -386,7 +396,40 @@ Executor框架Executor框架的两级调度模型
 <li>完成<br> <code>FutureTask.run()</code>执行完后正常结束，或被取消（<code>Future.cancel(...)</code>），或执行时抛出异常而结束，FutureTask处于完成状态。</li>
 </ol>
 <p><img src="/images/javase/futuretask-get-cancel-state.png" alt=""></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FutureTaskTest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ExecutionException, InterruptedException </span>&#123;</div><div class="line">        ExecutorService es = Executors.newCachedThreadPool();</div><div class="line"></div><div class="line">        Task task = <span class="keyword">new</span> Task();</div><div class="line">        Future&lt;String&gt; future = es.submit(task);</div><div class="line">        FutureTask&lt;String&gt; futureTask = <span class="keyword">new</span> FutureTask&lt;String&gt;(task);</div><div class="line">        <span class="comment">// 将FutureTask交给线程池执行</span></div><div class="line">        es.submit(futureTask);</div><div class="line">        <span class="comment">// FutureTask直接交给Thread执行</span></div><div class="line">        <span class="comment">// new Thread(futureTask).start();</span></div><div class="line"></div><div class="line">        System.out.println(future.get());</div><div class="line">        System.out.println(futureTask.get());</div><div class="line"></div><div class="line">        es.shutdown();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Task</span> <span class="keyword">implements</span> <span class="title">Callable</span>&lt;<span class="title">String</span>&gt;</span>&#123;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">            Thread.sleep(<span class="number">2000</span>);</div><div class="line">            <span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++)&#123;</div><div class="line">                sum += i;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> <span class="string">"sum="</span>+sum;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FutureTaskTest</span> </span>{
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ExecutionException, InterruptedException </span>{
+        ExecutorService es = Executors.newCachedThreadPool();
+
+        Task task = <span class="keyword">new</span> Task();
+        Future&lt;String&gt; future = es.submit(task);
+        FutureTask&lt;String&gt; futureTask = <span class="keyword">new</span> FutureTask&lt;String&gt;(task);
+        <span class="comment">// 将FutureTask交给线程池执行</span>
+        es.submit(futureTask);
+        <span class="comment">// FutureTask直接交给Thread执行</span>
+        <span class="comment">// new Thread(futureTask).start();</span>
+
+        System.out.println(future.get());
+        System.out.println(futureTask.get());
+
+        es.shutdown();
+    }
+
+    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Task</span> <span class="keyword">implements</span> <span class="title">Callable</span>&lt;<span class="title">String</span>&gt;</span>{
+
+        <span class="meta">@Override</span>
+        <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>{
+            Thread.sleep(<span class="number">2000</span>);
+            <span class="keyword">int</span> sum = <span class="number">0</span>;
+            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++){
+                sum += i;
+            }
+            <span class="keyword">return</span> <span class="string">"sum="</span>+sum;
+        }
+    }
+}
+</code></pre>
+
       
     </div>
 
@@ -406,29 +449,21 @@ Executor框架Executor框架的两级调度模型
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/Executor/" rel="tag">#Executor</a>
-          
-            <a href="/tags/并发框架/" rel="tag">#并发框架</a>
-          
-        </div>
-      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/17/线程池/" rel="next" title="线程池">
-                <i class="fa fa-chevron-left"></i> 线程池
+              <a href="/2017/01/16/JUC集合框架-2-ConcurrentHashMap/" rel="next" title="JUC集合框架(2): ConcurrentHashMap">
+                <i class="fa fa-chevron-left"></i> JUC集合框架(2): ConcurrentHashMap
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/01/19/网络模型/" rel="prev" title="网络模型">
-                网络模型 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/01/17/线程池/" rel="prev" title="线程池">
+                线程池 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -514,7 +549,7 @@ Executor框架Executor框架的两级调度模型
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">158</span>
+                <span class="site-state-item-count">157</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
