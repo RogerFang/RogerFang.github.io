@@ -282,8 +282,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/06/数据结构与算法-29-图-深度优先搜索-DFS/" itemprop="url">
-                  数据结构与算法(29): 图- 深度优先搜索(DFS)
+                <a class="post-title-link" href="/2016/10/27/数据结构与算法-6-树形结构-AVL树/" itemprop="url">
+                  数据结构与算法(6): 树形结构-AVL树
                 </a>
               
             
@@ -296,8 +296,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-06T14:00:00+08:00" content="2016-11-06">
-              2016-11-06
+            <time itemprop="dateCreated" datetime="2016-10-27T20:41:50+08:00" content="2016-10-27">
+              2016-10-27
             </time>
           </span>
 
@@ -345,11 +345,14 @@
       
         
           
-          &emsp;&emsp;假设初始状态是图中所有顶点均未被访问，则从某个顶点v出发，首先访问该顶点，然后依次从它的各个未被访问的邻接点出发深度优先搜索遍历图，直至图中所有和v有路径相通的顶点都被访问到。 若此时尚有其他顶点未被访问到，则另选一个未被访问的顶点作起始点，重复上述过程，直至图中所有顶点都被
+          介绍
+AVL树是根据它的发明者Adelson-Velsky和Landis命名的。
+
+&emsp;&emsp;AVL树是带有平衡条件的二叉查找树。这个平衡条件必须要容易保持，而且保证树的深度必须是$O(\log{N})$，所以AVL树的查找、插入和删除在平均和最坏情况下都是$O(\log{N})$。它
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/06/数据结构与算法-29-图-深度优先搜索-DFS/#more" rel="contents">
+            <a class="btn" href="/2016/10/27/数据结构与算法-6-树形结构-AVL树/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -400,8 +403,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/06/数据结构与算法-28-图-拓扑排序/" itemprop="url">
-                  数据结构与算法(28): 图- 拓扑排序
+                <a class="post-title-link" href="/2016/10/27/数据结构与算法-5-树形结构-二叉查找树/" itemprop="url">
+                  数据结构与算法(5): 树形结构-二叉查找树
                 </a>
               
             
@@ -414,8 +417,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-06T10:57:57+08:00" content="2016-11-06">
-              2016-11-06
+            <time itemprop="dateCreated" datetime="2016-10-27T16:33:18+08:00" content="2016-10-27">
+              2016-10-27
             </time>
           </span>
 
@@ -463,14 +466,19 @@
       
         
           
-          定义&emsp;&emsp;拓扑排序(Topological Order)是指：将一个有向无环图(Directed Acyclic Graph, DAG)进行排序而得到一个有序的线性序列。拓扑排序不必是唯一的，任何合理的排序都是可以的。
-算法步骤
-构造一个队列Q和拓扑排序的结果队列T；
-把所有没有依
+          性质
+若左子树不为空，则左子树上所有节点的值均小于它的根节点的值；
+若右子树不为空，则右子树上所有节点的值均大于它的根节点的值。
+左、右子树也分别为二叉查找树
+
+实现
+下面的实现代码中，insert和remove是通过递归实现的，之后用while语句替代对比一下。
+
+1234567891011121
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/06/数据结构与算法-28-图-拓扑排序/#more" rel="contents">
+            <a class="btn" href="/2016/10/27/数据结构与算法-5-树形结构-二叉查找树/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -521,8 +529,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/06/数据结构与算法-27-图-理论基础/" itemprop="url">
-                  数据结构与算法(27): 图- 理论基础
+                <a class="post-title-link" href="/2016/10/27/数据结构与算法-4-树形结构-树-二叉树/" itemprop="url">
+                  数据结构与算法(4): 树形结构-树&二叉树
                 </a>
               
             
@@ -535,8 +543,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-06T09:38:57+08:00" content="2016-11-06">
-              2016-11-06
+            <time itemprop="dateCreated" datetime="2016-10-27T13:02:36+08:00" content="2016-10-27">
+              2016-10-27
             </time>
           </span>
 
@@ -584,22 +592,18 @@
       
         
           
-          定义
-一个图(graph)G=(V, E)由顶点(vertex)的集V和边(edge)的的集E组成。
+          树定义树：是n(n&gt;=0)个节点的有限集。
 
+当n=0时，称为空树
+有且仅有一个特定的节点称为根节点
+当n&gt;1时，其余节点可分为k(k&gt;0)个互不相交的有限集T1，T2，…，T3，其中每个集合本身又是一棵树，并且称为根的子树。
 
-无向图无向图所有的边都是不区分方向的。
-
-有向图有向图所有的边都是有方向的。
-
-
-
-邻接：顶点w和顶点v邻接当且仅当$(v, w) \in E$。
-度：在无向图中，顶点的度是邻接到该顶点的边的数
+特性
+节点的度：节点拥有的子树个数；树的度是树内各节
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/06/数据结构与算法-27-图-理论基础/#more" rel="contents">
+            <a class="btn" href="/2016/10/27/数据结构与算法-4-树形结构-树-二叉树/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -650,8 +654,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/04/数据结构与算法-26-散列/" itemprop="url">
-                  数据结构与算法(26): 散列
+                <a class="post-title-link" href="/2016/10/26/数据结构与算法-3-线性结构-队列/" itemprop="url">
+                  数据结构与算法(3): 线性结构-队列
                 </a>
               
             
@@ -664,8 +668,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-04T15:46:35+08:00" content="2016-11-04">
-              2016-11-04
+            <time itemprop="dateCreated" datetime="2016-10-26T13:56:35+08:00" content="2016-10-26">
+              2016-10-26
             </time>
           </span>
 
@@ -713,15 +717,16 @@
       
         
           
-          
-散列是一种用于以常数平均时间执行插入、删除和查找的技术。
+          队列：一种线性存储结构，和栈一样也是一种操作受限的表。
 
-散列表(Hash Table)就是一种以键-值存储数据的结构。
-使用哈希查找有两个步骤:&emsp;&emsp;1. 使用散列函数将被查找的键转换为存储单元的索引。在理想的情况下，不同的键会被转换为不同的索引值，但是在有些情况下多个键被散
+队列中数据是按照”先进先出（FIFO）“方式进出队列的。
+队列只允许在”队首“删除，而在”队尾“插入。
+
+顺序队列&emsp;&emsp;建立顺序队列结构必须为分配一片连续的存储空间，并设置两个指针进行管理。一个是队头指针front，它指向队
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/04/数据结构与算法-26-散列/#more" rel="contents">
+            <a class="btn" href="/2016/10/26/数据结构与算法-3-线性结构-队列/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -772,8 +777,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/04/数据结构与算法-25-排序-外部排序/" itemprop="url">
-                  数据结构与算法(25): 排序- 外部排序
+                <a class="post-title-link" href="/2016/10/25/数据结构与算法-2-线性结构-栈/" itemprop="url">
+                  数据结构与算法(2): 线性结构-栈
                 </a>
               
             
@@ -786,8 +791,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-04T14:22:14+08:00" content="2016-11-04">
-              2016-11-04
+            <time itemprop="dateCreated" datetime="2016-10-25T19:18:16+08:00" content="2016-10-25">
+              2016-10-25
             </time>
           </span>
 
@@ -835,11 +840,16 @@
       
         
           
-          &emsp;&emsp;外部排序指的是大文件的排序，即待排序的记录存储在外存储器上，待排序的文件无法一次装入内存，需要在内存和外部存储器之间进行多次数据交换，以达到排序整个文件的目的。外部排序最常用的算法是多路归并排序，即将原文件分解成多个能够一次性装入内存的部分，分别把每一部分调入内存完成排序。然
+          栈：一种线性存储结构，是限制插入和删除只能在一个位置上进行的表，该位置是表的末端，叫做栈顶。
+
+栈中数据是按照“先进后出（LIFO）”方式进行出栈的
+栈通常包括三种的三种操作：push（向栈中添加元素）、peek（返回栈顶元素）、pop（返回并删除栈顶元素）
+
+栈的实现方式数组实现123456789
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/04/数据结构与算法-25-排序-外部排序/#more" rel="contents">
+            <a class="btn" href="/2016/10/25/数据结构与算法-2-线性结构-栈/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -890,8 +900,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/04/数据结构与算法-24-排序-桶排序/" itemprop="url">
-                  数据结构与算法(24): 排序- 桶排序
+                <a class="post-title-link" href="/2016/10/25/数据结构与算法-1-线性结构-表/" itemprop="url">
+                  数据结构与算法(1): 线性结构-表
                 </a>
               
             
@@ -904,8 +914,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-04T14:10:14+08:00" content="2016-11-04">
-              2016-11-04
+            <time itemprop="dateCreated" datetime="2016-10-25T17:52:46+08:00" content="2016-10-25">
+              2016-10-25
             </time>
           </span>
 
@@ -953,493 +963,12 @@
       
         
           
-          &emsp;&emsp;桶排序(Bucket Sort)的原理很简单，它是将数组分到有限数量的桶子里。
-&emsp;&emsp;假设待排序的数组a中共有N个整数，并且已知数组a中数据的范围[0, MAX)。在桶排序时，创建容量为MAX的桶数组r，并将桶数组元素都初始化为0；将容量为MAX的桶数组中的
+          数组数组能够顺序存储相同类型的多个数据，数据的元素在内存上的存储地址是连续的。在声明数组的时候，需要指定数组的名称，它含有的数据类型以及数组的长度。特点：数据是连续的，随机访问速度快。（在Java中Collection集合中提供了ArrayList和Vector实现动态数组）
+表（线性表）线性表：零
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/04/数据结构与算法-24-排序-桶排序/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/11/04/数据结构与算法-23-排序-快速排序/" itemprop="url">
-                  数据结构与算法(23): 排序- 快速排序
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-04T12:10:14+08:00" content="2016-11-04">
-              2016-11-04
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
-                    <span itemprop="name">数据结构与算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          &emsp;&emsp;快速排序的基本思想：选择一个基准数，通过一趟排序将要排序的数据分割成独立的两部分；其中一部分的所有数据都比另外一部分的所有数据都要小。然后，再按此方法对这两部分数据分别进行快速排序，整个排序过程递归进行，以达到有序序列。
-
-快速排序的每一轮处理其实就是将一轮的基准数归位。
-
-
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/04/数据结构与算法-23-排序-快速排序/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/11/03/数据结构与算法-22-排序-归并排序/" itemprop="url">
-                  数据结构与算法(22): 排序- 归并排序
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-03T19:10:14+08:00" content="2016-11-03">
-              2016-11-03
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
-                    <span itemprop="name">数据结构与算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          &emsp;&emsp;归并排序的基本思想：将两个有序数列合并成一个有序数列，具体实现包括“从上往下”和“从下往上”2种方式。&emsp;&emsp;时间复杂度：O($N\log{N}$)。&emsp;&emsp;空间复杂度：O($N$)。（临时数组）&emsp;&emsp;归并排序是稳定的。
-
-从
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/03/数据结构与算法-22-排序-归并排序/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/11/03/数据结构与算法-21-排序-堆排序/" itemprop="url">
-                  数据结构与算法(21): 排序- 堆排序
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-03T13:10:14+08:00" content="2016-11-03">
-              2016-11-03
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
-                    <span itemprop="name">数据结构与算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          &emsp;&emsp;堆排序是指利用堆这种数据结构所涉及的一种排序算法。最大堆通常被用来进行”升序”排序，而最小堆通常被用来进行”降序”排序。&emsp;&emsp;最小堆进行降序的基本思想：&emsp;&emsp;1. 初始化堆：将数据构造成最小堆。&emsp;&emsp;2. 交换数据：将a[
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/03/数据结构与算法-21-排序-堆排序/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/11/03/数据结构与算法-20-排序-希尔排序/" itemprop="url">
-                  数据结构与算法(20): 排序- 希尔排序
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-03T12:30:14+08:00" content="2016-11-03">
-              2016-11-03
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
-                    <span itemprop="name">数据结构与算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          
-希尔排序是插入排序的一种，它是针对直接插入排序算法的改进。该方法又称缩减增量排序，因DL．Shell于1959年提出而得名。
-
-&emsp;&emsp;希尔排序实质上是一种分组插入方法。它的基本思想是：对于n个待排序的数列，取一个小于n的整数gap(gap被称为步长)将待排序元素分成若干个组子序列
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/03/数据结构与算法-20-排序-希尔排序/#more" rel="contents">
+            <a class="btn" href="/2016/10/25/数据结构与算法-1-线性结构-表/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1473,7 +1002,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/22/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><span class="page-number current">23</span><a class="page-number" href="/page/24/">24</a><a class="page-number" href="/page/25/">25</a><a class="extend next" rel="next" href="/page/24/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/22/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><span class="page-number current">23</span>
   </nav>
 
 
@@ -1514,7 +1043,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">249</span>
+              <span class="site-state-item-count">226</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1522,7 +1051,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1531,7 +1060,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">157</span>
+                <span class="site-state-item-count">149</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

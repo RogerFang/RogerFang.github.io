@@ -282,8 +282,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/19/网络模型/" itemprop="url">
-                  网络模型
+                <a class="post-title-link" href="/2017/01/05/JVM-垃圾回收机制/" itemprop="url">
+                  JVM: 垃圾回收机制
                 </a>
               
             
@@ -296,8 +296,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-19T08:54:11+08:00" content="2017-01-19">
-              2017-01-19
+            <time itemprop="dateCreated" datetime="2017-01-05T18:29:43+08:00" content="2017-01-05">
+              2017-01-05
             </time>
           </span>
 
@@ -310,8 +310,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/网络/" itemprop="url" rel="index">
-                    <span itemprop="name">网络</span>
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
                   </a>
                 </span>
 
@@ -345,12 +345,13 @@
       
         
           
-          OSI 七层模型OSI（Open System Interconnection，开放系统互连）七层网络模型称为开放式网络互连参考模型。它是国际标准组织制定的一个指导信息互连、互通和协作的网络规范。
-从逻辑上可以将其划分为七层模型：应用层、表示层、会话层、传输层、网络层、数据链路层和物理层。其中上3层
+          垃圾回收可以有效的防止内存泄露，有效的使用空闲的内存。Java堆和方法区的内存分配和回收是动态的，因而垃圾收集器所关注的也是这部分内存。
+垃圾收集机制要考虑的两件事情：（1）发现无用对象（如何判断对象是否还“存活”）；（2）回收被无用对象占用的内存空间，使该空间可被程序再次使用（垃圾收集算法）。
+对
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/19/网络模型/#more" rel="contents">
+            <a class="btn" href="/2017/01/05/JVM-垃圾回收机制/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -401,8 +402,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/17/线程池/" itemprop="url">
-                  线程池
+                <a class="post-title-link" href="/2017/01/05/JVM-HotSpot虚拟机中的对象/" itemprop="url">
+                  JVM: HotSpot虚拟机中的对象
                 </a>
               
             
@@ -415,8 +416,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-17T13:07:46+08:00" content="2017-01-17">
-              2017-01-17
+            <time itemprop="dateCreated" datetime="2017-01-05T16:26:02+08:00" content="2017-01-05">
+              2017-01-05
             </time>
           </span>
 
@@ -429,8 +430,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java-SE/" itemprop="url" rel="index">
-                    <span itemprop="name">Java SE</span>
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
                   </a>
                 </span>
 
@@ -464,19 +465,17 @@
       
         
           
-          线程池带来的好处：
+          探讨HotSpot虚拟机在Java堆中的对象分配、布局和访问过程。
+对象的创建
+这里仅讨论普通的Java对象，不涉及数组和Class对象等
 
-降低资源消耗 通过重复利用已创建的线程降低线程创建和销毁造成的消耗。
-提高响应速度 当任务到达时，任务可以不需要等到线程创建就能立即执行。
-提高线程的可管理性 线程是稀缺资源，使用线程池可以统一分配、调优和监控。
+对象的创建过程：
 
-实现原理当提交一个新任务到线程池时，线程池的主要处理流程
-
-判
+虚拟机遇到一条new指令时，首先去检查这个指令的参数是否能够在常量池中定位到一个类的符号引用，并检查这个符号引用代表的类是否已被加载、解析
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/17/线程池/#more" rel="contents">
+            <a class="btn" href="/2017/01/05/JVM-HotSpot虚拟机中的对象/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -527,8 +526,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/17/Executor框架/" itemprop="url">
-                  未命名
+                <a class="post-title-link" href="/2017/01/05/JVM-Java虚拟机运行时数据区域/" itemprop="url">
+                  JVM: Java虚拟机运行时数据区域
                 </a>
               
             
@@ -541,11 +540,30 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-17T00:00:00+08:00" content="2017-01-17">
-              2017-01-17
+            <time itemprop="dateCreated" datetime="2017-01-05T14:32:43+08:00" content="2017-01-05">
+              2017-01-05
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
@@ -572,18 +590,14 @@
         
           
           
-title: Executor框架date: 2017-01-17 16:43:15categories:
+Java与C/C++之间有一堵由动态内存分配和垃圾收集技术所围成的“高墙”。
 
-Java SEtags:
-Executor
-并发框架
-
-
-Java的线程既是工作单元，也是执行机制。从JDK 5开始，把工作单元与执行机制分离开来。工作单元包括Runnable和Calla
+Java虚拟机在执行Java程序的过程中会把它管理的内存划分为若干个不同的数据区域。
+程序计数器程序计数器（Program Counter Register）是一块线程私有的内存空间，可以看作是当前线程所执行的字节码的
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/17/Executor框架/#more" rel="contents">
+            <a class="btn" href="/2017/01/05/JVM-Java虚拟机运行时数据区域/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -634,8 +648,8 @@ Java的线程既是工作单元，也是执行机制。从JDK 5开始，把工�
             
               
                 
-                <a class="post-title-link" href="/2017/01/16/JUC集合框架-2-ConcurrentHashMap/" itemprop="url">
-                  JUC集合框架(2): ConcurrentHashMap
+                <a class="post-title-link" href="/2017/01/04/JVM-字节码执行引擎-2-方法调用/" itemprop="url">
+                  JVM: 字节码执行引擎(2)-方法调用
                 </a>
               
             
@@ -648,8 +662,8 @@ Java的线程既是工作单元，也是执行机制。从JDK 5开始，把工�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-16T11:03:06+08:00" content="2017-01-16">
-              2017-01-16
+            <time itemprop="dateCreated" datetime="2017-01-04T15:24:50+08:00" content="2017-01-04">
+              2017-01-04
             </time>
           </span>
 
@@ -662,8 +676,8 @@ Java的线程既是工作单元，也是执行机制。从JDK 5开始，把工�
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/JUC集合框架/" itemprop="url" rel="index">
-                    <span itemprop="name">JUC集合框架</span>
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
                   </a>
                 </span>
 
@@ -697,12 +711,15 @@ Java的线程既是工作单元，也是执行机制。从JDK 5开始，把工�
       
         
           
-          12public class ConcurrentHashMap&lt;K,V&gt; extends AbstractMap&lt;K,V&gt;    implements ConcurrentMap&lt;K,V&gt;, Serializable
-ConcurrentHashMap相当于线程
+          方法调用不同于方法执行，方法调用阶段唯一的任务就是确定被调用方法的版本（即调用哪一个方法），暂时还不涉及方法内部的具体运行过程。
+解析
+解析调用一定是个静态的过程，在编译期间就完全确定，在类加载的解析阶段就会把涉及的符号引用转换为可确定的直接引用，不会延迟到运行期再去完成。
+
+所有方法调用中的目标方
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/16/JUC集合框架-2-ConcurrentHashMap/#more" rel="contents">
+            <a class="btn" href="/2017/01/04/JVM-字节码执行引擎-2-方法调用/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -753,8 +770,8 @@ ConcurrentHashMap相当于线程
             
               
                 
-                <a class="post-title-link" href="/2017/01/16/JUC集合框架-1-概述/" itemprop="url">
-                  JUC集合框架(1): 概述
+                <a class="post-title-link" href="/2017/01/04/JVM-字节码执行引擎-1-概述/" itemprop="url">
+                  JVM: 字节码执行引擎(1)-概述
                 </a>
               
             
@@ -767,8 +784,8 @@ ConcurrentHashMap相当于线程
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-16T10:30:10+08:00" content="2017-01-16">
-              2017-01-16
+            <time itemprop="dateCreated" datetime="2017-01-04T14:18:38+08:00" content="2017-01-04">
+              2017-01-04
             </time>
           </span>
 
@@ -781,8 +798,8 @@ ConcurrentHashMap相当于线程
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/JUC集合框架/" itemprop="url" rel="index">
-                    <span itemprop="name">JUC集合框架</span>
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
                   </a>
                 </span>
 
@@ -816,15 +833,14 @@ ConcurrentHashMap相当于线程
       
         
           
-          JUC包中集合类可以分为3部分：List和Set、Map以及Queue。
-List和SetJUC集合包中List和Set的实现类有：
+          执行引擎是JVM最核心的组成部分之一。
+虚拟机执行引擎在执行代码的时候，可能会有解释执行（通过解释器执行）和编译执行（通过JIT编译器产生本地代码执行）两种选择。
 
-CopyOnWriteArrayList  CopyOnWriteArrayList相当于线程安全的ArrayList，它实现了List接口。
-CopyOnWrit
+虚拟机是一个相对于物理机的概念，它们都有代码执行能力，其区别是物理机的执行引擎是直接建立在处理器、硬件、指令集和操作系统层面上的，而虚
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/16/JUC集合框架-1-概述/#more" rel="contents">
+            <a class="btn" href="/2017/01/04/JVM-字节码执行引擎-1-概述/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -875,8 +891,8 @@ CopyOnWrit
             
               
                 
-                <a class="post-title-link" href="/2017/01/15/Lock-并发工具类-Exchanger/" itemprop="url">
-                  Lock: 并发工具类-Exchanger
+                <a class="post-title-link" href="/2017/01/03/Class文件-2-字节码指令/" itemprop="url">
+                  Class文件(2): 字节码指令
                 </a>
               
             
@@ -889,8 +905,8 @@ CopyOnWrit
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-15T17:11:35+08:00" content="2017-01-15">
-              2017-01-15
+            <time itemprop="dateCreated" datetime="2017-01-03T18:39:09+08:00" content="2017-01-03">
+              2017-01-03
             </time>
           </span>
 
@@ -903,8 +919,8 @@ CopyOnWrit
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java锁/" itemprop="url" rel="index">
-                    <span itemprop="name">Java锁</span>
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
                   </a>
                 </span>
 
@@ -938,11 +954,16 @@ CopyOnWrit
       
         
           
-          Exchanger是一个用于线程间协作的工具类，可以进行线程间的数据交换。它提供一个同步点，在这个同步点，两个线程可以交换彼此的数据。这两个线程通过exchange(V x)方法交换数据，如果第一个线程先执行exchange(V x)方法，它会一直等待第二个线程也执行exchange(V x)方法，
+          Java虚拟机字节码指令：由1个字节长度的操作码（代表着某种特定操作含义的数字），以及跟随其后的0至多个操作数（Operands，此操作所需的参数）而构成。
+
+再次强调Java虚拟机采用面向操作数栈而不是寄存器的架构，所以大多数的指令都包含操作数，而只有一个操作码。
+
+
+指令的操作码长度为1个字节，
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/15/Lock-并发工具类-Exchanger/#more" rel="contents">
+            <a class="btn" href="/2017/01/03/Class文件-2-字节码指令/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -993,8 +1014,8 @@ CopyOnWrit
             
               
                 
-                <a class="post-title-link" href="/2017/01/15/Lock-并发工具类-Semaphore/" itemprop="url">
-                  Lock: 并发工具类-Semaphore
+                <a class="post-title-link" href="/2017/01/03/Class文件-1-类文件结构/" itemprop="url">
+                  Class文件(1): 类文件结构
                 </a>
               
             
@@ -1007,8 +1028,8 @@ CopyOnWrit
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-15T14:21:40+08:00" content="2017-01-15">
-              2017-01-15
+            <time itemprop="dateCreated" datetime="2017-01-03T18:38:49+08:00" content="2017-01-03">
+              2017-01-03
             </time>
           </span>
 
@@ -1021,8 +1042,8 @@ CopyOnWrit
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java锁/" itemprop="url" rel="index">
-                    <span itemprop="name">Java锁</span>
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
                   </a>
                 </span>
 
@@ -1056,12 +1077,15 @@ CopyOnWrit
       
         
           
-          Semaphore（信号量）是用来控制同时访问特定资源的线程数量，它通过协调各个线程，以保证合理的使用公共资源。
-信号量维护了一个信号量许可集。线程可以通过调用acquire()来获取信号量的许可；当信号量中有可用的许可时，线程能获取该许可；否则线程必须等待，直到有可用的许可为止。 线程可以通过re
+          
+Write Once, Run Anywhere.
+
+各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——字节码（ByteCode），是构成平台无关性的基石。
+Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格按照顺序紧凑地排列在Class文件中，中间没有任何分隔符。当遇到
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/15/Lock-并发工具类-Semaphore/#more" rel="contents">
+            <a class="btn" href="/2017/01/03/Class文件-1-类文件结构/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1112,8 +1136,8 @@ CopyOnWrit
             
               
                 
-                <a class="post-title-link" href="/2017/01/15/Lock-并发工具类-CyclicBarrier/" itemprop="url">
-                  Lock: 并发工具类-CyclicBarrier
+                <a class="post-title-link" href="/2017/01/02/JVM-类加载-2-类加载器ClassLoader/" itemprop="url">
+                  JVM: 类加载(2)-类加载器ClassLoader
                 </a>
               
             
@@ -1126,8 +1150,8 @@ CopyOnWrit
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-15T14:21:14+08:00" content="2017-01-15">
-              2017-01-15
+            <time itemprop="dateCreated" datetime="2017-01-02T23:10:37+08:00" content="2017-01-02">
+              2017-01-02
             </time>
           </span>
 
@@ -1140,8 +1164,8 @@ CopyOnWrit
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java锁/" itemprop="url" rel="index">
-                    <span itemprop="name">Java锁</span>
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
                   </a>
                 </span>
 
@@ -1175,13 +1199,15 @@ CopyOnWrit
       
         
           
-          CyclicBarrier可以让一组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，所有被屏障拦截的线程才会继续运行。
-CountDownLatch和CyclicBarrier的区别
-CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；而CyclicBa
+          类加载器只用于完成整个类加载过程的加载（Loading）动作：类的加载阶段中“通过一个类的全限定名去获取描述此类的二进制字节流”这个动作放到Java虚拟机外部去实现，以便让程序代码自己决定如何去获取所需要的类。
+
+类加载器在类层次划分、OSGI、热部署、代码加密等领域被广泛应用。
+
+类在虚拟机中的唯
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/15/Lock-并发工具类-CyclicBarrier/#more" rel="contents">
+            <a class="btn" href="/2017/01/02/JVM-类加载-2-类加载器ClassLoader/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1232,8 +1258,8 @@ CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；�
             
               
                 
-                <a class="post-title-link" href="/2017/01/15/Lock-并发工具类-CountDownLatch/" itemprop="url">
-                  Lock: 并发工具类-CountDownLatch
+                <a class="post-title-link" href="/2017/01/02/JVM-类加载-1-类加载机制/" itemprop="url">
+                  JVM: 类加载(1)-类加载机制
                 </a>
               
             
@@ -1246,8 +1272,8 @@ CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-15T14:20:41+08:00" content="2017-01-15">
-              2017-01-15
+            <time itemprop="dateCreated" datetime="2017-01-02T23:10:10+08:00" content="2017-01-02">
+              2017-01-02
             </time>
           </span>
 
@@ -1260,8 +1286,8 @@ CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；�
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java锁/" itemprop="url" rel="index">
-                    <span itemprop="name">Java锁</span>
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
                   </a>
                 </span>
 
@@ -1295,13 +1321,15 @@ CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；�
       
         
           
-          在JDK并发包提供了几个常用的并发工具类：CountDownLatch、CyclicBarrier、Semaphore提供了一种并发流程控制的手段，而Exchanger工具类提供了在线程间交换数据的一种手段。
-CountDownLatch允许一个或多个线程等待其他线程完成操作。
-CountDownL
+          类加载机制：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型。
+
+Java可以动态扩展的特性就是依赖运行期动态加载和动态连接这个特点实现的。
+
+类加载的时机类的生命周期类从被加载到虚拟机内存中开始，到卸载出内存为止，整个生
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/15/Lock-并发工具类-CountDownLatch/#more" rel="contents">
+            <a class="btn" href="/2017/01/02/JVM-类加载-1-类加载机制/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1352,8 +1380,8 @@ CountDownL
             
               
                 
-                <a class="post-title-link" href="/2017/01/15/Lock-Condition/" itemprop="url">
-                  Lock: Condition
+                <a class="post-title-link" href="/2017/01/01/JVM-后端编译-JIT编译器/" itemprop="url">
+                  JVM: 后端编译(JIT编译器)
                 </a>
               
             
@@ -1366,8 +1394,8 @@ CountDownL
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-15T13:22:49+08:00" content="2017-01-15">
-              2017-01-15
+            <time itemprop="dateCreated" datetime="2017-01-01T23:42:14+08:00" content="2017-01-01">
+              2017-01-01
             </time>
           </span>
 
@@ -1380,8 +1408,8 @@ CountDownL
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java锁/" itemprop="url" rel="index">
-                    <span itemprop="name">Java锁</span>
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
                   </a>
                 </span>
 
@@ -1415,12 +1443,15 @@ CountDownL
       
         
           
-          任意一个Java对象，都拥有一组监视器方法（定义在java.lang.Object上），主要包括wait()、wait(long timeout)、notify()、notifyAll()，这些方法与synchronized关键字配合，可以实现等待/通知机制。
-Condition的作用是对锁进行更精
+          解释器与JIT编译器当程序需要迅速启动和执行的时候，解释器可以首先发挥作用，省去编译的时间，立即执行。在程序执行后，随着时间的推移，JIT编译器逐渐发挥作用，把越来越多的代码编译成本地机器码，可以获得更高的执行效率。
+
+可以使用解释器执行节约内存，反之使用JIT编译器来提升效率。
+
+HotSpot虚
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/15/Lock-Condition/#more" rel="contents">
+            <a class="btn" href="/2017/01/01/JVM-后端编译-JIT编译器/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1454,7 +1485,7 @@ Condition的作用是对锁进行更精
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/15/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/25/">25</a><a class="extend next" rel="next" href="/page/17/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/15/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/17/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1495,7 +1526,7 @@ Condition的作用是对锁进行更精
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">249</span>
+              <span class="site-state-item-count">226</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1503,7 +1534,7 @@ Condition的作用是对锁进行更精
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1512,7 +1543,7 @@ Condition的作用是对锁进行更精
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">157</span>
+                <span class="site-state-item-count">149</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

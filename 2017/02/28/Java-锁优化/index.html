@@ -100,7 +100,7 @@ Mark Word 在32位系统中占用32位，在64位系统中占用64位。
 Mark Word 在32位系统中占用32位，在64位系统中占用64位。
 
 普">
-<meta property="og:updated_time" content="2017-03-15T07:06:33.194Z">
+<meta property="og:updated_time" content="2017-07-14T01:34:06.964Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 锁优化">
 <meta name="twitter:description" content="对象头和锁对象头在 JVM: HotSpot虚拟机中的对象 对象的内存布局 中有提到过，用于保存对象的系统信息。
@@ -374,7 +374,7 @@ Mark Word 在32位系统中占用32位，在64位系统中占用64位。
 <blockquote>
 <p><strong>轻量级锁</strong>是在无竞争条件的情况下使用<strong>CAS操作</strong>去消除同步使用的操作系统的<strong>互斥量</strong>。</p>
 </blockquote>
-<h2 id="锁膨胀"><a href="#锁膨胀" class="headerlink" title="锁膨胀"></a>锁膨胀</h2><p>当<strong>轻量级锁</strong>失败，JVM 就会使用<strong>重量级锁</strong>。重量级锁对象的对象头部 Mark Word：<br><code>[ptr  | 10] monitor</code><br>整个 Mark Word 表示指向<code>monitor</code>对象的指针，线程很可能在操作系统层面挂起。</p>
+<h2 id="重量级锁"><a href="#重量级锁" class="headerlink" title="重量级锁"></a>重量级锁</h2><p>锁膨胀：当<strong>轻量级锁</strong>失败，JVM 就会使用<strong>重量级锁</strong>。重量级锁对象的对象头部 Mark Word：<br><code>[ptr  | 10] monitor</code><br>整个 Mark Word 表示指向<code>monitor</code>对象的指针，线程很可能在操作系统层面挂起，线程间切换和调度的成本就会比较高。</p>
 <h2 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h2><p><strong>自旋锁</strong>可以使得线程尽快进入临界区而避免被操作系统挂起。</p>
 <p><strong>自旋锁</strong>可以使线程在没有获得锁时，不被挂起，转而去执行一个<strong>空循环</strong>（自旋），在若干个循环后，线程如果可以获得锁，则继续执行。如果依然不能获得锁，才会被挂起。</p>
 <p><strong>缺点</strong>：对于锁竞争激烈，单线程锁占用时间长的并发程序，自旋锁在自旋等待后，往往依然无法获得锁，浪费了 CPU 时间。</p>
@@ -392,6 +392,15 @@ Mark Word 在32位系统中占用32位，在64位系统中占用64位。
 <p><strong>无锁</strong>：指的是非阻塞同步的方法，不使用锁，依然能确保数据和程序在高并发时保持多线程间的一致性。</p>
 <p><strong>CAS</strong>（Compare And Swap）基于比较并交换的算法，在硬件层面上，大部分的现代处理器都已经支持原子化的 CAS 指令。Java中的<code>java.util.concurrent.atomic</code>包封装了许多 CAS 操作。</p>
 <p>JDK 1.8 中新增的<code>java.util.concurrent.atomic.LongAddr</code>类，对数字进行计数采取了优化措施，将热点数据 value 分离成多个单元 cell，每个 cell 独自维护内部的值，当前对象的实际值由所有 cell 累计合成。</p>
+<h1 id="synchronized锁流程"><a href="#synchronized锁流程" class="headerlink" title="synchronized锁流程"></a>synchronized锁流程</h1><ol>
+<li>检测 Mark Word 里面是不是当前线程的ID，如果是，表示当前线程处于<strong>偏向锁</strong>。</li>
+<li>如果不是，则使用 CAS 将当前线程的ID替换 Mark Word，如果成功则表示当前线程获得偏向锁，并置偏向标志位为1。</li>
+<li>如果失败，则说明发生竞争，撤销偏向锁，进而升级为<strong>轻量级锁</strong>。</li>
+<li>当前线程使用 CAS 将对象头的 Mark Word替换为指向轻量级锁的指针，如果成功，则当前线程获得锁。</li>
+<li>如果失败，表示其他线程竞争锁，当前线程便尝试使用自旋来获取锁。</li>
+<li>如果自旋成功则依然处于轻量级状态。</li>
+<li>如果自旋失败，则升级为<strong>重量级锁</strong>。</li>
+</ol>
 
       
     </div>
@@ -501,7 +510,7 @@ Mark Word 在32位系统中占用32位，在64位系统中占用64位。
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">249</span>
+              <span class="site-state-item-count">226</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -509,7 +518,7 @@ Mark Word 在32位系统中占用32位，在64位系统中占用64位。
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -518,7 +527,7 @@ Mark Word 在32位系统中占用32位，在64位系统中占用64位。
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">157</span>
+                <span class="site-state-item-count">149</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -558,7 +567,7 @@ Mark Word 在32位系统中占用32位，在64位系统中占用64位。
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#对象头和锁"><span class="nav-number">1.</span> <span class="nav-text">对象头和锁</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM中锁的实现和优化"><span class="nav-number">2.</span> <span class="nav-text">JVM中锁的实现和优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#偏向锁"><span class="nav-number">2.1.</span> <span class="nav-text">偏向锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#轻量级锁"><span class="nav-number">2.2.</span> <span class="nav-text">轻量级锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁膨胀"><span class="nav-number">2.3.</span> <span class="nav-text">锁膨胀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自旋锁"><span class="nav-number">2.4.</span> <span class="nav-text">自旋锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁消除"><span class="nav-number">2.5.</span> <span class="nav-text">锁消除</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用层的锁优化"><span class="nav-number">3.</span> <span class="nav-text">应用层的锁优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#减少锁持有时间"><span class="nav-number">3.1.</span> <span class="nav-text">减少锁持有时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#减小锁粒度"><span class="nav-number">3.2.</span> <span class="nav-text">减小锁粒度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁分离"><span class="nav-number">3.3.</span> <span class="nav-text">锁分离</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁粗化"><span class="nav-number">3.4.</span> <span class="nav-text">锁粗化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#无锁"><span class="nav-number">4.</span> <span class="nav-text">无锁</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#对象头和锁"><span class="nav-number">1.</span> <span class="nav-text">对象头和锁</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM中锁的实现和优化"><span class="nav-number">2.</span> <span class="nav-text">JVM中锁的实现和优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#偏向锁"><span class="nav-number">2.1.</span> <span class="nav-text">偏向锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#轻量级锁"><span class="nav-number">2.2.</span> <span class="nav-text">轻量级锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重量级锁"><span class="nav-number">2.3.</span> <span class="nav-text">重量级锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自旋锁"><span class="nav-number">2.4.</span> <span class="nav-text">自旋锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁消除"><span class="nav-number">2.5.</span> <span class="nav-text">锁消除</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用层的锁优化"><span class="nav-number">3.</span> <span class="nav-text">应用层的锁优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#减少锁持有时间"><span class="nav-number">3.1.</span> <span class="nav-text">减少锁持有时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#减小锁粒度"><span class="nav-number">3.2.</span> <span class="nav-text">减小锁粒度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁分离"><span class="nav-number">3.3.</span> <span class="nav-text">锁分离</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁粗化"><span class="nav-number">3.4.</span> <span class="nav-text">锁粗化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#无锁"><span class="nav-number">4.</span> <span class="nav-text">无锁</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#synchronized锁流程"><span class="nav-number">5.</span> <span class="nav-text">synchronized锁流程</span></a></li></ol></div>
             
           </div>
         </section>

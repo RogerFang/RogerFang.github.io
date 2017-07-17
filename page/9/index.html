@@ -282,8 +282,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/10/SwordPointToOffer-61-按之字形顺序打印二叉树/" itemprop="url">
-                  SwordPointToOffer(61): 按之字形顺序打印二叉树
+                <a class="post-title-link" href="/2017/02/06/SwordPointToOffer-37-两个链表的第一个公共节点/" itemprop="url">
+                  SwordPointToOffer(37): 两个链表的第一个公共节点
                 </a>
               
             
@@ -296,8 +296,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-10T11:03:36+08:00" content="2017-02-10">
-              2017-02-10
+            <time itemprop="dateCreated" datetime="2017-02-06T22:42:11+08:00" content="2017-02-06">
+              2017-02-06
             </time>
           </span>
 
@@ -345,12 +345,14 @@
       
         
           
-          题目请实现一个函数按照之字形打印二叉树，即第一行按照从左到右的顺序打印，第二层按照从右至左的顺序打印，第三行按照从左到右的顺序打印，其他行以此类推。
-分析按之字形顺序打印二叉树需要两个栈。我们在打印某一行结点时，把下一层的子结点保存到相应的栈里。如果当前打印的是奇数层，则先保存左子结点再保存右子结点
+          题目输入两个链表，找出它们的第一个公共节点。
+分析方法一蛮力法：在第一个链表上顺序遍历每个节点，每遍历到一个节点的时候，在第二个链表上顺序遍历每个节点。如果在第二个链表上有一个节点和第一个链表上的节点一样，说明两个链表在这个节点上重合。
+时间复杂度是$O(mn)$，m和n分别为两个链表的长度。
+方法
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/10/SwordPointToOffer-61-按之字形顺序打印二叉树/#more" rel="contents">
+            <a class="btn" href="/2017/02/06/SwordPointToOffer-37-两个链表的第一个公共节点/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -401,8 +403,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/10/SwordPointToOffer-60-把二叉树打印成多行/" itemprop="url">
-                  SwordPointToOffer(60): 把二叉树打印成多行
+                <a class="post-title-link" href="/2017/02/06/SwordPointToOffer-36-数组中的逆序对/" itemprop="url">
+                  SwordPointToOffer(36): 数组中的逆序对
                 </a>
               
             
@@ -415,8 +417,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-10T10:22:35+08:00" content="2017-02-10">
-              2017-02-10
+            <time itemprop="dateCreated" datetime="2017-02-06T20:30:24+08:00" content="2017-02-06">
+              2017-02-06
             </time>
           </span>
 
@@ -464,18 +466,13 @@
       
         
           
-          题目从上到下按层打印二叉树，同一层的节点按从左到右的顺序打印，每一层打印到一行。
-分析二叉树的层序遍历，需要借助队列完成。
-本题需要注意的问题，将每层分行打印，需要两个变量：
-
-一个变量表示在当前层中还没有打印的节点数；
-一个变量表示下一层节点的数目。
-
-实现12345678910111213141
+          题目在数组中的两个数字如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。输入一个数组，求出这个数组中的逆序对的总数。
+分析方法一从头到尾扫描数组，没扫描到一个数字，就逐个比较该数字和后面的数字的大小，时间复杂度是 $O(n^2)$。
+方法二先把数组分隔成子数组， 先统计出子数组内部的逆序对
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/10/SwordPointToOffer-60-把二叉树打印成多行/#more" rel="contents">
+            <a class="btn" href="/2017/02/06/SwordPointToOffer-36-数组中的逆序对/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -526,8 +523,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/10/SwordPointToOffer-59-对称的二叉树/" itemprop="url">
-                  SwordPointToOffer(59): 对称的二叉树
+                <a class="post-title-link" href="/2017/02/06/SwordPointToOffer-35-第一个只出现一次的字符/" itemprop="url">
+                  SwordPointToOffer(35): 第一个只出现一次的字符
                 </a>
               
             
@@ -540,8 +537,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-10T10:07:22+08:00" content="2017-02-10">
-              2017-02-10
+            <time itemprop="dateCreated" datetime="2017-02-06T16:38:04+08:00" content="2017-02-06">
+              2017-02-06
             </time>
           </span>
 
@@ -589,12 +586,13 @@
       
         
           
-          题目请实现一个函数，用来判断一颗二叉树是不是对称的。注意，如果一个二叉树同此二叉树的镜像是同样的，定义其为对称的。
-分析通常我们有三种不同的二叉树遍历算法，即前序遍历、中序遍历和后序遍历。在这三种遍历算法中，都是先遍历左子结点再遍历右子结点。我们是否可以定义一种遍历算法，先遍历右子结点再遍历左子结点
+          题目在字符串中找出第一个只出现一次的字符。如输入“abaccdeff”，则输出“b”。
+分析字符是长度为8的数据类型，一共有256种可能，可以用一个数组模拟哈希表记录统计的次数。
+实现1234567891011121314151617181920public class FirstNotRepeat
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/10/SwordPointToOffer-59-对称的二叉树/#more" rel="contents">
+            <a class="btn" href="/2017/02/06/SwordPointToOffer-35-第一个只出现一次的字符/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -645,8 +643,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/09/SwordPointToOffer-58-二叉树的下一个节点/" itemprop="url">
-                  SwordPointToOffer(58): 二叉树的下一个节点
+                <a class="post-title-link" href="/2017/02/06/SwordPointToOffer-34-丑数/" itemprop="url">
+                  SwordPointToOffer(34): 丑数
                 </a>
               
             
@@ -659,8 +657,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-09T23:14:19+08:00" content="2017-02-09">
-              2017-02-09
+            <time itemprop="dateCreated" datetime="2017-02-06T16:02:39+08:00" content="2017-02-06">
+              2017-02-06
             </time>
           </span>
 
@@ -708,13 +706,12 @@
       
         
           
-          题目给定一个二叉树和其中的一个节点，请找出中序遍历顺序的下一个节点并且返回。注意，树中的节点不仅包含左右子节点，同时包含指向父节点的指针。
-分析如果一个节点有右子树，那么它的下一个节点就是它的右子树中的左子节点。也就是说右子节点出发一直沿着指向左子节点的指针，我们就能找到它的下一个节点。
-接着我们分
+          题目我们把只包含因子2、3和5的数称作丑数。求按从小到大的顺序的第1500个丑数。例如6、8都是丑数，但14不是，习惯上把1称为第一个丑数。
+分析方法一逐个判断每个整数是不是丑数，直观但不够高效。123456789boolean isUgly(int num)&#123;	while(num%2 =
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/09/SwordPointToOffer-58-二叉树的下一个节点/#more" rel="contents">
+            <a class="btn" href="/2017/02/06/SwordPointToOffer-34-丑数/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -765,8 +762,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/09/SwordPointToOffer-57-删除链表中重复的节点/" itemprop="url">
-                  SwordPointToOffer(57): 删除链表中重复的节点
+                <a class="post-title-link" href="/2017/02/06/SwordPointToOffer-33-把数组排成最小的数/" itemprop="url">
+                  SwordPointToOffer(33): 把数组排成最小的数
                 </a>
               
             
@@ -779,8 +776,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-09T22:53:04+08:00" content="2017-02-09">
-              2017-02-09
+            <time itemprop="dateCreated" datetime="2017-02-06T15:21:33+08:00" content="2017-02-06">
+              2017-02-06
             </time>
           </span>
 
@@ -828,13 +825,13 @@
       
         
           
-          题目在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。
-例如，链表1-&gt;2-&gt;3-&gt;3-&gt;4-&gt;4-&gt;5 处理后为 1-&gt;2-&gt;5
-分析从头遍历整个链表，如果当前结点的值与下一个结点的值相同，那么它们就是重
+          题目输入一个正整数数组，把数组里所有数字都拼接起来排成一个数，打印能拼接处的所有数字中最小的一个。例如输入数组{3,32,321}，则打印出能排成的最小数字321323。
+分析方法一求出所有数字的全排列，然后拼接起来，最后求出最大值。n个数字总共有 $n!$个排列。
+方法二找到一个排序规则，数组根据
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/09/SwordPointToOffer-57-删除链表中重复的节点/#more" rel="contents">
+            <a class="btn" href="/2017/02/06/SwordPointToOffer-33-把数组排成最小的数/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -885,8 +882,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/09/SwordPointToOffer-56-链表中环的入口节点/" itemprop="url">
-                  SwordPointToOffer(56): 链表中环的入口节点
+                <a class="post-title-link" href="/2017/02/06/SwordPointToOffer-32-从1到n整数中1出现的次数/" itemprop="url">
+                  SwordPointToOffer(32): 从1到n整数中1出现的次数
                 </a>
               
             
@@ -899,8 +896,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-09T22:28:34+08:00" content="2017-02-09">
-              2017-02-09
+            <time itemprop="dateCreated" datetime="2017-02-06T13:22:15+08:00" content="2017-02-06">
+              2017-02-06
             </time>
           </span>
 
@@ -948,11 +945,12 @@
       
         
           
-          题目一个链表中包含环，请找出该链表的环的入口结点。123456789101112/** * 节点定义 */public class ListNode &#123;    int val;    ListNode next = null;    ListNode(int val) &#123;    
+          #题目输入一个整数n，求从1到n这n个整数的十进制表示中1出现的次数。例如输入12，从1到12这些整数中国包含1的数字有1,10,11和12，1一共出现了5次。
+分析如果直接累加1到n中每个整数出现1的次数，采用做除法和求余运算以求出该数字中1出现的次数。如果输入数字n，n有$O(\log{n})$
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/09/SwordPointToOffer-56-链表中环的入口节点/#more" rel="contents">
+            <a class="btn" href="/2017/02/06/SwordPointToOffer-32-从1到n整数中1出现的次数/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1003,8 +1001,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/09/SwordPointToOffer-54-表示数值的字符串/" itemprop="url">
-                  SwordPointToOffer(54): 表示数值的字符串
+                <a class="post-title-link" href="/2017/02/06/SwordPointToOffer-31-连续子数组的最大和/" itemprop="url">
+                  SwordPointToOffer(31): 连续子数组的最大和
                 </a>
               
             
@@ -1017,8 +1015,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-09T15:03:47+08:00" content="2017-02-09">
-              2017-02-09
+            <time itemprop="dateCreated" datetime="2017-02-06T12:01:00+08:00" content="2017-02-06">
+              2017-02-06
             </time>
           </span>
 
@@ -1066,12 +1064,13 @@
       
         
           
-          题目请实现一个函数用来判断字符串是否表示数值（包括整数和小数）。例如，字符串”+100”,”5e2”,”-123”,”3.1416”和”-1E-16”都表示数值。 但是”12e”,”1a3.14”,”1.2.3”,”+-5”和”12e+4.3”都不是。
-分析表示数值的字符串遵循如下模式：[sign]
+          题目输入一个整型数组，数组里有正数也有负数。数组中一个或连续的多个正数组成一个子数组。求所有子数组的和的最大值。要求时间复杂度为O(n)。
+例如：输入的数组为{1,-2,3,10,-4,7,2,-5}，和最大的子数组为{3,10,-4,7,2}，因此输出为该子数组的和18。
+分析如果使用枚举所有子数
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/09/SwordPointToOffer-54-表示数值的字符串/#more" rel="contents">
+            <a class="btn" href="/2017/02/06/SwordPointToOffer-31-连续子数组的最大和/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1122,8 +1121,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/09/SwordPointToOffer-53-正则表达式匹配/" itemprop="url">
-                  SwordPointToOffer(53): 正则表达式匹配
+                <a class="post-title-link" href="/2017/02/06/SwordPointToOffer-30-最小的k个数/" itemprop="url">
+                  SwordPointToOffer(30): 最小的k个数
                 </a>
               
             
@@ -1136,8 +1135,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-09T13:56:39+08:00" content="2017-02-09">
-              2017-02-09
+            <time itemprop="dateCreated" datetime="2017-02-06T10:33:28+08:00" content="2017-02-06">
+              2017-02-06
             </time>
           </span>
 
@@ -1185,12 +1184,19 @@
       
         
           
-          题目请实现一个函数用来匹配包括’.’和’‘的正则表达式。模式中的字符’.’表示任意一个字符，而’‘表示它前面的字符可以出现任意次（包含0次）。 在本题中，匹配是指字符串的所有字符匹配整个模式。例如，字符串”aaa”与模式”a.a”和”abaca”匹配，但是与”aa.a”和”ab*a”均不匹配
-分析每
+          题目输入n个整数，找出其中最小的k个数。例如输入 4、5、1、6、2、7、3、8，则最小的4个数字是1、2、3、4。
+分析方法一
+时间复杂度最优是$O(n\log{n})$。
+
+最简单的方法就是对整个输入的数字进行排序，然后取出前k个数。
+方法二
+时间复杂度是$O(n)$。 和29题的方法二一样
+
+
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/09/SwordPointToOffer-53-正则表达式匹配/#more" rel="contents">
+            <a class="btn" href="/2017/02/06/SwordPointToOffer-30-最小的k个数/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1241,8 +1247,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/09/SwordPointToOffer-52-构建乘积数组/" itemprop="url">
-                  SwordPointToOffer(52): 构建乘积数组
+                <a class="post-title-link" href="/2017/02/06/SwordPointToOffer-29-数组中出现次数超过一半的数字/" itemprop="url">
+                  SwordPointToOffer(29): 数组中出现次数超过一半的数字
                 </a>
               
             
@@ -1255,8 +1261,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-09T13:40:23+08:00" content="2017-02-09">
-              2017-02-09
+            <time itemprop="dateCreated" datetime="2017-02-06T10:09:20+08:00" content="2017-02-06">
+              2017-02-06
             </time>
           </span>
 
@@ -1304,12 +1310,19 @@
       
         
           
-          题目给定一个数组 A[0,1,…,n-1]，请构建一个数组 B[0,1,…,n-1]，其中 B 中的元素 B[i]=A[0]×A[1]×…×A[i-1]×A[i+1]×…×A[n-1]，不能使用除法。
-分析定义 B[i] = C[i]  D[i]，C[i] = A[0]A[1]…A[i-1]，D[i
+          题目数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。例如输入一个数组 {1,2,3,2,2,2,2,5,4,2}，会输出数字2。
+分析方法一
+时间复杂度最优是$O(n\log{n})$。
+
+将整个数组进行排序，取出n/2索引处的数字即可。
+方法二
+时间复杂度是$O(n)$。
+
+借用快速
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/09/SwordPointToOffer-52-构建乘积数组/#more" rel="contents">
+            <a class="btn" href="/2017/02/06/SwordPointToOffer-29-数组中出现次数超过一半的数字/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1360,8 +1373,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/09/SwordPointToOffer-51-数组中重复的数字/" itemprop="url">
-                  SwordPointToOffer(51): 数组中重复的数字
+                <a class="post-title-link" href="/2017/02/05/SwordPointToOffer-28-字符串的排列/" itemprop="url">
+                  SwordPointToOffer(28): 字符串的排列
                 </a>
               
             
@@ -1374,8 +1387,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-09T13:15:25+08:00" content="2017-02-09">
-              2017-02-09
+            <time itemprop="dateCreated" datetime="2017-02-05T15:39:22+08:00" content="2017-02-05">
+              2017-02-05
             </time>
           </span>
 
@@ -1423,13 +1436,12 @@
       
         
           
-          题目在一个长度为n的数组里的所有数字都在0到n-1的范围内。 数组中某些数字是重复的，但不知道有几个数字是重复的。也不知道每个数字重复几次。请找出数组中任意一个重复的数字。
-例如，如果输入长度为7的数组{2,3,1,0,2,5,3}，那么对应的输出是重复的数字2或者3。
-分析方法一排序，时间复杂度$
+          题目输入一个字符串，打印出该字符串中字符的所有排列。例如输入字符串abc，则打印出由字符a、b、c所能排列出来的所有字符串 abc、acb、bac、bca、cab和cba。（可能有字符重复，字符只包括大小写字母）
+分析把一个字符串看成由两部分组成：第一部分为它的第一个字符，第二部分是后面的所有字符。
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/09/SwordPointToOffer-51-数组中重复的数字/#more" rel="contents">
+            <a class="btn" href="/2017/02/05/SwordPointToOffer-28-字符串的排列/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1463,7 +1475,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/25/">25</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1504,7 +1516,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">249</span>
+              <span class="site-state-item-count">226</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1512,7 +1524,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1521,7 +1533,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">157</span>
+                <span class="site-state-item-count">149</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
