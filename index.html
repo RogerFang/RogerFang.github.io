@@ -282,8 +282,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/06/18/数据结构与算法-树形结构-Trie树/" itemprop="url">
-                  数据结构与算法: 树形结构- Trie树
+                <a class="post-title-link" href="/2017/08/25/Nutch抓取优化/" itemprop="url">
+                  Nutch抓取优化
                 </a>
               
             
@@ -296,8 +296,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-06-18T15:58:12+08:00" content="2017-06-18">
-              2017-06-18
+            <time itemprop="dateCreated" datetime="2017-08-25T09:52:33+08:00" content="2017-08-25">
+              2017-08-25
             </time>
           </span>
 
@@ -310,8 +310,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
-                    <span itemprop="name">数据结构与算法</span>
+                  <a href="/categories/Nutch/" itemprop="url" rel="index">
+                    <span itemprop="name">Nutch</span>
                   </a>
                 </span>
 
@@ -345,17 +345,15 @@
       
         
           
-          Trie树，又称为字典树、单词查找树或键树，常用于统计和排序大量的字符串（但不仅限于字符串）。优点是最大限度地减少无谓的字符串的比较，可以用于字符串的最长匹配查找。
+          抓取优化设计方案流程优化将nutch默认的串行抓取流程改为并行抓取流程
+串行流程介绍nutch crawl流程图
 
-Trie树的核心思想是空间换时间，利用字符串的公共前缀来降低查询时间的开销以提高效率。
-
-3个基本性质:
-
-根节点不包含字符，除根节
+串行流程主要是这四个阶段:generate–&gt;fetch–&gt;parse–&gt;updatedb，循环执行。
+串行流程问题当crawldb中数据量比较少时，fetch流程会
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/06/18/数据结构与算法-树形结构-Trie树/#more" rel="contents">
+            <a class="btn" href="/2017/08/25/Nutch抓取优化/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -406,8 +404,8 @@ Trie树的核心思想是空间换时间，利用字符串的公共前缀来降�
             
               
                 
-                <a class="post-title-link" href="/2017/06/15/Lucene查询语法/" itemprop="url">
-                  Lucene查询语法
+                <a class="post-title-link" href="/2017/08/25/Nutch流程介绍/" itemprop="url">
+                  Nutch流程介绍
                 </a>
               
             
@@ -420,8 +418,8 @@ Trie树的核心思想是空间换时间，利用字符串的公共前缀来降�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-06-15T20:38:01+08:00" content="2017-06-15">
-              2017-06-15
+            <time itemprop="dateCreated" datetime="2017-08-25T09:48:25+08:00" content="2017-08-25">
+              2017-08-25
             </time>
           </span>
 
@@ -434,8 +432,8 @@ Trie树的核心思想是空间换时间，利用字符串的公共前缀来降�
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Lucene/" itemprop="url" rel="index">
-                    <span itemprop="name">Lucene</span>
+                  <a href="/categories/Nutch/" itemprop="url" rel="index">
+                    <span itemprop="name">Nutch</span>
                   </a>
                 </span>
 
@@ -469,16 +467,30 @@ Trie树的核心思想是空间换时间，利用字符串的公共前缀来降�
       
         
           
-          语法关键字: + - &amp;$ || ! () {} [] ^ &quot; ~ * ? : \。
-查询 Term
-单一查询词，eg:&quot;hello&quot;
-词组 phrase，eg:&quot;hello world&quot;
+          Generate经历三类Job: select/partition/updatedb，最后打上tag_generate。
 
-查询 Field使用域名和关键字:，:仅对紧跟其后
+
+
+参数
+说明
+
+
+
+
+crawl_db
+crawldb存放目录
+
+
+segments_dir
+Generate生成的segment存放目录
+
+
+topN
+Generate生成
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/06/15/Lucene查询语法/#more" rel="contents">
+            <a class="btn" href="/2017/08/25/Nutch流程介绍/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -529,8 +541,8 @@ Trie树的核心思想是空间换时间，利用字符串的公共前缀来降�
             
               
                 
-                <a class="post-title-link" href="/2017/06/15/搜索过程分析/" itemprop="url">
-                  搜索过程分析
+                <a class="post-title-link" href="/2017/08/25/汉字拆字搜索/" itemprop="url">
+                  汉字拆字搜索
                 </a>
               
             
@@ -543,8 +555,8 @@ Trie树的核心思想是空间换时间，利用字符串的公共前缀来降�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-06-15T19:42:48+08:00" content="2017-06-15">
-              2017-06-15
+            <time itemprop="dateCreated" datetime="2017-08-25T09:43:18+08:00" content="2017-08-25">
+              2017-08-25
             </time>
           </span>
 
@@ -557,8 +569,8 @@ Trie树的核心思想是空间换时间，利用字符串的公共前缀来降�
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Lucene/" itemprop="url" rel="index">
-                    <span itemprop="name">Lucene</span>
+                  <a href="/categories/search/" itemprop="url" rel="index">
+                    <span itemprop="name">search</span>
                   </a>
                 </span>
 
@@ -592,18 +604,12 @@ Trie树的核心思想是空间换时间，利用字符串的公共前缀来降�
       
         
           
-          Lucene的搜索过程：
-
-IndexReader 打开索引文件，读取并打开指向索引文件的流。
-用户输入查询语句。
-将查询语句转换为查询对象Query对象树。
-构造Weight对象树，用于计算词的权重（仅计算搜索语句相关的部分）。
-构造Scorer对象树，用于计算打分。
-在构造Scorer对象树的过
+          解决问题部分生僻字不知道读音无所搜索，可以根据拆字的方式提供一种解决方案。例如：堃(kūn)字，可以通过方方土或者两个方一个土的方式搜索到。
+设计思路最直接的解决办法是如果有每个汉字的拆字数据，那么就可以直接通过用户输入的拆字部分进行搜索，但是目前还未找到该数据。因而转换另一种间接解决方案，使用五笔
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/06/15/搜索过程分析/#more" rel="contents">
+            <a class="btn" href="/2017/08/25/汉字拆字搜索/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -654,8 +660,8 @@ IndexReader 打开索引文件，读取并打开指向索引文件的流。
             
               
                 
-                <a class="post-title-link" href="/2017/06/04/设计模式概述和面向对象的设计原则/" itemprop="url">
-                  设计模式概述和面向对象的设计原则
+                <a class="post-title-link" href="/2017/07/02/IO多路复用/" itemprop="url">
+                  IO多路复用
                 </a>
               
             
@@ -668,8 +674,8 @@ IndexReader 打开索引文件，读取并打开指向索引文件的流。
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-06-04T19:00:42+08:00" content="2017-06-04">
-              2017-06-04
+            <time itemprop="dateCreated" datetime="2017-07-02T13:38:39+08:00" content="2017-07-02">
+              2017-07-02
             </time>
           </span>
 
@@ -682,8 +688,8 @@ IndexReader 打开索引文件，读取并打开指向索引文件的流。
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">设计模式</span>
+                  <a href="/categories/操作系统/" itemprop="url" rel="index">
+                    <span itemprop="name">操作系统</span>
                   </a>
                 </span>
 
@@ -717,15 +723,13 @@ IndexReader 打开索引文件，读取并打开指向索引文件的流。
       
         
           
-          使用设计模式是为了可重用代码、让代码更容易被他人理解、保证代码可靠性。
-分类
-创建型模式，共 5 种：工厂方法模式、抽象工厂模式、单例模式、建造者模式、原型模式。
-结构型模式，共 7 种：适配器模式、装饰器模式、代理模式、外观模式、桥接模式、组合模式、享元模式。
-行为型模式，共 11 种：策略模式、
+          问题：最传统的多进程并发模型，每进来一个新的I/O流会分配一个新的进程管理。
+IO多路复用（I/O Multiplexing）：单个进程，通过记录跟踪每个 IO 流的状态，来同时管理多个 IO 流。内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。
+与多进程和多线程技术相比，I/O
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/06/04/设计模式概述和面向对象的设计原则/#more" rel="contents">
+            <a class="btn" href="/2017/07/02/IO多路复用/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -776,8 +780,8 @@ IndexReader 打开索引文件，读取并打开指向索引文件的流。
             
               
                 
-                <a class="post-title-link" href="/2017/06/03/索引过程分析/" itemprop="url">
-                  索引过程分析
+                <a class="post-title-link" href="/2017/07/02/After-URL/" itemprop="url">
+                  After URL
                 </a>
               
             
@@ -790,8 +794,8 @@ IndexReader 打开索引文件，读取并打开指向索引文件的流。
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-06-03T14:25:35+08:00" content="2017-06-03">
-              2017-06-03
+            <time itemprop="dateCreated" datetime="2017-07-02T09:32:55+08:00" content="2017-07-02">
+              2017-07-02
             </time>
           </span>
 
@@ -804,8 +808,8 @@ IndexReader 打开索引文件，读取并打开指向索引文件的流。
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Lucene/" itemprop="url" rel="index">
-                    <span itemprop="name">Lucene</span>
+                  <a href="/categories/网络/" itemprop="url" rel="index">
+                    <span itemprop="name">网络</span>
                   </a>
                 </span>
 
@@ -839,22 +843,158 @@ IndexReader 打开索引文件，读取并打开指向索引文件的流。
       
         
           
-          Lucene3 中的索引过程设计很多对象，分别负责索引文档的不同部分的信息，同时也注重复用一些对象集。索引过程中涉及3种索引链：基本索引链、线程索引链、域索引链。
-IndexWriterIndexWriter 对象主要包括几方面的信息：1.用于索引文档
+          输入网址后发生了什么？
+浏览器查找域名对应 IPDNS 查找过程
+浏览器缓存 浏览器会记录 DNS 一段时间。
+系统缓存 浏览器没找到 DNS 缓存，此时做一个系统调用。
+路由器缓存
+ISP DNS 缓存
+递归查找 DNS 缓存没有时，ISP DNS服务器会先后从 根域名服务器，顶级域名服务器等获取
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/07/02/After-URL/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
 
 
+    
+      
 
-成员
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/07/01/HTTP/" itemprop="url">
+                  HTTP
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-01T20:00:21+08:00" content="2017-07-01">
+              2017-07-01
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/网络/" itemprop="url" rel="index">
+                    <span itemprop="name">网络</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          HTTP构建于 TCP/IP 协议之上，默认端口号 80，是无连接状态的。
+状态码
+
+
+状态码
 描述
 
 
 
 
-Directory 
+200
+OK, 客户端请求成功
+
+
+302
+Moved Temporaily, 请求重定向
+
+
+304
+Not Modified, 文件未修改, 可使用缓存文件
+
+
+400
+Bad Requ
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/06/03/索引过程分析/#more" rel="contents">
+            <a class="btn" href="/2017/07/01/HTTP/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -905,8 +1045,8 @@ Directory
             
               
                 
-                <a class="post-title-link" href="/2017/05/29/词典和倒排表信息/" itemprop="url">
-                  词典和倒排表信息
+                <a class="post-title-link" href="/2017/07/01/leetcode-135-candy/" itemprop="url">
+                  leetcode(135): candy
                 </a>
               
             
@@ -919,8 +1059,8 @@ Directory
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-05-29T11:13:26+08:00" content="2017-05-29">
-              2017-05-29
+            <time itemprop="dateCreated" datetime="2017-07-01T18:04:25+08:00" content="2017-07-01">
+              2017-07-01
             </time>
           </span>
 
@@ -933,8 +1073,8 @@ Directory
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Lucene/" itemprop="url" rel="index">
-                    <span itemprop="name">Lucene</span>
+                  <a href="/categories/leetcode/" itemprop="url" rel="index">
+                    <span itemprop="name">leetcode</span>
                   </a>
                 </span>
 
@@ -968,13 +1108,12 @@ Directory
       
         
           
-          反向信息也就是反向索引，包括词典（Term Dictionary）和倒排表（Posting List）。这两部分分别存在 .tii、.tis和.frq、prx中。
-词典term 是根据 term’s field name 和 term text 进行字典排序。
-IndexReader.open() 
+          There are N children standing in a line. Each child is assigned a rating value.
+You are giving candies to these children subjected to the following re
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/05/29/词典和倒排表信息/#more" rel="contents">
+            <a class="btn" href="/2017/07/01/leetcode-135-candy/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1025,8 +1164,8 @@ IndexReader.open()
             
               
                 
-                <a class="post-title-link" href="/2017/05/28/词向量的元数据和数据信息/" itemprop="url">
-                  词向量的元数据和数据信息
+                <a class="post-title-link" href="/2017/07/01/leetcode-136-137-260-single-number/" itemprop="url">
+                  leetcode(136/137/260): single number
                 </a>
               
             
@@ -1039,8 +1178,8 @@ IndexReader.open()
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-05-28T14:26:39+08:00" content="2017-05-28">
-              2017-05-28
+            <time itemprop="dateCreated" datetime="2017-07-01T16:19:10+08:00" content="2017-07-01">
+              2017-07-01
             </time>
           </span>
 
@@ -1053,8 +1192,8 @@ IndexReader.open()
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Lucene/" itemprop="url" rel="index">
-                    <span itemprop="name">Lucene</span>
+                  <a href="/categories/leetcode/" itemprop="url" rel="index">
+                    <span itemprop="name">leetcode</span>
                   </a>
                 </span>
 
@@ -1088,12 +1227,12 @@ IndexReader.open()
       
         
           
-          IndexReader.getTermFeqVector() -&gt; DirectoryReader.getTermFreqVector() -&gt; SegmentReader.getTermFreqVector() -&gt; TermVectorsReader.get()
-Term Ve
+          136Given an array of integers, every element appears twice except for one. Find that single one.
+Note:Your algorithm should have a linear runtime comp
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/05/28/词向量的元数据和数据信息/#more" rel="contents">
+            <a class="btn" href="/2017/07/01/leetcode-136-137-260-single-number/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1144,8 +1283,8 @@ Term Ve
             
               
                 
-                <a class="post-title-link" href="/2017/05/28/域的元数据信息和数据信息/" itemprop="url">
-                  域的元数据信息和数据信息
+                <a class="post-title-link" href="/2017/07/01/leetcode-140-word-break-2/" itemprop="url">
+                  leetcode(140): word break(2)
                 </a>
               
             
@@ -1158,8 +1297,8 @@ Term Ve
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-05-28T14:26:22+08:00" content="2017-05-28">
-              2017-05-28
+            <time itemprop="dateCreated" datetime="2017-07-01T13:48:29+08:00" content="2017-07-01">
+              2017-07-01
             </time>
           </span>
 
@@ -1172,8 +1311,8 @@ Term Ve
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Lucene/" itemprop="url" rel="index">
-                    <span itemprop="name">Lucene</span>
+                  <a href="/categories/leetcode/" itemprop="url" rel="index">
+                    <span itemprop="name">leetcode</span>
                   </a>
                 </span>
 
@@ -1207,11 +1346,11 @@ Term Ve
       
         
           
-          元数据 .fnmIndexReader.open() -&gt; DirectoryReader.open() -&gt; FindSegmentsFile.run() FindSegmentsFile.doBody() -&gt; new DirectoryReader() -&gt; Segme
+          ProblemGiven a non-empty string s and a dictionary wordDict containing a list of non-empty words, add spaces in s to construct a sentence where each w
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/05/28/域的元数据信息和数据信息/#more" rel="contents">
+            <a class="btn" href="/2017/07/01/leetcode-140-word-break-2/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1262,8 +1401,8 @@ Term Ve
             
               
                 
-                <a class="post-title-link" href="/2017/05/28/段的元数据信息/" itemprop="url">
-                  段的元数据信息
+                <a class="post-title-link" href="/2017/07/01/leetcode-139-word-break/" itemprop="url">
+                  leetcode(139): word break
                 </a>
               
             
@@ -1276,8 +1415,8 @@ Term Ve
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-05-28T11:27:35+08:00" content="2017-05-28">
-              2017-05-28
+            <time itemprop="dateCreated" datetime="2017-07-01T13:44:15+08:00" content="2017-07-01">
+              2017-07-01
             </time>
           </span>
 
@@ -1290,8 +1429,8 @@ Term Ve
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Lucene/" itemprop="url" rel="index">
-                    <span itemprop="name">Lucene</span>
+                  <a href="/categories/leetcode/" itemprop="url" rel="index">
+                    <span itemprop="name">leetcode</span>
                   </a>
                 </span>
 
@@ -1325,137 +1464,11 @@ Term Ve
       
         
           
-          segments.gen和segments_N保存了段的元数据信息，索引有多少个段，每个段有多少篇文档。而段的真正的数据信息是保存在域（Field）和词（Term）中的。
-一个索引只有一个segments.gen，而segments_N可能有多个。
-IndexReader.open() -&gt; 
+          ProblemGiven a non-empty string s and a dictionary wordDict containing a list of non-empty words, determine if s can be segmented into a space-separat
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/05/28/段的元数据信息/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/05/27/索引文件格式概述/" itemprop="url">
-                  索引文件格式概述
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-05-27T10:44:49+08:00" content="2017-05-27">
-              2017-05-27
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Lucene/" itemprop="url" rel="index">
-                    <span itemprop="name">Lucene</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          官网介绍：Lucene- Index File Formats
-索引层次结构Lucene的索引结构主要分为以下几个层次：
-
-索引（Index） 一个索引对应一个索引目录（文件夹）。
-段（Segment）
-一个索引可以包含多个段，段之间是相互独立的，可以被分开搜索，不同的段可以合并。
-有相同前缀如_0
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2017/05/27/索引文件格式概述/#more" rel="contents">
+            <a class="btn" href="/2017/07/01/leetcode-139-word-break/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1489,7 +1502,7 @@ IndexReader.open() -&gt;
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/26/">26</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1530,7 +1543,7 @@ IndexReader.open() -&gt;
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">226</span>
+              <span class="site-state-item-count">252</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1538,7 +1551,7 @@ IndexReader.open() -&gt;
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1547,7 +1560,7 @@ IndexReader.open() -&gt;
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">149</span>
+                <span class="site-state-item-count">160</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

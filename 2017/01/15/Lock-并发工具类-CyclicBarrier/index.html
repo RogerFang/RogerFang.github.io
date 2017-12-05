@@ -96,7 +96,7 @@ CountDownLatch的计数器无法被重置，只能使用一次；">
 CountDownLatch和CyclicBarrier的区别
 CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；而CyclicBarrier则是允许一组线程相互等待。
 CountDownLatch的计数器无法被重置，只能使用一次；">
-<meta property="og:updated_time" content="2017-03-01T13:24:47.226Z">
+<meta property="og:updated_time" content="2017-07-22T01:43:20.758Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Lock: 并发工具类-CyclicBarrier">
 <meta name="twitter:description" content="CyclicBarrier可以让一组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，所有被屏障拦截的线程才会继续运行。
@@ -352,7 +352,7 @@ CountDownLatch的计数器无法被重置，只能使用一次；">
 <h1 id="CountDownLatch和CyclicBarrier的区别"><a href="#CountDownLatch和CyclicBarrier的区别" class="headerlink" title="CountDownLatch和CyclicBarrier的区别"></a>CountDownLatch和CyclicBarrier的区别</h1><ol>
 <li>CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；而CyclicBarrier则是允许一组线程相互等待。</li>
 <li>CountDownLatch的计数器无法被重置，只能使用一次；CyclicBarrier的计数器可以被重置后使用，因此它被称为是循环的barrier，能处理更为复杂的业务场景。</li>
-<li>CountDownLatch通过自定义同步器（共享锁）实现的；而CyclicBarrier是通过重入锁ReentrantLock（排他锁）和Condition来实现的。</li>
+<li>CountDownLatch通过自定义同步器（共享锁）实现的；而CyclicBarrier是通过重入锁ReentrantLock（排他锁）和Condition的等待通知机制来实现的。</li>
 </ol>
 <h1 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h1><h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><p>CyclicBarrier是通过重入锁ReentrantLock和Condition实现的。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** The lock for guarding barrier entry */</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();</div><div class="line"><span class="comment">/** Condition to wait on until tripped */</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> Condition trip = lock.newCondition();</div></pre></td></tr></table></figure></p>
 <h2 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">CyclicBarrier</span><span class="params">(<span class="keyword">int</span> parties)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>(parties, <span class="keyword">null</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">CyclicBarrier</span><span class="params">(<span class="keyword">int</span> parties, Runnable barrierAction)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (parties &lt;= <span class="number">0</span>) <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</div><div class="line">    <span class="comment">// parties表示“必须同时到达barrier的线程个数”</span></div><div class="line">    <span class="keyword">this</span>.parties = parties;</div><div class="line">    <span class="comment">// count表示“处在等待状态的线程个数”</span></div><div class="line">    <span class="keyword">this</span>.count = parties;</div><div class="line">    <span class="comment">// barrierCommand表示“parties个线程到达barrier时，会优先执行的动作”</span></div><div class="line">    <span class="keyword">this</span>.barrierCommand = barrierAction;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -476,7 +476,7 @@ CountDownLatch的计数器无法被重置，只能使用一次；">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">226</span>
+              <span class="site-state-item-count">252</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -484,7 +484,7 @@ CountDownLatch的计数器无法被重置，只能使用一次；">
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -493,7 +493,7 @@ CountDownLatch的计数器无法被重置，只能使用一次；">
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">149</span>
+                <span class="site-state-item-count">160</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

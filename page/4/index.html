@@ -282,8 +282,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/16/Spring-事务/" itemprop="url">
-                  Spring: 事务
+                <a class="post-title-link" href="/2017/06/03/索引过程分析/" itemprop="url">
+                  索引过程分析
                 </a>
               
             
@@ -296,8 +296,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-16T23:20:55+08:00" content="2017-02-16">
-              2017-02-16
+            <time itemprop="dateCreated" datetime="2017-06-03T14:25:35+08:00" content="2017-06-03">
+              2017-06-03
             </time>
           </span>
 
@@ -310,8 +310,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Spring/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring</span>
+                  <a href="/categories/Lucene/" itemprop="url" rel="index">
+                    <span itemprop="name">Lucene</span>
                   </a>
                 </span>
 
@@ -345,12 +345,22 @@
       
         
           
-          概述Spring配置文件中关于事务配置总是由三个组成部分，分别是DataSource、TransactionManager和代理机制这三部分，无论哪种配置方式，一般变化的只是代理机制这部分。 DataSource、 TransactionManager这两部分只是会根据数据访问方式有所变化。
-Dat
+          Lucene3 中的索引过程设计很多对象，分别负责索引文档的不同部分的信息，同时也注重复用一些对象集。索引过程中涉及3种索引链：基本索引链、线程索引链、域索引链。
+IndexWriterIndexWriter 对象主要包括几方面的信息：1.用于索引文档
+
+
+
+成员
+描述
+
+
+
+
+Directory 
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/16/Spring-事务/#more" rel="contents">
+            <a class="btn" href="/2017/06/03/索引过程分析/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -401,8 +411,8 @@ Dat
             
               
                 
-                <a class="post-title-link" href="/2017/02/16/动手写web框架-9-事务实现/" itemprop="url">
-                  动手写web框架(9): 事务实现
+                <a class="post-title-link" href="/2017/05/29/词典和倒排表信息/" itemprop="url">
+                  词典和倒排表信息
                 </a>
               
             
@@ -415,8 +425,8 @@ Dat
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-16T22:23:33+08:00" content="2017-02-16">
-              2017-02-16
+            <time itemprop="dateCreated" datetime="2017-05-29T11:13:26+08:00" content="2017-05-29">
+              2017-05-29
             </time>
           </span>
 
@@ -429,8 +439,8 @@ Dat
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/动手写web框架/" itemprop="url" rel="index">
-                    <span itemprop="name">动手写web框架</span>
+                  <a href="/categories/Lucene/" itemprop="url" rel="index">
+                    <span itemprop="name">Lucene</span>
                   </a>
                 </span>
 
@@ -464,11 +474,13 @@ Dat
       
         
           
-          定义事务注解@Transaction注解只能用于方法级别。Transaction123456789101112131415package org.smart4j.framework.annotation;import java.lang.annotation.ElementType;import j
+          反向信息也就是反向索引，包括词典（Term Dictionary）和倒排表（Posting List）。这两部分分别存在 .tii、.tis和.frq、prx中。
+词典term 是根据 term’s field name 和 term text 进行字典排序。
+IndexReader.open() 
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/16/动手写web框架-9-事务实现/#more" rel="contents">
+            <a class="btn" href="/2017/05/29/词典和倒排表信息/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -519,8 +531,8 @@ Dat
             
               
                 
-                <a class="post-title-link" href="/2017/02/16/动手写web框架-8-AOP实现/" itemprop="url">
-                  动手写web框架(8): AOP实现
+                <a class="post-title-link" href="/2017/05/28/词向量的元数据和数据信息/" itemprop="url">
+                  词向量的元数据和数据信息
                 </a>
               
             
@@ -533,8 +545,8 @@ Dat
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-16T16:45:02+08:00" content="2017-02-16">
-              2017-02-16
+            <time itemprop="dateCreated" datetime="2017-05-28T14:26:39+08:00" content="2017-05-28">
+              2017-05-28
             </time>
           </span>
 
@@ -547,8 +559,8 @@ Dat
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/动手写web框架/" itemprop="url" rel="index">
-                    <span itemprop="name">动手写web框架</span>
+                  <a href="/categories/Lucene/" itemprop="url" rel="index">
+                    <span itemprop="name">Lucene</span>
                   </a>
                 </span>
 
@@ -582,11 +594,12 @@ Dat
       
         
           
-          定义切面注解Aspect1234567891011121314151617package org.smart4j.framework.annotation;import java.lang.annotation.*;/** * 切面注解 * Created by Roger on 2016/11/2
+          IndexReader.getTermFeqVector() -&gt; DirectoryReader.getTermFreqVector() -&gt; SegmentReader.getTermFreqVector() -&gt; TermVectorsReader.get()
+Term Ve
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/16/动手写web框架-8-AOP实现/#more" rel="contents">
+            <a class="btn" href="/2017/05/28/词向量的元数据和数据信息/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -637,8 +650,8 @@ Dat
             
               
                 
-                <a class="post-title-link" href="/2017/02/16/动手写web框架-7-请求转发器/" itemprop="url">
-                  动手写web框架(7): 请求转发器
+                <a class="post-title-link" href="/2017/05/28/域的元数据信息和数据信息/" itemprop="url">
+                  域的元数据信息和数据信息
                 </a>
               
             
@@ -651,8 +664,8 @@ Dat
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-16T15:53:51+08:00" content="2017-02-16">
-              2017-02-16
+            <time itemprop="dateCreated" datetime="2017-05-28T14:26:22+08:00" content="2017-05-28">
+              2017-05-28
             </time>
           </span>
 
@@ -665,8 +678,8 @@ Dat
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/动手写web框架/" itemprop="url" rel="index">
-                    <span itemprop="name">动手写web框架</span>
+                  <a href="/categories/Lucene/" itemprop="url" rel="index">
+                    <span itemprop="name">Lucene</span>
                   </a>
                 </span>
 
@@ -700,14 +713,11 @@ Dat
       
         
           
-          类似于Spring MVC中的DispatcherServlet，所以我们也需要编写一个Servlet，让它处理所有的请求。
-
-从HttpServletRequest对象中获取请求方法和请求路径；
-通过ControllerHelper获取Request对应的Handler，Handler包括Cont
+          元数据 .fnmIndexReader.open() -&gt; DirectoryReader.open() -&gt; FindSegmentsFile.run() FindSegmentsFile.doBody() -&gt; new DirectoryReader() -&gt; Segme
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/16/动手写web框架-7-请求转发器/#more" rel="contents">
+            <a class="btn" href="/2017/05/28/域的元数据信息和数据信息/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -758,8 +768,8 @@ Dat
             
               
                 
-                <a class="post-title-link" href="/2017/02/16/动手写web框架-6-初始化框架/" itemprop="url">
-                  动手写web框架(6): 初始化框架
+                <a class="post-title-link" href="/2017/05/28/段的元数据信息/" itemprop="url">
+                  段的元数据信息
                 </a>
               
             
@@ -772,8 +782,8 @@ Dat
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-16T15:48:36+08:00" content="2017-02-16">
-              2017-02-16
+            <time itemprop="dateCreated" datetime="2017-05-28T11:27:35+08:00" content="2017-05-28">
+              2017-05-28
             </time>
           </span>
 
@@ -786,8 +796,8 @@ Dat
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/动手写web框架/" itemprop="url" rel="index">
-                    <span itemprop="name">动手写web框架</span>
+                  <a href="/categories/Lucene/" itemprop="url" rel="index">
+                    <span itemprop="name">Lucene</span>
                   </a>
                 </span>
 
@@ -821,11 +831,13 @@ Dat
       
         
           
-          通过定义一个HelperLoader类来加载所有的Helper类完成初始化。HelperLoader123456789101112131415161718192021222324252627package org.smart4j.framework;import org.smart4j.framew
+          segments.gen和segments_N保存了段的元数据信息，索引有多少个段，每个段有多少篇文档。而段的真正的数据信息是保存在域（Field）和词（Term）中的。
+一个索引只有一个segments.gen，而segments_N可能有多个。
+IndexReader.open() -&gt; 
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/16/动手写web框架-6-初始化框架/#more" rel="contents">
+            <a class="btn" href="/2017/05/28/段的元数据信息/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -876,8 +888,8 @@ Dat
             
               
                 
-                <a class="post-title-link" href="/2017/02/16/动手写web框架-5-加载Controller/" itemprop="url">
-                  动手写web框架(5): 加载Controller
+                <a class="post-title-link" href="/2017/05/27/索引文件格式概述/" itemprop="url">
+                  索引文件格式概述
                 </a>
               
             
@@ -890,8 +902,8 @@ Dat
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-16T15:33:12+08:00" content="2017-02-16">
-              2017-02-16
+            <time itemprop="dateCreated" datetime="2017-05-27T10:44:49+08:00" content="2017-05-27">
+              2017-05-27
             </time>
           </span>
 
@@ -904,8 +916,8 @@ Dat
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/动手写web框架/" itemprop="url" rel="index">
-                    <span itemprop="name">动手写web框架</span>
+                  <a href="/categories/Lucene/" itemprop="url" rel="index">
+                    <span itemprop="name">Lucene</span>
                   </a>
                 </span>
 
@@ -939,11 +951,17 @@ Dat
       
         
           
-          通过ClassHelper可以获取所有定义了@Controller注解的类，通过反射获取该类中所有带有@Action注解的方法，获取Action注解中的请求表达式，进而得到请求方法和请求路径，将其封装成一个请求对象Request和处理对象Handler，最后把Request和Handler建立映射关
+          官网介绍：Lucene- Index File Formats
+索引层次结构Lucene的索引结构主要分为以下几个层次：
+
+索引（Index） 一个索引对应一个索引目录（文件夹）。
+段（Segment）
+一个索引可以包含多个段，段之间是相互独立的，可以被分开搜索，不同的段可以合并。
+有相同前缀如_0
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/16/动手写web框架-5-加载Controller/#more" rel="contents">
+            <a class="btn" href="/2017/05/27/索引文件格式概述/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -994,8 +1012,8 @@ Dat
             
               
                 
-                <a class="post-title-link" href="/2017/02/16/动手写web框架-4-依赖注入实现/" itemprop="url">
-                  动手写web框架(4): 依赖注入实现
+                <a class="post-title-link" href="/2017/04/26/branch-upstream/" itemprop="url">
+                  branch upstream
                 </a>
               
             
@@ -1008,8 +1026,8 @@ Dat
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-16T14:40:05+08:00" content="2017-02-16">
-              2017-02-16
+            <time itemprop="dateCreated" datetime="2017-04-26T15:44:03+08:00" content="2017-04-26">
+              2017-04-26
             </time>
           </span>
 
@@ -1022,8 +1040,8 @@ Dat
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/动手写web框架/" itemprop="url" rel="index">
-                    <span itemprop="name">动手写web框架</span>
+                  <a href="/categories/Git/" itemprop="url" rel="index">
+                    <span itemprop="name">Git</span>
                   </a>
                 </span>
 
@@ -1057,13 +1075,13 @@ Dat
       
         
           
-          IOC的原理参见：IOC原理
-对象交给第三方容器管理，维护对象间的关系，并将依赖的成员注入到相关的对象中。
-BeanHelper已经可以获取到所有Bean对象，现在就需要遍历这些Bean对象，通过反射获取对象的成员变量，判断成员变量是否带有@Inject注解，如果有就通过反射注入相关的Bean对象。
+          upstream设置当前工作目录工作分支，跟远程的仓库，分支之间的链接关系。
+基本设置123git branch --set-upstream-to=origin/develop或git branch -u origin/develop
+将当前分支的upstream设为远程仓库的develop分支。
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/16/动手写web框架-4-依赖注入实现/#more" rel="contents">
+            <a class="btn" href="/2017/04/26/branch-upstream/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1114,8 +1132,8 @@ BeanHelper已经可以获取到所有Bean对象，现在就需要遍历这些Bea
             
               
                 
-                <a class="post-title-link" href="/2017/02/16/动手写web框架-3-Bean容器/" itemprop="url">
-                  动手写web框架(3): Bean容器
+                <a class="post-title-link" href="/2017/04/26/mergetool-config-kdiff3/" itemprop="url">
+                  mergetool config:kdiff3
                 </a>
               
             
@@ -1128,8 +1146,8 @@ BeanHelper已经可以获取到所有Bean对象，现在就需要遍历这些Bea
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-16T14:39:59+08:00" content="2017-02-16">
-              2017-02-16
+            <time itemprop="dateCreated" datetime="2017-04-26T09:58:20+08:00" content="2017-04-26">
+              2017-04-26
             </time>
           </span>
 
@@ -1142,8 +1160,8 @@ BeanHelper已经可以获取到所有Bean对象，现在就需要遍历这些Bea
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/动手写web框架/" itemprop="url" rel="index">
-                    <span itemprop="name">动手写web框架</span>
+                  <a href="/categories/Git/" itemprop="url" rel="index">
+                    <span itemprop="name">Git</span>
                   </a>
                 </span>
 
@@ -1177,12 +1195,16 @@ BeanHelper已经可以获取到所有Bean对象，现在就需要遍历这些Bea
       
         
           
-          通过ClassHepler类可以获取相关的已加载的类，但是无法获取到类的实例，因而要完成Bean容器，必须借助反射来实例化相应的Bean对象，最后通过一个Map集合维护所有类和对象之间的映射关系。
-BeanHelper12345678910111213141516171819202122232425
+          
+查看git config的配置，是否已经配置了merge工具
+ 1git config --global -l
+
+如果没有配置merge tool
+ 12git config --global --add merge.tool kdiff3git config --global --add mer
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/16/动手写web框架-3-Bean容器/#more" rel="contents">
+            <a class="btn" href="/2017/04/26/mergetool-config-kdiff3/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1233,8 +1255,8 @@ BeanHelper12345678910111213141516171819202122232425
             
               
                 
-                <a class="post-title-link" href="/2017/02/16/动手写web框架-2-类加载器/" itemprop="url">
-                  动手写web框架(2): 类加载器
+                <a class="post-title-link" href="/2017/03/08/JUC集合框架-5-CopyOnWriteArrayList/" itemprop="url">
+                  JUC集合框架(5): CopyOnWriteArrayList
                 </a>
               
             
@@ -1247,8 +1269,8 @@ BeanHelper12345678910111213141516171819202122232425
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-16T14:39:52+08:00" content="2017-02-16">
-              2017-02-16
+            <time itemprop="dateCreated" datetime="2017-03-08T13:52:17+08:00" content="2017-03-08">
+              2017-03-08
             </time>
           </span>
 
@@ -1261,8 +1283,8 @@ BeanHelper12345678910111213141516171819202122232425
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/动手写web框架/" itemprop="url" rel="index">
-                    <span itemprop="name">动手写web框架</span>
+                  <a href="/categories/JUC集合框架/" itemprop="url" rel="index">
+                    <span itemprop="name">JUC集合框架</span>
                   </a>
                 </span>
 
@@ -1296,12 +1318,15 @@ BeanHelper12345678910111213141516171819202122232425
       
         
           
-          自定义一个类加载器，用于加载基础包名下的所有类，比如使用了某注解的类，实现了某接口的类，或者继承了某父类的所有子类等。
-自定义注解一个Web框架需要用到一些自定义的注解。Action1234567891011121314151617package org.smart4j.framework.anno
+          
+适用于读操作远大于写操作的场景。
+
+CopyOnWriteArrayList的读操作不会加锁，写操作也不会阻塞读操作，只有写和写操作之间需要同步等待。
+12public class CopyOnWriteArrayList&lt;E&gt;    implements List&lt;E&gt;,
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/16/动手写web框架-2-类加载器/#more" rel="contents">
+            <a class="btn" href="/2017/03/08/JUC集合框架-5-CopyOnWriteArrayList/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1352,8 +1377,8 @@ BeanHelper12345678910111213141516171819202122232425
             
               
                 
-                <a class="post-title-link" href="/2017/02/16/动手写web框架-1-加载配置项/" itemprop="url">
-                  动手写web框架(1): 加载配置项
+                <a class="post-title-link" href="/2017/03/08/JUC集合框架-4-ConcurrentLinkedQueue/" itemprop="url">
+                  JUC集合框架(4): ConcurrentLinkedQueue
                 </a>
               
             
@@ -1366,8 +1391,8 @@ BeanHelper12345678910111213141516171819202122232425
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-16T14:25:37+08:00" content="2017-02-16">
-              2017-02-16
+            <time itemprop="dateCreated" datetime="2017-03-08T13:15:37+08:00" content="2017-03-08">
+              2017-03-08
             </time>
           </span>
 
@@ -1380,8 +1405,8 @@ BeanHelper12345678910111213141516171819202122232425
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/动手写web框架/" itemprop="url" rel="index">
-                    <span itemprop="name">动手写web框架</span>
+                  <a href="/categories/JUC集合框架/" itemprop="url" rel="index">
+                    <span itemprop="name">JUC集合框架</span>
                   </a>
                 </span>
 
@@ -1415,11 +1440,12 @@ BeanHelper12345678910111213141516171819202122232425
       
         
           
-          定义框架所需的配置项 smart.properties在src/main/resources目录下创建名为smart.properties的文件。1234567891011jdbc.driver=com.mysql.jdbc.Driverjdbc.url=jdbc:mysql://localhost
+          ArrayBlockingQueue和LinkedBlockingQueue是并发队列的阻塞算法实现，而ConcurrentLinkedQueue是并发队列的非阻塞算法实现。
+12public class ConcurrentLinkedQueue&lt;E&gt; extends Abstract
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/16/动手写web框架-1-加载配置项/#more" rel="contents">
+            <a class="btn" href="/2017/03/08/JUC集合框架-4-ConcurrentLinkedQueue/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1453,7 +1479,7 @@ BeanHelper12345678910111213141516171819202122232425
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/26/">26</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1494,7 +1520,7 @@ BeanHelper12345678910111213141516171819202122232425
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">226</span>
+              <span class="site-state-item-count">252</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1502,7 +1528,7 @@ BeanHelper12345678910111213141516171819202122232425
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1511,7 +1537,7 @@ BeanHelper12345678910111213141516171819202122232425
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">149</span>
+                <span class="site-state-item-count">160</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

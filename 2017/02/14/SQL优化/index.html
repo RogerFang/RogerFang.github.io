@@ -111,7 +111,7 @@ Co">
 <meta property="og:image" content="https://rogerfang.github.io/images/database/eg_page_optimize_3.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/database/eg_page_optimize_4.png">
 <meta property="og:image" content="https://rogerfang.github.io/images/database/eg_page_optimize_5.png">
-<meta property="og:updated_time" content="2017-02-14T08:54:51.515Z">
+<meta property="og:updated_time" content="2017-09-05T02:28:00.128Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SQL优化">
 <meta name="twitter:description" content="SQL优化的一般步骤通过show status命令了解SQL执行频率MySQL通过show [session|global] status命令可以提供服务器状态信息，默认是session(当前连接)，global会显示自数据库上次启动至今。
@@ -385,7 +385,7 @@ Co">
 <ul>
 <li><code>select_type</code>: 表示SELECT的类型，常见的取值有SIMPLE(简单表，即不使用表连接或子查询)、PRIMARY(主查询，即外层的查询)、UNION(UNION中的第二个或后面的查询语句)、SUBQUERY(子查询中的第一个SELECT)。</li>
 <li><code>table</code>: 输出结果集的表。</li>
-<li><code>type</code>: 表示MySQL在表中找到所需行的方式，或者叫访问类型。性能由差到号：ALL(全表扫描) &lt; index(索引全扫描) &lt; range(索引范围扫描) &lt; ref(使用非唯一索引或唯一索引的前缀扫描，返回匹配某个单独值的记录) &lt; eq_ref(类似ref，区别是使用的索引是唯一索引) &lt; const,system(单标中最多有一个匹配行) &lt; NULL(MySQL不用访问表或索引就能得到结果)。</li>
+<li><code>type</code>: 表示MySQL在表中找到所需行的方式，或者叫访问类型。性能由差到好：ALL(全表扫描) &lt; index(索引全扫描) &lt; range(索引范围扫描) &lt; ref(使用非唯一索引或唯一索引的前缀扫描，返回匹配某个单独值的记录) &lt; eq_ref(类似ref，区别是使用的索引是唯一索引) &lt; const,system(单标中最多有一个匹配行) &lt; NULL(MySQL不用访问表或索引就能得到结果)。</li>
 <li><code>possible_keys</code>: 查询时可能使用的索引。</li>
 <li><code>key</code>: 查询时实际使用的索引。</li>
 <li><code>key_len</code>: 使用到索引字段的长度。</li>
@@ -525,7 +525,7 @@ Co">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">226</span>
+              <span class="site-state-item-count">252</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -533,7 +533,7 @@ Co">
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -542,7 +542,7 @@ Co">
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">149</span>
+                <span class="site-state-item-count">160</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

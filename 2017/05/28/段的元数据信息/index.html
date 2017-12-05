@@ -94,7 +94,7 @@ IndexReader.open() -&amp;gt; DirectoryReader.open() -&amp;gt; FindSegmentsFile.r
 <meta property="og:description" content="segments.gen和segments_N保存了段的元数据信息，索引有多少个段，每个段有多少篇文档。而段的真正的数据信息是保存在域（Field）和词（Term）中的。
 一个索引只有一个segments.gen，而segments_N可能有多个。
 IndexReader.open() -&amp;gt; DirectoryReader.open() -&amp;gt; FindSegmentsFile.run(">
-<meta property="og:updated_time" content="2017-05-28T06:41:31.822Z">
+<meta property="og:updated_time" content="2017-10-14T13:41:27.812Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="段的元数据信息">
 <meta name="twitter:description" content="segments.gen和segments_N保存了段的元数据信息，索引有多少个段，每个段有多少篇文档。而段的真正的数据信息是保存在域（Field）和词（Term）中的。
@@ -359,11 +359,73 @@ IndexReader.open() -&amp;gt; DirectoryReader.open() -&amp;gt; FindSegmentsFile.r
 </ol>
 <p>确定了<code>segments_N</code>文件名后就调用<code>FindSegmentsFile.doBody()</code>方法，其实现调用了<code>SegmentInfos.read(directory, segmentFileName)</code>去读取具体的<code>segments_N</code>文件。</p>
 <h3 id="SegmentInfos-read"><a href="#SegmentInfos-read" class="headerlink" title="SegmentInfos.read()"></a>SegmentInfos.read()</h3><ol>
-<li>获取 IndexInput 实例<br> 通过<code>new ChecksumIndexInput(directory.openInput(segmentFileName))</code>得到input实例，</li>
-<li>读取 format, version, counter, segCount<br> | 属性 | 描述 |<br> |——–|——–|<br> |format|索引文件格式的版本号，主要是校验 IndexWriter 和 IndexReader 是否使用了同一个版本号。|<br> |version|索引的版本号，记录了 IndexWriter 将修改提交到索引文件中的次数。可以比较 IndexReader 中的 version 和索引文件中的 version 是否相同来判断此 IndexReader 被打开后，还有没有被 IndexWriter 更新。|<br> |counter|是下一个新段的段名。|<br> |segCount|段的个数。|</li>
-<li><p>读取每个段的元数据</p>
- <figure class="highlight java"><figcaption><span>SegmentInfos.read()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = input.readInt(); i &gt; <span class="number">0</span>; i--) &#123; <span class="comment">// read segmentInfos</span></div><div class="line">       add(<span class="keyword">new</span> SegmentInfo(directory, format, input));</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p> | 属性 | 描述 |<br> |——–|——–|<br> |segName|存储段名。|<br> |segSize|存储段中包含的文档数。|<br> |delGen|.del文件的版本号，每当 IndexWriter 向索引提交删除操作的时候，加1。|<br> |docStoreOffset|标志位，域和词向量的存储方式，-1 表示单独存储，否则表示共享存储。|<br> |docStoreSegment|保存了共享段的名字。|<br> |docStoreIsCompoundFile|doc是否存储在 Compound File (.cfx) 文件中|<br> |hasSingleNormFile|标志位，1表示所有的 Norm Factor 都存在 .nrm 文件中，否则每个域都有自己的文件 .fN|<br> |numField|域的数量|<br> |normGen|记录每个域的 norm file|<br> |isCompoundFile|是否为复合文件，把同一个段中的文件按照一定的格式保存在一个文件当中，以减少每次打开文件的个数|<br> |delCount|记录了此段中删除的文档的数目|<br> |hasProx|如果至少有一个段 omitTf 为fase，也即词频需要被保存，则 hasProx 为1，否则为0|<br> |diagnostics|调试信息|</p>
+<li>获取 IndexInput 实例<br>通过<code>new ChecksumIndexInput(directory.openInput(segmentFileName))</code>得到input实例，</li>
+<li>读取 format, version, counter, segCount<br>| 属性 | 描述 |<br>|——–|——–|<br>|format|索引文件格式的版本号，主要是校验 IndexWriter 和 IndexReader 是否使用了同一个版本号。|<br>|version|索引的版本号，记录了 IndexWriter 将修改提交到索引文件中的次数。可以比较 IndexReader 中的 version 和索引文件中的 version 是否相同来判断此 IndexReader 被打开后，还有没有被 IndexWriter 更新。|<br>|counter|是下一个新段的段名。|<br>|segCount|段的个数。|</li>
+<li>读取每个段的元数据<figure class="highlight java"><figcaption><span>SegmentInfos.read()</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = input.readInt(); i &gt; <span class="number">0</span>; i--) &#123; <span class="comment">// read segmentInfos</span></div><div class="line">    add(<span class="keyword">new</span> SegmentInfo(directory, format, input));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>segName</td>
+<td>存储段名。</td>
+</tr>
+<tr>
+<td>segSize</td>
+<td>存储段中包含的文档数。</td>
+</tr>
+<tr>
+<td>delGen</td>
+<td>.del文件的版本号，每当 IndexWriter 向索引提交删除操作的时候，加1。</td>
+</tr>
+<tr>
+<td>docStoreOffset</td>
+<td>标志位，域和词向量的存储方式，-1 表示单独存储，否则表示共享存储。</td>
+</tr>
+<tr>
+<td>docStoreSegment</td>
+<td>保存了共享段的名字。</td>
+</tr>
+<tr>
+<td>docStoreIsCompoundFile</td>
+<td>doc是否存储在 Compound File (.cfx) 文件中</td>
+</tr>
+<tr>
+<td>hasSingleNormFile</td>
+<td>标志位，1表示所有的 Norm Factor 都存在 .nrm 文件中，否则每个域都有自己的文件 .fN</td>
+</tr>
+<tr>
+<td>numField</td>
+<td>域的数量</td>
+</tr>
+<tr>
+<td>normGen</td>
+<td>记录每个域的 norm file</td>
+</tr>
+<tr>
+<td>isCompoundFile</td>
+<td>是否为复合文件，把同一个段中的文件按照一定的格式保存在一个文件当中，以减少每次打开文件的个数</td>
+</tr>
+<tr>
+<td>delCount</td>
+<td>记录了此段中删除的文档的数目</td>
+</tr>
+<tr>
+<td>hasProx</td>
+<td>如果至少有一个段 omitTf 为fase，也即词频需要被保存，则 hasProx 为1，否则为0</td>
+</tr>
+<tr>
+<td>diagnostics</td>
+<td>调试信息</td>
+</tr>
+</tbody>
+</table>
 <blockquote>
 <p>对于<strong>域(Stored Field)</strong>和<strong>词向量(Term Vector)</strong>的存储可以有不同的方式，即可以每个段(Segment)单独存储自己的域和词向量信息，也可以多个段共享域和词向量，把它们存储到一个段中去。</p>
 </blockquote>
@@ -371,9 +433,9 @@ IndexReader.open() -&amp;gt; DirectoryReader.open() -&amp;gt; FindSegmentsFile.r
 <li>如果<code>DocStoreOffset</code>为-1，则此段单独存储自己的域和词向量，从存储文件上来看，如果此段段名为XXX，则此段有自己的XXX.fdt，XXX.fdx，XXX.tvf，XXX.tvd，XXX.tvx文件。<code>DocStoreSegment</code>和<code>DocStoreIsCompoundFile</code>在此处不被保存。</li>
 <li>如果<code>DocStoreOffset</code>不为-1，则<code>DocStoreSegment</code>保存了共享的段的名字，比如为YYY，<code>DocStoreOffset</code>则为此段的域及词向量信息在共享段中的偏移量。则此段没有自己的XXX.fdt，XXX.fdx，XXX.tvf，XXX.tvd，XXX.tvx文件，而是将信息存放在共享段的YYY.fdt，YYY.fdx，YYY.tvf，YYY.tvd，YYY.tvx文件中。</li>
 </ul>
-</li>
-<li>读取 userData<br> 保存了user在 IndexWriter.commit 提交的信息。</li>
-<li>checkSum<br> 存储了 segment_N 文件的校验和。</li>
+<ol>
+<li>读取 userData<br>保存了user在 IndexWriter.commit 提交的信息。</li>
+<li>checkSum<br>存储了 segment_N 文件的校验和。</li>
 </ol>
 <hr>
 <p>感谢：<br><a href="http://www.cnblogs.com/forfuture1978/archive/2009/12/14/1623599.html" target="_blank" rel="external">http://www.cnblogs.com/forfuture1978/archive/2009/12/14/1623599.html</a></p>
@@ -488,7 +550,7 @@ IndexReader.open() -&amp;gt; DirectoryReader.open() -&amp;gt; FindSegmentsFile.r
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">226</span>
+              <span class="site-state-item-count">252</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -496,7 +558,7 @@ IndexReader.open() -&amp;gt; DirectoryReader.open() -&amp;gt; FindSegmentsFile.r
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -505,7 +567,7 @@ IndexReader.open() -&amp;gt; DirectoryReader.open() -&amp;gt; FindSegmentsFile.r
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">149</span>
+                <span class="site-state-item-count">160</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

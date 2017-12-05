@@ -98,7 +98,7 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
 JVM的类加载机制允许从多种源动态地加载Java类，但是动态类加载有一个重要的缺点，即我们在使用动态加载的类对象时，往往对这个类知之甚少，甚至于一无所知。这种情况下就需要使用一种动态编程技术——反射。
 
 优点：可以在运行时加载类，并获取类的内部结构，还可以创建新的对象和调用对象中的方法等">
-<meta property="og:updated_time" content="2017-07-02T07:43:48.927Z">
+<meta property="og:updated_time" content="2017-08-26T02:33:37.645Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 反射">
 <meta name="twitter:description" content="简介反射能够让运行在JVM中的程序检测和修改运行时的行为，使用反射API可以在运行时获取对象的内部结构信息。
@@ -377,7 +377,7 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
 </li>
 </ol>
 <p>运行结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">MyClass.print:method invoke</div><div class="line">private field reflect: Roger</div><div class="line">public field reflect: 23</div></pre></td></tr></table></figure></p>
-<h1 id="反射对泛型的支持"><a href="#反射对泛型的支持" class="headerlink" title="反射对泛型的支持"></a>反射对泛型的支持</h1><p>Java 5中引入了泛型的概念之后，Java反射API也做了相应的修改，以提供对泛型的支持。由于类型擦除机制的存在，泛型类中的类型参数等信息，在运行时刻是不存在的。JVM看到的都是原始类型。对此，Java 5对Java类文件的格式做了修订，添加了Signature属性，用来包含不在JVM类型系统中的类型信息。比如以java.util.List接口为例，在其类文件中的Signature属性的声明是<e:ljava lang="" object;="">Ljava/lang/Object;Ljava/util/Collection<te;>;; ，这就说明List接口有一个类型参数E。在运行时刻，JVM会读取Signature属性的内容并提供给反射API来使用。</te;></e:ljava></p>
+<h1 id="反射对泛型的支持"><a href="#反射对泛型的支持" class="headerlink" title="反射对泛型的支持"></a>反射对泛型的支持</h1><p>Java 5中引入了泛型的概念之后，Java反射API也做了相应的修改，以提供对泛型的支持。由于类型擦除机制的存在，泛型类中的类型参数等信息，在运行时刻是不存在的。JVM看到的都是原始类型。对此，Java 5对Java类文件的格式做了修订，添加了Signature属性，用来包含不在JVM类型系统中的类型信息。比如以java.util.List接口为例，在其类文件中的Signature属性的声明是<code>&lt;E:Ljava/lang/Object;&gt;Ljava/lang/Object;Ljava/util/Collection&lt;TE;&gt;;;</code> ，这就说明List接口有一个类型参数E。在运行时刻，JVM会读取Signature属性的内容并提供给反射API来使用。</p>
 <h2 id="域类型"><a href="#域类型" class="headerlink" title="域类型"></a>域类型</h2><p>定义一个泛型域<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">List&lt;String&gt; list;</div></pre></td></tr></table></figure></p>
 <p>比如在代码中声明了一个域是List<string>类型的，虽然在运行时刻其类型会变成原始类型List，但是仍然可以通过反射来获取到所用的实际的类型参数。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 反射获取域的泛型类型</span></div><div class="line">Field field = cls.getDeclaredField(<span class="string">"list"</span>); <span class="comment">// list的类型是List&lt;String&gt;</span></div><div class="line">Type type = field.getGenericType();</div><div class="line"><span class="keyword">if</span> (type <span class="keyword">instanceof</span> ParameterizedType)&#123;</div><div class="line">    ParameterizedType paramType = (ParameterizedType) type;</div><div class="line">    Type[] actualTypes = paramType.getActualTypeArguments();</div><div class="line">    <span class="keyword">for</span> (Type aType: actualTypes)&#123;</div><div class="line">        <span class="keyword">if</span> (aType <span class="keyword">instanceof</span>  Class)&#123;</div><div class="line">            Class aCls = (Class) aType;</div><div class="line">            System.out.println(<span class="string">"field: "</span> + aCls.getName()); <span class="comment">// 输出java.lang.String</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></string></p>
 <h2 id="方法返回类型"><a href="#方法返回类型" class="headerlink" title="方法返回类型"></a>方法返回类型</h2><p>定义方法返回类型为泛型的方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">getList</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
@@ -527,7 +527,7 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">226</span>
+              <span class="site-state-item-count">252</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -535,7 +535,7 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -544,7 +544,7 @@ JVM的类加载机制允许从多种源动态地加载Java类，但是动态类�
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">149</span>
+                <span class="site-state-item-count">160</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
