@@ -98,9 +98,9 @@
 
 串行流程主要是这四个阶段:generate–&amp;gt;fetch–&amp;gt;parse–&amp;gt;updatedb，循环执行。
 串行流程问题当crawldb中数据量比较少时，fetch流程会占80%以上的时间，流程效率并不低。但是当crawldb中的url规模较大，例如百亿级别时，gene">
-<meta property="og:image" content="https://rogerfang.github.io/../images/nutch/crawl-flow.jpg">
+<meta property="og:image" content="https://rogerfang.github.io/images/nutch/crawl-flow.jpg">
 <meta property="og:image" content="https://rogerfang.github.io/images/nutch/parallel-crawl-flow.jpg">
-<meta property="og:updated_time" content="2017-12-05T06:25:26.410Z">
+<meta property="og:updated_time" content="2017-12-18T11:02:36.057Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nutch抓取优化">
 <meta name="twitter:description" content="抓取优化设计方案流程优化将nutch默认的串行抓取流程改为并行抓取流程
@@ -108,7 +108,7 @@
 
 串行流程主要是这四个阶段:generate–&amp;gt;fetch–&amp;gt;parse–&amp;gt;updatedb，循环执行。
 串行流程问题当crawldb中数据量比较少时，fetch流程会占80%以上的时间，流程效率并不低。但是当crawldb中的url规模较大，例如百亿级别时，gene">
-<meta name="twitter:image" content="https://rogerfang.github.io/../images/nutch/crawl-flow.jpg">
+<meta name="twitter:image" content="https://rogerfang.github.io/images/nutch/crawl-flow.jpg">
 
 
 
@@ -356,7 +356,7 @@
       
         <h1 id="抓取优化设计方案"><a href="#抓取优化设计方案" class="headerlink" title="抓取优化设计方案"></a>抓取优化设计方案</h1><h2 id="流程优化"><a href="#流程优化" class="headerlink" title="流程优化"></a>流程优化</h2><p>将nutch默认的串行抓取流程改为并行抓取流程</p>
 <h3 id="串行流程介绍"><a href="#串行流程介绍" class="headerlink" title="串行流程介绍"></a>串行流程介绍</h3><p>nutch crawl流程图</p>
-<p><img src="../images/nutch/crawl-flow.jpg" alt="crawl-flow"></p>
+<p><img src="/images/nutch/crawl-flow.jpg" alt="crawl-flow"></p>
 <p>串行流程主要是这四个阶段:generate–&gt;fetch–&gt;parse–&gt;updatedb，循环执行。</p>
 <h3 id="串行流程问题"><a href="#串行流程问题" class="headerlink" title="串行流程问题"></a>串行流程问题</h3><p>当crawldb中数据量比较少时，fetch流程会占80%以上的时间，流程效率并不低。但是当crawldb中的url规模较大，例如百亿级别时，generate，parse和updatedb会占用大量时间，导致fetch流程的时间占比很低，甚至低于10%，极大地降低了抓取效率。从优化抓取量角度看，fetch流程应该在不断的运行。</p>
 <h3 id="并行流程"><a href="#并行流程" class="headerlink" title="并行流程"></a>并行流程</h3><p>并发流程图</p>
@@ -492,6 +492,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/12/18/Dubbo-初探Dubbo源码/" rel="prev" title="Dubbo:初探Dubbo源码">
+                Dubbo:初探Dubbo源码 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -558,7 +562,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">252</span>
+              <span class="site-state-item-count">254</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -566,7 +570,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">33</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -575,7 +579,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">160</span>
+                <span class="site-state-item-count">161</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

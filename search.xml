@@ -4,11 +4,172 @@
   
     
     <entry>
+      <title><![CDATA[Dubbo:dubbo与spring]]></title>
+      <url>https://rogerfang.github.io/2017/12/18/Dubbo-dubbo%E4%B8%8Espring/</url>
+      <content type="html"><![CDATA[<h1 id="spring-lt-dubbo-gt-标签扩展"><a href="#spring-lt-dubbo-gt-标签扩展" class="headerlink" title="spring&lt;dubbo&gt;标签扩展"></a>spring<code>&lt;dubbo&gt;</code>标签扩展</h1><h2 id="spring自定义标签"><a href="#spring自定义标签" class="headerlink" title="spring自定义标签"></a>spring自定义标签</h2><p>扩展spring自定义标签的步骤如下：</p>
+<ul>
+<li>定义一个XSD文件描述扩展组件内容。</li>
+<li>实现<code>BeanDefinitionParser</code>接口，用于解析XSD文件中组件的定义，置于类路径下。</li>
+<li>继承<code>NamespaceHandlerSupport</code>类，将组件解析器注册到spring容器中。</li>
+<li>在类路径下创建 <strong>META-INF/spring.schemas</strong> 文件，spring可扩展的schema机制默认会去加载该文件，作为自定义标签的命名空间的本地映射。</li>
+<li>在类路径下创建 <strong>META-INF/spring.handlers</strong>文件，spring在<code>parseCustomElement()</code>解析自定义标签时会加载对应的<code>NamespaceHandler</code>，然后调用其<code>parse()</code>对相应的元素节点进行解析。</li>
+</ul>
+<h2 id="dubbo中的实现"><a href="#dubbo中的实现" class="headerlink" title="dubbo中的实现"></a>dubbo中的实现</h2><p><code>DubboNamespaceHandler</code>、<code>DubboBeanDefinitionParser</code>，根据不同的节点名解析成不同的对象(eg: <code>ApplicationConfig</code>、<code>RegistryConfig</code>、<code>ProtocolConfig</code>、<code>ProviderConfig</code>、<code>ConsumerConfig</code>、<code>ReferenceBean</code>、<code>ServiceBean</code>等)。</p>
+<h1 id="服务暴露触发"><a href="#服务暴露触发" class="headerlink" title="服务暴露触发"></a>服务暴露触发</h1><p><img src="/images/dubbo/servicebean-class-diagram.png" alt=""></p>
+<p><code>ServiceBean</code>实现了<code>InitializingBean</code>、<code>ApplicationListener</code>，对应的会在<code>afterPropertiesSet()</code>bean的属性设置完成后和<code>onApplicationEvent</code>spring容器初始化完成后进行是否export服务的判断，调用<code>ServiceBean</code>其父类<code>ServiceConfig</code>的<code>export()</code>方法触发服务暴露。</p>
+<h1 id="SpringContainer"><a href="#SpringContainer" class="headerlink" title="SpringContainer"></a>SpringContainer</h1><figure class="highlight java"><figcaption><span>SpringContainer</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</div><div class="line">    String configPath = ConfigUtils.getProperty(SPRING_CONFIG);</div><div class="line">    <span class="keyword">if</span> (configPath == <span class="keyword">null</span> || configPath.length() == <span class="number">0</span>) &#123;</div><div class="line">        configPath = DEFAULT_SPRING_CONFIG;</div><div class="line">    &#125;</div><div class="line">    context = <span class="keyword">new</span> ClassPathXmlApplicationContext(configPath.split(<span class="string">"[,\\s]+"</span>));</div><div class="line">    context.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>默认加载<code>classpath*:META-INF/spring/*.xml</code>相关的spring配置文件，也可以通过<code>dubbo.spring.config</code>参数进行设定。</p>
+<h1 id="Main加载spring容器"><a href="#Main加载spring容器" class="headerlink" title="Main加载spring容器"></a>Main加载spring容器</h1><p>dubbo提供了是一个 <code>SpringContainer</code> 的容器，以简单的 <code>com.alibaba.dubbo.container.Main</code>类来加载 Spring 启动，因为服务通常不需要 Tomcat/JBoss 等 Web 容器的特性，没必要用 Web 容器去加载服务。</p>
+<p>通过重入锁和等待条件来保证Spring容器一直运行不退出，通过注册一个shutdown hook来保证JVM关闭时清理现场，释放通知信号。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ReentrantLock LOCK = <span class="keyword">new</span> ReentrantLock();</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Condition STOP = LOCK.newCondition();</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">if</span> (args == <span class="keyword">null</span> || args.length == <span class="number">0</span>) &#123;</div><div class="line">            String config = ConfigUtils.getProperty(CONTAINER_KEY, loader.getDefaultExtensionName());</div><div class="line">            args = Constants.COMMA_SPLIT_PATTERN.split(config);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">final</span> List&lt;Container&gt; containers = <span class="keyword">new</span> ArrayList&lt;Container&gt;();</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; args.length; i++) &#123;</div><div class="line">            containers.add(loader.getExtension(args[i]));</div><div class="line">        &#125;</div><div class="line">        logger.info(<span class="string">"Use container type("</span> + Arrays.toString(args) + <span class="string">") to run dubbo serivce."</span>);</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (<span class="string">"true"</span>.equals(System.getProperty(SHUTDOWN_HOOK_KEY))) &#123;</div><div class="line">            Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Thread() &#123;</div><div class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                    <span class="keyword">for</span> (Container container : containers) &#123;</div><div class="line">                        <span class="keyword">try</span> &#123;</div><div class="line">                            container.stop();</div><div class="line">                            logger.info(<span class="string">"Dubbo "</span> + container.getClass().getSimpleName() + <span class="string">" stopped!"</span>);</div><div class="line">                        &#125; <span class="keyword">catch</span> (Throwable t) &#123;</div><div class="line">                            logger.error(t.getMessage(), t);</div><div class="line">                        &#125;</div><div class="line">                        <span class="keyword">try</span> &#123;</div><div class="line">                            LOCK.lock();</div><div class="line">                            STOP.signal();</div><div class="line">                        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">                            LOCK.unlock();</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (Container container : containers) &#123;</div><div class="line">            container.start();</div><div class="line">            logger.info(<span class="string">"Dubbo "</span> + container.getClass().getSimpleName() + <span class="string">" started!"</span>);</div><div class="line">        &#125;</div><div class="line">        System.out.println(<span class="keyword">new</span> SimpleDateFormat(<span class="string">"[yyyy-MM-dd HH:mm:ss]"</span>).format(<span class="keyword">new</span> Date()) + <span class="string">" Dubbo service server started!"</span>);</div><div class="line">    &#125; <span class="keyword">catch</span> (RuntimeException e) &#123;</div><div class="line">        e.printStackTrace();</div><div class="line">        logger.error(e.getMessage(), e);</div><div class="line">        System.exit(<span class="number">1</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        LOCK.lock();</div><div class="line">        STOP.await();</div><div class="line">    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">        logger.warn(<span class="string">"Dubbo service server stopped, interrupted by other thread!"</span>, e);</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        LOCK.unlock();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>shutdown hook 调用场景：</p>
+<ul>
+<li>程序正常退出</li>
+<li>使用System.exit()</li>
+<li>终端使用Ctrl+C触发的中断</li>
+<li>系统关闭</li>
+<li>使用Kill pid命令干掉进程，使用kill -9 pid是不会JVM注册的钩子不会被调用。</li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Dubbo:初探Dubbo源码]]></title>
+      <url>https://rogerfang.github.io/2017/12/18/Dubbo-%E5%88%9D%E6%8E%A2Dubbo%E6%BA%90%E7%A0%81/</url>
+      <content type="html"><![CDATA[<h1 id="dubbo简介"><a href="#dubbo简介" class="headerlink" title="dubbo简介"></a>dubbo简介</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p><img src="/images/dubbo/dubbo-architecture-roadmap.png" alt=""></p>
+<p>随着应用规模不断增大，应用之间的交互越多，基于MVC的垂直应用架构的开发模式弊端逐渐突显：开发维护成本变高，部署效率低等。<br>通过将核心业务抽取出来，作为独立的服务，逐渐形成稳定的服务中心，以实现服务的共享和重用，分布式服务框架成为了应用架构的核心。<br>流动计算架构可以解决当服务越来越多时，服务URL配置、服务路由、负载均衡、集群容错、容量规划等问题，资源调度和治理中心（SOA）是关键。</p>
+<h2 id="dubbo架构"><a href="#dubbo架构" class="headerlink" title="dubbo架构"></a>dubbo架构</h2><p><img src="/images/dubbo/dubbo-architecture.png" alt=""></p>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Provider</td>
+<td>服务提供方</td>
+</tr>
+<tr>
+<td>Consumer</td>
+<td>服务消费方，调用远程服务</td>
+</tr>
+<tr>
+<td>Registry</td>
+<td>服务注册与发现的注册中心</td>
+</tr>
+<tr>
+<td>Monitor</td>
+<td>服务监控中心，包括服务调用次数和调用时间等</td>
+</tr>
+<tr>
+<td>Container</td>
+<td>服务运行容器</td>
+</tr>
+</tbody>
+</table>
+<p>当服务集群规模进一步扩大，带动IT治理结构进一步升级，需要实现动态部署，进行流动计算，现有分布式服务架构不会带来阻力。下图是<strong>未来可能的一种架构</strong>：<br><img src="/images/dubbo/dubbo-architecture-future.png" alt=""></p>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deployer</td>
+<td>自动部署服务的本地代理</td>
+</tr>
+<tr>
+<td>Repository</td>
+<td>仓库用于存储服务应用发布包</td>
+</tr>
+<tr>
+<td>Scheduler</td>
+<td>调度中心基于访问压力自动增减Provider</td>
+</tr>
+<tr>
+<td>Admin</td>
+<td>统一管理控制台</td>
+</tr>
+<tr>
+<td>Registry</td>
+<td>服务注册与发现的注册中心</td>
+</tr>
+<tr>
+<td>Monitor</td>
+<td>服务监控中心，包括服务调用次数和调用时间等</td>
+</tr>
+</tbody>
+</table>
+<h1 id="dubbo框架设计"><a href="#dubbo框架设计" class="headerlink" title="dubbo框架设计"></a>dubbo框架设计</h1><p><img src="/images/dubbo/dubbo-framework.png" alt=""></p>
+<ul>
+<li>图中左边淡蓝背景的为服务消费方使用的接口，右边淡绿色背景的为服务提供方使用的接口，位于中轴线上的为双方都用到的接口。</li>
+<li>图中从下至上分为十层，各层均为单向依赖，右边的黑色箭头代表层之间的依赖关系，每一层都可以剥离上层被复用，其中，Service 和 Config 层为 API，其它各层均为 SPI。</li>
+<li>图中绿色小块的为扩展接口，蓝色小块为实现类，图中只显示用于关联各层的实现类。</li>
+<li>图中<strong>蓝色虚线</strong>为初始化过程，即启动时组装链。<strong>红色实线</strong>为方法调用过程，即运行时调时链。紫色三角箭头为继承，可以把子类看作父类的同一个节点，线上的文字为调用的方法。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>config配置层</td>
+<td>对外配置接口，以<code>ServiceConfig</code>,<code>ReferenceConfig</code>为中心，可以直接初始化配置类，也可以通过 spring 解析配置生成配置类</td>
+</tr>
+<tr>
+<td>proxy服务代理层</td>
+<td>服务接口透明代理，生成服务的客户端 Stub 和服务器端 Skeleton, 以<code>ServiceProxy</code>为中心，扩展接口为<code>ProxyFactory</code></td>
+</tr>
+<tr>
+<td>registry注册中心层</td>
+<td>封装服务地址的注册与发现，以服务 URL 为中心，扩展接口为<code>RegistryFactory</code>,<code>Registry</code>,<code>RegistryService</code></td>
+</tr>
+<tr>
+<td>cluster路由层</td>
+<td>封装多个提供者的路由及负载均衡，并桥接注册中心，以 Invoker 为中心，扩展接口为<code>Cluster</code>,<code>Directory</code>,<code>Router</code>,<code>LoadBalance</code></td>
+</tr>
+<tr>
+<td>monitor监控层</td>
+<td>RPC 调用次数和调用时间监控，以 Statistics 为中心，扩展接口为<code>MonitorFactory</code>,<code>Monitor</code>,<code>MonitorService</code></td>
+</tr>
+<tr>
+<td>protocol远程调用层</td>
+<td>封将 RPC 调用，以 Invocation, Result 为中心，扩展接口为<code>Protocol</code>,<code>Invoker</code>,<code>Exporter</code></td>
+</tr>
+<tr>
+<td>exchange信息交换层</td>
+<td>封装请求响应模式，同步转异步，以 Request, Response 为中心，扩展接口为<code>Exchanger</code>,<code>ExchangeChannel</code>,<code>ExchangeClient</code>,<code>ExchangeServer</code></td>
+</tr>
+<tr>
+<td>transport网络传输层</td>
+<td>抽象 mina 和 netty 为统一接口，以 Message 为中心，扩展接口为<code>Channel</code>,<code>Transporter</code>,<code>Client</code>,<code>Server</code>,<code>Codec</code></td>
+</tr>
+<tr>
+<td>serialize数据序列化层</td>
+<td>可复用的一些工具，扩展接口为<code>Serialization</code>,<code>ObjectInput</code>,<code>ObjectOutput</code>,<code>ThreadPool</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="调用链"><a href="#调用链" class="headerlink" title="调用链"></a>调用链</h2><p><img src="/images/dubbo/dubbo-extension.png" alt=""></p>
+<h2 id="服务暴露时序图"><a href="#服务暴露时序图" class="headerlink" title="服务暴露时序图"></a>服务暴露时序图</h2><p><img src="/images/dubbo/dubbo-export.png" alt=""></p>
+<h2 id="服务引用时序图"><a href="#服务引用时序图" class="headerlink" title="服务引用时序图"></a>服务引用时序图</h2><p><img src="/images/dubbo/dubbo-refer.png" alt=""></p>
+<hr>
+<p>为了保证记录学习dubb源码的连贯性，该部分内容介绍源于dubbo官方文档。<br><a href="http://dubbo.io/books/dubbo-user-book/" target="_blank" rel="external">dubbo背景</a><br><a href="http://dubbo.io/books/dubbo-dev-book/design.html" target="_blank" rel="external">dubbo框架设计</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[Nutch抓取优化]]></title>
       <url>https://rogerfang.github.io/2017/08/25/Nutch%E6%8A%93%E5%8F%96%E4%BC%98%E5%8C%96/</url>
       <content type="html"><![CDATA[<h1 id="抓取优化设计方案"><a href="#抓取优化设计方案" class="headerlink" title="抓取优化设计方案"></a>抓取优化设计方案</h1><h2 id="流程优化"><a href="#流程优化" class="headerlink" title="流程优化"></a>流程优化</h2><p>将nutch默认的串行抓取流程改为并行抓取流程</p>
 <h3 id="串行流程介绍"><a href="#串行流程介绍" class="headerlink" title="串行流程介绍"></a>串行流程介绍</h3><p>nutch crawl流程图</p>
-<p><img src="../images/nutch/crawl-flow.jpg" alt="crawl-flow"></p>
+<p><img src="/images/nutch/crawl-flow.jpg" alt="crawl-flow"></p>
 <p>串行流程主要是这四个阶段:generate–&gt;fetch–&gt;parse–&gt;updatedb，循环执行。</p>
 <h3 id="串行流程问题"><a href="#串行流程问题" class="headerlink" title="串行流程问题"></a>串行流程问题</h3><p>当crawldb中数据量比较少时，fetch流程会占80%以上的时间，流程效率并不低。但是当crawldb中的url规模较大，例如百亿级别时，generate，parse和updatedb会占用大量时间，导致fetch流程的时间占比很低，甚至低于10%，极大地降低了抓取效率。从优化抓取量角度看，fetch流程应该在不断的运行。</p>
 <h3 id="并行流程"><a href="#并行流程" class="headerlink" title="并行流程"></a>并行流程</h3><p>并发流程图</p>
