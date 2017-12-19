@@ -1,0 +1,822 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="dubbo," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="Java的SPI机制SPI(service provider interface)机制是通过定义服务接口标准，让不同的厂商去实现，java通过java.util.ServiceLoader类查找接口对应的服务实现。
+SPI约定服务提供者提供了服务接口的一种实现后，要在类路径下的META-INF/services/目录里创建一个以服务接口命名的文件，文件内容是实现该服务接口的具体实现类名（如果有多个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dubbo:扩展机制">
+<meta property="og:url" content="https://rogerfang.github.io/2017/12/19/Dubbo-扩展机制/index.html">
+<meta property="og:site_name" content="方龙的博客">
+<meta property="og:description" content="Java的SPI机制SPI(service provider interface)机制是通过定义服务接口标准，让不同的厂商去实现，java通过java.util.ServiceLoader类查找接口对应的服务实现。
+SPI约定服务提供者提供了服务接口的一种实现后，要在类路径下的META-INF/services/目录里创建一个以服务接口命名的文件，文件内容是实现该服务接口的具体实现类名（如果有多个">
+<meta property="og:image" content="https://rogerfang.github.io/images/dubbo/dubbo-extensionloader.png">
+<meta property="og:updated_time" content="2017-12-19T08:16:03.057Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dubbo:扩展机制">
+<meta name="twitter:description" content="Java的SPI机制SPI(service provider interface)机制是通过定义服务接口标准，让不同的厂商去实现，java通过java.util.ServiceLoader类查找接口对应的服务实现。
+SPI约定服务提供者提供了服务接口的一种实现后，要在类路径下的META-INF/services/目录里创建一个以服务接口命名的文件，文件内容是实现该服务接口的具体实现类名（如果有多个">
+<meta name="twitter:image" content="https://rogerfang.github.io/images/dubbo/dubbo-extensionloader.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://rogerfang.github.io/2017/12/19/Dubbo-扩展机制/"/>
+
+
+  <title> Dubbo:扩展机制 | 方龙的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">方龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Dubbo:扩展机制
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-12-19T10:17:45+08:00" content="2017-12-19">
+              2017-12-19
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/dubbo/" itemprop="url" rel="index">
+                    <span itemprop="name">dubbo</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Java的SPI机制"><a href="#Java的SPI机制" class="headerlink" title="Java的SPI机制"></a>Java的SPI机制</h1><p>SPI(service provider interface)机制是通过定义服务接口标准，让不同的厂商去实现，java通过<code>java.util.ServiceLoader</code>类查找接口对应的服务实现。</p>
+<h2 id="SPI约定"><a href="#SPI约定" class="headerlink" title="SPI约定"></a>SPI约定</h2><p>服务提供者提供了服务接口的一种实现后，要在类路径下的META-INF/services/目录里创建一个以服务接口命名的文件，文件内容是实现该服务接口的具体实现类名（如果有多个实现类则换行保存，SPI会一次性实例化所有实现）。</p>
+<p>使用：<code>ServiceLoader&lt;XX&gt; loader = ServiceLoader.load(XX.class);</code></p>
+<h1 id="dubbo的扩展机制"><a href="#dubbo的扩展机制" class="headerlink" title="dubbo的扩展机制"></a>dubbo的扩展机制</h1><p>dubbo的扩展机制和java的SPI机制相似，但是又增加了如下功能：</p>
+<ul>
+<li>根据关键字获取特定的扩展实现，依赖注解<code>@SPI</code>和<code>@Adaptive</code>。</li>
+<li>对扩展点增加了 IOC 和 AOP 的功能。</li>
+</ul>
+<blockquote>
+<p><strong>约定</strong>：在扩展类的 jar 包内 ，放置扩展点配置文件 <code>META-INF/dubbo/接口全限定名</code> ，内容为： <code>配置名=扩展实现类全限定名</code> ，多个实现类用换行符分隔。</p>
+</blockquote>
+<p>通过 <code>ExtensionLoader</code> 获取扩展点实例的方法：eg <code>Protocol protocol = ExtensionLoader.getExtensionLoader(Protocol.class).getAdaptiveExtension();</code>。</p>
+<p><img src="/images/dubbo/dubbo-extensionloader.png" alt=""><br>核心步骤：</p>
+<ul>
+<li>5 <code>loadFile()</code>从<code>META-INF/dubbo/</code>、<code>META-INF/dubbo/internal</code>、<code>META-INF/services</code>等路径下加载所有的扩展点</li>
+<li>7 生成扩展点自适应类的源码</li>
+<li>9 注入依赖的扩展点</li>
+</ul>
+<h2 id="扩展点定义"><a href="#扩展点定义" class="headerlink" title="扩展点定义"></a>扩展点定义</h2><p><code>@SPI</code>注解：被该注解标记的接口表示是一个可扩展的接口，注解的值表示默认的扩展点实现类对应的key（具体是在根据URL配置动态获取实现类时，如果URL配置缺失则使用<code>@SPI</code>的值作为默认值）。</p>
+<p><code>@Adaptive</code>注解：</p>
+<ul>
+<li>标记在扩展接口的方法上，<code>ExtensionLoader.getAdaptiveExtension()</code>获取自适应类是通过生成java源码并编译成class加载完成的，没有被标注的方法生成的实现都会抛出<code>UnsupportedOperationException</code>异常。</li>
+<li>标记在扩展接口的实现类上，获取自适应类不再通过生成java源码实现，而是直接把标记了<code>@Adaptive</code>注解的类作为扩展接口实现类。（只能有一个实现类标记<code>@Adaptive</code>，目前只有<code>AdaptiveCompiler</code>和<code>AdaptiveExtensionFactory</code>类上标注了该注解）</li>
+</ul>
+<h2 id="扩展点特性"><a href="#扩展点特性" class="headerlink" title="扩展点特性"></a>扩展点特性</h2><h3 id="扩展点自适应（Adaptive）"><a href="#扩展点自适应（Adaptive）" class="headerlink" title="扩展点自适应（Adaptive）"></a>扩展点自适应（Adaptive）</h3><p>上述通过<code>ExtensionLoader</code>的<code>getAdaptiveExtension()</code>方法得到的是扩展点的自适应实现（命名方式为”类名$Adaptive”），这个自适应实现类在运行时根据url（<strong>Dubbo使用URL对象传递配置信息</strong>）来动态的创建具体实现类实例，然后再进行调用。</p>
+<p>运行时创建的具体扩展实现类实例是通过<code>ExtensionLoader.getExtensionLoader(XX.class).getExtension(extName);</code>方法完成的。</p>
+<h4 id="生成自适应类并编译"><a href="#生成自适应类并编译" class="headerlink" title="生成自适应类并编译"></a>生成自适应类并编译</h4><p>自适应类是通过动态拼接而成的java代码，然后再通过编译器扩展（默认是javassist）编译该java代码。</p>
+<figure class="highlight java"><figcaption><span>ExtensionLoader</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> Class&lt;?&gt; createAdaptiveExtensionClass() &#123;</div><div class="line">    <span class="comment">// 生成自适应类源码</span></div><div class="line">    String code = createAdaptiveExtensionClassCode();</div><div class="line">    ClassLoader classLoader = findClassLoader();</div><div class="line">    <span class="comment">// 编译器扩展</span></div><div class="line">    com.alibaba.dubbo.common.compiler.Compiler compiler = ExtensionLoader.getExtensionLoader(com.alibaba.dubbo.common.compiler.Compiler.class).getAdaptiveExtension();</div><div class="line">    <span class="keyword">return</span> compiler.compile(code, classLoader);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> String <span class="title">createAdaptiveExtensionClassCode</span><span class="params">()</span> </span>&#123;</div><div class="line">    StringBuilder codeBuidler = <span class="keyword">new</span> StringBuilder();</div><div class="line">    Method[] methods = type.getMethods();</div><div class="line">    <span class="keyword">boolean</span> hasAdaptiveAnnotation = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">for</span> (Method m : methods) &#123;</div><div class="line">        <span class="keyword">if</span> (m.isAnnotationPresent(Adaptive.class)) &#123;</div><div class="line">            hasAdaptiveAnnotation = <span class="keyword">true</span>;</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 完全没有Adaptive方法，则不需要生成Adaptive类</span></div><div class="line">    <span class="keyword">if</span> (!hasAdaptiveAnnotation)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"No adaptive method on extension "</span> + type.getName() + <span class="string">", refuse to create the adaptive class!"</span>);</div><div class="line"></div><div class="line">    codeBuidler.append(<span class="string">"package "</span> + type.getPackage().getName() + <span class="string">";"</span>);</div><div class="line">    codeBuidler.append(<span class="string">"\nimport "</span> + ExtensionLoader.class.getName() + <span class="string">";"</span>);</div><div class="line">    codeBuidler.append(<span class="string">"\npublic class "</span> + type.getSimpleName() + <span class="string">"$Adaptive"</span> + <span class="string">" implements "</span> + type.getCanonicalName() + <span class="string">" &#123;"</span>);</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (Method method : methods) &#123;</div><div class="line">        Class&lt;?&gt; rt = method.getReturnType();</div><div class="line">        Class&lt;?&gt;[] pts = method.getParameterTypes();</div><div class="line">        Class&lt;?&gt;[] ets = method.getExceptionTypes();</div><div class="line"></div><div class="line">        Adaptive adaptiveAnnotation = method.getAnnotation(Adaptive.class);</div><div class="line">        StringBuilder code = <span class="keyword">new</span> StringBuilder(<span class="number">512</span>);</div><div class="line">        <span class="keyword">if</span> (adaptiveAnnotation == <span class="keyword">null</span>) &#123;</div><div class="line">            code.append(<span class="string">"throw new UnsupportedOperationException(\"method "</span>)</div><div class="line">                    .append(method.toString()).append(<span class="string">" of interface "</span>)</div><div class="line">                    .append(type.getName()).append(<span class="string">" is not adaptive method!\");"</span>);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">int</span> urlTypeIndex = -<span class="number">1</span>;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pts.length; ++i) &#123;</div><div class="line">                <span class="keyword">if</span> (pts[i].equals(URL.class)) &#123;</div><div class="line">                    urlTypeIndex = i;</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 有类型为URL的参数</span></div><div class="line">            <span class="keyword">if</span> (urlTypeIndex != -<span class="number">1</span>) &#123;</div><div class="line">                <span class="comment">// Null Point check</span></div><div class="line">                String s = String.format(<span class="string">"\nif (arg%d == null) throw new IllegalArgumentException(\"url == null\");"</span>,</div><div class="line">                        urlTypeIndex);</div><div class="line">                code.append(s);</div><div class="line"></div><div class="line">                s = String.format(<span class="string">"\n%s url = arg%d;"</span>, URL.class.getName(), urlTypeIndex);</div><div class="line">                code.append(s);</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 参数没有URL类型</span></div><div class="line">            <span class="keyword">else</span> &#123;</div><div class="line">                String attribMethod = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">                <span class="comment">// 找到参数的URL属性</span></div><div class="line">                LBL_PTS:</div><div class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pts.length; ++i) &#123;</div><div class="line">                    Method[] ms = pts[i].getMethods();</div><div class="line">                    <span class="keyword">for</span> (Method m : ms) &#123;</div><div class="line">                        String name = m.getName();</div><div class="line">                        <span class="keyword">if</span> ((name.startsWith(<span class="string">"get"</span>) || name.length() &gt; <span class="number">3</span>)</div><div class="line">                                &amp;&amp; Modifier.isPublic(m.getModifiers())</div><div class="line">                                &amp;&amp; !Modifier.isStatic(m.getModifiers())</div><div class="line">                                &amp;&amp; m.getParameterTypes().length == <span class="number">0</span></div><div class="line">                                &amp;&amp; m.getReturnType() == URL.class) &#123;</div><div class="line">                            urlTypeIndex = i;</div><div class="line">                            attribMethod = name;</div><div class="line">                            <span class="keyword">break</span> LBL_PTS;</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">if</span> (attribMethod == <span class="keyword">null</span>) &#123;</div><div class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"fail to create adative class for interface "</span> + type.getName()</div><div class="line">                            + <span class="string">": not found url parameter or url attribute in parameters of method "</span> + method.getName());</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="comment">// Null point check</span></div><div class="line">                String s = String.format(<span class="string">"\nif (arg%d == null) throw new IllegalArgumentException(\"%s argument == null\");"</span>,</div><div class="line">                        urlTypeIndex, pts[urlTypeIndex].getName());</div><div class="line">                code.append(s);</div><div class="line">                s = String.format(<span class="string">"\nif (arg%d.%s() == null) throw new IllegalArgumentException(\"%s argument %s() == null\");"</span>,</div><div class="line">                        urlTypeIndex, attribMethod, pts[urlTypeIndex].getName(), attribMethod);</div><div class="line">                code.append(s);</div><div class="line"></div><div class="line">                s = String.format(<span class="string">"%s url = arg%d.%s();"</span>, URL.class.getName(), urlTypeIndex, attribMethod);</div><div class="line">                code.append(s);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">// @OvO@ 获取方法上Adaptive注解的值</span></div><div class="line">            String[] value = adaptiveAnnotation.value();</div><div class="line">            <span class="comment">// 没有设置Key，则使用“扩展点接口名的点分隔”作为Key</span></div><div class="line">            <span class="keyword">if</span> (value.length == <span class="number">0</span>) &#123;</div><div class="line">                <span class="keyword">char</span>[] charArray = type.getSimpleName().toCharArray();</div><div class="line">                StringBuilder sb = <span class="keyword">new</span> StringBuilder(<span class="number">128</span>);</div><div class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; charArray.length; i++) &#123;</div><div class="line">                    <span class="keyword">if</span> (Character.isUpperCase(charArray[i])) &#123;</div><div class="line">                        <span class="keyword">if</span> (i != <span class="number">0</span>) &#123;</div><div class="line">                            sb.append(<span class="string">"."</span>);</div><div class="line">                        &#125;</div><div class="line">                        sb.append(Character.toLowerCase(charArray[i]));</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        sb.append(charArray[i]);</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">                value = <span class="keyword">new</span> String[]&#123;sb.toString()&#125;;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">boolean</span> hasInvocation = <span class="keyword">false</span>;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pts.length; ++i) &#123;</div><div class="line">                <span class="keyword">if</span> (pts[i].getName().equals(<span class="string">"com.alibaba.dubbo.rpc.Invocation"</span>)) &#123;</div><div class="line">                    <span class="comment">// Null Point check</span></div><div class="line">                    String s = String.format(<span class="string">"\nif (arg%d == null) throw new IllegalArgumentException(\"invocation == null\");"</span>, i);</div><div class="line">                    code.append(s);</div><div class="line">                    s = String.format(<span class="string">"\nString methodName = arg%d.getMethodName();"</span>, i);</div><div class="line">                    code.append(s);</div><div class="line">                    hasInvocation = <span class="keyword">true</span>;</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            String defaultExtName = cachedDefaultName;</div><div class="line">            String getNameCode = <span class="keyword">null</span>;</div><div class="line">            <span class="comment">// @OvO@ 确定Adaptive实现: 通过@Adaptive注解的value(多个value则依次尝试)作为URL参数的key来获取相应值(默认值是@SPI注解的value)</span></div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = value.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</div><div class="line">                <span class="keyword">if</span> (i == value.length - <span class="number">1</span>) &#123;</div><div class="line">                    <span class="keyword">if</span> (<span class="keyword">null</span> != defaultExtName) &#123;</div><div class="line">                        <span class="keyword">if</span> (!<span class="string">"protocol"</span>.equals(value[i]))</div><div class="line">                            <span class="keyword">if</span> (hasInvocation)</div><div class="line">                                getNameCode = String.format(<span class="string">"url.getMethodParameter(methodName, \"%s\", \"%s\")"</span>, value[i], defaultExtName);</div><div class="line">                            <span class="keyword">else</span></div><div class="line">                                getNameCode = String.format(<span class="string">"url.getParameter(\"%s\", \"%s\")"</span>, value[i], defaultExtName);</div><div class="line">                        <span class="keyword">else</span></div><div class="line">                            getNameCode = String.format(<span class="string">"( url.getProtocol() == null ? \"%s\" : url.getProtocol() )"</span>, defaultExtName);</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        <span class="keyword">if</span> (!<span class="string">"protocol"</span>.equals(value[i]))</div><div class="line">                            <span class="keyword">if</span> (hasInvocation)</div><div class="line">                                getNameCode = String.format(<span class="string">"url.getMethodParameter(methodName, \"%s\", \"%s\")"</span>, value[i], defaultExtName);</div><div class="line">                            <span class="keyword">else</span></div><div class="line">                                getNameCode = String.format(<span class="string">"url.getParameter(\"%s\")"</span>, value[i]);</div><div class="line">                        <span class="keyword">else</span></div><div class="line">                            getNameCode = <span class="string">"url.getProtocol()"</span>;</div><div class="line">                    &#125;</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    <span class="keyword">if</span> (!<span class="string">"protocol"</span>.equals(value[i]))</div><div class="line">                        <span class="keyword">if</span> (hasInvocation)</div><div class="line">                            getNameCode = String.format(<span class="string">"url.getMethodParameter(methodName, \"%s\", \"%s\")"</span>, value[i], defaultExtName);</div><div class="line">                        <span class="keyword">else</span></div><div class="line">                            getNameCode = String.format(<span class="string">"url.getParameter(\"%s\", %s)"</span>, value[i], getNameCode);</div><div class="line">                    <span class="keyword">else</span></div><div class="line">                        getNameCode = String.format(<span class="string">"url.getProtocol() == null ? (%s) : url.getProtocol()"</span>, getNameCode);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            code.append(<span class="string">"\nString extName = "</span>).append(getNameCode).append(<span class="string">";"</span>);</div><div class="line">            <span class="comment">// check extName == null?</span></div><div class="line">            String s = String.format(<span class="string">"\nif(extName == null) "</span> +</div><div class="line">                            <span class="string">"throw new IllegalStateException(\"Fail to get extension(%s) name from url(\" + url.toString() + \") use keys(%s)\");"</span>,</div><div class="line">                    type.getName(), Arrays.toString(value));</div><div class="line">            code.append(s);</div><div class="line">            <span class="comment">// @OvO@ 确定了Adaptive实现后,通过getExtension(extName)方法得到实例</span></div><div class="line">            s = String.format(<span class="string">"\n%s extension = (%&lt;s)%s.getExtensionLoader(%s.class).getExtension(extName);"</span>,</div><div class="line">                    type.getName(), ExtensionLoader.class.getSimpleName(), type.getName());</div><div class="line">            code.append(s);</div><div class="line"></div><div class="line">            <span class="comment">// return statement</span></div><div class="line">            <span class="keyword">if</span> (!rt.equals(<span class="keyword">void</span>.class)) &#123;</div><div class="line">                code.append(<span class="string">"\nreturn "</span>);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            s = String.format(<span class="string">"extension.%s("</span>, method.getName());</div><div class="line">            code.append(s);</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pts.length; i++) &#123;</div><div class="line">                <span class="keyword">if</span> (i != <span class="number">0</span>)</div><div class="line">                    code.append(<span class="string">", "</span>);</div><div class="line">                code.append(<span class="string">"arg"</span>).append(i);</div><div class="line">            &#125;</div><div class="line">            code.append(<span class="string">");"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        codeBuidler.append(<span class="string">"\npublic "</span> + rt.getCanonicalName() + <span class="string">" "</span> + method.getName() + <span class="string">"("</span>);</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pts.length; i++) &#123;</div><div class="line">            <span class="keyword">if</span> (i &gt; <span class="number">0</span>) &#123;</div><div class="line">                codeBuidler.append(<span class="string">", "</span>);</div><div class="line">            &#125;</div><div class="line">            codeBuidler.append(pts[i].getCanonicalName());</div><div class="line">            codeBuidler.append(<span class="string">" "</span>);</div><div class="line">            codeBuidler.append(<span class="string">"arg"</span> + i);</div><div class="line">        &#125;</div><div class="line">        codeBuidler.append(<span class="string">")"</span>);</div><div class="line">        <span class="keyword">if</span> (ets.length &gt; <span class="number">0</span>) &#123;</div><div class="line">            codeBuidler.append(<span class="string">" throws "</span>);</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; ets.length; i++) &#123;</div><div class="line">                <span class="keyword">if</span> (i &gt; <span class="number">0</span>) &#123;</div><div class="line">                    codeBuidler.append(<span class="string">", "</span>);</div><div class="line">                &#125;</div><div class="line">                codeBuidler.append(ets[i].getCanonicalName());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        codeBuidler.append(<span class="string">" &#123;"</span>);</div><div class="line">        codeBuidler.append(code.toString());</div><div class="line">        codeBuidler.append(<span class="string">"\n&#125;"</span>);</div><div class="line">    &#125;</div><div class="line">    codeBuidler.append(<span class="string">"\n&#125;"</span>);</div><div class="line">    <span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</div><div class="line">        logger.debug(codeBuidler.toString());</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> codeBuidler.toString();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="Protocol自适应类源码"><a href="#Protocol自适应类源码" class="headerlink" title="Protocol自适应类源码"></a>Protocol自适应类源码</h4><figure class="highlight java"><figcaption><span>Protocol$Adaptive</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> com.alibaba.dubbo.common.extension.ExtensionLoader;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Protocol</span>$<span class="title">Adaptive</span> <span class="keyword">implements</span> <span class="title">com</span>.<span class="title">alibaba</span>.<span class="title">dubbo</span>.<span class="title">rpc</span>.<span class="title">Protocol</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> UnsupportedOperationException(<span class="string">"method public abstract void com.alibaba.dubbo.rpc.Protocol.destroy() of interface com.alibaba.dubbo.rpc.Protocol is not adaptive method!"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getDefaultPort</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> UnsupportedOperationException(<span class="string">"method public abstract int com.alibaba.dubbo.rpc.Protocol.getDefaultPort() of interface com.alibaba.dubbo.rpc.Protocol is not adaptive method!"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> com.alibaba.dubbo.rpc.<span class="function">Invoker <span class="title">refer</span><span class="params">(java.lang.Class arg0, com.alibaba.dubbo.common.URL arg1)</span> <span class="keyword">throws</span> com.alibaba.dubbo.rpc.RpcException </span>&#123;</div><div class="line">        <span class="keyword">if</span> (arg1 == <span class="keyword">null</span>) <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"url == null"</span>);</div><div class="line">        com.alibaba.dubbo.common.URL url = arg1;</div><div class="line">        String extName = (url.getProtocol() == <span class="keyword">null</span> ? <span class="string">"dubbo"</span> : url.getProtocol());</div><div class="line">        <span class="keyword">if</span> (extName == <span class="keyword">null</span>)</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Fail to get extension(com.alibaba.dubbo.rpc.Protocol) name from url("</span> + url.toString() + <span class="string">") use keys([protocol])"</span>);</div><div class="line">        com.alibaba.dubbo.rpc.Protocol extension = (com.alibaba.dubbo.rpc.Protocol) ExtensionLoader.getExtensionLoader(com.alibaba.dubbo.rpc.Protocol.class).getExtension(extName);</div><div class="line">        <span class="keyword">return</span> extension.refer(arg0, arg1);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> com.alibaba.dubbo.rpc.<span class="function">Exporter <span class="title">export</span><span class="params">(com.alibaba.dubbo.rpc.Invoker arg0)</span> <span class="keyword">throws</span> com.alibaba.dubbo.rpc.RpcException </span>&#123;</div><div class="line">        <span class="keyword">if</span> (arg0 == <span class="keyword">null</span>) <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"com.alibaba.dubbo.rpc.Invoker argument == null"</span>);</div><div class="line">        <span class="keyword">if</span> (arg0.getUrl() == <span class="keyword">null</span>)</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"com.alibaba.dubbo.rpc.Invoker argument getUrl() == null"</span>);</div><div class="line">        com.alibaba.dubbo.common.URL url = arg0.getUrl();</div><div class="line">        String extName = (url.getProtocol() == <span class="keyword">null</span> ? <span class="string">"dubbo"</span> : url.getProtocol());</div><div class="line">        <span class="keyword">if</span> (extName == <span class="keyword">null</span>)</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Fail to get extension(com.alibaba.dubbo.rpc.Protocol) name from url("</span> + url.toString() + <span class="string">") use keys([protocol])"</span>);</div><div class="line">        com.alibaba.dubbo.rpc.Protocol extension = (com.alibaba.dubbo.rpc.Protocol) ExtensionLoader.getExtensionLoader(com.alibaba.dubbo.rpc.Protocol.class).getExtension(extName);</div><div class="line">        <span class="keyword">return</span> extension.export(arg0);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="扩展点装饰（AOP）"><a href="#扩展点装饰（AOP）" class="headerlink" title="扩展点装饰（AOP）"></a>扩展点装饰（AOP）</h3><p><code>ExtensionLoader</code>在加载扩展点时，如果加载到的扩展点有拷贝构造函数（也就是构造函数参数类型为扩展点类型），则判定为扩展点的 Wrapper 类（判定扩展点是否为 Wrapper 类是在<code>loadFile()</code>中完成的）。</p>
+<p>在上述介绍中，dubbo在运行时通过URL来动态创建扩展点实现的实例，也就是<code>ExtensionLoader</code>的<code>getExtension(String name)</code>方法，真正创建实例是在<code>createExtension()</code>方法中并完成了Wrapper类的包装过程。</p>
+<figure class="highlight java"><figcaption><span>ExtensionLoader</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> T <span class="title">getExtension</span><span class="params">(String name)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (name == <span class="keyword">null</span> || name.length() == <span class="number">0</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Extension name == null"</span>);</div><div class="line">    <span class="keyword">if</span> (<span class="string">"true"</span>.equals(name)) &#123;</div><div class="line">        <span class="keyword">return</span> getDefaultExtension();</div><div class="line">    &#125;</div><div class="line">    Holder&lt;Object&gt; holder = cachedInstances.get(name);</div><div class="line">    <span class="keyword">if</span> (holder == <span class="keyword">null</span>) &#123;</div><div class="line">        cachedInstances.putIfAbsent(name, <span class="keyword">new</span> Holder&lt;Object&gt;());</div><div class="line">        holder = cachedInstances.get(name);</div><div class="line">    &#125;</div><div class="line">    Object instance = holder.get();</div><div class="line">    <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">synchronized</span> (holder) &#123;</div><div class="line">            instance = holder.get();</div><div class="line">            <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="comment">// @OvO@ 创建扩展实例,同时对实例进行包装Wrapper</span></div><div class="line">                instance = createExtension(name);</div><div class="line">                holder.set(instance);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> (T) instance;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// @OvO@ 创建扩展实例,进行相应的装饰wrapper,并注入装饰类依赖的扩展点</span></div><div class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line"><span class="function"><span class="keyword">private</span> T <span class="title">createExtension</span><span class="params">(String name)</span> </span>&#123;</div><div class="line">    Class&lt;?&gt; clazz = getExtensionClasses().get(name);</div><div class="line">    <span class="keyword">if</span> (clazz == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> findException(name);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        T instance = (T) EXTENSION_INSTANCES.get(clazz);</div><div class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</div><div class="line">            EXTENSION_INSTANCES.putIfAbsent(clazz, (T) clazz.newInstance());</div><div class="line">            instance = (T) EXTENSION_INSTANCES.get(clazz);</div><div class="line">        &#125;</div><div class="line">        injectExtension(instance);</div><div class="line">        Set&lt;Class&lt;?&gt;&gt; wrapperClasses = cachedWrapperClasses;</div><div class="line">        <span class="keyword">if</span> (wrapperClasses != <span class="keyword">null</span> &amp;&amp; wrapperClasses.size() &gt; <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">for</span> (Class&lt;?&gt; wrapperClass : wrapperClasses) &#123;</div><div class="line">                instance = injectExtension((T) wrapperClass.getConstructor(type).newInstance(instance));</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> instance;</div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable t) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Extension instance(name: "</span> + name + <span class="string">", class: "</span> +</div><div class="line">                type + <span class="string">")  could not be instantiated: "</span> + t.getMessage(), t);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="扩展点注入（IOC）"><a href="#扩展点注入（IOC）" class="headerlink" title="扩展点注入（IOC）"></a>扩展点注入（IOC）</h3><p>在获取扩展点自适应类的实例（<code>getAdaptiveExtension()</code>）和获取扩展点具体实现类的实例时（<code>getExtension()</code>）都会通过<code>injectExtension()</code>完成依赖注入。</p>
+<p>dubbo中默认采用<code>AdaptiveExtensionFactory</code>来获取所有的扩展，其实现还是通过遍历<code>SpiExtensionFactory</code>（dubbo的扩展机制得到的扩展点实例）和<code>SpringExtensionFactory</code>（spring容器维护的bean）完成的。</p>
+<h3 id="扩展点自动激活（Activate）"><a href="#扩展点自动激活（Activate）" class="headerlink" title="扩展点自动激活（Activate）"></a>扩展点自动激活（Activate）</h3><p>对于集合类扩展点，比如： Filter , InvokerListener , ExportListener , TelnetHandler , StatusChecker 等，可以同时加载多个实现，可以用自动激活根据条件来自动加载。</p>
+<p><code>ExtensionLoader</code>在通过<code>loadFile()</code>加载扩展配置时会缓存带有注解<code>@Activate</code>的类的相关信息，使用<code>getActivateExtension(URL url, String[] values, String group)</code>方法获取条件相匹配的扩展实现。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/dubbo/" rel="tag">#dubbo</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/18/Dubbo-dubbo与spring/" rel="next" title="Dubbo:dubbo与spring">
+                <i class="fa fa-chevron-left"></i> Dubbo:dubbo与spring
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="方龙" />
+          <p class="site-author-name" itemprop="name">方龙</p>
+          <p class="site-description motion-element" itemprop="description">梦想还是要有的，万一实现了呢</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">255</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">161</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RogerFang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java的SPI机制"><span class="nav-number">1.</span> <span class="nav-text">Java的SPI机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SPI约定"><span class="nav-number">1.1.</span> <span class="nav-text">SPI约定</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dubbo的扩展机制"><span class="nav-number">2.</span> <span class="nav-text">dubbo的扩展机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展点定义"><span class="nav-number">2.1.</span> <span class="nav-text">扩展点定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展点特性"><span class="nav-number">2.2.</span> <span class="nav-text">扩展点特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展点自适应（Adaptive）"><span class="nav-number">2.2.1.</span> <span class="nav-text">扩展点自适应（Adaptive）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#生成自适应类并编译"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">生成自适应类并编译</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Protocol自适应类源码"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">Protocol自适应类源码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展点装饰（AOP）"><span class="nav-number">2.2.2.</span> <span class="nav-text">扩展点装饰（AOP）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展点注入（IOC）"><span class="nav-number">2.2.3.</span> <span class="nav-text">扩展点注入（IOC）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展点自动激活（Activate）"><span class="nav-number">2.2.4.</span> <span class="nav-text">扩展点自动激活（Activate）</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">方龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = false;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title >= 0 || index_content >= 0 ){
+                                isMatch = true;
+								if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            } 
+							
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

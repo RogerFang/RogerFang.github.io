@@ -101,7 +101,7 @@
 继承NamespaceHandlerSupport类，将组件解析器注册到spring容器中。
 在类路径下创建 META-INF/spring.schema">
 <meta property="og:image" content="https://rogerfang.github.io/images/dubbo/servicebean-class-diagram.png">
-<meta property="og:updated_time" content="2017-12-18T15:01:48.146Z">
+<meta property="og:updated_time" content="2017-12-19T14:12:33.392Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dubbo:dubbo与spring">
 <meta name="twitter:description" content="spring&amp;lt;dubbo&amp;gt;标签扩展spring自定义标签扩展spring自定义标签的步骤如下：
@@ -366,7 +366,7 @@
 </ul>
 <h2 id="dubbo中的实现"><a href="#dubbo中的实现" class="headerlink" title="dubbo中的实现"></a>dubbo中的实现</h2><p><code>DubboNamespaceHandler</code>、<code>DubboBeanDefinitionParser</code>，根据不同的节点名解析成不同的对象(eg: <code>ApplicationConfig</code>、<code>RegistryConfig</code>、<code>ProtocolConfig</code>、<code>ProviderConfig</code>、<code>ConsumerConfig</code>、<code>ReferenceBean</code>、<code>ServiceBean</code>等)。</p>
 <h1 id="服务暴露触发"><a href="#服务暴露触发" class="headerlink" title="服务暴露触发"></a>服务暴露触发</h1><p><img src="/images/dubbo/servicebean-class-diagram.png" alt=""></p>
-<p><code>ServiceBean</code>实现了<code>InitializingBean</code>、<code>ApplicationListener</code>，对应的会在<code>afterPropertiesSet()</code>bean的属性设置完成后和<code>onApplicationEvent</code>spring容器初始化完成后进行是否export服务的判断，调用<code>ServiceBean</code>其父类<code>ServiceConfig</code>的<code>export()</code>方法触发服务暴露。</p>
+<p><code>ServiceBean</code>实现了<code>InitializingBean</code>、<code>ApplicationListener</code>，对应的会在<code>afterPropertiesSet()</code>bean的属性设置完成后（设置一个整数delay毫秒）和<code>onApplicationEvent</code>spring容器初始化完成后进行是否export服务（delay设为 -1），调用<code>ServiceBean</code>其父类<code>ServiceConfig</code>的<code>export()</code>方法触发服务暴露。</p>
 <h1 id="SpringContainer"><a href="#SpringContainer" class="headerlink" title="SpringContainer"></a>SpringContainer</h1><figure class="highlight java"><figcaption><span>SpringContainer</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</div><div class="line">    String configPath = ConfigUtils.getProperty(SPRING_CONFIG);</div><div class="line">    <span class="keyword">if</span> (configPath == <span class="keyword">null</span> || configPath.length() == <span class="number">0</span>) &#123;</div><div class="line">        configPath = DEFAULT_SPRING_CONFIG;</div><div class="line">    &#125;</div><div class="line">    context = <span class="keyword">new</span> ClassPathXmlApplicationContext(configPath.split(<span class="string">"[,\\s]+"</span>));</div><div class="line">    context.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>默认加载<code>classpath*:META-INF/spring/*.xml</code>相关的spring配置文件，也可以通过<code>dubbo.spring.config</code>参数进行设定。</p>
 <h1 id="Main加载spring容器"><a href="#Main加载spring容器" class="headerlink" title="Main加载spring容器"></a>Main加载spring容器</h1><p>dubbo提供了是一个 <code>SpringContainer</code> 的容器，以简单的 <code>com.alibaba.dubbo.container.Main</code>类来加载 Spring 启动，因为服务通常不需要 Tomcat/JBoss 等 Web 容器的特性，没必要用 Web 容器去加载服务。</p>
@@ -417,6 +417,10 @@
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/19/Dubbo-扩展机制/" rel="prev" title="Dubbo:扩展机制">
+                Dubbo:扩展机制 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -484,7 +488,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">254</span>
+              <span class="site-state-item-count">255</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
