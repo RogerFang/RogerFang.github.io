@@ -101,7 +101,8 @@
 继承NamespaceHandlerSupport类，将组件解析器注册到spring容器中。
 在类路径下创建 META-INF/spring.schema">
 <meta property="og:image" content="https://rogerfang.github.io/images/dubbo/servicebean-class-diagram.png">
-<meta property="og:updated_time" content="2017-12-20T03:51:45.144Z">
+<meta property="og:image" content="https://rogerfang.github.io/images/dubbo/referencebean-class-diagram.png">
+<meta property="og:updated_time" content="2017-12-22T05:13:15.791Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dubbo:dubbo与spring">
 <meta name="twitter:description" content="spring&amp;lt;dubbo&amp;gt;标签扩展spring自定义标签扩展spring自定义标签的步骤如下：
@@ -368,6 +369,9 @@
 <h1 id="服务暴露触发"><a href="#服务暴露触发" class="headerlink" title="服务暴露触发"></a>服务暴露触发</h1><p><img src="/images/dubbo/servicebean-class-diagram.png" alt=""></p>
 <p><code>ServiceBean</code>实现了<code>InitializingBean</code>、<code>ApplicationListener</code>，对应的会在<code>afterPropertiesSet()</code>bean的初始化过程（设置一个非空且不等-1的值，延迟delay毫秒）和<code>onApplicationEvent</code>spring容器<code>refresh()</code>完成后的事件机制（delay设为 null或-1），判断是否需要export服务。</p>
 <p>真正的服务暴露逻辑是在，<code>ServiceBean</code>的父类<code>ServiceConfig.export()</code>完成服务暴露，暴露之前还需要将bean转换成URL格式（将url作为解耦的通信数据）。</p>
+<h1 id="服务引用触发"><a href="#服务引用触发" class="headerlink" title="服务引用触发"></a>服务引用触发</h1><p><img src="/images/dubbo/referencebean-class-diagram.png" alt=""></p>
+<p><code>ReferenceBean</code>实现了<code>FactoryBean</code>、<code>InitializingBean</code>，在reference标签中配置init属性就会触发立即初始化（<code>afterPropertiesSet()</code>方法中），如果没有配置则会延迟初始化直到通过<code>getBean()</code>调用<code>getObject()</code>完成。</p>
+<p>真正的服务引用逻辑是在，<code>ReferenceBean</code>的父类<code>ReferenceConfig.init()</code>中完成服务引用。</p>
 <h1 id="SpringContainer"><a href="#SpringContainer" class="headerlink" title="SpringContainer"></a>SpringContainer</h1><figure class="highlight java"><figcaption><span>SpringContainer</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</div><div class="line">    String configPath = ConfigUtils.getProperty(SPRING_CONFIG);</div><div class="line">    <span class="keyword">if</span> (configPath == <span class="keyword">null</span> || configPath.length() == <span class="number">0</span>) &#123;</div><div class="line">        configPath = DEFAULT_SPRING_CONFIG;</div><div class="line">    &#125;</div><div class="line">    context = <span class="keyword">new</span> ClassPathXmlApplicationContext(configPath.split(<span class="string">"[,\\s]+"</span>));</div><div class="line">    context.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>默认加载<code>classpath*:META-INF/spring/*.xml</code>相关的spring配置文件，也可以通过<code>dubbo.spring.config</code>参数进行设定。</p>
 <h1 id="Main加载spring容器"><a href="#Main加载spring容器" class="headerlink" title="Main加载spring容器"></a>Main加载spring容器</h1><p>dubbo提供了是一个 <code>SpringContainer</code> 的容器，以简单的 <code>com.alibaba.dubbo.container.Main</code>类来加载 Spring 启动，因为服务通常不需要 Tomcat/JBoss 等 Web 容器的特性，没必要用 Web 容器去加载服务。</p>
@@ -489,7 +493,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">256</span>
+              <span class="site-state-item-count">257</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -546,7 +550,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#spring-lt-dubbo-gt-标签扩展"><span class="nav-number">1.</span> <span class="nav-text">spring<dubbo>标签扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#spring自定义标签"><span class="nav-number">1.1.</span> <span class="nav-text">spring自定义标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dubbo中的实现"><span class="nav-number">1.2.</span> <span class="nav-text">dubbo中的实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#服务暴露触发"><span class="nav-number">2.</span> <span class="nav-text">服务暴露触发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringContainer"><span class="nav-number">3.</span> <span class="nav-text">SpringContainer</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Main加载spring容器"><span class="nav-number">4.</span> <span class="nav-text">Main加载spring容器</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#spring-lt-dubbo-gt-标签扩展"><span class="nav-number">1.</span> <span class="nav-text">spring<dubbo>标签扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#spring自定义标签"><span class="nav-number">1.1.</span> <span class="nav-text">spring自定义标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dubbo中的实现"><span class="nav-number">1.2.</span> <span class="nav-text">dubbo中的实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#服务暴露触发"><span class="nav-number">2.</span> <span class="nav-text">服务暴露触发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#服务引用触发"><span class="nav-number">3.</span> <span class="nav-text">服务引用触发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringContainer"><span class="nav-number">4.</span> <span class="nav-text">SpringContainer</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Main加载spring容器"><span class="nav-number">5.</span> <span class="nav-text">Main加载spring容器</span></a></li></ol></div>
             
           </div>
         </section>
