@@ -100,127 +100,124 @@ digester.addRuleSet(new ContextRuleSet("Server/Service/Engine/Host/"));
 # Context容器加载web服务与热部署
 Tomcat 通过BackgroundProcessor来实现Context的加载web服务和热部署：Tomcat 的 Engine 会启动一个线程，该线程每10s会发送一个事件，监听到该事件的部署配置类会自动去扫描 webapp 文件夹下的war包，将其加载成一个Context，即启动一个web服务。
 
-##开启线程，执行BackGroupProcessor
+## 开启线程，执行BackGroupProcessor
 1. `StandardEngine`的`startInternal()`方法调用父类`ContainerBase`的`startInternal()`方法，其中调用`threadStart()`方法开启一个线程。
+```java ContainerBase.threadStart()
+/**
+ * Start the background thread that will periodically check for
+ * session timeouts.
+ */
+protected void threadStart() {
 
-    ```java ContainerBase.threadStart()
-    /**
-     * Start the background thread that will periodically check for
-     * session timeouts.
-     */
-    protected void threadStart() {
+    if (thread != null)
+        return;
+    if (backgroundProcessorDelay <= 0)
+        return;
 
-        if (thread != null)
-            return;
-        if (backgroundProcessorDelay <= 0)
-            return;
+    threadDone = false;
+    String threadName = "ContainerBackgroundProcessor[" + toString() + "]";
+    thread = new Thread(new ContainerBackgroundProcessor(), threadName);
+    thread.setDaemon(true);
+    thread.start();
 
-        threadDone = false;
-        String threadName = "ContainerBackgroundProcessor[" + toString() + "]";
-        thread = new Thread(new ContainerBackgroundProcessor(), threadName);
-        thread.setDaemon(true);
-        thread.start();
-
-    }
-    ```
+}
+```
 
 2.该线程每10s会调用一次processChildren。
+```java ContainerBase.ContainerBackgroundProcessor
+/**
+ * Private thread class to invoke the backgroundProcess method
+ * of this container and its children after a fixed delay.
+ */
+protected class ContainerBackgroundProcessor implements Runnable {
 
-    ```java ContainerBase.ContainerBackgroundProcessor
-    /**
-     * Private thread class to invoke the backgroundProcess method
-     * of this container and its children after a fixed delay.
-     */
-    protected class ContainerBackgroundProcessor implements Runnable {
-
-        @Override
-        public void run() {
-            Throwable t = null;
-            String unexpectedDeathMessage = sm.getString(
-                    "containerBase.backgroundProcess.unexpectedThreadDeath",
-                    Thread.currentThread().getName());
-            try {
-                while (!threadDone) {
-                    try {
-                        // 在StandardEngine中构造方法设置默认backgroundProcessorDelay=10，即10s调用一次
-                        Thread.sleep(backgroundProcessorDelay * 1000L);
-                    } catch (InterruptedException e) {
-                        // Ignore
-                    }
-                    if (!threadDone) {
-                        processChildren(ContainerBase.this);
-                    }
+    @Override
+    public void run() {
+        Throwable t = null;
+        String unexpectedDeathMessage = sm.getString(
+                "containerBase.backgroundProcess.unexpectedThreadDeath",
+                Thread.currentThread().getName());
+        try {
+            while (!threadDone) {
+                try {
+                    // 在StandardEngine中构造方法设置默认backgroundProcessorDelay=10，即10s调用一次
+                    Thread.sleep(backgroundProcessorDelay * 1000L);
+                } catch (InterruptedException e) {
+                    // Ignore
                 }
-            } catch (RuntimeException|Error e) {
-                t = e;
-                throw e;
-            } finally {
                 if (!threadDone) {
-                    log.error(unexpectedDeathMessage, t);
+                    processChildren(ContainerBase.this);
                 }
             }
+        } catch (RuntimeException|Error e) {
+            t = e;
+            throw e;
+        } finally {
+            if (!threadDone) {
+                log.error(unexpectedDeathMessage, t);
+            }
         }
-        ...
     }
-    ```
+    ...
+}
+```
 
 3.在`processChildren()`方法中又调用其子组件Engine、Host、Context、Wrapper及其相关组件的`backgroundProcess()`方法。
+`fireLifecycleEvent()`：对容器的监听对象发送Lifecycle.PERIODIC_EVENT事件，调用LifecycleListener的lifecycleEvent。
 
-    `fireLifecycleEvent()`：对容器的监听对象发送Lifecycle.PERIODIC_EVENT事件，调用LifecycleListener的lifecycleEvent。
+```java ContainerBase.backgroundProcess()
+/**
+ * Execute a periodic task, such as reloading, etc. This method will be
+ * invoked inside the classloading context of this container.
+ */
+@Override
+public void backgroundProcess() {
 
-    ```java ContainerBase.backgroundProcess()
-    /**
-     * Execute a periodic task, such as reloading, etc. This method will be
-     * invoked inside the classloading context of this container.
-     */
-    @Override
-    public void backgroundProcess() {
+    ...
+    fireLifecycleEvent(Lifecycle.PERIODIC_EVENT, null);
+}
+```
 
-        ...
-        fireLifecycleEvent(Lifecycle.PERIODIC_EVENT, null);
+```java StandardContext.backgroundProcess()
+@Override
+public void backgroundProcess() {
+
+    if (!getState().isAvailable())
+        return;
+
+    Loader loader = getLoader();
+    if (loader != null) {
+        try {
+            // WebappLoader
+            loader.backgroundProcess();
+        } catch (Exception e) {
+            log.warn(sm.getString(
+                    "standardContext.backgroundProcess.loader", loader), e);
+        }
     }
-    ```
-
-    ```java StandardContext.backgroundProcess()
-    @Override
-    public void backgroundProcess() {
-
-        if (!getState().isAvailable())
-            return;
-
-        Loader loader = getLoader();
-        if (loader != null) {
-            try {
-                // WebappLoader
-                loader.backgroundProcess();
-            } catch (Exception e) {
-                log.warn(sm.getString(
-                        "standardContext.backgroundProcess.loader", loader), e);
-            }
+    Manager manager = getManager();
+    if (manager != null) {
+        try {
+            manager.backgroundProcess();
+        } catch (Exception e) {
+            log.warn(sm.getString(
+                    "standardContext.backgroundProcess.manager", manager),
+                    e);
         }
-        Manager manager = getManager();
-        if (manager != null) {
-            try {
-                manager.backgroundProcess();
-            } catch (Exception e) {
-                log.warn(sm.getString(
-                        "standardContext.backgroundProcess.manager", manager),
-                        e);
-            }
-        }
-        WebResourceRoot resources = getResources();
-        if (resources != null) {
-            try {
-                resources.backgroundProcess();
-            } catch (Exception e) {
-                log.warn(sm.getString(
-                        "standardContext.backgroundProcess.resources",
-                        resources), e);
-            }
-        }
-        super.backgroundProcess();
     }
-    ```
+    WebResourceRoot resources = getResources();
+    if (resources != null) {
+        try {
+            resources.backgroundProcess();
+        } catch (Exception e) {
+            log.warn(sm.getString(
+                    "standardContext.backgroundProcess.resources",
+                    resources), e);
+        }
+    }
+    super.backgroundProcess();
+}
+```
 
 4.调用 WebappLoader 的`backgroundProcess()`方法，`reloadable`即为是否开启热部署，而`modified()`则是当前文件是否有修改的判断，当开启了热部署且有修改就会调用Context的reload方法进行重加载，实现web服务的**热部署**。
 ```java WebappLoader.backgroundProcess()

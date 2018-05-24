@@ -23,7 +23,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
 	在多线程环境下，使用HashMap进行put操作会导致HashMap中的Entry链表形成环形数据结构，从而使得在进行get等操作时引起死循环。
 
 2. 效率低下的HashTable
-	HashTable使用synchronized来保证线程安全，但是在线程竞争激烈的情况下效率低下。因为HashTable会对整个表进行加锁来实现同步，而JDK 1.8中的ConcurrentHashMap则使用更细粒度的锁来实现同步（对表中的某一列进行加锁）。
+	HashTable使用synchronized来保证线程安全，但是在线程竞争激烈的情况下效率低下。因为HashTable会对整个表进行加锁来实现同步，而JDK 1.8中的ConcurrentHashMap则使用更细粒度的锁来实现同步（对表中的链表表头进行加锁）。
 
 HashTable 虽然性能上不如 ConcurrentHashMap，但**并不能完全被取代**，两者的迭代器的一致性不同的，HashTable的迭代器是强一致性的，而**ConcurrentHashMap是弱一致的**。 ConcurrentHashMap的get，clear，iterator 都是弱一致性的。
 

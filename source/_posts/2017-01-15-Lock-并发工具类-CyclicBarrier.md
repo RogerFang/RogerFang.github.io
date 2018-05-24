@@ -15,7 +15,7 @@ CyclicBarrier可以让一组线程到达一个屏障（也可以叫同步点）�
 # CountDownLatch和CyclicBarrier的区别
 1. CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；而CyclicBarrier则是允许一组线程相互等待。
 2. CountDownLatch的计数器无法被重置，只能使用一次；CyclicBarrier的计数器可以被重置后使用，因此它被称为是循环的barrier，能处理更为复杂的业务场景。
-3. CountDownLatch通过自定义同步器（共享锁）实现的；而CyclicBarrier是通过重入锁ReentrantLock（排他锁）和Condition来实现的。
+3. CountDownLatch通过自定义同步器（共享锁）实现的；而CyclicBarrier是通过重入锁ReentrantLock（排他锁）和Condition的等待通知机制来实现的。
 
 
 # 源码分析
